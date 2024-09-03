@@ -6,6 +6,8 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { useSupabaseAuth } from '@/integrations/supabase';
 import { supabase } from '@/integrations/supabase/supabase';
 import { useToast } from "@/components/ui/use-toast";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { InfoIcon } from 'lucide-react';
 
 const Registration = () => {
   const [formData, setFormData] = useState({
@@ -16,6 +18,7 @@ const Registration = () => {
     agreeTerms: false
   });
   const [loading, setLoading] = useState(false);
+  const [emailSent, setEmailSent] = useState(false);
   const { session } = useSupabaseAuth();
   const navigate = useNavigate();
   const { toast } = useToast();
@@ -72,11 +75,11 @@ const Registration = () => {
       
       if (profileError) throw profileError;
 
+      setEmailSent(true);
       toast({
         title: "Success",
         description: "Registration successful. Please check your email to verify your account.",
       });
-      navigate('/login');
     } catch (error) {
       toast({
         title: "Error",
@@ -87,6 +90,25 @@ const Registration = () => {
       setLoading(false);
     }
   };
+
+  if (emailSent) {
+    return (
+      <div className="flex min-h-screen bg-background items-center justify-center">
+        <div className="max-w-md w-full p-8 bg-card rounded-lg shadow-lg">
+          <Alert>
+            <InfoIcon className="h-4 w-4" />
+            <AlertTitle>Check your email</AlertTitle>
+            <AlertDescription>
+              We've sent you an email with a link to verify your account. Please check your inbox and click the link to complete your registration.
+            </AlertDescription>
+          </Alert>
+          <Button className="mt-4 w-full" onClick={() => navigate('/login')}>
+            Go to Login
+          </Button>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="flex min-h-screen bg-background">

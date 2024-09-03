@@ -9,6 +9,7 @@ import Login from "./pages/Login";
 import UserProfile from "./pages/UserProfile";
 import ImageUpload from "./pages/ImageUpload";
 import WorkflowEditor from "./components/WorkflowEditor";
+import EmailConfirmation from "./pages/EmailConfirmation";
 
 const queryClient = new QueryClient();
 
@@ -26,6 +27,7 @@ const App = () => (
             <Route path="/upload" element={<ImageUpload />} />
             <Route path="/editor" element={<WorkflowEditor />} />
             <Route path="/logout" element={<Navigate to="/" replace />} />
+            <Route path="/email-confirmation" element={<EmailConfirmation />} />
           </Routes>
         </BrowserRouter>
       </TooltipProvider>
