@@ -14,7 +14,7 @@ import { Button } from "@/components/ui/button"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible"
-import { PlusCircle, User, Bot, Users, Play, MessageSquare, StickyNote, ChevronRight, HelpCircle, Settings, ChevronDown, Cog } from 'lucide-react';
+import { PlusCircle, User, Bot, Users, Play, MessageSquare, StickyNote, ChevronRight, HelpCircle, Settings, ChevronDown, Cog, Save, FileJson } from 'lucide-react';
 
 import UserNode from './nodes/UserNode';
 import AgentNode from './nodes/AgentNode';
@@ -276,18 +276,32 @@ const WorkflowEditor = () => {
         </ReactFlow>
       </div>
       <div className="absolute top-0 right-0 p-4 flex space-x-2">
-        <Button onClick={() => setShowHelpOverlay(true)}>
+        <Button
+          onClick={() => setShowHelpOverlay(true)}
+          className="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded flex items-center justify-center"
+        >
           <HelpCircle className="mr-2 h-4 w-4" />
           Help
         </Button>
-        <Button onClick={() => setShowSettingsModal(true)}>
+        <Button
+          onClick={() => setShowSettingsModal(true)}
+          className="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded flex items-center justify-center"
+        >
           <Settings className="mr-2 h-4 w-4" />
           Settings
         </Button>
-        <Button onClick={handleExportJSON}>
+        <Button
+          onClick={handleExportJSON}
+          className="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded flex items-center justify-center"
+        >
+          <FileJson className="mr-2 h-4 w-4" />
           Export JSON
         </Button>
-        <Button onClick={handleSaveLoad}>
+        <Button
+          onClick={handleSaveLoad}
+          className="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded flex items-center justify-center"
+        >
+          <Save className="mr-2 h-4 w-4" />
           Save/Load
         </Button>
       </div>
