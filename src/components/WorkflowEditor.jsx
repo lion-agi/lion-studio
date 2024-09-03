@@ -14,7 +14,7 @@ import { Button } from "@/components/ui/button"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible"
-import { PlusCircle, User, Bot, Users, Play, MessageSquare, StickyNote, ChevronRight, HelpCircle, Settings, ChevronDown, Cog, Save, FileJson } from 'lucide-react';
+import { PlusCircle, User, Bot, Users, Play, MessageSquare, StickyNote, ChevronRight, HelpCircle, Settings, ChevronDown, Cog, Save, FileJson, Menu } from 'lucide-react';
 
 import UserNode from './nodes/UserNode';
 import AgentNode from './nodes/AgentNode';
@@ -54,6 +54,7 @@ const WorkflowEditor = () => {
     advanced: false,
     extensions: false,
   });
+  const [showMobileMenu, setShowMobileMenu] = useState(false);
 
   const onConnect = useCallback((params) => {
     setEdges((eds) => addEdge({
@@ -155,6 +156,10 @@ const WorkflowEditor = () => {
     // Implement the logic to create a new flow based on the configuration
     console.log('Creating new flow:', flowConfig);
     // You can add nodes and edges here based on the flowConfig
+  };
+
+  const toggleMobileMenu = () => {
+    setShowMobileMenu(!showMobileMenu);
   };
 
   return (
@@ -275,35 +280,45 @@ const WorkflowEditor = () => {
           <Background color="#4B5563" gap={16} />
         </ReactFlow>
       </div>
-      <div className="absolute top-0 right-0 p-4 flex space-x-2">
+      <div className="absolute top-0 right-0 p-4 flex space-x-2 md:space-x-4">
         <Button
-          onClick={() => setShowHelpOverlay(true)}
-          className="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded flex items-center justify-center"
+          variant="ghost"
+          size="icon"
+          onClick={toggleMobileMenu}
+          className="md:hidden text-white hover:bg-purple-700"
         >
-          <HelpCircle className="mr-2 h-4 w-4" />
-          Help
+          <Menu className="h-6 w-6" />
         </Button>
-        <Button
-          onClick={() => setShowSettingsModal(true)}
-          className="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded flex items-center justify-center"
-        >
-          <Settings className="mr-2 h-4 w-4" />
-          Settings
-        </Button>
-        <Button
-          onClick={handleExportJSON}
-          className="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded flex items-center justify-center"
-        >
-          <FileJson className="mr-2 h-4 w-4" />
-          Export JSON
-        </Button>
-        <Button
-          onClick={handleSaveLoad}
-          className="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded flex items-center justify-center"
-        >
-          <Save className="mr-2 h-4 w-4" />
-          Save/Load
-        </Button>
+        <div className={`${showMobileMenu ? 'flex' : 'hidden'} md:flex flex-col md:flex-row space-y-2 md:space-y-0 md:space-x-2 absolute md:relative top-16 md:top-0 right-0 bg-gray-800 md:bg-transparent p-4 md:p-0 rounded-lg md:rounded-none shadow-lg md:shadow-none`}>
+          <Button
+            onClick={() => setShowHelpOverlay(true)}
+            className="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded flex items-center justify-center"
+          >
+            <HelpCircle className="mr-2 h-4 w-4" />
+            Help
+          </Button>
+          <Button
+            onClick={() => setShowSettingsModal(true)}
+            className="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded flex items-center justify-center"
+          >
+            <Settings className="mr-2 h-4 w-4" />
+            Settings
+          </Button>
+          <Button
+            onClick={handleExportJSON}
+            className="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded flex items-center justify-center"
+          >
+            <FileJson className="mr-2 h-4 w-4" />
+            Export JSON
+          </Button>
+          <Button
+            onClick={handleSaveLoad}
+            className="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded flex items-center justify-center"
+          >
+            <Save className="mr-2 h-4 w-4" />
+            Save/Load
+          </Button>
+        </div>
       </div>
       {showHelpOverlay && <HelpOverlay onClose={() => setShowHelpOverlay(false)} />}
       {showSettingsModal && <SettingsModal onClose={() => setShowSettingsModal(false)} />}
