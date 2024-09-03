@@ -275,7 +275,7 @@ const WorkflowEditor = () => {
           <Background color="#4B5563" gap={16} />
         </ReactFlow>
       </div>
-      <div className="absolute top-4 right-4 space-x-2">
+      <div className="absolute top-0 right-0 p-4 flex space-x-2">
         <Button onClick={() => setShowHelpOverlay(true)}>
           <HelpCircle className="mr-2 h-4 w-4" />
           Help
