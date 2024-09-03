@@ -10,12 +10,12 @@ const NodeTypeButton = ({ icon, label, onClick, expanded }) => (
         <Button
           variant="ghost"
           size="sm"
-          className="w-full justify-start text-gray-300 hover:text-white hover:bg-gray-700"
+          className={`w-full justify-start text-gray-300 hover:text-white hover:bg-gray-700 ${expanded ? '' : 'px-2'}`}
           onClick={onClick}
         >
-          {icon}
-          {expanded && <span className="ml-2">{label}</span>}
-          <PlusCircle className="ml-auto h-4 w-4" />
+          {React.cloneElement(icon, { className: `h-6 w-6 ${expanded ? 'mr-2' : ''}` })}
+          {expanded && <span className="flex-grow">{label}</span>}
+          {expanded && <PlusCircle className="ml-auto h-4 w-4" />}
         </Button>
       </TooltipTrigger>
       <TooltipContent side="right">
