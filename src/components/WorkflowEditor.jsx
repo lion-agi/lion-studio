@@ -25,6 +25,10 @@ import NestedChatNode from './nodes/NestedChatNode';
 import NoteNode from './nodes/NoteNode';
 import HelpOverlay from './HelpOverlay';
 import SettingsModal from './SettingsModal';
+import JSONModal from './JSONModal';
+import WizardDialog from './WizardDialog';
+import SaveLoadDialog from './SaveLoadDialog';
+import AgenticFlowWizard from './AgenticFlowWizard';
 
 const nodeTypes = {
   user: UserNode,
@@ -43,6 +47,8 @@ const WorkflowEditor = () => {
   const [selectedNodeType, setSelectedNodeType] = useState(null);
   const [showHelpOverlay, setShowHelpOverlay] = useState(false);
   const [showSettingsModal, setShowSettingsModal] = useState(false);
+  const [showJSONModal, setShowJSONModal] = useState(false);
+  const [showSaveLoadDialog, setShowSaveLoadDialog] = useState(false);
   const [expandedCategories, setExpandedCategories] = useState({
     basic: true,
     advanced: false,
@@ -134,6 +140,21 @@ const WorkflowEditor = () => {
       default:
         return '#64748B';
     }
+  };
+
+  const handleExportJSON = () => {
+    const graphData = { nodes, edges };
+    setShowJSONModal(true);
+  };
+
+  const handleSaveLoad = () => {
+    setShowSaveLoadDialog(true);
+  };
+
+  const handleCreateAgenticFlow = (flowConfig) => {
+    // Implement the logic to create a new flow based on the configuration
+    console.log('Creating new flow:', flowConfig);
+    // You can add nodes and edges here based on the flowConfig
   };
 
   return (
@@ -254,8 +275,50 @@ const WorkflowEditor = () => {
           <Background color="#4B5563" gap={16} />
         </ReactFlow>
       </div>
+      <div className="absolute top-4 right-4 space-x-2">
+        <Button onClick={() => setShowHelpOverlay(true)}>
+          <HelpCircle className="mr-2 h-4 w-4" />
+          Help
+        </Button>
+        <Button onClick={() => setShowSettingsModal(true)}>
+          <Settings className="mr-2 h-4 w-4" />
+          Settings
+        </Button>
+        <Button onClick={handleExportJSON}>
+          Export JSON
+        </Button>
+        <Button onClick={handleSaveLoad}>
+          Save/Load
+        </Button>
+      </div>
       {showHelpOverlay && <HelpOverlay onClose={() => setShowHelpOverlay(false)} />}
       {showSettingsModal && <SettingsModal onClose={() => setShowSettingsModal(false)} />}
+      {showJSONModal && <JSONModal isOpen={showJSONModal} onClose={() => setShowJSONModal(false)} jsonData={{ nodes, edges }} />}
+      {showSaveLoadDialog && (
+        <SaveLoadDialog
+          isOpen={showSaveLoadDialog}
+          onClose={() => setShowSaveLoadDialog(false)}
+          onSave={(savedGraph) => {
+            console.log('Saving graph:', savedGraph);
+            setShowSaveLoadDialog(false);
+          }}
+          onLoad={(loadedGraphData) => {
+            setNodes(loadedGraphData.nodes);
+            setEdges(loadedGraphData.edges);
+            setShowSaveLoadDialog(false);
+          }}
+          graphData={{ nodes, edges }}
+        />
+      )}
+      <WizardDialog onAddNode={addNode} />
+      <AgenticFlowWizard
+        onCreateFlow={handleCreateAgenticFlow}
+        onClearDiagram={() => {
+          setNodes([]);
+          setEdges([]);
+        }}
+        onSaveFlow={handleExportJSON}
+      />
     </div>
   );
 };
