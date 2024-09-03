@@ -13,19 +13,26 @@ export const supabase = createClient(supabaseUrl, supabaseKey, {
 
 // Function to get user profile
 export const getUserProfile = async () => {
-  const { data, error } = await supabase.rpc('get_my_profile');
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) throw new Error('No user logged in');
+
+  const { data, error } = await supabase
+    .from('profiles')
+    .select('*')
+    .eq('id', user.id)
+    .single();
+
   if (error) throw error;
   return data;
 };
 
 // Function to update user profile
 export const updateUserProfile = async (userId, updates) => {
-  const { error } = await supabase.rpc('update_profile', {
-    user_id: userId,
-    new_first_name: updates.firstName,
-    new_last_name: updates.lastName,
-    new_avatar_url: updates.avatarUrl
-  });
+  const { error } = await supabase
+    .from('profiles')
+    .update(updates)
+    .eq('id', userId);
+
   if (error) throw error;
 };
 
@@ -46,18 +53,24 @@ export const searchImages = async (query, page = 1, pageSize = 20) => {
 
 // Function to like an image
 export const likeImage = async (imageId) => {
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) throw new Error('No user logged in');
+
   const { data, error } = await supabase
     .from('likes')
-    .insert({ image_id: imageId, user_id: supabase.auth.user().id });
+    .insert({ image_id: imageId, user_id: user.id });
   if (error) throw error;
   return data;
 };
 
 // Function to comment on an image
 export const commentOnImage = async (imageId, comment) => {
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) throw new Error('No user logged in');
+
   const { data, error } = await supabase
     .from('comments')
-    .insert({ image_id: imageId, user_id: supabase.auth.user().id, content: comment });
+    .insert({ image_id: imageId, user_id: user.id, content: comment });
   if (error) throw error;
   return data;
 };

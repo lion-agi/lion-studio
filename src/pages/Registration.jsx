@@ -20,10 +20,11 @@ const Registration = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
 
-  if (session) {
-    navigate('/profile');
-    return null;
-  }
+  React.useEffect(() => {
+    if (session) {
+      navigate('/profile');
+    }
+  }, [session, navigate]);
 
   const handleInputChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -56,6 +57,21 @@ const Registration = () => {
         }
       });
       if (error) throw error;
+      
+      // Insert user data into the profiles table
+      const { error: profileError } = await supabase
+        .from('profiles')
+        .insert([
+          { 
+            id: data.user.id,
+            first_name: formData.firstName,
+            last_name: formData.lastName,
+            email: formData.email
+          }
+        ]);
+      
+      if (profileError) throw profileError;
+
       toast({
         title: "Success",
         description: "Registration successful. Please check your email to verify your account.",
@@ -75,10 +91,10 @@ const Registration = () => {
   return (
     <div className="flex min-h-screen bg-background">
       <div className="flex-1 bg-gradient-to-br from-purple-600 to-indigo-600 p-12 text-white flex flex-col justify-between">
-        <img src="/lion-studio-logo.svg" alt="Lion Studio Logo" className="w-24 h-24" />
+        <img src="/lion-studio-logo.jpeg" alt="Lion Studio Logo" className="w-24 h-24 object-contain" />
         <div>
           <h1 className="text-4xl font-bold mb-4">Intelligent Workflow Automation</h1>
-          <img src="/workflow-illustration.jpg" alt="Workflow Illustration" className="w-full rounded-lg shadow-lg" />
+          <img src="/demo1.jpg" alt="Workflow Illustration" className="w-full rounded-lg shadow-lg" />
         </div>
       </div>
       <div className="flex-1 p-12 flex flex-col justify-center">
@@ -134,16 +150,6 @@ const Registration = () => {
             <p className="text-center text-sm text-muted-foreground">
               Already have an account? <Link to="/login" className="text-purple-600 hover:underline">Log in</Link>
             </p>
-          </div>
-          <div className="mt-6 space-y-4">
-            <Button variant="outline" className="w-full" onClick={() => supabase.auth.signInWithOAuth({ provider: 'google' })}>
-              <img src="/google-logo.svg" alt="Google" className="w-5 h-5 mr-2" />
-              Sign up with Google
-            </Button>
-            <Button variant="outline" className="w-full" onClick={() => supabase.auth.signInWithOAuth({ provider: 'apple' })}>
-              <img src="/apple-logo.svg" alt="Apple" className="w-5 h-5 mr-2" />
-              Sign up with Apple
-            </Button>
           </div>
         </div>
       </div>
