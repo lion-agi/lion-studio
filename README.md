@@ -6,6 +6,8 @@
 
 **URL**: https://github.com/lion-agi/lion-studio
 
+**Preview**: https://preview--lion-studio.gptengineer.run/
+
 
 ![demo1](./public/demo1.jpg)
 
