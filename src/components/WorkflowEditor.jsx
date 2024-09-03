@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useRef } from 'react';
 import ReactFlow, {
   addEdge,
   MiniMap,
@@ -34,6 +34,8 @@ const WorkflowEditor = () => {
     advanced: false,
     extensions: false,
   });
+  const reactFlowWrapper = useRef(null);
+  const [reactFlowInstance, setReactFlowInstance] = useState(null);
 
   const onConnect = useCallback((params) => {
     setEdges((eds) => addEdge({
@@ -75,13 +77,13 @@ const WorkflowEditor = () => {
     (event) => {
       event.preventDefault();
 
-      const reactFlowBounds = event.target.getBoundingClientRect();
+      const reactFlowBounds = reactFlowWrapper.current.getBoundingClientRect();
       const type = event.dataTransfer.getData('application/reactflow');
 
-      const position = {
+      const position = reactFlowInstance.project({
         x: event.clientX - reactFlowBounds.left,
         y: event.clientY - reactFlowBounds.top,
-      };
+      });
 
       const newNode = {
         id: `${type}-${nodes.length + 1}`,
@@ -92,7 +94,7 @@ const WorkflowEditor = () => {
 
       setNodes((nds) => nds.concat(newNode));
     },
-    [nodes, setNodes]
+    [nodes, setNodes, reactFlowInstance]
   );
 
   const handleExportJSON = () => {
@@ -114,6 +116,16 @@ const WorkflowEditor = () => {
     setShowNodeWizard(true);
   };
 
+  const onNodeClick = useCallback((event, node) => {
+    // Deselect all nodes
+    setNodes((nds) =>
+      nds.map((n) => ({
+        ...n,
+        selected: n.id === node.id,
+      }))
+    );
+  }, [setNodes]);
+
   return (
     <div className="h-screen flex bg-gradient-to-br from-gray-900 to-gray-800 text-white relative">
       <Sidebar
@@ -129,17 +141,19 @@ const WorkflowEditor = () => {
         onOpenNodeWizard={handleOpenNodeWizard}
       />
 
-      <div className={`flex-grow transition-all duration-300 ${sidebarExpanded ? 'ml-64' : 'ml-20'}`}>
+      <div className={`flex-grow transition-all duration-300 ${sidebarExpanded ? 'ml-64' : 'ml-20'}`} ref={reactFlowWrapper}>
         <ReactFlow
           nodes={nodes}
           edges={edges}
           onNodesChange={onNodesChange}
           onEdgesChange={onEdgesChange}
           onConnect={onConnect}
+          onInit={setReactFlowInstance}
+          onDrop={onDrop}
+          onDragOver={onDragOver}
+          onNodeClick={onNodeClick}
           nodeTypes={nodeTypes}
           fitView
-          onDragOver={onDragOver}
-          onDrop={onDrop}
         >
           <Controls />
           <MiniMap nodeColor={(node) => {
