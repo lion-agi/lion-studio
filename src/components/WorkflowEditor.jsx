@@ -43,8 +43,7 @@ const nodeTypes = {
 const WorkflowEditor = () => {
   const [nodes, setNodes, onNodesChange] = useNodesState([]);
   const [edges, setEdges, onEdgesChange] = useEdgesState([]);
-  const [leftSidebarExpanded, setLeftSidebarExpanded] = useState(true);
-  const [rightSidebarExpanded, setRightSidebarExpanded] = useState(true);
+  const [sidebarExpanded, setSidebarExpanded] = useState(true);
   const [selectedNodeType, setSelectedNodeType] = useState(null);
   const [showHelpOverlay, setShowHelpOverlay] = useState(false);
   const [showSettingsModal, setShowSettingsModal] = useState(false);
@@ -77,12 +76,8 @@ const WorkflowEditor = () => {
     setSelectedNodeType(type);
   };
 
-  const toggleLeftSidebar = () => {
-    setLeftSidebarExpanded(!leftSidebarExpanded);
-  };
-
-  const toggleRightSidebar = () => {
-    setRightSidebarExpanded(!rightSidebarExpanded);
+  const toggleSidebar = () => {
+    setSidebarExpanded(!sidebarExpanded);
   };
 
   const toggleCategory = (category) => {
@@ -165,91 +160,175 @@ const WorkflowEditor = () => {
   return (
     <div className="h-screen flex bg-gradient-to-br from-gray-900 to-gray-800 text-white relative">
       {/* Left Sidebar */}
-      <div className={`left-sidebar ${leftSidebarExpanded ? 'w-64' : 'w-12'} bg-gray-800 flex flex-col transition-all duration-300 border-r border-gray-700 fixed left-0 top-0 bottom-0 overflow-hidden`}>
-        <Button variant="ghost" size="icon" onClick={toggleLeftSidebar} className="self-end mb-4 text-gray-400 hover:text-white">
-          {leftSidebarExpanded ? <ChevronLeft className="h-6 w-6" /> : <ChevronRight className="h-6 w-6" />}
+      <div className={`left-sidebar ${sidebarExpanded ? 'w-64' : 'w-16'} bg-gray-800 flex flex-col transition-all duration-300 border-r border-gray-700 fixed left-0 top-0 bottom-0 overflow-hidden`}>
+        <Button variant="ghost" size="icon" onClick={toggleSidebar} className="self-end mb-4 text-gray-400 hover:text-white">
+          {sidebarExpanded ? <ChevronLeft className="h-6 w-6" /> : <ChevronRight className="h-6 w-6" />}
         </Button>
-        {leftSidebarExpanded && (
-          <div className="flex-grow space-y-2 overflow-y-auto px-4">
-            <Collapsible open={expandedCategories.basic} onOpenChange={() => toggleCategory('basic')}>
-              <CollapsibleTrigger className="flex items-center w-full p-2 hover:bg-gray-700 rounded text-gray-300 hover:text-white">
-                <PlusCircle className="h-6 w-6 mr-2" />
-                <span className="flex-grow">Basic Nodes</span>
-                <ChevronDown className={`h-4 w-4 transition-transform duration-200 ${expandedCategories.basic ? 'rotate-180' : ''}`} />
-              </CollapsibleTrigger>
-              <CollapsibleContent className="space-y-2 pl-4">
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  className={`w-full justify-start text-gray-300 hover:text-white hover:bg-gray-700 ${selectedNodeType === 'assistant' ? 'bg-gray-700' : ''}`}
-                  onDragStart={(event) => onDragStart(event, 'assistant')}
-                  draggable
-                >
-                  <Bot className="h-4 w-4 mr-2" />
-                  <span>Assistant</span>
-                </Button>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  className={`w-full justify-start text-gray-300 hover:text-white hover:bg-gray-700 ${selectedNodeType === 'user' ? 'bg-gray-700' : ''}`}
-                  onDragStart={(event) => onDragStart(event, 'user')}
-                  draggable
-                >
-                  <User className="h-4 w-4 mr-2" />
-                  <span>User Proxy</span>
-                </Button>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  className={`w-full justify-start text-gray-300 hover:text-white hover:bg-gray-700 ${selectedNodeType === 'group' ? 'bg-gray-700' : ''}`}
-                  onDragStart={(event) => onDragStart(event, 'group')}
-                  draggable
-                >
-                  <Users className="h-4 w-4 mr-2" />
-                  <span>Group Chat</span>
-                </Button>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  className={`w-full justify-start text-gray-300 hover:text-white hover:bg-gray-700 ${selectedNodeType === 'note' ? 'bg-gray-700' : ''}`}
-                  onDragStart={(event) => onDragStart(event, 'note')}
-                  draggable
-                >
-                  <StickyNote className="h-4 w-4 mr-2" />
-                  <span>Note</span>
-                </Button>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  className={`w-full justify-start text-gray-300 hover:text-white hover:bg-gray-700 ${selectedNodeType === 'initializer' ? 'bg-gray-700' : ''}`}
-                  onDragStart={(event) => onDragStart(event, 'initializer')}
-                  draggable
-                >
-                  <Cog className="h-4 w-4 mr-2" />
-                  <span>Config</span>
-                </Button>
-              </CollapsibleContent>
-            </Collapsible>
-            <Collapsible open={expandedCategories.advanced} onOpenChange={() => toggleCategory('advanced')}>
-              <CollapsibleTrigger className="flex items-center w-full p-2 hover:bg-gray-700 rounded text-gray-300 hover:text-white">
-                <Bot className="h-6 w-6 mr-2" />
-                <span className="flex-grow">Advanced Nodes</span>
-                <ChevronDown className={`h-4 w-4 transition-transform duration-200 ${expandedCategories.advanced ? 'rotate-180' : ''}`} />
-              </CollapsibleTrigger>
-            </Collapsible>
-            <Collapsible open={expandedCategories.extensions} onOpenChange={() => toggleCategory('extensions')}>
-              <CollapsibleTrigger className="flex items-center w-full p-2 hover:bg-gray-700 rounded text-gray-300 hover:text-white">
-                <PlusCircle className="h-6 w-6 mr-2" />
-                <span className="flex-grow">Extensions</span>
-                <ChevronDown className={`h-4 w-4 transition-transform duration-200 ${expandedCategories.extensions ? 'rotate-180' : ''}`} />
-              </CollapsibleTrigger>
-            </Collapsible>
+        <div className="flex-grow space-y-2 overflow-y-auto px-4">
+          <div className="space-y-2 mb-4">
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className="w-full justify-start text-gray-300 hover:text-white hover:bg-gray-700"
+                    onClick={() => setShowHelpOverlay(true)}
+                  >
+                    <HelpCircle className="h-5 w-5 mr-2" />
+                    {sidebarExpanded && <span>Help</span>}
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent side="right">
+                  <p>Help</p>
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className="w-full justify-start text-gray-300 hover:text-white hover:bg-gray-700"
+                    onClick={() => setShowSettingsModal(true)}
+                  >
+                    <Settings className="h-5 w-5 mr-2" />
+                    {sidebarExpanded && <span>Settings</span>}
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent side="right">
+                  <p>Settings</p>
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className="w-full justify-start text-gray-300 hover:text-white hover:bg-gray-700"
+                    onClick={handleExportJSON}
+                  >
+                    <FileJson className="h-5 w-5 mr-2" />
+                    {sidebarExpanded && <span>Export JSON</span>}
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent side="right">
+                  <p>Export JSON</p>
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className="w-full justify-start text-gray-300 hover:text-white hover:bg-gray-700"
+                    onClick={handleSaveLoad}
+                  >
+                    <Save className="h-5 w-5 mr-2" />
+                    {sidebarExpanded && <span>Save/Load</span>}
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent side="right">
+                  <p>Save/Load</p>
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
           </div>
-        )}
+          <div className="h-px bg-gray-700 my-4"></div>
+          <Collapsible open={expandedCategories.basic} onOpenChange={() => toggleCategory('basic')}>
+            <CollapsibleTrigger className="flex items-center w-full p-2 hover:bg-gray-700 rounded text-gray-300 hover:text-white">
+              <PlusCircle className="h-5 w-5 mr-2" />
+              {sidebarExpanded && <span className="flex-grow">Basic Nodes</span>}
+              {sidebarExpanded && <ChevronDown className={`h-4 w-4 transition-transform duration-200 ${expandedCategories.basic ? 'rotate-180' : ''}`} />}
+            </CollapsibleTrigger>
+            <CollapsibleContent className="space-y-2 pl-4">
+              <Button
+                variant="ghost"
+                size="sm"
+                className={`w-full justify-start text-gray-300 hover:text-white hover:bg-gray-700 ${selectedNodeType === 'assistant' ? 'bg-gray-700' : ''}`}
+                onDragStart={(event) => onDragStart(event, 'assistant')}
+                draggable
+              >
+                <Bot className="h-4 w-4 mr-2" />
+                {sidebarExpanded && <span>Assistant</span>}
+              </Button>
+              <Button
+                variant="ghost"
+                size="sm"
+                className={`w-full justify-start text-gray-300 hover:text-white hover:bg-gray-700 ${selectedNodeType === 'user' ? 'bg-gray-700' : ''}`}
+                onDragStart={(event) => onDragStart(event, 'user')}
+                draggable
+              >
+                <User className="h-4 w-4 mr-2" />
+                {sidebarExpanded && <span>User Proxy</span>}
+              </Button>
+              <Button
+                variant="ghost"
+                size="sm"
+                className={`w-full justify-start text-gray-300 hover:text-white hover:bg-gray-700 ${selectedNodeType === 'group' ? 'bg-gray-700' : ''}`}
+                onDragStart={(event) => onDragStart(event, 'group')}
+                draggable
+              >
+                <Users className="h-4 w-4 mr-2" />
+                {sidebarExpanded && <span>Group Chat</span>}
+              </Button>
+              <Button
+                variant="ghost"
+                size="sm"
+                className={`w-full justify-start text-gray-300 hover:text-white hover:bg-gray-700 ${selectedNodeType === 'note' ? 'bg-gray-700' : ''}`}
+                onDragStart={(event) => onDragStart(event, 'note')}
+                draggable
+              >
+                <StickyNote className="h-4 w-4 mr-2" />
+                {sidebarExpanded && <span>Note</span>}
+              </Button>
+              <Button
+                variant="ghost"
+                size="sm"
+                className={`w-full justify-start text-gray-300 hover:text-white hover:bg-gray-700 ${selectedNodeType === 'initializer' ? 'bg-gray-700' : ''}`}
+                onDragStart={(event) => onDragStart(event, 'initializer')}
+                draggable
+              >
+                <Cog className="h-4 w-4 mr-2" />
+                {sidebarExpanded && <span>Config</span>}
+              </Button>
+            </CollapsibleContent>
+          </Collapsible>
+          <Collapsible open={expandedCategories.advanced} onOpenChange={() => toggleCategory('advanced')}>
+            <CollapsibleTrigger className="flex items-center w-full p-2 hover:bg-gray-700 rounded text-gray-300 hover:text-white">
+              <Bot className="h-5 w-5 mr-2" />
+              {sidebarExpanded && <span className="flex-grow">Advanced Nodes</span>}
+              {sidebarExpanded && <ChevronDown className={`h-4 w-4 transition-transform duration-200 ${expandedCategories.advanced ? 'rotate-180' : ''}`} />}
+            </CollapsibleTrigger>
+          </Collapsible>
+          <Collapsible open={expandedCategories.extensions} onOpenChange={() => toggleCategory('extensions')}>
+            <CollapsibleTrigger className="flex items-center w-full p-2 hover:bg-gray-700 rounded text-gray-300 hover:text-white">
+              <PlusCircle className="h-5 w-5 mr-2" />
+              {sidebarExpanded && <span className="flex-grow">Extensions</span>}
+              {sidebarExpanded && <ChevronDown className={`h-4 w-4 transition-transform duration-200 ${expandedCategories.extensions ? 'rotate-180' : ''}`} />}
+            </CollapsibleTrigger>
+          </Collapsible>
+        </div>
+        <div className="mt-auto pt-4 space-y-2 border-t border-gray-700 px-4 pb-4">
+          <WizardDialog onAddNode={addNode} />
+          <AgenticFlowWizard
+            onCreateFlow={handleCreateAgenticFlow}
+            onClearDiagram={() => {
+              setNodes([]);
+              setEdges([]);
+            }}
+            onSaveFlow={handleExportJSON}
+          />
+        </div>
       </div>
 
       {/* Main Content Area */}
-      <div className={`flex-grow transition-all duration-300 ${leftSidebarExpanded ? 'ml-64' : 'ml-12'} ${rightSidebarExpanded ? 'mr-64' : 'mr-12'}`}>
+      <div className={`flex-grow transition-all duration-300 ${sidebarExpanded ? 'ml-64' : 'ml-16'}`}>
         <ReactFlow
           nodes={nodes}
           edges={edges}
@@ -265,65 +344,6 @@ const WorkflowEditor = () => {
           <MiniMap nodeColor={nodeColor} nodeStrokeWidth={3} zoomable pannable />
           <Background color="#4B5563" gap={16} />
         </ReactFlow>
-      </div>
-
-      {/* Right Sidebar */}
-      <div className={`right-sidebar ${rightSidebarExpanded ? 'w-64' : 'w-12'} bg-gray-800 flex flex-col transition-all duration-300 border-l border-gray-700 fixed right-0 top-0 bottom-0 overflow-hidden`}>
-        <Button variant="ghost" size="icon" onClick={toggleRightSidebar} className="self-start mb-4 text-gray-400 hover:text-white">
-          {rightSidebarExpanded ? <ChevronRight className="h-6 w-6" /> : <ChevronLeft className="h-6 w-6" />}
-        </Button>
-        {rightSidebarExpanded && (
-          <>
-            <div className="flex-grow space-y-4 overflow-y-auto px-4">
-              <WizardDialog onAddNode={addNode} />
-              <AgenticFlowWizard
-                onCreateFlow={handleCreateAgenticFlow}
-                onClearDiagram={() => {
-                  setNodes([]);
-                  setEdges([]);
-                }}
-                onSaveFlow={handleExportJSON}
-              />
-            </div>
-            <div className="mt-auto pt-4 space-y-2 border-t border-gray-700 px-4 pb-4">
-              <Button variant="outline" size="sm" className="w-full justify-start text-gray-300 hover:text-white hover:bg-gray-700">
-                Build Functions
-              </Button>
-            </div>
-          </>
-        )}
-      </div>
-
-      {/* Top Bar */}
-      <div className="absolute top-4 left-4 z-10 flex space-x-2">
-        <Button
-          onClick={() => setShowHelpOverlay(true)}
-          className="bg-purple-600 hover:bg-purple-700 text-white"
-        >
-          <HelpCircle className="mr-2 h-4 w-4" />
-          Help
-        </Button>
-        <Button
-          onClick={() => setShowSettingsModal(true)}
-          className="bg-purple-600 hover:bg-purple-700 text-white"
-        >
-          <Settings className="mr-2 h-4 w-4" />
-          Settings
-        </Button>
-        <Button
-          onClick={handleExportJSON}
-          className="bg-purple-600 hover:bg-purple-700 text-white"
-        >
-          <FileJson className="mr-2 h-4 w-4" />
-          Export JSON
-        </Button>
-        <Button
-          onClick={handleSaveLoad}
-          className="bg-purple-600 hover:bg-purple-700 text-white"
-        >
-          <Save className="mr-2 h-4 w-4" />
-          Save/Load
-        </Button>
       </div>
 
       {showHelpOverlay && <HelpOverlay onClose={() => setShowHelpOverlay(false)} />}
