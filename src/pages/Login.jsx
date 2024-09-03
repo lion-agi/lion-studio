@@ -5,11 +5,13 @@ import { Input } from "@/components/ui/input";
 import { useSupabaseAuth } from '@/integrations/supabase';
 import { supabase } from '@/integrations/supabase/supabase';
 import { useToast } from "@/components/ui/use-toast";
+import { Alert, AlertDescription } from "@/components/ui/alert";
 
 const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
   const { session } = useSupabaseAuth();
   const navigate = useNavigate();
   const { toast } = useToast();
@@ -23,6 +25,7 @@ const Login = () => {
   const handleLogin = async (e) => {
     e.preventDefault();
     setLoading(true);
+    setError('');
     try {
       const { error } = await supabase.auth.signInWithPassword({
         email,
@@ -35,9 +38,10 @@ const Login = () => {
       });
       navigate('/editor');
     } catch (error) {
+      setError('Invalid email or password. Please try again.');
       toast({
         title: "Error",
-        description: error.message,
+        description: "Failed to log in. Please check your credentials.",
         variant: "destructive",
       });
     } finally {
@@ -69,6 +73,11 @@ const Login = () => {
       <div className="flex-1 p-12 flex flex-col justify-center">
         <div className="max-w-md w-full mx-auto">
           <h2 className="text-3xl font-bold mb-6">Log in to your account</h2>
+          {error && (
+            <Alert variant="destructive" className="mb-4">
+              <AlertDescription>{error}</AlertDescription>
+            </Alert>
+          )}
           <form onSubmit={handleLogin} className="space-y-4">
             <Input
               type="email"
