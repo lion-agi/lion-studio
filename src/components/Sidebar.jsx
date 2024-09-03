@@ -114,7 +114,6 @@ const NodeTypeButton = ({ icon, label, onClick, expanded }) => (
             variant="ghost"
             size="sm"
             className={`flex-grow justify-start text-gray-300 hover:text-white hover:bg-gray-700 ${expanded ? '' : 'px-2'}`}
-            onClick={onClick}
           >
             {React.cloneElement(icon, { className: `h-6 w-6 ${expanded ? 'mr-2' : ''}` })}
             {expanded && <span className="flex-grow">{label}</span>}

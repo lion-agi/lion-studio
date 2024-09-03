@@ -177,3 +177,24 @@ body.dragging * {
   fill: #A78BFA;
   filter: drop-shadow(0 0 2px rgba(167, 139, 250, 0.8));
 }
+
+/* Node type-specific styles */
+.node-card.assistant {
+  @apply from-blue-500/20 to-blue-400/10;
+}
+
+.node-card.user {
+  @apply from-green-500/20 to-green-400/10;
+}
+
+.node-card.group {
+  @apply from-purple-500/20 to-purple-400/10;
+}
+
+.node-card.note {
+  @apply from-yellow-500/20 to-yellow-400/10;
+}
+
+.node-card.initializer {
+  @apply from-red-500/20 to-red-400/10;
+}
