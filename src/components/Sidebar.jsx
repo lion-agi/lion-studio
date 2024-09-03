@@ -2,8 +2,7 @@ import React from 'react';
 import { Button } from "@/components/ui/button";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
-import { ChevronLeft, ChevronRight, ChevronDown, HelpCircle, Settings, FileJson, Save, PlusCircle, Bot, User, Users, StickyNote, Cog } from 'lucide-react';
-import NodeTypeButton from './NodeTypeButton';
+import { ChevronLeft, ChevronRight, ChevronDown, HelpCircle, Settings, FileJson, Save, Bot, User, Users, StickyNote, Cog, Plus } from 'lucide-react';
 
 const Sidebar = ({ 
   sidebarExpanded, 
@@ -30,13 +29,13 @@ const Sidebar = ({
         
         <div className="h-px bg-gray-700 my-4"></div>
         
-        <SidebarButton icon={<PlusCircle className="h-6 w-6" />} label="New Agentic Flow" onClick={onCreateAgenticFlow} expanded={sidebarExpanded} />
+        <SidebarButton icon={<Plus className="h-6 w-6" />} label="New Agentic Flow" onClick={onCreateAgenticFlow} expanded={sidebarExpanded} />
 
         <div className="h-px bg-gray-700 my-4"></div>
 
         <NodeCategory
           name="Basic Nodes"
-          icon={<PlusCircle className="h-6 w-6 mr-2" />}
+          icon={<Plus className="h-6 w-6 mr-2" />}
           expanded={expandedCategories.basic}
           onToggle={() => toggleCategory('basic')}
           sidebarExpanded={sidebarExpanded}
@@ -60,7 +59,7 @@ const Sidebar = ({
 
         <NodeCategory
           name="Extensions"
-          icon={<PlusCircle className="h-6 w-6 mr-2" />}
+          icon={<Plus className="h-6 w-6 mr-2" />}
           expanded={expandedCategories.extensions}
           onToggle={() => toggleCategory('extensions')}
           sidebarExpanded={sidebarExpanded}
@@ -104,6 +103,40 @@ const NodeCategory = ({ name, icon, expanded, onToggle, sidebarExpanded, childre
       {children}
     </CollapsibleContent>
   </Collapsible>
+);
+
+const NodeTypeButton = ({ icon, label, onClick, expanded }) => (
+  <TooltipProvider>
+    <Tooltip>
+      <TooltipTrigger asChild>
+        <div className="flex items-center">
+          <Button
+            variant="ghost"
+            size="sm"
+            className={`flex-grow justify-start text-gray-300 hover:text-white hover:bg-gray-700 ${expanded ? '' : 'px-2'}`}
+            onClick={onClick}
+          >
+            {React.cloneElement(icon, { className: `h-6 w-6 ${expanded ? 'mr-2' : ''}` })}
+            {expanded && <span className="flex-grow">{label}</span>}
+          </Button>
+          <Button
+            variant="ghost"
+            size="sm"
+            className="px-2 text-gray-300 hover:text-white hover:bg-gray-700"
+            onClick={(e) => {
+              e.stopPropagation();
+              onClick();
+            }}
+          >
+            <Plus className="h-4 w-4" />
+          </Button>
+        </div>
+      </TooltipTrigger>
+      <TooltipContent side="right">
+        <p>Add {label}</p>
+      </TooltipContent>
+    </Tooltip>
+  </TooltipProvider>
 );
 
 export default Sidebar;
