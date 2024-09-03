@@ -11,7 +11,6 @@ import ReactFlow, {
 import 'reactflow/dist/style.css';
 
 import { Button } from "@/components/ui/button"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible"
 import { PlusCircle, User, Bot, Users, Play, MessageSquare, StickyNote, ChevronRight, HelpCircle, Settings, ChevronDown, Cog, Save, FileJson, Menu, ChevronLeft } from 'lucide-react';
@@ -26,7 +25,6 @@ import NoteNode from './nodes/NoteNode';
 import HelpOverlay from './HelpOverlay';
 import SettingsModal from './SettingsModal';
 import JSONModal from './JSONModal';
-import WizardDialog from './WizardDialog';
 import SaveLoadDialog from './SaveLoadDialog';
 import AgenticFlowWizard from './AgenticFlowWizard';
 
@@ -44,7 +42,6 @@ const WorkflowEditor = () => {
   const [nodes, setNodes, onNodesChange] = useNodesState([]);
   const [edges, setEdges, onEdgesChange] = useEdgesState([]);
   const [sidebarExpanded, setSidebarExpanded] = useState(true);
-  const [selectedNodeType, setSelectedNodeType] = useState(null);
   const [showHelpOverlay, setShowHelpOverlay] = useState(false);
   const [showSettingsModal, setShowSettingsModal] = useState(false);
   const [showJSONModal, setShowJSONModal] = useState(false);
@@ -65,7 +62,7 @@ const WorkflowEditor = () => {
     }, eds));
   }, [setEdges]);
 
-  const addNode = (type) => {
+  const addNode = useCallback((type) => {
     const newNode = {
       id: `${type}-${nodes.length + 1}`,
       type,
@@ -73,8 +70,7 @@ const WorkflowEditor = () => {
       data: { label: `${type.charAt(0).toUpperCase() + type.slice(1)} Node` },
     };
     setNodes((nds) => nds.concat(newNode));
-    setSelectedNodeType(type);
-  };
+  }, [nodes, setNodes]);
 
   const toggleSidebar = () => {
     setSidebarExpanded(!sidebarExpanded);
@@ -85,11 +81,6 @@ const WorkflowEditor = () => {
       ...prev,
       [category]: !prev[category]
     }));
-  };
-
-  const onDragStart = (event, nodeType) => {
-    event.dataTransfer.setData('application/reactflow', nodeType);
-    event.dataTransfer.effectAllowed = 'move';
   };
 
   const onDragOver = useCallback((event) => {
@@ -152,94 +143,77 @@ const WorkflowEditor = () => {
   };
 
   const handleCreateAgenticFlow = (flowConfig) => {
-    // Implement the logic to create a new flow based on the configuration
     console.log('Creating new flow:', flowConfig);
-    // You can add nodes and edges here based on the flowConfig
   };
+
+  const renderSidebarButton = (icon, label, onClick) => (
+    <TooltipProvider>
+      <Tooltip>
+        <TooltipTrigger asChild>
+          <Button
+            variant="ghost"
+            size="sm"
+            className="w-full justify-start text-gray-300 hover:text-white hover:bg-gray-700"
+            onClick={onClick}
+          >
+            {icon}
+            {sidebarExpanded && <span className="ml-2">{label}</span>}
+          </Button>
+        </TooltipTrigger>
+        <TooltipContent side="right">
+          <p>{label}</p>
+        </TooltipContent>
+      </Tooltip>
+    </TooltipProvider>
+  );
+
+  const renderNodeTypeButton = (icon, label, type) => (
+    <TooltipProvider>
+      <Tooltip>
+        <TooltipTrigger asChild>
+          <Button
+            variant="ghost"
+            size="sm"
+            className="w-full justify-start text-gray-300 hover:text-white hover:bg-gray-700"
+            onClick={() => addNode(type)}
+          >
+            {icon}
+            {sidebarExpanded && <span className="ml-2">{label}</span>}
+            <PlusCircle className="ml-auto h-4 w-4" />
+          </Button>
+        </TooltipTrigger>
+        <TooltipContent side="right">
+          <p>Add {label}</p>
+        </TooltipContent>
+      </Tooltip>
+    </TooltipProvider>
+  );
 
   return (
     <div className="h-screen flex bg-gradient-to-br from-gray-900 to-gray-800 text-white relative">
-      {/* Left Sidebar */}
       <div className={`left-sidebar ${sidebarExpanded ? 'w-64' : 'w-16'} bg-gray-800 flex flex-col transition-all duration-300 border-r border-gray-700 fixed left-0 top-0 bottom-0 overflow-hidden`}>
         <Button variant="ghost" size="icon" onClick={toggleSidebar} className="self-end mb-4 text-gray-400 hover:text-white">
           {sidebarExpanded ? <ChevronLeft className="h-6 w-6" /> : <ChevronRight className="h-6 w-6" />}
         </Button>
         <div className="flex-grow space-y-2 overflow-y-auto px-4">
-          <div className="space-y-2 mb-4">
-            <TooltipProvider>
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    className="w-full justify-start text-gray-300 hover:text-white hover:bg-gray-700"
-                    onClick={() => setShowHelpOverlay(true)}
-                  >
-                    <HelpCircle className="h-5 w-5 mr-2" />
-                    {sidebarExpanded && <span>Help</span>}
-                  </Button>
-                </TooltipTrigger>
-                <TooltipContent side="right">
-                  <p>Help</p>
-                </TooltipContent>
-              </Tooltip>
-            </TooltipProvider>
-            <TooltipProvider>
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    className="w-full justify-start text-gray-300 hover:text-white hover:bg-gray-700"
-                    onClick={() => setShowSettingsModal(true)}
-                  >
-                    <Settings className="h-5 w-5 mr-2" />
-                    {sidebarExpanded && <span>Settings</span>}
-                  </Button>
-                </TooltipTrigger>
-                <TooltipContent side="right">
-                  <p>Settings</p>
-                </TooltipContent>
-              </Tooltip>
-            </TooltipProvider>
-            <TooltipProvider>
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    className="w-full justify-start text-gray-300 hover:text-white hover:bg-gray-700"
-                    onClick={handleExportJSON}
-                  >
-                    <FileJson className="h-5 w-5 mr-2" />
-                    {sidebarExpanded && <span>Export JSON</span>}
-                  </Button>
-                </TooltipTrigger>
-                <TooltipContent side="right">
-                  <p>Export JSON</p>
-                </TooltipContent>
-              </Tooltip>
-            </TooltipProvider>
-            <TooltipProvider>
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    className="w-full justify-start text-gray-300 hover:text-white hover:bg-gray-700"
-                    onClick={handleSaveLoad}
-                  >
-                    <Save className="h-5 w-5 mr-2" />
-                    {sidebarExpanded && <span>Save/Load</span>}
-                  </Button>
-                </TooltipTrigger>
-                <TooltipContent side="right">
-                  <p>Save/Load</p>
-                </TooltipContent>
-              </Tooltip>
-            </TooltipProvider>
-          </div>
+          {renderSidebarButton(<HelpCircle className="h-5 w-5" />, "Help", () => setShowHelpOverlay(true))}
+          {renderSidebarButton(<Settings className="h-5 w-5" />, "Settings", () => setShowSettingsModal(true))}
+          {renderSidebarButton(<FileJson className="h-5 w-5" />, "Export JSON", handleExportJSON)}
+          {renderSidebarButton(<Save className="h-5 w-5" />, "Save/Load", handleSaveLoad)}
+          
           <div className="h-px bg-gray-700 my-4"></div>
+          
+          <AgenticFlowWizard
+            onCreateFlow={handleCreateAgenticFlow}
+            onClearDiagram={() => {
+              setNodes([]);
+              setEdges([]);
+            }}
+            onSaveFlow={handleExportJSON}
+          />
+
+          <div className="h-px bg-gray-700 my-4"></div>
+
           <Collapsible open={expandedCategories.basic} onOpenChange={() => toggleCategory('basic')}>
             <CollapsibleTrigger className="flex items-center w-full p-2 hover:bg-gray-700 rounded text-gray-300 hover:text-white">
               <PlusCircle className="h-5 w-5 mr-2" />
@@ -247,56 +221,11 @@ const WorkflowEditor = () => {
               {sidebarExpanded && <ChevronDown className={`h-4 w-4 transition-transform duration-200 ${expandedCategories.basic ? 'rotate-180' : ''}`} />}
             </CollapsibleTrigger>
             <CollapsibleContent className="space-y-2 pl-4">
-              <Button
-                variant="ghost"
-                size="sm"
-                className={`w-full justify-start text-gray-300 hover:text-white hover:bg-gray-700 ${selectedNodeType === 'assistant' ? 'bg-gray-700' : ''}`}
-                onDragStart={(event) => onDragStart(event, 'assistant')}
-                draggable
-              >
-                <Bot className="h-4 w-4 mr-2" />
-                {sidebarExpanded && <span>Assistant</span>}
-              </Button>
-              <Button
-                variant="ghost"
-                size="sm"
-                className={`w-full justify-start text-gray-300 hover:text-white hover:bg-gray-700 ${selectedNodeType === 'user' ? 'bg-gray-700' : ''}`}
-                onDragStart={(event) => onDragStart(event, 'user')}
-                draggable
-              >
-                <User className="h-4 w-4 mr-2" />
-                {sidebarExpanded && <span>User Proxy</span>}
-              </Button>
-              <Button
-                variant="ghost"
-                size="sm"
-                className={`w-full justify-start text-gray-300 hover:text-white hover:bg-gray-700 ${selectedNodeType === 'group' ? 'bg-gray-700' : ''}`}
-                onDragStart={(event) => onDragStart(event, 'group')}
-                draggable
-              >
-                <Users className="h-4 w-4 mr-2" />
-                {sidebarExpanded && <span>Group Chat</span>}
-              </Button>
-              <Button
-                variant="ghost"
-                size="sm"
-                className={`w-full justify-start text-gray-300 hover:text-white hover:bg-gray-700 ${selectedNodeType === 'note' ? 'bg-gray-700' : ''}`}
-                onDragStart={(event) => onDragStart(event, 'note')}
-                draggable
-              >
-                <StickyNote className="h-4 w-4 mr-2" />
-                {sidebarExpanded && <span>Note</span>}
-              </Button>
-              <Button
-                variant="ghost"
-                size="sm"
-                className={`w-full justify-start text-gray-300 hover:text-white hover:bg-gray-700 ${selectedNodeType === 'initializer' ? 'bg-gray-700' : ''}`}
-                onDragStart={(event) => onDragStart(event, 'initializer')}
-                draggable
-              >
-                <Cog className="h-4 w-4 mr-2" />
-                {sidebarExpanded && <span>Config</span>}
-              </Button>
+              {renderNodeTypeButton(<Bot className="h-4 w-4" />, "Assistant", "assistant")}
+              {renderNodeTypeButton(<User className="h-4 w-4" />, "User Proxy", "user")}
+              {renderNodeTypeButton(<Users className="h-4 w-4" />, "Group Chat", "group")}
+              {renderNodeTypeButton(<StickyNote className="h-4 w-4" />, "Note", "note")}
+              {renderNodeTypeButton(<Cog className="h-4 w-4" />, "Config", "initializer")}
             </CollapsibleContent>
           </Collapsible>
           <Collapsible open={expandedCategories.advanced} onOpenChange={() => toggleCategory('advanced')}>
@@ -314,20 +243,8 @@ const WorkflowEditor = () => {
             </CollapsibleTrigger>
           </Collapsible>
         </div>
-        <div className="mt-auto pt-4 space-y-2 border-t border-gray-700 px-4 pb-4">
-          <WizardDialog onAddNode={addNode} />
-          <AgenticFlowWizard
-            onCreateFlow={handleCreateAgenticFlow}
-            onClearDiagram={() => {
-              setNodes([]);
-              setEdges([]);
-            }}
-            onSaveFlow={handleExportJSON}
-          />
-        </div>
       </div>
 
-      {/* Main Content Area */}
       <div className={`flex-grow transition-all duration-300 ${sidebarExpanded ? 'ml-64' : 'ml-16'}`}>
         <ReactFlow
           nodes={nodes}
