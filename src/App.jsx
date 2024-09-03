@@ -10,6 +10,7 @@ import UserProfile from "./pages/UserProfile";
 import ImageUpload from "./pages/ImageUpload";
 import WorkflowEditor from "./components/WorkflowEditor";
 import EmailConfirmation from "./pages/EmailConfirmation";
+import AuthCallback from "./pages/AuthCallback";
 
 const queryClient = new QueryClient();
 
@@ -28,6 +29,7 @@ const App = () => (
             <Route path="/editor" element={<WorkflowEditor />} />
             <Route path="/logout" element={<Navigate to="/" replace />} />
             <Route path="/email-confirmation" element={<EmailConfirmation />} />
+            <Route path="/auth/callback" element={<AuthCallback />} />
           </Routes>
         </BrowserRouter>
       </TooltipProvider>
