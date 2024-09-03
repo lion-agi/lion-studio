@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useToast } from "@/components/ui/use-toast";
+import { LogOut } from 'lucide-react';
 
 const UserProfile = () => {
   const { session, logout } = useSupabaseAuth();
@@ -103,7 +104,7 @@ const UserProfile = () => {
   const handleLogout = async () => {
     try {
       await logout();
-      navigate('/login');
+      navigate('/');
     } catch (error) {
       toast({
         title: "Error",
@@ -174,7 +175,10 @@ const UserProfile = () => {
           <Button onClick={loadMoreImages} className="mt-4">Load More</Button>
         )}
       </div>
-      <Button variant="outline" className="mt-8" onClick={handleLogout}>Log out</Button>
+      <Button variant="outline" className="mt-8" onClick={handleLogout}>
+        <LogOut className="mr-2 h-4 w-4" />
+        Log out
+      </Button>
     </div>
   );
 };

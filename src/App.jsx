@@ -1,7 +1,7 @@
 import { Toaster } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { SupabaseAuthProvider } from "./integrations/supabase";
 import Index from "./pages/Index";
 import Registration from "./pages/Registration";
@@ -25,6 +25,7 @@ const App = () => (
             <Route path="/profile" element={<UserProfile />} />
             <Route path="/upload" element={<ImageUpload />} />
             <Route path="/editor" element={<WorkflowEditor />} />
+            <Route path="/logout" element={<Navigate to="/" replace />} />
           </Routes>
         </BrowserRouter>
       </TooltipProvider>
