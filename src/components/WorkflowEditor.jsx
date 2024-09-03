@@ -16,6 +16,7 @@ import SettingsModal from './SettingsModal';
 import JSONModal from './JSONModal';
 import SaveLoadDialog from './SaveLoadDialog';
 import AgenticFlowWizard from './AgenticFlowWizard';
+import WizardDialog from './WizardDialog';
 import { nodeTypes } from './nodes';
 
 const WorkflowEditor = () => {
@@ -26,6 +27,8 @@ const WorkflowEditor = () => {
   const [showSettingsModal, setShowSettingsModal] = useState(false);
   const [showJSONModal, setShowJSONModal] = useState(false);
   const [showSaveLoadDialog, setShowSaveLoadDialog] = useState(false);
+  const [showNodeWizard, setShowNodeWizard] = useState(false);
+  const [nodeWizardType, setNodeWizardType] = useState('');
   const [expandedCategories, setExpandedCategories] = useState({
     basic: true,
     advanced: false,
@@ -42,12 +45,12 @@ const WorkflowEditor = () => {
     }, eds));
   }, [setEdges]);
 
-  const addNode = useCallback((type) => {
+  const addNode = useCallback((nodeData) => {
     const newNode = {
-      id: `${type}-${nodes.length + 1}`,
-      type,
+      id: `${nodeData.type}-${nodes.length + 1}`,
+      type: nodeData.type,
       position: { x: Math.random() * 500, y: Math.random() * 500 },
-      data: { label: `${type.charAt(0).toUpperCase() + type.slice(1)} Node` },
+      data: { label: nodeData.name, ...nodeData },
     };
     setNodes((nds) => nds.concat(newNode));
   }, [nodes, setNodes]);
@@ -106,6 +109,11 @@ const WorkflowEditor = () => {
     // Implement the logic to create a new flow based on the configuration
   };
 
+  const handleOpenNodeWizard = (nodeType) => {
+    setNodeWizardType(nodeType);
+    setShowNodeWizard(true);
+  };
+
   return (
     <div className="h-screen flex bg-gradient-to-br from-gray-900 to-gray-800 text-white relative">
       <Sidebar
@@ -118,10 +126,10 @@ const WorkflowEditor = () => {
         onExportJSONClick={handleExportJSON}
         onSaveLoadClick={handleSaveLoad}
         onCreateAgenticFlow={handleCreateAgenticFlow}
-        addNode={addNode}
+        onOpenNodeWizard={handleOpenNodeWizard}
       />
 
-      <div className={`flex-grow transition-all duration-300 ${sidebarExpanded ? 'ml-64' : 'ml-16'}`}>
+      <div className={`flex-grow transition-all duration-300 ${sidebarExpanded ? 'ml-64' : 'ml-20'}`}>
         <ReactFlow
           nodes={nodes}
           edges={edges}
@@ -175,6 +183,14 @@ const WorkflowEditor = () => {
             setShowSaveLoadDialog(false);
           }}
           graphData={{ nodes, edges }}
+        />
+      )}
+      {showNodeWizard && (
+        <WizardDialog
+          isOpen={showNodeWizard}
+          onClose={() => setShowNodeWizard(false)}
+          onAddNode={addNode}
+          nodeType={nodeWizardType}
         />
       )}
     </div>

@@ -15,7 +15,7 @@ const Sidebar = ({
   onExportJSONClick, 
   onSaveLoadClick,
   onCreateAgenticFlow,
-  addNode
+  onOpenNodeWizard
 }) => {
   return (
     <div className={`left-sidebar ${sidebarExpanded ? 'w-64' : 'w-20'} bg-gray-800 flex flex-col transition-all duration-300 border-r border-gray-700 fixed left-0 top-0 bottom-0 overflow-hidden`}>
@@ -41,11 +41,11 @@ const Sidebar = ({
           onToggle={() => toggleCategory('basic')}
           sidebarExpanded={sidebarExpanded}
         >
-          <NodeTypeButton icon={<Bot className="h-5 w-5" />} label="Assistant" onClick={() => addNode('assistant')} expanded={sidebarExpanded} />
-          <NodeTypeButton icon={<User className="h-5 w-5" />} label="User Proxy" onClick={() => addNode('user')} expanded={sidebarExpanded} />
-          <NodeTypeButton icon={<Users className="h-5 w-5" />} label="Group Chat" onClick={() => addNode('group')} expanded={sidebarExpanded} />
-          <NodeTypeButton icon={<StickyNote className="h-5 w-5" />} label="Note" onClick={() => addNode('note')} expanded={sidebarExpanded} />
-          <NodeTypeButton icon={<Cog className="h-5 w-5" />} label="Config" onClick={() => addNode('initializer')} expanded={sidebarExpanded} />
+          <NodeTypeButton icon={<Bot className="h-6 w-6" />} label="Assistant" onClick={() => onOpenNodeWizard('assistant')} expanded={sidebarExpanded} />
+          <NodeTypeButton icon={<User className="h-6 w-6" />} label="User Proxy" onClick={() => onOpenNodeWizard('user')} expanded={sidebarExpanded} />
+          <NodeTypeButton icon={<Users className="h-6 w-6" />} label="Group Chat" onClick={() => onOpenNodeWizard('group')} expanded={sidebarExpanded} />
+          <NodeTypeButton icon={<StickyNote className="h-6 w-6" />} label="Note" onClick={() => onOpenNodeWizard('note')} expanded={sidebarExpanded} />
+          <NodeTypeButton icon={<Cog className="h-6 w-6" />} label="Config" onClick={() => onOpenNodeWizard('initializer')} expanded={sidebarExpanded} />
         </NodeCategory>
 
         <NodeCategory
