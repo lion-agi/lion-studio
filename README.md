@@ -1,18 +1,25 @@
-# Welcome to your GPT Engineer project
+# Welcome to Lion Studio
 
 ## Project info
 
-**Project**: clever-paw-automation
+**Project**: Lion Studio
 
-**URL**: https://run.gptengineer.app/projects/cb26dce4-e3a1-41fb-90e7-d596eabc0340/improve
+**URL**: https://github.com/lion-agi/lion-studio
+
+
+![demo1](./public/demo1.jpg)
+
 
 ## How can I edit this code?
 
 There are several ways of editing your application.
 
+
+
+
 **Use GPT Engineer**
 
-Simply visit the GPT Engineer project at [GPT Engineer](https://gptengineer.app/projects/cb26dce4-e3a1-41fb-90e7-d596eabc0340/improve) and start prompting.
+Simply visit the GPT Engineer project at [GPT Engineer](https://gptengineer.app) and start prompting.
 
 Changes made via gptengineer.app will be committed automatically to this repo.
 
@@ -25,16 +32,11 @@ The only requirement is having Node.js & npm installed - [install with nvm](http
 Follow these steps:
 
 ```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
-
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
-
-# Step 3: Install the necessary dependencies.
+git clone https://github.com/lion-agi/lion-studio.git
+cd lion-studio
 npm i
 
-# Step 4: Start the development server with auto-reloading and an instant preview.
+# This will run a dev server with auto reloading and an instant preview.
 npm run dev
 ```
 
@@ -54,19 +56,54 @@ npm run dev
 
 ## What technologies are used for this project?
 
-This project is built with .
+This project is built with:
 
 - Vite
 - React
 - shadcn-ui
 - Tailwind CSS
+- Supabase (for backend and authentication)
+- React Flow (for workflow editor)
 
 ## How can I deploy this project?
 
 All GPT Engineer projects can be deployed directly via the GPT Engineer app.
 
-Simply visit your project at [GPT Engineer](https://gptengineer.app/projects/cb26dce4-e3a1-41fb-90e7-d596eabc0340/improve) and click on Share -> Publish.
+Simply visit your project at [GPT Engineer](https://gptengineer.app) and click on Share -> Publish.
 
 ## I want to use a custom domain - is that possible?
 
-We don't support custom domains (yet). If you want to deploy your project under your own domain then we recommend using Netlify. Visit our docs for more details: [Custom domains](https://docs.gptengineer.app/tips-tricks/custom-domain/)
+We don't support custom domains (yet). If you want to deploy your project under your own domain then we recommend using Netlify or GitHub pages. Visit our docs for more details: [Custom domains](https://docs.gptengineer.app/tips-tricks/custom-domain/)
+
+## Features
+
+Lion Studio offers the following key features:
+
+- Intelligent Workflow Automation
+- AI-Powered Workflow Editor
+- User Authentication and Profile Management
+- Image Upload and Gallery
+- Customizable Node Types for Workflows
+
+## Getting Started
+
+To get started with Lion Studio:
+
+1. Clone the repository
+2. Install dependencies with `npm install`
+3. Set up your Supabase project and update the environment variables
+4. Run the development server with `npm run dev`
+
+For more detailed instructions, please refer to our documentation.
+
+## Contributing
+
+We welcome contributions to Lion Studio! Please read our contributing guidelines before submitting pull requests.
+
+## License
+
+[Your chosen license]
+
+## Contact
+
+For any queries or support, please contact [Your contact information].
