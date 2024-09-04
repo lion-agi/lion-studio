@@ -29,10 +29,10 @@ const JSONModal = ({ isOpen, onClose, jsonData }) => {
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="sm:max-w-[800px] h-[80vh] flex flex-col">
         <DialogHeader>
-          <DialogTitle>Exported JSON</DialogTitle>
+          <DialogTitle>Workflow JSON Schema</DialogTitle>
         </DialogHeader>
         <ScrollArea className="flex-grow mt-4 border rounded-md p-4">
-          <pre className="text-sm">
+          <pre className="text-sm whitespace-pre-wrap">
             {JSON.stringify(jsonData, null, 2)}
           </pre>
         </ScrollArea>
