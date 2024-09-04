@@ -11,7 +11,7 @@ const UserNode = ({ data, selected }) => {
   return (
     <Card className={`node-card w-64 bg-gradient-to-br from-blue-400/20 to-blue-300/10 backdrop-blur-sm ${selected ? 'selected' : ''}`}>
       <CardHeader className="node-header bg-blue-500/30 relative" onClick={() => setIsExpanded(!isExpanded)}>
-        <CardTitle className="text-blue-800 font-bold flex items-center">
+        <CardTitle className="text-accent-foreground font-bold flex items-center">
           <User className="w-5 h-5 mr-2" />
           {data.label}
         </CardTitle>
