@@ -12,6 +12,7 @@ const SaveLoadDialog = ({ isOpen, onClose, onSave, onLoad, graphData }) => {
   const [description, setDescription] = useState('');
   const [savedGraphs, setSavedGraphs] = useState([]);
   const [selectedGraph, setSelectedGraph] = useState('');
+  const [fileContent, setFileContent] = useState(null);
 
   useEffect(() => {
     const graphs = JSON.parse(localStorage.getItem('savedGraphs') || '[]');
@@ -33,10 +34,30 @@ const SaveLoadDialog = ({ isOpen, onClose, onSave, onLoad, graphData }) => {
   };
 
   const handleLoad = () => {
-    const graphToLoad = savedGraphs.find(graph => graph.name === selectedGraph);
-    if (graphToLoad) {
-      onLoad(graphToLoad.data);
-      onClose();
+    if (fileContent) {
+      onLoad(fileContent);
+    } else if (selectedGraph) {
+      const graphToLoad = savedGraphs.find(graph => graph.name === selectedGraph);
+      if (graphToLoad) {
+        onLoad(graphToLoad.data);
+      }
+    }
+    onClose();
+  };
+
+  const handleFileUpload = (event) => {
+    const file = event.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        try {
+          const content = JSON.parse(e.target.result);
+          setFileContent(content);
+        } catch (error) {
+          console.error('Error parsing JSON file:', error);
+        }
+      };
+      reader.readAsText(file);
     }
   };
 
@@ -81,21 +102,33 @@ const SaveLoadDialog = ({ isOpen, onClose, onSave, onLoad, graphData }) => {
               </div>
             </>
           ) : (
-            <div className="grid grid-cols-4 items-center gap-4">
-              <Label htmlFor="loadGraph" className="text-right">Select Graph</Label>
-              <Select onValueChange={setSelectedGraph} defaultValue={selectedGraph}>
-                <SelectTrigger className="col-span-3">
-                  <SelectValue placeholder="Select a graph to load" />
-                </SelectTrigger>
-                <SelectContent>
-                  {savedGraphs.map((graph) => (
-                    <SelectItem key={graph.name} value={graph.name}>
-                      {graph.name}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
+            <>
+              <div className="grid grid-cols-4 items-center gap-4">
+                <Label htmlFor="loadGraph" className="text-right">Select Graph</Label>
+                <Select onValueChange={setSelectedGraph} defaultValue={selectedGraph}>
+                  <SelectTrigger className="col-span-3">
+                    <SelectValue placeholder="Select a graph to load" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {savedGraphs.map((graph) => (
+                      <SelectItem key={graph.name} value={graph.name}>
+                        {graph.name}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+              <div className="grid grid-cols-4 items-center gap-4">
+                <Label htmlFor="fileUpload" className="text-right">Upload File</Label>
+                <Input
+                  id="fileUpload"
+                  type="file"
+                  accept=".json"
+                  onChange={handleFileUpload}
+                  className="col-span-3"
+                />
+              </div>
+            </>
           )}
         </div>
         <div className="flex justify-end mt-4">

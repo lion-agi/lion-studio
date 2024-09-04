@@ -72,12 +72,19 @@ const WorkflowEditor = () => {
     return null;
   }, [reactFlowInstance]);
 
+  const handleLoadGraph = (graphData) => {
+    if (graphData && graphData.nodes && graphData.edges) {
+      setNodes(graphData.nodes);
+      setEdges(graphData.edges);
+    }
+  };
+
   return (
     <div className="h-screen flex flex-col bg-gradient-to-br from-gray-900 to-gray-800 text-white">
       <div className="flex flex-grow overflow-hidden">
         <LeftSidebar
           onExportJSON={exportToJson}
-          onSaveLoad={handleSaveLoad}
+          onSaveLoad={() => setShowSaveLoadDialog(true)}
           onCreateAgenticFlow={handleCreateAgenticFlow}
           onShowHelp={() => setShowHelpOverlay(true)}
           onShowSettings={() => setShowSettingsModal(true)}
@@ -127,6 +134,15 @@ const WorkflowEditor = () => {
           <NodeCreationCard onAddNode={addNode} />
         </div>
       </div>
+      {showSaveLoadDialog && (
+        <SaveLoadDialog
+          isOpen={showSaveLoadDialog}
+          onClose={() => setShowSaveLoadDialog(false)}
+          onSave={handleSaveLoad}
+          onLoad={handleLoadGraph}
+          graphData={{ nodes, edges }}
+        />
+      )}
     </div>
   );
 };
