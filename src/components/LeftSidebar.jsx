@@ -7,16 +7,12 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 
 const LeftSidebar = ({ onExportJSON, onSaveLoad, onCreateAgenticFlow, onShowHelp }) => {
   const { toast } = useToast();
   const [showSettingsDialog, setShowSettingsDialog] = useState(false);
   const [darkMode, setDarkMode] = useState(false);
   const [autoSave, setAutoSave] = useState(false);
-  const [activeSidebar, setActiveSidebar] = useState(null);
 
   const handleSave = useCallback(() => {
     const jsonContent = onExportJSON();
@@ -80,10 +76,7 @@ const LeftSidebar = ({ onExportJSON, onSaveLoad, onCreateAgenticFlow, onShowHelp
           <Button
             variant="ghost"
             size="icon"
-            onClick={() => {
-              onClick();
-              setActiveSidebar(label);
-            }}
+            onClick={onClick}
             className="hover:bg-gray-700 active:bg-gray-600"
             aria-label={ariaLabel}
           >
@@ -97,73 +90,14 @@ const LeftSidebar = ({ onExportJSON, onSaveLoad, onCreateAgenticFlow, onShowHelp
     </TooltipProvider>
   ), []);
 
-  const renderSecondSidebar = () => {
-    switch (activeSidebar) {
-      case "Save Workflow":
-        return (
-          <CollapsibleContent className="p-4 bg-gray-800 w-64">
-            <h3 className="text-lg font-semibold mb-4">Save Options</h3>
-            <Input className="mb-4" placeholder="Workflow Name" />
-            <Textarea className="mb-4" placeholder="Description" />
-            <Button onClick={handleSave} className="w-full">Save Workflow</Button>
-          </CollapsibleContent>
-        );
-      case "Upload/Load Workflow":
-        return (
-          <CollapsibleContent className="p-4 bg-gray-800 w-64">
-            <h3 className="text-lg font-semibold mb-4">Load Workflow</h3>
-            <Button onClick={handleUpload} className="w-full mb-4">Choose File</Button>
-            <Alert>
-              <AlertDescription>Select a JSON file to load a saved workflow.</AlertDescription>
-            </Alert>
-          </CollapsibleContent>
-        );
-      case "Create New Flow":
-        return (
-          <CollapsibleContent className="p-4 bg-gray-800 w-64">
-            <h3 className="text-lg font-semibold mb-4">New Flow</h3>
-            <Input className="mb-4" placeholder="Flow Name" />
-            <Button onClick={onCreateAgenticFlow} className="w-full">Create Flow</Button>
-          </CollapsibleContent>
-        );
-      case "Check JSON Schema":
-        return (
-          <CollapsibleContent className="p-4 bg-gray-800 w-64">
-            <h3 className="text-lg font-semibold mb-4">JSON Schema</h3>
-            <Button onClick={handleCheckJSON} className="w-full mb-4">Validate Schema</Button>
-            <Alert>
-              <AlertDescription>Click to validate the current workflow's JSON schema.</AlertDescription>
-            </Alert>
-          </CollapsibleContent>
-        );
-      case "Help":
-        return (
-          <CollapsibleContent className="p-4 bg-gray-800 w-64">
-            <h3 className="text-lg font-semibold mb-4">Help</h3>
-            <Alert>
-              <AlertDescription>Need assistance? Check our documentation or contact support.</AlertDescription>
-            </Alert>
-            <Button onClick={onShowHelp} className="w-full mt-4">View Documentation</Button>
-          </CollapsibleContent>
-        );
-      default:
-        return null;
-    }
-  };
-
   return (
-    <Collapsible>
-      <div className="flex">
-        <div className="w-16 bg-gray-800 p-2 flex flex-col items-center space-y-4">
-          {renderButton(<Save className="h-6 w-6 text-gray-300" />, "Save Workflow", handleSave, "Save Workflow")}
-          {renderButton(<Upload className="h-6 w-6 text-gray-300" />, "Upload/Load Workflow", handleUpload, "Upload/Load Workflow")}
-          {renderButton(<PlusCircle className="h-6 w-6 text-gray-300" />, "Create New Flow", onCreateAgenticFlow, "Create New Flow")}
-          {renderButton(<FileJson className="h-6 w-6 text-gray-300" />, "Check JSON Schema", handleCheckJSON, "Check JSON Schema")}
-          {renderButton(<HelpCircle className="h-6 w-6 text-gray-300" />, "Help", onShowHelp, "Help")}
-          {renderButton(<Settings className="h-6 w-6 text-gray-300" />, "Settings", () => setShowSettingsDialog(true), "Settings")}
-        </div>
-        {renderSecondSidebar()}
-      </div>
+    <div className="w-16 bg-gray-800 p-2 flex flex-col items-center space-y-4">
+      {renderButton(<Save className="h-6 w-6 text-gray-300" />, "Save Workflow", handleSave, "Save Workflow")}
+      {renderButton(<Upload className="h-6 w-6 text-gray-300" />, "Upload/Load Workflow", handleUpload, "Upload/Load Workflow")}
+      {renderButton(<PlusCircle className="h-6 w-6 text-gray-300" />, "Create New Flow", onCreateAgenticFlow, "Create New Flow")}
+      {renderButton(<FileJson className="h-6 w-6 text-gray-300" />, "Check JSON Schema", handleCheckJSON, "Check JSON Schema")}
+      {renderButton(<HelpCircle className="h-6 w-6 text-gray-300" />, "Help", onShowHelp, "Help")}
+      {renderButton(<Settings className="h-6 w-6 text-gray-300" />, "Settings", () => setShowSettingsDialog(true), "Settings")}
 
       <Dialog open={showSettingsDialog} onOpenChange={setShowSettingsDialog}>
         <DialogContent>
@@ -190,7 +124,7 @@ const LeftSidebar = ({ onExportJSON, onSaveLoad, onCreateAgenticFlow, onShowHelp
           </div>
         </DialogContent>
       </Dialog>
-    </Collapsible>
+    </div>
   );
 };
 
