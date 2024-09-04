@@ -10,7 +10,7 @@ const tabs = [
   { name: 'Fine-tuning', href: '/fine-tuning' },
   { name: 'Knowledge bases', href: '/knowledge-bases' },
   { name: 'Evaluations', href: '/evaluations' },
-  { name: 'Editor', href: '/editor' }, // New tab for the editor
+  { name: 'Editor', href: '/editor' },
 ];
 
 const TopNavigation = React.memo(() => {

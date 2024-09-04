@@ -1,141 +1,98 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
-import { ChevronLeft, ChevronRight, ChevronDown, HelpCircle, Settings, FileJson, Save, Bot, User, Users, StickyNote, Cog, Plus } from 'lucide-react';
+import { ChevronDown, Search, Bot, User, Users, StickyNote, Cog, Plus, Database, Workflow, Zap } from 'lucide-react';
 
-const Sidebar = ({ 
-  sidebarExpanded, 
-  toggleSidebar, 
-  expandedCategories, 
-  toggleCategory, 
-  onHelpClick, 
-  onSettingsClick, 
-  onExportJSONClick, 
-  onSaveLoadClick,
-  onCreateAgenticFlow,
-  onOpenNodeWizard
-}) => {
+const nodeCategories = [
+  {
+    name: 'Basic',
+    nodes: [
+      { type: 'assistant', icon: <Bot />, label: 'Assistant' },
+      { type: 'user', icon: <User />, label: 'User Proxy' },
+      { type: 'group', icon: <Users />, label: 'Group Chat' },
+      { type: 'note', icon: <StickyNote />, label: 'Note' },
+      { type: 'initializer', icon: <Cog />, label: 'Config' },
+    ]
+  },
+  {
+    name: 'Advanced',
+    nodes: [
+      { type: 'database', icon: <Database />, label: 'Database' },
+      { type: 'workflow', icon: <Workflow />, label: 'Nested Workflow' },
+      { type: 'api', icon: <Zap />, label: 'API Call' },
+    ]
+  }
+];
+
+const Sidebar = ({ onAddNode }) => {
+  const [searchTerm, setSearchTerm] = useState('');
+  const [expandedCategories, setExpandedCategories] = useState({});
+
+  const toggleCategory = (category) => {
+    setExpandedCategories(prev => ({
+      ...prev,
+      [category]: !prev[category]
+    }));
+  };
+
+  const filteredCategories = nodeCategories.map(category => ({
+    ...category,
+    nodes: category.nodes.filter(node =>
+      node.label.toLowerCase().includes(searchTerm.toLowerCase())
+    )
+  })).filter(category => category.nodes.length > 0);
+
+  const handleDragStart = (e, nodeType) => {
+    e.dataTransfer.setData('application/reactflow', nodeType);
+    e.dataTransfer.effectAllowed = 'move';
+  };
+
   return (
-    <div className={`sidebar ${sidebarExpanded ? 'w-64' : 'w-16'} bg-gray-800 flex flex-col transition-all duration-300 border-r border-gray-700 h-full overflow-hidden`}>
-      <Button variant="ghost" size="icon" onClick={toggleSidebar} className="self-end mb-4 text-gray-400 hover:text-white">
-        {sidebarExpanded ? <ChevronLeft className="h-6 w-6" /> : <ChevronRight className="h-6 w-6" />}
-      </Button>
-      <div className="flex-grow space-y-2 overflow-y-auto px-4">
-        <SidebarButton icon={<HelpCircle className="h-6 w-6" />} label="Help" onClick={onHelpClick} expanded={sidebarExpanded} />
-        <SidebarButton icon={<Settings className="h-6 w-6" />} label="Settings" onClick={onSettingsClick} expanded={sidebarExpanded} />
-        <SidebarButton icon={<FileJson className="h-6 w-6" />} label="Export JSON" onClick={onExportJSONClick} expanded={sidebarExpanded} />
-        <SidebarButton icon={<Save className="h-6 w-6" />} label="Save/Load" onClick={onSaveLoadClick} expanded={sidebarExpanded} />
-        
-        <div className="h-px bg-gray-700 my-4"></div>
-        
-        <SidebarButton icon={<Plus className="h-6 w-6" />} label="New Agentic Flow" onClick={onCreateAgenticFlow} expanded={sidebarExpanded} />
-
-        <div className="h-px bg-gray-700 my-4"></div>
-
-        <NodeCategory
-          name="Basic Nodes"
-          icon={<Plus className="h-6 w-6 mr-2" />}
-          expanded={expandedCategories.basic}
-          onToggle={() => toggleCategory('basic')}
-          sidebarExpanded={sidebarExpanded}
+    <div className="bg-gray-800 text-white p-4 overflow-y-auto max-h-[calc(100vh-64px)]">
+      <Input
+        type="text"
+        placeholder="Search nodes..."
+        value={searchTerm}
+        onChange={(e) => setSearchTerm(e.target.value)}
+        className="mb-4 bg-gray-700 text-white"
+      />
+      {filteredCategories.map((category) => (
+        <Collapsible
+          key={category.name}
+          open={expandedCategories[category.name]}
+          onOpenChange={() => toggleCategory(category.name)}
         >
-          <NodeTypeButton icon={<Bot className="h-6 w-6" />} label="Assistant" onClick={() => onOpenNodeWizard('assistant')} expanded={sidebarExpanded} />
-          <NodeTypeButton icon={<User className="h-6 w-6" />} label="User Proxy" onClick={() => onOpenNodeWizard('user')} expanded={sidebarExpanded} />
-          <NodeTypeButton icon={<Users className="h-6 w-6" />} label="Group Chat" onClick={() => onOpenNodeWizard('group')} expanded={sidebarExpanded} />
-          <NodeTypeButton icon={<StickyNote className="h-6 w-6" />} label="Note" onClick={() => onOpenNodeWizard('note')} expanded={sidebarExpanded} />
-          <NodeTypeButton icon={<Cog className="h-6 w-6" />} label="Config" onClick={() => onOpenNodeWizard('initializer')} expanded={sidebarExpanded} />
-        </NodeCategory>
-
-        <NodeCategory
-          name="Advanced Nodes"
-          icon={<Bot className="h-6 w-6 mr-2" />}
-          expanded={expandedCategories.advanced}
-          onToggle={() => toggleCategory('advanced')}
-          sidebarExpanded={sidebarExpanded}
-        >
-          {/* Add advanced nodes here */}
-        </NodeCategory>
-
-        <NodeCategory
-          name="Extensions"
-          icon={<Plus className="h-6 w-6 mr-2" />}
-          expanded={expandedCategories.extensions}
-          onToggle={() => toggleCategory('extensions')}
-          sidebarExpanded={sidebarExpanded}
-        >
-          {/* Add extension nodes here */}
-        </NodeCategory>
-      </div>
+          <CollapsibleTrigger className="flex items-center justify-between w-full p-2 bg-gray-700 rounded-md mb-2">
+            <span>{category.name}</span>
+            <ChevronDown className={`h-4 w-4 transition-transform duration-200 ${expandedCategories[category.name] ? 'rotate-180' : ''}`} />
+          </CollapsibleTrigger>
+          <CollapsibleContent>
+            {category.nodes.map((node) => (
+              <TooltipProvider key={node.type}>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <div
+                      className="flex items-center p-2 hover:bg-gray-700 rounded-md cursor-move mb-2"
+                      draggable
+                      onDragStart={(e) => handleDragStart(e, node.type)}
+                    >
+                      {node.icon}
+                      <span className="ml-2">{node.label}</span>
+                    </div>
+                  </TooltipTrigger>
+                  <TooltipContent side="right">
+                    <p>Drag to add {node.label}</p>
+                  </TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
+            ))}
+          </CollapsibleContent>
+        </Collapsible>
+      ))}
     </div>
   );
 };
-
-const SidebarButton = ({ icon, label, onClick, expanded }) => (
-  <TooltipProvider>
-    <Tooltip>
-      <TooltipTrigger asChild>
-        <Button
-          variant="ghost"
-          size="sm"
-          className={`w-full justify-start text-gray-300 hover:text-white hover:bg-gray-700 ${expanded ? '' : 'px-2'}`}
-          onClick={onClick}
-        >
-          {React.cloneElement(icon, { className: `h-6 w-6 ${expanded ? 'mr-2' : ''}` })}
-          {expanded && <span>{label}</span>}
-        </Button>
-      </TooltipTrigger>
-      <TooltipContent side="right">
-        <p>{label}</p>
-      </TooltipContent>
-    </Tooltip>
-  </TooltipProvider>
-);
-
-const NodeCategory = ({ name, icon, expanded, onToggle, sidebarExpanded, children }) => (
-  <Collapsible open={expanded} onOpenChange={onToggle}>
-    <CollapsibleTrigger className={`flex items-center w-full p-2 hover:bg-gray-700 rounded text-gray-300 hover:text-white ${sidebarExpanded ? '' : 'justify-center'}`}>
-      {React.cloneElement(icon, { className: `h-6 w-6 ${sidebarExpanded ? 'mr-2' : ''}` })}
-      {sidebarExpanded && <span className="flex-grow">{name}</span>}
-      {sidebarExpanded && <ChevronDown className={`h-4 w-4 transition-transform duration-200 ${expanded ? 'rotate-180' : ''}`} />}
-    </CollapsibleTrigger>
-    <CollapsibleContent className={`space-y-2 ${sidebarExpanded ? 'pl-4' : 'pl-0'}`}>
-      {children}
-    </CollapsibleContent>
-  </Collapsible>
-);
-
-const NodeTypeButton = ({ icon, label, onClick, expanded }) => (
-  <TooltipProvider>
-    <Tooltip>
-      <TooltipTrigger asChild>
-        <div className="flex items-center">
-          <Button
-            variant="ghost"
-            size="sm"
-            className={`flex-grow justify-start text-gray-300 hover:text-white hover:bg-gray-700 ${expanded ? '' : 'px-2'}`}
-          >
-            {React.cloneElement(icon, { className: `h-6 w-6 ${expanded ? 'mr-2' : ''}` })}
-            {expanded && <span className="flex-grow">{label}</span>}
-          </Button>
-          <Button
-            variant="ghost"
-            size="sm"
-            className="px-2 text-gray-300 hover:text-white hover:bg-gray-700"
-            onClick={(e) => {
-              e.stopPropagation();
-              onClick();
-            }}
-          >
-            <Plus className="h-4 w-4" />
-          </Button>
-        </div>
-      </TooltipTrigger>
-      <TooltipContent side="right">
-        <p>Add {label}</p>
-      </TooltipContent>
-    </Tooltip>
-  </TooltipProvider>
-);
 
 export default Sidebar;
