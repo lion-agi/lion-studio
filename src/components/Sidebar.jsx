@@ -17,7 +17,7 @@ const Sidebar = ({
   onOpenNodeWizard
 }) => {
   return (
-    <div className={`left-sidebar ${sidebarExpanded ? 'w-64' : 'w-20'} bg-gray-800 flex flex-col transition-all duration-300 border-r border-gray-700 fixed left-0 top-0 bottom-0 overflow-hidden`}>
+    <div className={`sidebar ${sidebarExpanded ? 'w-64' : 'w-16'} bg-gray-800 flex flex-col transition-all duration-300 border-r border-gray-700 h-full overflow-hidden`}>
       <Button variant="ghost" size="icon" onClick={toggleSidebar} className="self-end mb-4 text-gray-400 hover:text-white">
         {sidebarExpanded ? <ChevronLeft className="h-6 w-6" /> : <ChevronRight className="h-6 w-6" />}
       </Button>
