@@ -39,7 +39,7 @@ const WorkflowEditor = () => {
     handleCreateAgenticFlow,
     handleOpenNodeWizard,
     onNodeClick,
-  } = useWorkflowHandlers(nodes, setNodes, edges, setEdges, reactFlowInstance, sidebarExpanded, setSidebarExpanded);
+  } = useWorkflowHandlers(nodes, setNodes, edges, setEdges, reactFlowWrapper, reactFlowInstance, sidebarExpanded, setSidebarExpanded);
 
   const {
     showHelpOverlay,
@@ -67,8 +67,14 @@ const WorkflowEditor = () => {
           onShowSettings={() => setShowSettingsModal(true)}
         />
         <div className="flex-grow flex">
-          <Sidebar onAddNode={addNode} />
-          <div className="flex-grow">
+          <Sidebar
+            onAddNode={addNode}
+            expanded={sidebarExpanded}
+            toggleSidebar={toggleSidebar}
+            expandedCategories={expandedCategories}
+            toggleCategory={toggleCategory}
+          />
+          <div className="flex-grow" ref={reactFlowWrapper}>
             <ReactFlow
               nodes={nodes}
               edges={edges}
@@ -83,18 +89,23 @@ const WorkflowEditor = () => {
               fitView
             >
               <Controls />
-              <MiniMap nodeColor={(node) => {
-                switch (node.type) {
-                  case 'user': return '#3B82F6';
-                  case 'agent': return '#10B981';
-                  case 'assistant': return '#F59E0B';
-                  case 'group': return '#8B5CF6';
-                  case 'initializer': return '#EF4444';
-                  case 'nestedChat': return '#EC4899';
-                  case 'note': return '#6366F1';
-                  default: return '#64748B';
-                }
-              }} nodeStrokeWidth={3} zoomable pannable />
+              <MiniMap
+                nodeColor={(node) => {
+                  switch (node.type) {
+                    case 'user': return '#3B82F6';
+                    case 'agent': return '#10B981';
+                    case 'assistant': return '#F59E0B';
+                    case 'group': return '#8B5CF6';
+                    case 'initializer': return '#EF4444';
+                    case 'nestedChat': return '#EC4899';
+                    case 'note': return '#6366F1';
+                    default: return '#64748B';
+                  }
+                }}
+                nodeStrokeWidth={3}
+                zoomable
+                pannable
+              />
               <Background color="#4B5563" gap={16} />
             </ReactFlow>
           </div>
