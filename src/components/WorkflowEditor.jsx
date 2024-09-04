@@ -7,9 +7,9 @@ import ReactFlow, {
   useEdgesState,
 } from 'reactflow';
 import 'reactflow/dist/style.css';
-import Sidebar from './Sidebar';
 import LeftSidebar from './LeftSidebar';
 import SecondaryNavigation from './SecondaryNavigation';
+import NodeCreationCard from './NodeCreationCard';
 import { nodeTypes } from './nodes';
 import { useWorkflowState } from '../hooks/useWorkflowState';
 import { useWorkflowHandlers } from '../hooks/useWorkflowHandlers';
@@ -80,14 +80,7 @@ const WorkflowEditor = () => {
           isExpanded={isSecondaryNavExpanded}
           toggleExpanded={() => setIsSecondaryNavExpanded(!isSecondaryNavExpanded)}
         />
-        <div className="flex-grow flex">
-          <Sidebar
-            onAddNode={addNode}
-            expanded={sidebarExpanded}
-            toggleSidebar={toggleSidebar}
-            expandedCategories={expandedCategories}
-            toggleCategory={toggleCategory}
-          />
+        <div className="flex-grow flex relative">
           <div className="flex-grow" ref={reactFlowWrapper}>
             <ReactFlow
               nodes={nodes}
@@ -123,6 +116,7 @@ const WorkflowEditor = () => {
               <Background color="#4B5563" gap={16} />
             </ReactFlow>
           </div>
+          <NodeCreationCard onAddNode={addNode} />
         </div>
       </div>
     </div>
