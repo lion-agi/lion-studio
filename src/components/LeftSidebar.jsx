@@ -7,10 +7,13 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { Alert, AlertDescription } from "@/components/ui/alert";
+import JSONModal from './JSONModal';
 
 const LeftSidebar = ({ onExportJSON, onSaveLoad, onCreateAgenticFlow, onShowHelp, onFeatureChange }) => {
   const { toast } = useToast();
   const [showSettingsDialog, setShowSettingsDialog] = useState(false);
+  const [showJSONModal, setShowJSONModal] = useState(false);
+  const [jsonContent, setJsonContent] = useState(null);
   const [darkMode, setDarkMode] = useState(false);
   const [autoSave, setAutoSave] = useState(false);
 
@@ -50,14 +53,9 @@ const LeftSidebar = ({ onExportJSON, onSaveLoad, onCreateAgenticFlow, onShowHelp
 
   const handleCheckJSON = useCallback(() => {
     const jsonContent = onExportJSON();
-    // Implement your JSON schema validation logic here
-    const isValid = validateJSONSchema(jsonContent);
-    if (isValid) {
-      toast({ title: "JSON Schema Valid", description: "The current workflow JSON schema is valid." });
-    } else {
-      toast({ title: "JSON Schema Invalid", description: "The current workflow JSON schema is invalid. Please check your workflow.", variant: "destructive" });
-    }
-  }, [onExportJSON, toast]);
+    setJsonContent(jsonContent);
+    setShowJSONModal(true);
+  }, [onExportJSON]);
 
   const handleSettingsChange = useCallback((setting, value) => {
     if (setting === 'darkMode') {
@@ -132,15 +130,14 @@ const LeftSidebar = ({ onExportJSON, onSaveLoad, onCreateAgenticFlow, onShowHelp
           </div>
         </DialogContent>
       </Dialog>
+
+      <JSONModal
+        isOpen={showJSONModal}
+        onClose={() => setShowJSONModal(false)}
+        jsonData={jsonContent}
+      />
     </div>
   );
-};
-
-// Helper function to validate JSON schema (implement your validation logic here)
-const validateJSONSchema = (jsonContent) => {
-  // Placeholder for JSON schema validation
-  // Replace this with actual validation logic
-  return true;
 };
 
 export default LeftSidebar;
