@@ -9,6 +9,7 @@ import ReactFlow, {
 import 'reactflow/dist/style.css';
 import Sidebar from './Sidebar';
 import LeftSidebar from './LeftSidebar';
+import SecondaryNavigation from './SecondaryNavigation';
 import { nodeTypes } from './nodes';
 import { useWorkflowState } from '../hooks/useWorkflowState';
 import { useWorkflowHandlers } from '../hooks/useWorkflowHandlers';
@@ -19,6 +20,8 @@ const WorkflowEditor = () => {
   const [edges, setEdges, onEdgesChange] = useEdgesState([]);
   const reactFlowWrapper = useRef(null);
   const [reactFlowInstance, setReactFlowInstance] = useState(null);
+  const [activeFeature, setActiveFeature] = useState('workflows');
+  const [isSecondaryNavExpanded, setIsSecondaryNavExpanded] = useState(true);
 
   const {
     sidebarExpanded,
@@ -56,6 +59,11 @@ const WorkflowEditor = () => {
     setNodeWizardType,
   } = useWorkflowModals();
 
+  const handleFeatureChange = (feature) => {
+    setActiveFeature(feature);
+    setIsSecondaryNavExpanded(true);
+  };
+
   return (
     <div className="h-screen flex flex-col bg-gradient-to-br from-gray-900 to-gray-800 text-white">
       <div className="flex flex-grow overflow-hidden">
@@ -65,6 +73,12 @@ const WorkflowEditor = () => {
           onCreateAgenticFlow={handleCreateAgenticFlow}
           onShowHelp={() => setShowHelpOverlay(true)}
           onShowSettings={() => setShowSettingsModal(true)}
+          onFeatureChange={handleFeatureChange}
+        />
+        <SecondaryNavigation
+          activeFeature={activeFeature}
+          isExpanded={isSecondaryNavExpanded}
+          toggleExpanded={() => setIsSecondaryNavExpanded(!isSecondaryNavExpanded)}
         />
         <div className="flex-grow flex">
           <Sidebar

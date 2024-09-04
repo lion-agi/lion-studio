@@ -1,14 +1,14 @@
 import React, { useState, useCallback } from 'react';
 import { Button } from "@/components/ui/button";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
-import { Save, Upload, PlusCircle, HelpCircle, Settings, FileJson } from 'lucide-react';
+import { Save, Upload, PlusCircle, HelpCircle, Settings, FileJson, Workflow, Zap, Link, MessageSquare, Brain, Database, Activity } from 'lucide-react';
 import { useToast } from "@/components/ui/use-toast";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 
-const LeftSidebar = ({ onExportJSON, onSaveLoad, onCreateAgenticFlow, onShowHelp }) => {
+const LeftSidebar = ({ onExportJSON, onSaveLoad, onCreateAgenticFlow, onShowHelp, onFeatureChange }) => {
   const { toast } = useToast();
   const [showSettingsDialog, setShowSettingsDialog] = useState(false);
   const [darkMode, setDarkMode] = useState(false);
@@ -92,6 +92,14 @@ const LeftSidebar = ({ onExportJSON, onSaveLoad, onCreateAgenticFlow, onShowHelp
 
   return (
     <div className="w-16 bg-gray-800 p-2 flex flex-col items-center space-y-4">
+      {renderButton(<Workflow className="h-6 w-6 text-gray-300" />, "Workflows", () => onFeatureChange('workflows'), "Workflows")}
+      {renderButton(<Zap className="h-6 w-6 text-gray-300" />, "Deployments", () => onFeatureChange('deployments'), "Deployments")}
+      {renderButton(<Link className="h-6 w-6 text-gray-300" />, "Connections", () => onFeatureChange('connections'), "Connections")}
+      {renderButton(<MessageSquare className="h-6 w-6 text-gray-300" />, "Prompts", () => onFeatureChange('prompts'), "Prompts")}
+      {renderButton(<Brain className="h-6 w-6 text-gray-300" />, "Fine-tuning", () => onFeatureChange('fine-tuning'), "Fine-tuning")}
+      {renderButton(<Database className="h-6 w-6 text-gray-300" />, "Knowledge bases", () => onFeatureChange('knowledge-bases'), "Knowledge bases")}
+      {renderButton(<Activity className="h-6 w-6 text-gray-300" />, "Evaluations", () => onFeatureChange('evaluations'), "Evaluations")}
+      <div className="border-t border-gray-700 w-full my-2"></div>
       {renderButton(<Save className="h-6 w-6 text-gray-300" />, "Save Workflow", handleSave, "Save Workflow")}
       {renderButton(<Upload className="h-6 w-6 text-gray-300" />, "Upload/Load Workflow", handleUpload, "Upload/Load Workflow")}
       {renderButton(<PlusCircle className="h-6 w-6 text-gray-300" />, "Create New Flow", onCreateAgenticFlow, "Create New Flow")}
