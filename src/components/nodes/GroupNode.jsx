@@ -9,8 +9,8 @@ const GroupNode = ({ data, selected }) => {
   const [isExpanded, setIsExpanded] = useState(false);
 
   return (
-    <Card className={`node-card w-64 bg-gradient-to-br from-green-100 to-green-50 ${selected ? 'selected' : ''}`}>
-      <CardHeader className="node-header bg-green-200 relative" onClick={() => setIsExpanded(!isExpanded)}>
+    <Card className={`node-card w-64 bg-gradient-to-br from-green-400/20 to-green-300/10 backdrop-blur-sm ${selected ? 'selected' : ''}`}>
+      <CardHeader className="node-header bg-green-500/30 relative" onClick={() => setIsExpanded(!isExpanded)}>
         <CardTitle className="text-green-800 font-bold flex items-center">
           <Users className="w-5 h-5 mr-2" />
           {data.label}
@@ -35,7 +35,7 @@ const GroupNode = ({ data, selected }) => {
           </Button>
         </CardContent>
       )}
-      <div className="absolute top-0 right-0 p-1 bg-green-100/80 rounded-bl">
+      <div className="absolute top-0 right-0 p-1 bg-green-100/50 rounded-bl">
         <Button variant="ghost" size="icon"><Edit className="h-4 w-4" /></Button>
         <Button variant="ghost" size="icon"><Trash2 className="h-4 w-4" /></Button>
         <Button variant="ghost" size="icon"><Link className="h-4 w-4" /></Button>

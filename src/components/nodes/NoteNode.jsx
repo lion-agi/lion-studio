@@ -9,8 +9,8 @@ const NoteNode = ({ data, selected }) => {
   const [isExpanded, setIsExpanded] = useState(false);
 
   return (
-    <Card className={`node-card w-64 bg-gradient-to-br from-yellow-100 to-yellow-50 ${selected ? 'selected' : ''}`}>
-      <CardHeader className="node-header bg-yellow-200 relative" onClick={() => setIsExpanded(!isExpanded)}>
+    <Card className={`node-card w-64 bg-gradient-to-br from-yellow-400/20 to-yellow-300/10 backdrop-blur-sm ${selected ? 'selected' : ''}`}>
+      <CardHeader className="node-header bg-yellow-500/30 relative" onClick={() => setIsExpanded(!isExpanded)}>
         <CardTitle className="text-yellow-800 font-bold flex items-center">
           <StickyNote className="w-5 h-5 mr-2" />
           {data.label}
@@ -35,7 +35,7 @@ const NoteNode = ({ data, selected }) => {
           </Button>
         </CardContent>
       )}
-      <div className="absolute top-0 right-0 p-1 bg-yellow-100/80 rounded-bl">
+      <div className="absolute top-0 right-0 p-1 bg-yellow-100/50 rounded-bl">
         <Button variant="ghost" size="icon"><Edit className="h-4 w-4" /></Button>
         <Button variant="ghost" size="icon"><Trash2 className="h-4 w-4" /></Button>
         <Button variant="ghost" size="icon"><Link className="h-4 w-4" /></Button>
