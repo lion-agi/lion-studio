@@ -5,7 +5,6 @@ import ReactFlow, {
   MiniMap,
   useNodesState,
   useEdgesState,
-  addEdge,
 } from 'reactflow';
 import 'reactflow/dist/style.css';
 import Sidebar from './Sidebar';
@@ -45,7 +44,7 @@ const WorkflowEditor = () => {
     handleCreateAgenticFlow,
     handleOpenNodeWizard,
     onNodeClick,
-  } = useWorkflowHandlers(nodes, setNodes, edges, setEdges, reactFlowInstance);
+  } = useWorkflowHandlers(nodes, setNodes, edges, setEdges, reactFlowInstance, sidebarExpanded, setSidebarExpanded);
 
   const {
     showHelpOverlay,

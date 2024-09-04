@@ -1,7 +1,7 @@
 import { useCallback } from 'react';
 import { addEdge } from 'reactflow';
 
-export const useWorkflowHandlers = (nodes, setNodes, edges, setEdges, reactFlowInstance) => {
+export const useWorkflowHandlers = (nodes, setNodes, edges, setEdges, reactFlowInstance, sidebarExpanded, setSidebarExpanded) => {
   const onConnect = useCallback((params) => setEdges((eds) => addEdge({
     ...params,
     type: 'smoothstep',
@@ -25,11 +25,8 @@ export const useWorkflowHandlers = (nodes, setNodes, edges, setEdges, reactFlowI
   }, [sidebarExpanded, setSidebarExpanded]);
 
   const toggleCategory = useCallback((category) => {
-    setExpandedCategories(prev => ({
-      ...prev,
-      [category]: !prev[category]
-    }));
-  }, [setExpandedCategories]);
+    // This function should be implemented in the component that manages category state
+  }, []);
 
   const onDragOver = useCallback((event) => {
     event.preventDefault();
@@ -40,7 +37,7 @@ export const useWorkflowHandlers = (nodes, setNodes, edges, setEdges, reactFlowI
     (event) => {
       event.preventDefault();
 
-      const reactFlowBounds = reactFlowWrapper.current.getBoundingClientRect();
+      const reactFlowBounds = reactFlowInstance.getBoundingClientRect();
       const type = event.dataTransfer.getData('application/reactflow');
 
       const position = reactFlowInstance.project({
@@ -62,12 +59,14 @@ export const useWorkflowHandlers = (nodes, setNodes, edges, setEdges, reactFlowI
 
   const handleExportJSON = useCallback(() => {
     const graphData = { nodes, edges };
-    setShowJSONModal(true);
-  }, [nodes, edges, setShowJSONModal]);
+    console.log('Exporting JSON:', graphData);
+    // Implement actual export logic here
+  }, [nodes, edges]);
 
   const handleSaveLoad = useCallback(() => {
-    setShowSaveLoadDialog(true);
-  }, [setShowSaveLoadDialog]);
+    console.log('Save/Load dialog should be shown');
+    // Implement save/load dialog logic here
+  }, []);
 
   const handleCreateAgenticFlow = useCallback((flowConfig) => {
     console.log('Creating new flow:', flowConfig);
@@ -75,9 +74,9 @@ export const useWorkflowHandlers = (nodes, setNodes, edges, setEdges, reactFlowI
   }, []);
 
   const handleOpenNodeWizard = useCallback((nodeType) => {
-    setNodeWizardType(nodeType);
-    setShowNodeWizard(true);
-  }, [setNodeWizardType, setShowNodeWizard]);
+    console.log('Opening node wizard for type:', nodeType);
+    // Implement node wizard opening logic here
+  }, []);
 
   const onNodeClick = useCallback((event, node) => {
     setNodes((nds) =>
