@@ -1,8 +1,10 @@
+import React from 'react';
 import { Toaster } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { SupabaseAuthProvider } from "./integrations/supabase";
+import TopNavigation from "./components/TopNavigation";
 import Index from "./pages/Index";
 import Registration from "./pages/Registration";
 import Login from "./pages/Login";
@@ -20,17 +22,29 @@ const App = () => (
       <TooltipProvider>
         <Toaster />
         <BrowserRouter>
-          <Routes>
-            <Route path="/" element={<Index />} />
-            <Route path="/register" element={<Registration />} />
-            <Route path="/login" element={<Login />} />
-            <Route path="/profile" element={<UserProfile />} />
-            <Route path="/upload" element={<ImageUpload />} />
-            <Route path="/editor" element={<WorkflowEditor />} />
-            <Route path="/logout" element={<Navigate to="/" replace />} />
-            <Route path="/email-confirmation" element={<EmailConfirmation />} />
-            <Route path="/auth/callback" element={<AuthCallback />} />
-          </Routes>
+          <div className="flex flex-col min-h-screen">
+            <TopNavigation />
+            <main className="flex-grow">
+              <Routes>
+                <Route path="/" element={<Index />} />
+                <Route path="/register" element={<Registration />} />
+                <Route path="/login" element={<Login />} />
+                <Route path="/profile" element={<UserProfile />} />
+                <Route path="/upload" element={<ImageUpload />} />
+                <Route path="/editor" element={<WorkflowEditor />} />
+                <Route path="/logout" element={<Navigate to="/" replace />} />
+                <Route path="/email-confirmation" element={<EmailConfirmation />} />
+                <Route path="/auth/callback" element={<AuthCallback />} />
+                <Route path="/workflows" element={<div>Workflows Page</div>} />
+                <Route path="/deployments" element={<div>Deployments Page</div>} />
+                <Route path="/connections" element={<div>Connections Page</div>} />
+                <Route path="/prompts" element={<div>Prompts Page</div>} />
+                <Route path="/fine-tuning" element={<div>Fine-tuning Page</div>} />
+                <Route path="/knowledge-bases" element={<div>Knowledge Bases Page</div>} />
+                <Route path="/evaluations" element={<div>Evaluations Page</div>} />
+              </Routes>
+            </main>
+          </div>
         </BrowserRouter>
       </TooltipProvider>
     </SupabaseAuthProvider>
