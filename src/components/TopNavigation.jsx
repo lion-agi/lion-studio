@@ -3,6 +3,7 @@ import { Link, useLocation } from 'react-router-dom';
 import { cn } from "@/lib/utils";
 
 const tabs = [
+  { name: 'Editor', href: '/editor' },
   { name: 'Workflows', href: '/workflows' },
   { name: 'Deployments', href: '/deployments' },
   { name: 'Connections', href: '/connections' },
