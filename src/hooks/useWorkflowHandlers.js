@@ -1,7 +1,7 @@
 import { useCallback } from 'react';
 import { addEdge } from 'reactflow';
 
-export const useWorkflowHandlers = (nodes, setNodes, edges, setEdges, reactFlowInstance, sidebarExpanded, setSidebarExpanded) => {
+export const useWorkflowHandlers = (nodes, setNodes, edges, setEdges, reactFlowWrapper, reactFlowInstance, sidebarExpanded, setSidebarExpanded) => {
   const onConnect = useCallback((params) => setEdges((eds) => addEdge({
     ...params,
     type: 'smoothstep',
@@ -37,7 +37,12 @@ export const useWorkflowHandlers = (nodes, setNodes, edges, setEdges, reactFlowI
     (event) => {
       event.preventDefault();
 
-      const reactFlowBounds = reactFlowInstance.getBoundingClientRect();
+      if (!reactFlowWrapper.current || !reactFlowInstance) {
+        console.error('ReactFlow is not initialized');
+        return;
+      }
+
+      const reactFlowBounds = reactFlowWrapper.current.getBoundingClientRect();
       const type = event.dataTransfer.getData('application/reactflow');
 
       const position = reactFlowInstance.project({
@@ -54,7 +59,7 @@ export const useWorkflowHandlers = (nodes, setNodes, edges, setEdges, reactFlowI
 
       setNodes((nds) => nds.concat(newNode));
     },
-    [nodes, setNodes, reactFlowInstance]
+    [nodes, setNodes, reactFlowInstance, reactFlowWrapper]
   );
 
   const handleExportJSON = useCallback(() => {
