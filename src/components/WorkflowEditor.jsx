@@ -10,6 +10,7 @@ import 'reactflow/dist/style.css';
 import LeftSidebar from './LeftSidebar';
 import SecondaryNavigation from './SecondaryNavigation';
 import NodeCreationCard from './NodeCreationCard';
+import SaveLoadDialog from './SaveLoadDialog';
 import { nodeTypes } from './nodes';
 import { useWorkflowState } from '../hooks/useWorkflowState';
 import { useWorkflowHandlers } from '../hooks/useWorkflowHandlers';
