@@ -8,7 +8,8 @@ const JSONModal = ({ isOpen, onClose, jsonData }) => {
   const { toast } = useToast();
 
   const handleCopy = () => {
-    navigator.clipboard.writeText(JSON.stringify(jsonData, null, 2))
+    const jsonString = JSON.stringify(jsonData, null, 2);
+    navigator.clipboard.writeText(jsonString)
       .then(() => {
         toast({
           title: "Copied to clipboard",

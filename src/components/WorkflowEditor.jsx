@@ -64,11 +64,19 @@ const WorkflowEditor = () => {
     setIsSecondaryNavExpanded(true);
   };
 
+  const exportToJson = useCallback(() => {
+    if (reactFlowInstance) {
+      const flow = reactFlowInstance.toObject();
+      return flow;
+    }
+    return null;
+  }, [reactFlowInstance]);
+
   return (
     <div className="h-screen flex flex-col bg-gradient-to-br from-gray-900 to-gray-800 text-white">
       <div className="flex flex-grow overflow-hidden">
         <LeftSidebar
-          onExportJSON={handleExportJSON}
+          onExportJSON={exportToJson}
           onSaveLoad={handleSaveLoad}
           onCreateAgenticFlow={handleCreateAgenticFlow}
           onShowHelp={() => setShowHelpOverlay(true)}
