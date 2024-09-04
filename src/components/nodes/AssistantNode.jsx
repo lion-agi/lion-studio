@@ -34,12 +34,22 @@ const AssistantNode = ({ data, selected }) => {
   };
 
   return (
-    <Card className={`node-card w-64 from-accent/20 to-accent/10 ${selected ? 'selected' : ''}`}>
-      <CardHeader className="node-header bg-accent/30" onClick={() => setIsExpanded(!isExpanded)}>
+    <Card className={`node-card w-64 bg-gradient-to-br from-accent-200 to-accent-100 ${selected ? 'selected' : ''}`}>
+      <CardHeader className="node-header bg-accent-300 relative" onClick={() => setIsExpanded(!isExpanded)}>
         <CardTitle className="text-accent-foreground font-bold flex items-center">
           <Bot className="w-5 h-5 mr-2" />
           {data.label}
         </CardTitle>
+        <Handle
+          type="target"
+          position={Position.Left}
+          style={{ top: '50%', transform: 'translateY(-50%)', left: '-6px' }}
+        />
+        <Handle
+          type="source"
+          position={Position.Right}
+          style={{ top: '50%', transform: 'translateY(-50%)', right: '-6px' }}
+        />
       </CardHeader>
       {isExpanded && (
         <CardContent className="node-content">
@@ -67,16 +77,6 @@ const AssistantNode = ({ data, selected }) => {
           </Button>
         </div>
       )}
-      <Handle
-        type="target"
-        position={Position.Left}
-        style={{ width: '12px', height: '12px', left: '-6px' }}
-      />
-      <Handle
-        type="source"
-        position={Position.Right}
-        style={{ width: '12px', height: '12px', right: '-6px' }}
-      />
     </Card>
   );
 };
