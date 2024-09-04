@@ -22,17 +22,14 @@ const AssistantNode = ({ data, selected }) => {
   }, [data.id, store]);
 
   const handleEdit = () => {
-    // Implement edit functionality
     console.log('Edit node:', data.id);
   };
 
   const handleDelete = () => {
-    // Implement delete functionality
     console.log('Delete node:', data.id);
   };
 
   const handleDuplicate = () => {
-    // Implement duplicate functionality
     console.log('Duplicate node:', data.id);
   };
 
@@ -70,8 +67,16 @@ const AssistantNode = ({ data, selected }) => {
           </Button>
         </div>
       )}
-      <Handle type="target" position={Position.Top} />
-      <Handle type="source" position={Position.Bottom} />
+      <Handle
+        type="target"
+        position={Position.Left}
+        style={{ width: '12px', height: '12px', left: '-6px' }}
+      />
+      <Handle
+        type="source"
+        position={Position.Right}
+        style={{ width: '12px', height: '12px', right: '-6px' }}
+      />
     </Card>
   );
 };
