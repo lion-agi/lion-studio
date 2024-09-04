@@ -8,12 +8,7 @@ import ReactFlow, {
 } from 'reactflow';
 import 'reactflow/dist/style.css';
 import Sidebar from './Sidebar';
-import HelpOverlay from './HelpOverlay';
-import SettingsModal from './SettingsModal';
-import JSONModal from './JSONModal';
-import SaveLoadDialog from './SaveLoadDialog';
-import AgenticFlowWizard from './AgenticFlowWizard';
-import WizardDialog from './WizardDialog';
+import LeftSidebar from './LeftSidebar';
 import { nodeTypes } from './nodes';
 import { useWorkflowState } from '../hooks/useWorkflowState';
 import { useWorkflowHandlers } from '../hooks/useWorkflowHandlers';
@@ -63,67 +58,48 @@ const WorkflowEditor = () => {
 
   return (
     <div className="h-screen flex flex-col bg-gradient-to-br from-gray-900 to-gray-800 text-white">
-      <div className="flex">
-        <div className="flex-grow">
-          <ReactFlow
-            nodes={nodes}
-            edges={edges}
-            onNodesChange={onNodesChange}
-            onEdgesChange={onEdgesChange}
-            onConnect={onConnect}
-            onInit={setReactFlowInstance}
-            onDrop={onDrop}
-            onDragOver={onDragOver}
-            onNodeClick={onNodeClick}
-            nodeTypes={nodeTypes}
-            fitView
-          >
-            <Controls />
-            <MiniMap nodeColor={(node) => {
-              switch (node.type) {
-                case 'user': return '#3B82F6';
-                case 'agent': return '#10B981';
-                case 'assistant': return '#F59E0B';
-                case 'group': return '#8B5CF6';
-                case 'initializer': return '#EF4444';
-                case 'nestedChat': return '#EC4899';
-                case 'note': return '#6366F1';
-                default: return '#64748B';
-              }
-            }} nodeStrokeWidth={3} zoomable pannable />
-            <Background color="#4B5563" gap={16} />
-          </ReactFlow>
+      <div className="flex flex-grow overflow-hidden">
+        <LeftSidebar
+          onExportJSON={handleExportJSON}
+          onSaveLoad={handleSaveLoad}
+          onCreateAgenticFlow={handleCreateAgenticFlow}
+          onShowHelp={() => setShowHelpOverlay(true)}
+          onShowSettings={() => setShowSettingsModal(true)}
+        />
+        <div className="flex-grow flex">
+          <Sidebar onAddNode={addNode} />
+          <div className="flex-grow">
+            <ReactFlow
+              nodes={nodes}
+              edges={edges}
+              onNodesChange={onNodesChange}
+              onEdgesChange={onEdgesChange}
+              onConnect={onConnect}
+              onInit={setReactFlowInstance}
+              onDrop={onDrop}
+              onDragOver={onDragOver}
+              onNodeClick={onNodeClick}
+              nodeTypes={nodeTypes}
+              fitView
+            >
+              <Controls />
+              <MiniMap nodeColor={(node) => {
+                switch (node.type) {
+                  case 'user': return '#3B82F6';
+                  case 'agent': return '#10B981';
+                  case 'assistant': return '#F59E0B';
+                  case 'group': return '#8B5CF6';
+                  case 'initializer': return '#EF4444';
+                  case 'nestedChat': return '#EC4899';
+                  case 'note': return '#6366F1';
+                  default: return '#64748B';
+                }
+              }} nodeStrokeWidth={3} zoomable pannable />
+              <Background color="#4B5563" gap={16} />
+            </ReactFlow>
+          </div>
         </div>
-        <Sidebar onAddNode={addNode} />
       </div>
-
-      {showHelpOverlay && <HelpOverlay onClose={() => setShowHelpOverlay(false)} />}
-      {showSettingsModal && <SettingsModal onClose={() => setShowSettingsModal(false)} />}
-      {showJSONModal && <JSONModal isOpen={showJSONModal} onClose={() => setShowJSONModal(false)} jsonData={{ nodes, edges }} />}
-      {showSaveLoadDialog && (
-        <SaveLoadDialog
-          isOpen={showSaveLoadDialog}
-          onClose={() => setShowSaveLoadDialog(false)}
-          onSave={(savedGraph) => {
-            console.log('Saving graph:', savedGraph);
-            setShowSaveLoadDialog(false);
-          }}
-          onLoad={(loadedGraphData) => {
-            setNodes(loadedGraphData.nodes);
-            setEdges(loadedGraphData.edges);
-            setShowSaveLoadDialog(false);
-          }}
-          graphData={{ nodes, edges }}
-        />
-      )}
-      {showNodeWizard && (
-        <WizardDialog
-          isOpen={showNodeWizard}
-          onClose={() => setShowNodeWizard(false)}
-          onAddNode={addNode}
-          nodeType={nodeWizardType}
-        />
-      )}
     </div>
   );
 };
