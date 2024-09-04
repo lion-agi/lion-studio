@@ -8,8 +8,11 @@
 
 **Preview**: https://preview--lion-studio.gptengineer.run/
 
+**Note:** very alpha, not ready for anything serious, play around and write issues : ) 
 
-![demo1](./public/demo1.jpg)
+
+![PHOTO-2024-09-04-14-11-17](https://github.com/user-attachments/assets/898d9aa4-ae30-4545-ae27-43b526fe4513)
+
 
 
 ## How can I edit this code?
