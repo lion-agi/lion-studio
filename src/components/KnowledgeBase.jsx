@@ -152,10 +152,10 @@ const KnowledgeBase = () => {
   };
 
   return (
-    <div className="container mx-auto p-4">
-      <div className="flex justify-between items-center mb-6">
+    <div className="container mx-auto p-8">
+      <div className="flex justify-between items-center mb-8">
         <h1 className="text-2xl font-bold">Library</h1>
-        <div className="flex items-center space-x-2">
+        <div className="flex items-center space-x-4">
           <Input
             type="text"
             placeholder="Search your threads..."
@@ -169,7 +169,7 @@ const KnowledgeBase = () => {
         </div>
       </div>
 
-      <div className="flex space-x-4 mb-6">
+      <div className="flex space-x-4 mb-8">
         <Button variant="outline">
           <PlusCircle className="h-4 w-4 mr-2" />
           Thread
@@ -204,14 +204,18 @@ const KnowledgeBase = () => {
           <ThreadList threads={threads} />
         </TabsContent>
         <TabsContent value="pages">
-          <PageList pages={pages} />
+          <div className="px-8">
+            <PageList pages={pages} />
+          </div>
         </TabsContent>
         <TabsContent value="dataSources">
-          <DataSourceList dataSources={dataSources} />
+          <div className="px-8">
+            <DataSourceList dataSources={dataSources} />
+          </div>
         </TabsContent>
       </Tabs>
 
-      <div className="mt-6">
+      <div className="mt-8">
         <h2 className="text-xl font-semibold mb-4">Collections</h2>
         <div className="bg-card p-4 rounded-lg shadow">
           <div className="flex items-center justify-between">
