@@ -2,10 +2,16 @@ import React from 'react';
 import BaseNode from './BaseNode';
 import { StickyNote } from 'lucide-react';
 
-const Note = (props) => {
+const Note = ({ data, ...props }) => {
+  const nodeTitle = `Note: ${data.label || 'Untitled'}`;
+  
   return (
     <BaseNode 
-      {...props} 
+      {...props}
+      data={{
+        ...data,
+        label: nodeTitle
+      }}
       icon={StickyNote} 
       type="note"
       baseColor="yellow"
@@ -13,7 +19,7 @@ const Note = (props) => {
       gradientTo="to-yellow-300/10"
       iconColor="text-yellow-600"
     >
-      Note
+      {nodeTitle}
     </BaseNode>
   );
 };
