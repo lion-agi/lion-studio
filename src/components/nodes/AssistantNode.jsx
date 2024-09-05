@@ -47,14 +47,14 @@ const AssistantNode = ({ data, isConnectable, selected }) => {
 
   return (
     <Card 
-      className={`node-card w-64 bg-gradient-to-br from-accent-200 to-accent-100 ${isExpanded ? 'expanded' : ''}`}
+      className={`node-card w-83 bg-gradient-to-br from-accent-200 to-accent-100 ${isExpanded ? 'expanded' : ''}`}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
       <CardHeader className="node-header bg-accent-300 relative cursor-pointer" onClick={toggleExpand}>
-        <CardTitle className="text-accent-foreground font-bold flex items-center justify-between">
+        <CardTitle className="text-accent-foreground font-bold flex items-center justify-between text-sm">
           <div className="flex items-center">
-            <Bot className="w-6 h-6 mr-2" />
+            <Bot className="w-5 h-5 mr-2" />
             {editedData.label}
           </div>
           {isExpanded ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}

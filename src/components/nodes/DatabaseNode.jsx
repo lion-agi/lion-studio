@@ -46,15 +46,14 @@ const DatabaseNode = ({ data, isConnectable, selected }) => {
 
   return (
     <Card 
-      className={`node-card w-64 bg-gradient-to-br from-purple-400/20 to-purple-300/10 backdrop-blur-sm ${selected ? 'selected' : ''}`}
+      className={`node-card w-83 bg-gradient-to-br from-purple-400/20 to-purple-300/10 backdrop-blur-sm ${selected ? 'selected' : ''}`}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
       <CardHeader className="node-header bg-purple-300/30 relative cursor-pointer" onClick={toggleExpand}>
-        <CardTitle className="text-purple-foreground font-bold flex items-center justify-between">
+        <CardTitle className="text-purple-foreground font-bold flex items-center justify-between text-sm">
           <div className="flex items-center">
-            
-            <Database className="w-6 h-6 mr-2" />
+            <Database className="w-5 h-5 mr-2" />
             {editedData.label}
           </div>
           {isExpanded ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
