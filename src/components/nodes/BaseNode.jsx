@@ -45,25 +45,14 @@ const BaseNode = ({ data, isConnectable, selected, icon: Icon, type }) => {
     setIsExpanded(!isExpanded);
   }, [isExpanded]);
 
-  const getNodeColor = () => {
-    switch (type) {
-      case 'user':
-        return 'from-yellow-200 to-yellow-100';
-      case 'assistant':
-        return 'from-blue-200 to-blue-100';
-      default:
-        return 'from-gray-200 to-gray-100';
-    }
-  };
-
   return (
     <Card 
-      className={`node-card w-64 bg-gradient-to-br ${getNodeColor()} bg-opacity-80 backdrop-blur-sm ${isExpanded ? 'expanded' : ''}`}
+      className={`node-card w-64 bg-gradient-to-br from-${type}-200 to-${type}-100 ${isExpanded ? 'expanded' : ''}`}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
       <CardHeader className="node-header relative cursor-pointer p-3" onClick={toggleExpand}>
-        <CardTitle className="font-bold flex items-center justify-between text-sm">
+        <CardTitle className={`text-${type}-foreground font-bold flex items-center justify-between text-sm`}>
           <div className="flex items-center">
             <Icon className="w-4 h-4 mr-2" />
             {data.label}
@@ -92,14 +81,14 @@ const BaseNode = ({ data, isConnectable, selected, icon: Icon, type }) => {
                   <label className="text-xs font-medium">{key}:</label>
                   {typeof value === 'string' ? (
                     <Input
-                      className="node-input text-xs h-7 px-2 py-1 border border-gray-300"
+                      className="node-input text-xs h-7 px-2 py-1 border border-accent-300"
                       name={key}
                       value={value}
                       onChange={handleInputChange}
                     />
                   ) : (
                     <Textarea
-                      className="node-input text-xs px-2 py-1 border border-gray-300"
+                      className="node-input text-xs px-2 py-1 border border-accent-300"
                       name={key}
                       value={value}
                       onChange={handleInputChange}
@@ -124,7 +113,7 @@ const BaseNode = ({ data, isConnectable, selected, icon: Icon, type }) => {
               {Object.entries(editedData).map(([key, value]) => (
                 <div key={key} className="space-y-2">
                   <p className="font-medium">{key}:</p>
-                  <p className="border border-gray-300 rounded px-2 py-1">{value}</p>
+                  <p className="border border-accent-300 rounded px-2 py-1">{value}</p>
                 </div>
               ))}
             </>
@@ -132,7 +121,7 @@ const BaseNode = ({ data, isConnectable, selected, icon: Icon, type }) => {
         </CardContent>
       )}
       {!isEditing && (isHovered || selected) && (
-        <div className="absolute top-0 right-0 p-1 bg-white bg-opacity-80 rounded-bl">
+        <div className="absolute top-0 right-0 p-1 bg-background/80 rounded-bl">
           <Button variant="ghost" size="icon" onClick={handleEdit} className="h-7 w-7">
             <Edit className="h-3 w-3" />
           </Button>
