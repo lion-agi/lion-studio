@@ -32,8 +32,9 @@ const BaseNode = ({ data, isConnectable, selected, icon: Icon, type, baseColor =
 
   const handleInputChange = useCallback((e) => {
     const { name, value } = e.target;
+    if (name === 'label' && !data.isLabelEditable) return;
     setEditedData(prev => ({ ...prev, [name]: value }));
-  }, []);
+  }, [data.isLabelEditable]);
 
   const handleDelete = useCallback(() => {
     if (data.onDelete) {
@@ -55,7 +56,7 @@ const BaseNode = ({ data, isConnectable, selected, icon: Icon, type, baseColor =
         <CardTitle className={`text-${baseColor}-foreground font-bold flex items-center justify-between text-sm`}>
           <div className="flex items-center">
             <Icon className={`w-4 h-4 mr-2 ${iconColor}`} />
-            {editedData.label || children}
+            {data.label || children}
           </div>
           {isExpanded ? <ChevronUp className="w-3 h-3" /> : <ChevronDown className="w-3 h-3" />}
         </CardTitle>
@@ -76,13 +77,15 @@ const BaseNode = ({ data, isConnectable, selected, icon: Icon, type, baseColor =
         <CardContent className="node-content p-3">
           {isEditing ? (
             <>
-              <Input
-                className="node-input mb-2 text-xs h-7 px-2 py-1"
-                name="label"
-                placeholder="Node label"
-                value={editedData.label || ''}
-                onChange={handleInputChange}
-              />
+              {data.isLabelEditable && (
+                <Input
+                  className="node-input mb-2 text-xs h-7 px-2 py-1"
+                  name="originalLabel"
+                  placeholder="Node label"
+                  value={editedData.originalLabel || ''}
+                  onChange={handleInputChange}
+                />
+              )}
               <Textarea
                 className="node-input mb-2 text-xs px-2 py-1"
                 name="description"
@@ -104,7 +107,7 @@ const BaseNode = ({ data, isConnectable, selected, icon: Icon, type, baseColor =
             </>
           ) : (
             <>
-              <p className="mb-2 text-xs"><strong>Label:</strong> {editedData.label || children}</p>
+              <p className="mb-2 text-xs"><strong>Label:</strong> {data.originalLabel || children}</p>
               <p className="mb-2 text-xs"><strong>Description:</strong> {editedData.description || 'No description'}</p>
             </>
           )}

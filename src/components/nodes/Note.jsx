@@ -2,15 +2,21 @@ import React from 'react';
 import BaseNode from './BaseNode';
 import { StickyNote } from 'lucide-react';
 
+let noteCounter = 0;
+
 const Note = ({ data, ...props }) => {
-  const nodeTitle = `Note: ${data.label || 'Untitled'}`;
+  const nodeLabel = data.label || `unnamed${++noteCounter}`;
+  const nodeTitle = `Note: ${nodeLabel}`;
   
   return (
     <BaseNode 
       {...props}
       data={{
         ...data,
-        label: nodeTitle
+        label: nodeTitle,
+        originalLabel: nodeLabel,
+        isLabelEditable: true,
+        isTypeEditable: false
       }}
       icon={StickyNote} 
       type="note"
