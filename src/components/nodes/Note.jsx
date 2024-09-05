@@ -6,17 +6,24 @@ let noteCounter = 0;
 
 const Note = ({ data, ...props }) => {
   const nodeLabel = data.label || `unnamed${++noteCounter}`;
-  const nodeTitle = `Note: ${nodeLabel}`;
+  const getDisplayLabel = (label) => `Note: ${label}`;
   
   return (
     <BaseNode 
       {...props}
       data={{
         ...data,
-        label: nodeTitle,
-        originalLabel: nodeLabel,
-        isLabelEditable: true,
-        isTypeEditable: false
+        label: nodeLabel,
+        getDisplayLabel: getDisplayLabel,
+        onSave: (id, newData) => {
+          // Update the node data when saved
+          if (props.data.onSave) {
+            props.data.onSave(id, {
+              ...newData,
+              label: newData.label || nodeLabel,
+            });
+          }
+        },
       }}
       icon={StickyNote} 
       type="note"
@@ -25,7 +32,7 @@ const Note = ({ data, ...props }) => {
       gradientTo="to-yellow-300/10"
       iconColor="text-yellow-600"
     >
-      {nodeTitle}
+      {getDisplayLabel(nodeLabel)}
     </BaseNode>
   );
 };
