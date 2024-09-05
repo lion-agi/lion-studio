@@ -7,9 +7,14 @@ import { StickyNote, Save, Edit, Trash2, Link } from 'lucide-react';
 
 const NoteNode = ({ data, selected }) => {
   const [isExpanded, setIsExpanded] = useState(false);
+  const [isHovered, setIsHovered] = useState(false);
 
   return (
-    <Card className={`node-card w-64 bg-gradient-to-br from-yellow-400/20 to-yellow-300/10 backdrop-blur-sm ${selected ? 'selected' : ''}`}>
+    <Card 
+      className={`node-card w-64 bg-gradient-to-br from-yellow-400/20 to-yellow-300/10 backdrop-blur-sm ${selected ? 'selected' : ''}`}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+    >
       <CardHeader className="node-header relative" onClick={() => setIsExpanded(!isExpanded)}>
         <CardTitle className="text-accent-foreground font-bold flex items-center">
           <StickyNote className="w-6 h-6 mr-2" />
@@ -35,11 +40,13 @@ const NoteNode = ({ data, selected }) => {
           </Button>
         </CardContent>
       )}
-      <div className="absolute top-0 right-0 p-1 bg-yellow-100/50 rounded-bl">
-        <Button variant="ghost" size="icon"><Edit className="h-4 w-4" /></Button>
-        <Button variant="ghost" size="icon"><Trash2 className="h-4 w-4" /></Button>
-        <Button variant="ghost" size="icon"><Link className="h-4 w-4" /></Button>
-      </div>
+      {(selected || isHovered) && (
+        <div className="absolute top-0 right-0 p-1 bg-yellow-100/50 rounded-bl">
+          <Button variant="ghost" size="icon"><Edit className="h-4 w-4" /></Button>
+          <Button variant="ghost" size="icon"><Trash2 className="h-4 w-4" /></Button>
+          <Button variant="ghost" size="icon"><Link className="h-4 w-4" /></Button>
+        </div>
+      )}
     </Card>
   );
 };
