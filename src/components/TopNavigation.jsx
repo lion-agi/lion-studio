@@ -3,13 +3,14 @@ import { Link, useLocation } from 'react-router-dom';
 import { cn } from "@/lib/utils";
 
 const tabs = [
+  { name: 'Workflows', href: '/workflows' },
   { name: 'Deployments', href: '/deployments' },
   { name: 'Connections', href: '/connections' },
   { name: 'Prompts', href: '/prompts' },
   { name: 'Fine-tuning', href: '/fine-tuning' },
   { name: 'Knowledge bases', href: '/knowledge-bases' },
   { name: 'Evaluations', href: '/evaluations' },
-  { name: 'Workflows', href: '/workflows' },
+  { name: 'Editor', href: '/editor' },
   { name: 'Monitoring', href: '/monitoring' },
 ];
 
