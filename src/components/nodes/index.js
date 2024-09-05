@@ -1,23 +1,23 @@
-import UserNode from './UserNode';
-import AgentNode from './AgentNode';
+import HumanUser from './UserNode';
+import Assistant from './AgentNode';
 import AssistantNode from './AssistantNode';
 import GroupNode from './GroupNode';
-import InitializerNode from './InitializerNode';
+import Initializer from './InitializerNode';
 import NestedChatNode from './NestedChatNode';
 import NoteNode from './NoteNode';
-import ApiNode from './ApiNode';
+import APICall from './ApiNode';
 import WorkflowNode from './WorkflowNode';
 import DatabaseNode from './DatabaseNode';
 
 export const nodeTypes = {
-  user: UserNode,
-  agent: AgentNode,
+  user: HumanUser,
+  agent: Assistant,
   assistant: AssistantNode,
   group: GroupNode,
-  initializer: InitializerNode,
+  initializer: Initializer,
   nestedChat: NestedChatNode,
   note: NoteNode,
-  api: ApiNode,
+  api: APICall,
   workflow: WorkflowNode,
   database: DatabaseNode,
 };

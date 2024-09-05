@@ -2,7 +2,7 @@ import React from 'react';
 import BaseNode from './BaseNode';
 import { Zap } from 'lucide-react';
 
-const ApiNode = (props) => {
+const APICall = (props) => {
   return (
     <BaseNode 
       {...props} 
@@ -18,4 +18,4 @@ const ApiNode = (props) => {
   );
 };
 
-export default ApiNode;
+export default APICall;

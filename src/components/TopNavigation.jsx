@@ -3,15 +3,13 @@ import { Link, useLocation } from 'react-router-dom';
 import { cn } from "@/lib/utils";
 
 const tabs = [
-  { name: 'Workflows', href: '/workflows' },
-  { name: 'Deployments', href: '/deployments' },
-  { name: 'Connections', href: '/connections' },
+  { name: 'Workflows Editor', href: '/editor' },
   { name: 'Prompts', href: '/prompts' },
-  { name: 'Fine-tuning', href: '/fine-tuning' },
-  { name: 'Knowledge bases', href: '/knowledge-bases' },
+  { name: 'Connections', href: '/connections' },
+  { name: 'Knowledge Bases', href: '/knowledge-bases' },
   { name: 'Evaluations', href: '/evaluations' },
-  { name: 'Editor', href: '/editor' },
-  { name: 'Monitoring', href: '/monitoring' },
+  { name: 'Deployments', href: '/deployments' },
+  { name: 'Monitoring', href: '/monitoring' }
 ];
 
 const TopNavigation = React.memo(() => {

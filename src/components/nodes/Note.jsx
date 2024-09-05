@@ -2,7 +2,7 @@ import React from 'react';
 import BaseNode from './BaseNode';
 import { StickyNote } from 'lucide-react';
 
-const NoteNode = (props) => {
+const Note = (props) => {
   return (
     <BaseNode 
       {...props} 
@@ -18,4 +18,4 @@ const NoteNode = (props) => {
   );
 };
 
-export default NoteNode;
+export default Note;

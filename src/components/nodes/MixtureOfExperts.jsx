@@ -2,7 +2,7 @@ import React from 'react';
 import BaseNode from './BaseNode';
 import { Users } from 'lucide-react';
 
-const GroupNode = (props) => {
+const MixtureOfExperts = (props) => {
   return (
     <BaseNode 
       {...props} 
@@ -18,4 +18,4 @@ const GroupNode = (props) => {
   );
 };
 
-export default GroupNode;
+export default MixtureOfExperts;

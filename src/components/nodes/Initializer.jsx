@@ -2,7 +2,7 @@ import React from 'react';
 import BaseNode from './BaseNode';
 import { Play } from 'lucide-react';
 
-const InitializerNode = (props) => {
+const Initializer = (props) => {
   return (
     <BaseNode 
       {...props} 
@@ -18,4 +18,4 @@ const InitializerNode = (props) => {
   );
 };
 
-export default InitializerNode;
+export default Initializer;

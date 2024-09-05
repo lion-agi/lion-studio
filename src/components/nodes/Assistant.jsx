@@ -7,7 +7,7 @@ import { Textarea } from "@/components/ui/textarea"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Edit, Trash2, Link, Bot, Save } from 'lucide-react';
 
-const AgentNode = ({ data, selected }) => {
+const Assistant = ({ data, selected }) => {
   const [isExpanded, setIsExpanded] = useState(false);
 
   return (
@@ -51,4 +51,4 @@ const AgentNode = ({ data, selected }) => {
   );
 };
 
-export default AgentNode;
+export default Assistant;
