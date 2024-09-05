@@ -69,10 +69,10 @@ const WorkflowEditor = () => {
     setNodeWizardType,
   } = useWorkflowModals();
 
-  const handleFeatureChange = (feature) => {
+  const handleFeatureChange = useCallback((feature) => {
     setActiveFeature(feature);
     setIsSecondaryNavExpanded(true);
-  };
+  }, []);
 
   const handleSaveNode = useCallback((nodeId, newData) => {
     setNodes((nds) =>
@@ -109,10 +109,12 @@ const WorkflowEditor = () => {
   }, [reactFlowInstance, setShowJSONModal]);
 
   const onNodeDragStop = useCallback((event, node) => {
-    const { x, y } = snapToGrid(node.position.x, node.position.y);
-    setNodes((nds) =>
-      nds.map((n) => (n.id === node.id ? { ...n, position: { x, y } } : n))
-    );
+    if (node && node.position) {
+      const { x, y } = snapToGrid(node.position.x, node.position.y);
+      setNodes((nds) =>
+        nds.map((n) => (n.id === node.id ? { ...n, position: { x, y } } : n))
+      );
+    }
   }, [setNodes]);
 
   const customEdgeOptions = {
