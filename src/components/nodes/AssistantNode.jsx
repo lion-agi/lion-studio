@@ -2,7 +2,7 @@ import React from 'react';
 import BaseNode from './BaseNode';
 import { Bot } from 'lucide-react';
 
-const Assistant = (props) => {
+const AssistantNode = (props) => {
   return (
     <BaseNode 
       {...props} 
@@ -12,8 +12,10 @@ const Assistant = (props) => {
       gradientFrom="from-amber-700/20"
       gradientTo="to-amber-600/10"
       iconColor="text-amber-800"
-    />
+    >
+      Assistant Node
+    </BaseNode>
   );
 };
 
-export default Assistant;
+export default AssistantNode;
