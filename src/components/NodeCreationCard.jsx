@@ -3,7 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
-import { ChevronDown, Search, Bot, User, Users, StickyNote, Play, Plus, Database, Workflow, Zap } from 'lucide-react';
+import { ChevronDown, Search, Bot, User, Users, StickyNote, Play, Plus, Database, Workflow, Zap, MessageSquare } from 'lucide-react';
 import Draggable from 'react-draggable';
 
 const nodeCategories = [
@@ -23,6 +23,7 @@ const nodeCategories = [
       { type: 'database', icon: <Database />, label: 'Database' },
       { type: 'workflow', icon: <Workflow />, label: 'Workflow' },
       { type: 'api', icon: <Zap />, label: 'API Call' },
+      { type: 'conversation', icon: <MessageSquare />, label: 'Conversation' },
     ]
   }
 ];
