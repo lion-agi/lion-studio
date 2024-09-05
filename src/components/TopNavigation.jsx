@@ -11,6 +11,7 @@ const tabs = [
   { name: 'Knowledge bases', href: '/knowledge-bases' },
   { name: 'Evaluations', href: '/evaluations' },
   { name: 'Editor', href: '/editor' },
+  { name: 'Monitoring', href: '/monitoring' },
 ];
 
 const TopNavigation = React.memo(() => {
