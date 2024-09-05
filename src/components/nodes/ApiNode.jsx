@@ -4,6 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Textarea } from "@/components/ui/textarea"
 import { Zap, Save, Edit, Trash2, X, ChevronDown, ChevronUp } from 'lucide-react';
+import { getNodeStyle, getHeaderStyle, getContentStyle } from '../../styles/nodeStyles';
 
 const ApiNode = ({ data, isConnectable, selected }) => {
   const [isExpanded, setIsExpanded] = useState(false);
@@ -46,12 +47,12 @@ const ApiNode = ({ data, isConnectable, selected }) => {
 
   return (
     <Card 
-      className={`node-card w-64 bg-gradient-to-br from-blue-400/20 to-blue-300/10 backdrop-blur-sm ${selected ? 'selected' : ''}`}
+      style={getNodeStyle('api', selected)}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
-      <CardHeader className="node-header bg-blue-300/30 relative cursor-pointer" onClick={toggleExpand}>
-        <CardTitle className="text-blue-foreground font-bold flex items-center justify-between">
+      <CardHeader style={getHeaderStyle('api')} className="cursor-pointer" onClick={toggleExpand}>
+        <CardTitle className="text-white font-bold flex items-center justify-between">
           <div className="flex items-center">
             <Zap className="w-6 h-6 mr-2" />
             {editedData.label}
@@ -72,7 +73,7 @@ const ApiNode = ({ data, isConnectable, selected }) => {
         />
       </CardHeader>
       {isExpanded && (
-        <CardContent className="node-content">
+        <CardContent style={getContentStyle()}>
           {isEditing ? (
             <>
               <Textarea
