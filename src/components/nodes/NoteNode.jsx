@@ -12,7 +12,7 @@ const NoteNode = ({ data, selected }) => {
     <Card className={`node-card w-64 bg-gradient-to-br from-yellow-400/20 to-yellow-300/10 backdrop-blur-sm ${selected ? 'selected' : ''}`}>
       <CardHeader className="node-header relative" onClick={() => setIsExpanded(!isExpanded)}>
         <CardTitle className="text-accent-foreground font-bold flex items-center">
-          <StickyNote className="w-5 h-5 mr-2" />
+          <StickyNote className="w-6 h-6 mr-2" />
           {data.label}
         </CardTitle>
         <Handle

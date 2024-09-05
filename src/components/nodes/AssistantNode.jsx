@@ -37,7 +37,7 @@ const AssistantNode = ({ data, selected }) => {
     <Card className={`node-card w-64 bg-gradient-to-br from-accent-200 to-accent-100 ${selected ? 'selected' : ''}`}>
       <CardHeader className="node-header bg-accent-300 relative" onClick={() => setIsExpanded(!isExpanded)}>
         <CardTitle className="text-accent-foreground font-bold flex items-center">
-          <Bot className="w-5 h-5 mr-2" />
+          <Bot className="w-6 h-6 mr-2" />
           {data.label}
         </CardTitle>
         <Handle

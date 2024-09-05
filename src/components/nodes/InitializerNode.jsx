@@ -12,7 +12,7 @@ const InitializerNode = ({ data, selected }) => {
     <Card className={`node-card w-64 bg-gradient-to-br from-purple-400/20 to-purple-300/10 backdrop-blur-sm ${selected ? 'selected' : ''}`}>
       <CardHeader className="node-header relative" onClick={() => setIsExpanded(!isExpanded)}>
         <CardTitle className="text-accent-foreground font-bold flex items-center">
-          <Cog className="w-5 h-5 mr-2" />
+          <Cog className="w-6 h-6 mr-2" />
           {data.label}
         </CardTitle>
         <Handle
