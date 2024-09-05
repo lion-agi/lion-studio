@@ -12,6 +12,11 @@ const Initializer = (props) => {
       gradientFrom="from-purple-400/20"
       gradientTo="to-purple-300/10"
       iconColor="text-purple-600"
+      nodeData={{
+        name: props.data.name || 'Start',
+        initialData: props.data.initialData || {},
+        startCondition: props.data.startCondition || 'manual'
+      }}
     >
       Start
     </BaseNode>

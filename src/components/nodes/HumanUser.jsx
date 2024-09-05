@@ -12,8 +12,13 @@ const HumanUser = (props) => {
       gradientFrom="from-blue-400/20"
       gradientTo="to-blue-300/10"
       iconColor="text-blue-600"
+      nodeData={{
+        name: props.data.name || 'User',
+        role: props.data.role || 'End User',
+        preferences: props.data.preferences || {}
+      }}
     >
-      User Node
+      User
     </BaseNode>
   );
 };
