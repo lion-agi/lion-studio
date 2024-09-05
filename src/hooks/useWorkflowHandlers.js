@@ -1,7 +1,7 @@
 import { useCallback, useRef, useState } from 'react';
 import { addEdge } from 'reactflow';
 
-export const useWorkflowHandlers = (nodes, setNodes, edges, setEdges) => {
+export const useWorkflowHandlers = (nodes, setNodes, edges, setEdges, updateNodeMutation, deleteNodeMutation) => {
   const reactFlowWrapper = useRef(null);
   const [reactFlowInstance, setReactFlowInstance] = useState(null);
 
@@ -44,10 +44,12 @@ export const useWorkflowHandlers = (nodes, setNodes, edges, setEdges) => {
 
   const onNodeDragStop = useCallback((event, node) => {
     const { x, y } = node.position;
+    const updatedPosition = { x: Math.round(x / 20) * 20, y: Math.round(y / 20) * 20 };
     setNodes((nds) =>
-      nds.map((n) => (n.id === node.id ? { ...n, position: { x: Math.round(x / 20) * 20, y: Math.round(y / 20) * 20 } } : n))
+      nds.map((n) => (n.id === node.id ? { ...n, position: updatedPosition } : n))
     );
-  }, [setNodes]);
+    updateNodeMutation.mutate({ id: node.id, position_x: updatedPosition.x, position_y: updatedPosition.y });
+  }, [setNodes, updateNodeMutation]);
 
   const handleExportJSON = useCallback(() => {
     if (reactFlowInstance) {
