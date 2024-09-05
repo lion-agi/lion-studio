@@ -111,13 +111,13 @@ const KnowledgeBase = () => {
           {renderCollectionsCard()}
         </TabsContent>
         <TabsContent value="pages">
-          <div className="px-8">
+          <div className="px-8 mt-8">
             <PageList pages={pages} />
             {renderCollectionsCard()}
           </div>
         </TabsContent>
         <TabsContent value="dataSources">
-          <div className="px-8">
+          <div className="px-8 mt-8">
             <DataSourceList dataSources={dataSources} />
           </div>
         </TabsContent>
