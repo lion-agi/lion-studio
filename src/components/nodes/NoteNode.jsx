@@ -35,7 +35,7 @@ const NoteNode = ({ data, selected }) => {
         <CardContent className="node-content">
           <Textarea className="node-input mb-2" placeholder="Write your note here" />
           <Button size="sm" className="node-button bg-yellow-500 hover:bg-yellow-600">
-            <Save className="w-4 h-4 mr-2" />
+            <Save className="w-4 w-4 mr-2" />
             Save Note
           </Button>
         </CardContent>
