@@ -10,7 +10,14 @@ const AssistantNode = ({ data, isConnectable, selected }) => {
   const [isExpanded, setIsExpanded] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
-  const [editedData, setEditedData] = useState({ ...data });
+  const [editedData, setEditedData] = useState({
+    label: data.label || 'Assistant',
+    description: data.description || 'A helpful AI assistant',
+    model: data.model || 'openai/gpt-4',
+    temperature: data.temperature || 0.7,
+    maxTokens: data.maxTokens || 1500,
+    ...data
+  });
 
   const handleEdit = useCallback(() => {
     setIsEditing(true);
@@ -25,7 +32,14 @@ const AssistantNode = ({ data, isConnectable, selected }) => {
   }, [editedData, data]);
 
   const handleCancel = useCallback(() => {
-    setEditedData({ ...data });
+    setEditedData({
+      label: data.label || 'Assistant',
+      description: data.description || 'A helpful AI assistant',
+      model: data.model || 'openai/gpt-4',
+      temperature: data.temperature || 0.7,
+      maxTokens: data.maxTokens || 1500,
+      ...data
+    });
     setIsEditing(false);
     setIsExpanded(false);
   }, [data]);
@@ -110,6 +124,9 @@ const AssistantNode = ({ data, isConnectable, selected }) => {
                   className="node-input text-xs h-7 px-2 py-1 border border-accent-300"
                   name="temperature"
                   type="number"
+                  step="0.1"
+                  min="0"
+                  max="1"
                   value={editedData.temperature}
                   onChange={handleInputChange}
                 />
