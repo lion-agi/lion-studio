@@ -11,7 +11,7 @@ const nodeCategories = [
     name: 'Basic',
     nodes: [
       { type: 'assistant', icon: <Bot />, label: 'Assistant' },
-      { type: 'user', icon: <User />, label: 'User Proxy' },
+      { type: 'user', icon: <User />, label: 'Human User' },
       { type: 'group', icon: <Users />, label: 'Mixture Of Experts' },
       { type: 'note', icon: <StickyNote />, label: 'Note' },
       { type: 'initializer', icon: <Play />, label: 'Start' },

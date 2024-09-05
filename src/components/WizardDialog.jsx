@@ -68,7 +68,7 @@ const WizardDialog = ({ isOpen, onClose, onAddNode, nodeType }) => {
                   </SelectTrigger>
                   <SelectContent>
                     <SelectItem value="assistant">Assistant</SelectItem>
-                    <SelectItem value="user">User Proxy</SelectItem>
+                    <SelectItem value="user">Human User</SelectItem>
                     <SelectItem value="group">Mixture Of Experts</SelectItem>
                     <SelectItem value="note">Note</SelectItem>
                     <SelectItem value="initializer">Start</SelectItem>
