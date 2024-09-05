@@ -37,7 +37,6 @@ const App = () => (
                 <Route path="/logout" element={<Navigate to="/" replace />} />
                 <Route path="/email-confirmation" element={<EmailConfirmation />} />
                 <Route path="/auth/callback" element={<AuthCallback />} />
-                <Route path="/workflows" element={<div>Workflows Page</div>} />
                 <Route path="/deployments" element={<div>Deployments Page</div>} />
                 <Route path="/connections" element={<div>Connections Page</div>} />
                 <Route path="/prompts" element={<div>Prompts Page</div>} />

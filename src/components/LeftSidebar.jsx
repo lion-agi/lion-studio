@@ -5,7 +5,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import { Save, Upload, PlusCircle, HelpCircle, Settings, FileJson, Workflow, Zap, Link, MessageSquare, Brain, Database, Activity } from 'lucide-react';
+import { Save, Upload, PlusCircle, HelpCircle, Settings, FileJson, Zap, Link, MessageSquare, Brain, Database, Activity } from 'lucide-react';
 import { useToast } from "@/components/ui/use-toast";
 import JSONModal from './JSONModal';
 
@@ -90,7 +90,6 @@ const LeftSidebar = ({ onExportJSON, onSaveLoad, onCreateAgenticFlow, onShowHelp
 
   return (
     <div className="w-16 bg-gray-800 p-2 flex flex-col items-center space-y-4">
-      {renderButton(<Workflow className="h-6 w-6 text-gray-300" />, "Workflows", () => onFeatureChange('workflows'), "Workflows")}
       {renderButton(<Zap className="h-6 w-6 text-gray-300" />, "Deployments", () => onFeatureChange('deployments'), "Deployments")}
       {renderButton(<Link className="h-6 w-6 text-gray-300" />, "Connections", () => onFeatureChange('connections'), "Connections")}
       {renderButton(<MessageSquare className="h-6 w-6 text-gray-300" />, "Prompts", () => onFeatureChange('prompts'), "Prompts")}
