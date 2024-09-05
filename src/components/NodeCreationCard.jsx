@@ -12,9 +12,9 @@ const nodeCategories = [
     nodes: [
       { type: 'assistant', icon: <Bot />, label: 'Assistant' },
       { type: 'user', icon: <User />, label: 'User Proxy' },
-      { type: 'group', icon: <Users />, label: 'Mixture Of Experts' },
+      { type: 'group', icon: <Users />, label: 'Group Chat' },
       { type: 'note', icon: <StickyNote />, label: 'Note' },
-      { type: 'initializer', icon: <Cog />, label: 'Start' },
+      { type: 'initializer', icon: <Cog />, label: 'Config' },
     ]
   },
   {

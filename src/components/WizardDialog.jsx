@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -69,9 +69,9 @@ const WizardDialog = ({ isOpen, onClose, onAddNode, nodeType }) => {
                   <SelectContent>
                     <SelectItem value="assistant">Assistant</SelectItem>
                     <SelectItem value="user">User Proxy</SelectItem>
-                    <SelectItem value="group">Mixture Of Experts</SelectItem>
+                    <SelectItem value="group">Group Chat</SelectItem>
                     <SelectItem value="note">Note</SelectItem>
-                    <SelectItem value="initializer">Start</SelectItem>
+                    <SelectItem value="initializer">Config</SelectItem>
                   </SelectContent>
                 </Select>
               </TableCell>
