@@ -140,7 +140,7 @@ const getNodeColor = (node) => {
     case 'assistant': return '#F59E0B';
     case 'group': return '#FF4136';
     case 'initializer': return '#EF4444';
-    case 'nestedChat': return '#EC4899';
+    case 'conversation': return '#EC4899';
     case 'note': return '#6366F1';
     default: return '#64748B';
   }

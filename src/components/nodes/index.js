@@ -6,6 +6,7 @@ import Initializer from './Initializer';
 import DatabaseNode from './DatabaseNode';
 import WorkflowNode from './WorkflowNode';
 import APICall from './APICall';
+import ConversationNode from './Conversation';
 
 export const nodeTypes = {
   assistant: AssistantNode,
@@ -15,5 +16,6 @@ export const nodeTypes = {
   initializer: Initializer,
   database: DatabaseNode,
   workflow: WorkflowNode,
-  api: APICall
+  api: APICall,
+  conversation: ConversationNode
 };
