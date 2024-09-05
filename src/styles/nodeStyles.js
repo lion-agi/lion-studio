@@ -30,6 +30,7 @@ export const getHeaderStyle = (type) => {
     background: `${color}`,
     color: 'white',
     textShadow: '0 1px 2px rgba(0, 0, 0, 0.1)',
+    borderBottom: `3px solid ${color}`,
     borderTopLeftRadius: '8px',
     borderTopRightRadius: '8px',
     padding: '8px 12px',
