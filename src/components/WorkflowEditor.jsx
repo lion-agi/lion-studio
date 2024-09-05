@@ -1,5 +1,5 @@
 import React, { useState, useCallback, useRef } from 'react';
-import ReactFlow, { Background, Controls, MiniMap, MarkerType } from 'reactflow';
+import ReactFlow, { Background, Controls, MiniMap, useNodesState, useEdgesState, MarkerType } from 'reactflow';
 import 'reactflow/dist/style.css';
 import LeftSidebar from './LeftSidebar';
 import SecondaryNavigation from './SecondaryNavigation';
@@ -36,6 +36,7 @@ const WorkflowEditor = () => {
     onDragOver,
     onDrop,
     onNodeDragStop,
+    handleExportJSON,
     handleSaveLoad,
     handleCreateAgenticFlow,
     onNodeClick,
