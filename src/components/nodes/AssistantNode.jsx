@@ -41,9 +41,15 @@ const AssistantNode = ({ data, isConnectable }) => {
     }
   }, [data]);
 
+  const toggleExpand = useCallback(() => {
+    if (!isEditing) {
+      setIsExpanded(!isExpanded);
+    }
+  }, [isEditing, isExpanded]);
+
   return (
     <Card className={`node-card w-64 bg-gradient-to-br from-accent-200 to-accent-100 ${isExpanded ? 'expanded' : ''}`}>
-      <CardHeader className="node-header bg-accent-300 relative" onClick={() => !isEditing && setIsExpanded(!isExpanded)}>
+      <CardHeader className="node-header bg-accent-300 relative" onClick={toggleExpand}>
         <CardTitle className="text-accent-foreground font-bold flex items-center">
           <Bot className="w-6 h-6 mr-2" />
           {editedData.label}
