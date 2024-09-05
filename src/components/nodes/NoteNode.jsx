@@ -1,114 +1,20 @@
-import React, { useState, useCallback } from 'react';
-import { Handle, Position } from 'reactflow';
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
-import { Textarea } from "@/components/ui/textarea"
-import { StickyNote, Save, Edit, Trash2, X, ChevronDown, ChevronUp } from 'lucide-react';
+import React from 'react';
+import BaseNode from './BaseNode';
+import { StickyNote } from 'lucide-react';
 
-const NoteNode = ({ data, isConnectable, selected }) => {
-  const [isExpanded, setIsExpanded] = useState(false);
-  const [isEditing, setIsEditing] = useState(false);
-  const [isHovered, setIsHovered] = useState(false);
-  const [editedData, setEditedData] = useState({ ...data });
-
-  const handleEdit = useCallback(() => {
-    setIsEditing(true);
-    setIsExpanded(true);
-  }, []);
-
-  const handleSave = useCallback(() => {
-    if (data.onSave) {
-      data.onSave(editedData);
-    }
-    setIsEditing(false);
-  }, [editedData, data]);
-
-  const handleCancel = useCallback(() => {
-    setEditedData({ ...data });
-    setIsEditing(false);
-    setIsExpanded(false);
-  }, [data]);
-
-  const handleInputChange = useCallback((e) => {
-    const { name, value } = e.target;
-    setEditedData(prev => ({ ...prev, [name]: value }));
-  }, []);
-
-  const handleDelete = useCallback(() => {
-    if (data.onDelete) {
-      data.onDelete(data.id);
-    }
-  }, [data]);
-
-  const toggleExpand = useCallback(() => {
-    setIsExpanded(!isExpanded);
-  }, [isExpanded]);
-
+const NoteNode = (props) => {
   return (
-    <Card 
-      className={`node-card w-64 bg-gradient-to-br from-yellow-400/20 to-yellow-300/10 backdrop-blur-sm ${selected ? 'selected' : ''}`}
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
+    <BaseNode 
+      {...props} 
+      icon={StickyNote} 
+      type="note"
+      baseColor="yellow"
+      gradientFrom="from-yellow-400/20"
+      gradientTo="to-yellow-300/10"
+      iconColor="text-yellow-600"
     >
-      <CardHeader className="node-header relative cursor-pointer" onClick={toggleExpand}>
-        <CardTitle className="text-yellow-foreground font-bold flex items-center justify-between text-sm">
-          <div className="flex items-center">
-            <StickyNote className="w-4 h-4 mr-2" />
-            Note
-          </div>
-          {isExpanded ? <ChevronUp className="w-3 h-3" /> : <ChevronDown className="w-3 h-3" />}
-        </CardTitle>
-        <Handle
-          type="target"
-          position={Position.Left}
-          style={{ top: '50%', transform: 'translateY(-50%)', left: '-6px' }}
-          isConnectable={isConnectable}
-        />
-        <Handle
-          type="source"
-          position={Position.Right}
-          style={{ top: '50%', transform: 'translateY(-50%)', right: '-6px' }}
-          isConnectable={isConnectable}
-        />
-      </CardHeader>
-      {isExpanded && (
-        <CardContent className="node-content">
-          {isEditing ? (
-            <>
-              <Textarea
-                className="node-input mb-2 text-xs"
-                name="content"
-                placeholder="Write your note here"
-                value={editedData.content}
-                onChange={handleInputChange}
-              />
-              <div className="flex justify-end space-x-2 mt-2">
-                <Button size="sm" variant="outline" onClick={handleCancel}>
-                  <X className="w-3 h-3 mr-1" />
-                  Cancel
-                </Button>
-                <Button size="sm" onClick={handleSave}>
-                  <Save className="w-3 h-3 mr-1" />
-                  Save
-                </Button>
-              </div>
-            </>
-          ) : (
-            <p className="mb-2 text-xs">{editedData.content}</p>
-          )}
-        </CardContent>
-      )}
-      {!isEditing && (isHovered || selected) && (
-        <div className="absolute top-0 right-0 p-1 bg-background/80 rounded-bl">
-          <Button variant="ghost" size="icon" onClick={handleEdit}>
-            <Edit className="h-3 w-3" />
-          </Button>
-          <Button variant="ghost" size="icon" onClick={handleDelete}>
-            <Trash2 className="h-3 w-3" />
-          </Button>
-        </div>
-      )}
-    </Card>
+      Note
+    </BaseNode>
   );
 };
 
