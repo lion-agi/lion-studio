@@ -20,11 +20,7 @@ const BaseNode = ({ id, data, isConnectable, selected, icon: Icon, type, baseCol
   }, []);
 
   const handleSave = useCallback(() => {
-    if (data.onSave) {
-      data.onSave(id, editedData);
-    } else {
-      updateNode.mutate({ id, ...editedData });
-    }
+    updateNode.mutate({ id, ...editedData });
     setIsEditing(false);
     // Update the data state to reflect changes immediately
     Object.assign(data, editedData);

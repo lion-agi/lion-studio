@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useRef, useEffect } from 'react';
+import React, { useState, useCallback, useRef } from 'react';
 import ReactFlow, { Background, Controls, MiniMap, useNodesState, useEdgesState, MarkerType } from 'reactflow';
 import 'reactflow/dist/style.css';
 import LeftSidebar from './LeftSidebar';
@@ -10,8 +10,6 @@ import { nodeTypes } from './nodes';
 import { useWorkflowState } from '../hooks/useWorkflowState';
 import { useWorkflowHandlers } from '../hooks/useWorkflowHandlers';
 import { useWorkflowModals } from '../hooks/useWorkflowModals';
-import { useNodes, useAddNode, useUpdateNode, useDeleteNode } from '../integrations/supabase/hooks/nodes';
-import { useSupabaseAuth } from '../integrations/supabase';
 
 const GRID_SIZE = 20;
 
@@ -21,12 +19,6 @@ const snapToGrid = (x, y) => ({
 });
 
 const WorkflowEditor = () => {
-  const { session } = useSupabaseAuth();
-  const { data: nodesData, isLoading: isLoadingNodes } = useNodes(session?.user?.id);
-  const addNodeMutation = useAddNode();
-  const updateNodeMutation = useUpdateNode();
-  const deleteNodeMutation = useDeleteNode();
-
   const {
     nodes,
     edges,
@@ -35,15 +27,6 @@ const WorkflowEditor = () => {
     setNodes,
     setEdges,
   } = useWorkflowState();
-
-  useEffect(() => {
-    if (nodesData) {
-      setNodes(nodesData.map(node => ({
-        ...node,
-        position: { x: node.position_x, y: node.position_y },
-      })));
-    }
-  }, [nodesData, setNodes]);
 
   const {
     reactFlowWrapper,
@@ -57,7 +40,7 @@ const WorkflowEditor = () => {
     handleSaveLoad,
     handleCreateAgenticFlow,
     onNodeClick,
-  } = useWorkflowHandlers(nodes, setNodes, edges, setEdges, updateNodeMutation, deleteNodeMutation);
+  } = useWorkflowHandlers(nodes, setNodes, edges, setEdges);
 
   const {
     showJSONModal,
@@ -89,29 +72,6 @@ const WorkflowEditor = () => {
       setShowJSONModal(true);
     }
   }, [reactFlowInstance, setJsonData, setShowJSONModal]);
-
-  const onAddNode = useCallback((nodeData) => {
-    const position = { x: Math.random() * 500, y: Math.random() * 500 };
-    const newNode = {
-      id: `${nodeData.type}-${Date.now()}`,
-      type: nodeData.type,
-      position,
-      data: { label: nodeData.name, ...nodeData },
-    };
-    addNodeMutation.mutate({
-      user_id: session.user.id,
-      type: newNode.type,
-      label: newNode.data.label,
-      position_x: newNode.position.x,
-      position_y: newNode.position.y,
-      data: newNode.data,
-    });
-    setNodes((nds) => [...nds, newNode]);
-  }, [addNodeMutation, session, setNodes]);
-
-  if (isLoadingNodes) {
-    return <div>Loading workflow...</div>;
-  }
 
   return (
     <div className="h-screen flex flex-col bg-gradient-to-br from-gray-900 to-gray-800 text-white">
@@ -151,7 +111,7 @@ const WorkflowEditor = () => {
               <MiniMap nodeColor={getNodeColor} nodeStrokeWidth={3} zoomable pannable />
             </ReactFlow>
           </div>
-          <NodeCreationCard onAddNode={onAddNode} />
+          <NodeCreationCard onAddNode={(nodeData) => setNodes((nds) => [...nds, createNode(nodeData)])} />
         </div>
       </div>
       <SaveLoadDialog
@@ -185,5 +145,12 @@ const getNodeColor = (node) => {
     default: return '#64748B';
   }
 };
+
+const createNode = (nodeData) => ({
+  id: `${nodeData.type}-${Date.now()}`,
+  type: nodeData.type,
+  position: { x: Math.random() * 500, y: Math.random() * 500 },
+  data: { label: nodeData.name, ...nodeData },
+});
 
 export default WorkflowEditor;
