@@ -6,9 +6,10 @@ import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { Bot, Zap, Edit, Trash2, Save, X, ChevronDown, ChevronUp } from 'lucide-react';
 
-const AssistantNode = ({ data, isConnectable }) => {
+const AssistantNode = ({ data, isConnectable, selected }) => {
   const [isExpanded, setIsExpanded] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
+  const [isHovered, setIsHovered] = useState(false);
   const [editedData, setEditedData] = useState({ ...data });
 
   const handleEdit = useCallback(() => {
@@ -45,7 +46,11 @@ const AssistantNode = ({ data, isConnectable }) => {
   }, [isExpanded]);
 
   return (
-    <Card className={`node-card w-64 bg-gradient-to-br from-accent-200 to-accent-100 ${isExpanded ? 'expanded' : ''}`}>
+    <Card 
+      className={`node-card w-64 bg-gradient-to-br from-accent-200 to-accent-100 ${isExpanded ? 'expanded' : ''}`}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+    >
       <CardHeader className="node-header bg-accent-300 relative cursor-pointer" onClick={toggleExpand}>
         <CardTitle className="text-accent-foreground font-bold flex items-center justify-between">
           <div className="flex items-center">
@@ -133,7 +138,7 @@ const AssistantNode = ({ data, isConnectable }) => {
           )}
         </CardContent>
       )}
-      {!isEditing && (
+      {!isEditing && (isHovered || selected) && (
         <div className="absolute top-0 right-0 p-1 bg-background/80 rounded-bl">
           <Button variant="ghost" size="icon" onClick={handleEdit}>
             <Edit className="h-4 w-4" />
