@@ -13,8 +13,12 @@ const DataSourceItem = ({ dataSource }) => {
         <p className="text-sm text-gray-600 mb-2">{dataSource.type}</p>
         <div className="space-y-1 text-sm">
           <p><strong>Last Sync:</strong> {dataSource.lastSync}</p>
-          <p><strong>Total Files:</strong> {dataSource.totalFiles.toLocaleString()}</p>
-          <p><strong>Used Space:</strong> {dataSource.usedSpace}</p>
+          {dataSource.totalTables && <p><strong>Total Tables:</strong> {dataSource.totalTables}</p>}
+          {dataSource.totalCollections && <p><strong>Total Collections:</strong> {dataSource.totalCollections}</p>}
+          {dataSource.totalFiles && <p><strong>Total Files:</strong> {dataSource.totalFiles.toLocaleString()}</p>}
+          {dataSource.totalChannels && <p><strong>Total Channels:</strong> {dataSource.totalChannels}</p>}
+          {dataSource.totalMessages && <p><strong>Total Messages:</strong> {dataSource.totalMessages}</p>}
+          {dataSource.usedSpace && <p><strong>Used Space:</strong> {dataSource.usedSpace}</p>}
         </div>
         <div className="flex justify-end space-x-2 mt-4">
           <Button variant="ghost" size="sm">

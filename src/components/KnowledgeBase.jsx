@@ -102,24 +102,54 @@ const KnowledgeBase = () => {
     }
   ];
 
-  const dataSources = [
-    {
-      id: 1,
-      name: "Google Drive",
-      type: "Cloud Storage",
-      lastSync: "2 hours ago",
-      totalFiles: 1250,
-      usedSpace: "15 GB"
-    },
-    {
-      id: 2,
-      name: "AWS S3 Bucket",
-      type: "Object Storage",
-      lastSync: "1 day ago",
-      totalFiles: 3750,
-      usedSpace: "50 GB"
-    }
-  ];
+  const dataSources = {
+    database: [
+      {
+        id: 1,
+        name: "PostgreSQL",
+        type: "Relational Database",
+        lastSync: "1 hour ago",
+        totalTables: 50,
+        usedSpace: "5 GB"
+      },
+      {
+        id: 2,
+        name: "MongoDB",
+        type: "NoSQL Database",
+        lastSync: "30 minutes ago",
+        totalCollections: 20,
+        usedSpace: "2 GB"
+      }
+    ],
+    cloud: [
+      {
+        id: 3,
+        name: "Google Drive",
+        type: "Cloud Storage",
+        lastSync: "2 hours ago",
+        totalFiles: 1250,
+        usedSpace: "15 GB"
+      },
+      {
+        id: 4,
+        name: "AWS S3 Bucket",
+        type: "Object Storage",
+        lastSync: "1 day ago",
+        totalFiles: 3750,
+        usedSpace: "50 GB"
+      }
+    ],
+    integrations: [
+      {
+        id: 5,
+        name: "Slack",
+        type: "Communication Platform",
+        lastSync: "5 minutes ago",
+        totalChannels: 25,
+        totalMessages: "10,000+"
+      }
+    ]
+  };
 
   return (
     <div className="container mx-auto p-4">
