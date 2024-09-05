@@ -8,7 +8,7 @@ const MixtureOfExperts = (props) => {
       {...props} 
       icon={Users} 
       type="moe"
-      baseColor="shrimpRed"
+      baseColor="red"
       gradientFrom="from-red-400/20"
       gradientTo="to-red-300/10"
       iconColor="text-red-600"
