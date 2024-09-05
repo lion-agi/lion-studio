@@ -1,5 +1,5 @@
 export const nodeColors = {
-  assistant: '#6366f1',
+  assistant: '#CD7F32', // Brushed bronze color
   user: '#22c55e',
   group: '#eab308',
   note: '#f97316',

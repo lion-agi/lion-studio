@@ -8,10 +8,10 @@ const AssistantNode = (props) => {
       {...props} 
       icon={Bot} 
       type="assistant"
-      baseColor="gray"
-      gradientFrom="from-gray-400/20"
-      gradientTo="to-gray-300/10"
-      iconColor="text-gray-600"
+      baseColor="brushedBronze"
+      gradientFrom="from-amber-700/20"
+      gradientTo="to-amber-600/10"
+      iconColor="text-amber-800"
     />
   );
 };
