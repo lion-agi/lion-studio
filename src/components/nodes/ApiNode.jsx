@@ -46,12 +46,12 @@ const ApiNode = ({ data, isConnectable, selected }) => {
 
   return (
     <Card 
-      className={`node-card w-64 bg-gradient-to-br from-blue-400/20 to-blue-300/10 backdrop-blur-sm ${selected ? 'selected' : ''}`}
+      className={`node-card w-64 bg-gradient-to-br from-pink-400/20 to-pink-300/10 backdrop-blur-sm ${selected ? 'selected' : ''}`}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
-      <CardHeader className="node-header bg-blue-300/30 relative cursor-pointer" onClick={toggleExpand}>
-        <CardTitle className="text-blue-foreground font-bold flex items-center justify-between">
+      <CardHeader className="node-header bg-pink-300/30 relative cursor-pointer" onClick={toggleExpand}>
+        <CardTitle className="text-pink-foreground font-bold flex items-center justify-between">
           <div className="flex items-center">
             <Zap className="w-6 h-6 mr-2" />
             {editedData.label}
