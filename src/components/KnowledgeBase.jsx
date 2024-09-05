@@ -2,10 +2,21 @@ import React, { useState } from 'react';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { Textarea } from "@/components/ui/textarea";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { PlusCircle, Search } from 'lucide-react';
 
 const KnowledgeBase = () => {
   const [searchTerm, setSearchTerm] = useState('');
+  const [isCreateCollectionOpen, setIsCreateCollectionOpen] = useState(false);
+  const [newCollection, setNewCollection] = useState({
+    title: '',
+    emoji: '',
+    description: '',
+    aiPrompt: '',
+    privacy: 'Shareable'
+  });
 
   const knowledgeItems = [
     { title: "Quantum-Inspired Cognitive Algorithms", content: "Quantum-inspired algorithms are...", status: "Draft" },
@@ -22,6 +33,18 @@ const KnowledgeBase = () => {
   const filteredItems = knowledgeItems.filter(item =>
     item.title.toLowerCase().includes(searchTerm.toLowerCase())
   );
+
+  const handleCreateCollection = () => {
+    console.log('Creating collection:', newCollection);
+    setIsCreateCollectionOpen(false);
+    setNewCollection({
+      title: '',
+      emoji: '',
+      description: '',
+      aiPrompt: '',
+      privacy: 'Shareable'
+    });
+  };
 
   return (
     <div className="container mx-auto p-4">
@@ -50,10 +73,77 @@ const KnowledgeBase = () => {
           <PlusCircle className="h-4 w-4 mr-2" />
           Page
         </Button>
-        <Button variant="outline">
-          <PlusCircle className="h-4 w-4 mr-2" />
-          Collection
-        </Button>
+        <Dialog open={isCreateCollectionOpen} onOpenChange={setIsCreateCollectionOpen}>
+          <DialogTrigger asChild>
+            <Button variant="outline">
+              <PlusCircle className="h-4 w-4 mr-2" />
+              Collection
+            </Button>
+          </DialogTrigger>
+          <DialogContent className="sm:max-w-[425px]">
+            <DialogHeader>
+              <DialogTitle>Create Collection</DialogTitle>
+            </DialogHeader>
+            <div className="grid gap-4 py-4">
+              <div className="grid grid-cols-4 items-center gap-4">
+                <label htmlFor="title" className="text-right">Title</label>
+                <Input
+                  id="title"
+                  value={newCollection.title}
+                  onChange={(e) => setNewCollection({...newCollection, title: e.target.value})}
+                  className="col-span-3"
+                  placeholder="Vacation Planning"
+                />
+              </div>
+              <div className="grid grid-cols-4 items-center gap-4">
+                <label htmlFor="emoji" className="text-right">Emoji</label>
+                <Input
+                  id="emoji"
+                  value={newCollection.emoji}
+                  onChange={(e) => setNewCollection({...newCollection, emoji: e.target.value})}
+                  className="col-span-3"
+                  placeholder="+"
+                />
+              </div>
+              <div className="grid grid-cols-4 items-center gap-4">
+                <label htmlFor="description" className="text-right">Description</label>
+                <Textarea
+                  id="description"
+                  value={newCollection.description}
+                  onChange={(e) => setNewCollection({...newCollection, description: e.target.value})}
+                  className="col-span-3"
+                  placeholder="Planning a trip to Europe"
+                />
+              </div>
+              <div className="grid grid-cols-4 items-center gap-4">
+                <label htmlFor="aiPrompt" className="text-right">AI Prompt</label>
+                <Textarea
+                  id="aiPrompt"
+                  value={newCollection.aiPrompt}
+                  onChange={(e) => setNewCollection({...newCollection, aiPrompt: e.target.value})}
+                  className="col-span-3"
+                  placeholder="You are a travel agent. Help me plan my trip around boutique hotels, local food, and museums."
+                />
+              </div>
+              <div className="grid grid-cols-4 items-center gap-4">
+                <label htmlFor="privacy" className="text-right">Privacy</label>
+                <Select
+                  value={newCollection.privacy}
+                  onValueChange={(value) => setNewCollection({...newCollection, privacy: value})}
+                >
+                  <SelectTrigger className="col-span-3">
+                    <SelectValue placeholder="Select privacy setting" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="Shareable">Shareable</SelectItem>
+                    <SelectItem value="Private">Private</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
+            <Button onClick={handleCreateCollection}>Create</Button>
+          </DialogContent>
+        </Dialog>
       </div>
 
       <Tabs defaultValue="pages">
