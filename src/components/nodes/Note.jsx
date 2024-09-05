@@ -17,7 +17,7 @@ const Note = ({ data, ...props }) => {
         getDisplayLabel: getDisplayLabel,
         onSave: (id, newData) => {
           // Update the node data when saved
-          if (props.data.onSave) {
+          if (props.data && typeof props.data.onSave === 'function') {
             props.data.onSave(id, {
               ...newData,
               label: newData.label || nodeLabel,

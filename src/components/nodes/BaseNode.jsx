@@ -18,13 +18,12 @@ const BaseNode = ({ data, isConnectable, selected, icon: Icon, type, baseColor =
   }, []);
 
   const handleSave = useCallback(() => {
-    if (data.onSave) {
+    if (typeof data.onSave === 'function') {
       data.onSave(data.id, editedData);
     }
     setIsEditing(false);
     // Update the data state to reflect changes immediately
-    data.label = editedData.label;
-    data.description = editedData.description;
+    Object.assign(data, editedData);
   }, [editedData, data]);
 
   const handleCancel = useCallback(() => {
@@ -39,7 +38,7 @@ const BaseNode = ({ data, isConnectable, selected, icon: Icon, type, baseColor =
   }, []);
 
   const handleDelete = useCallback(() => {
-    if (data.onDelete) {
+    if (typeof data.onDelete === 'function') {
       data.onDelete(data.id);
     }
   }, [data]);
