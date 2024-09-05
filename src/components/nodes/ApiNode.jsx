@@ -45,18 +45,13 @@ const ApiNode = ({ data, isConnectable, selected }) => {
     setIsExpanded(!isExpanded);
   }, [isExpanded]);
 
-  const nodeStyle = getNodeStyle('api', selected);
-  const headerStyle = getHeaderStyle('api');
-  const contentStyle = getContentStyle();
-
   return (
     <Card 
-      className="w-64"
-      style={nodeStyle}
+      style={getNodeStyle('api', selected)}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
-      <CardHeader className="cursor-pointer" style={headerStyle} onClick={toggleExpand}>
+      <CardHeader style={getHeaderStyle('api')} className="cursor-pointer" onClick={toggleExpand}>
         <CardTitle className="text-white font-bold flex items-center justify-between">
           <div className="flex items-center">
             <Zap className="w-6 h-6 mr-2" />
@@ -64,9 +59,21 @@ const ApiNode = ({ data, isConnectable, selected }) => {
           </div>
           {isExpanded ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
         </CardTitle>
+        <Handle
+          type="target"
+          position={Position.Left}
+          style={{ top: '50%', transform: 'translateY(-50%)', left: '-6px' }}
+          isConnectable={isConnectable}
+        />
+        <Handle
+          type="source"
+          position={Position.Right}
+          style={{ top: '50%', transform: 'translateY(-50%)', right: '-6px' }}
+          isConnectable={isConnectable}
+        />
       </CardHeader>
       {isExpanded && (
-        <CardContent style={contentStyle}>
+        <CardContent style={getContentStyle()}>
           {isEditing ? (
             <>
               <Textarea
@@ -102,18 +109,6 @@ const ApiNode = ({ data, isConnectable, selected }) => {
           </Button>
         </div>
       )}
-      <Handle
-        type="target"
-        position={Position.Left}
-        style={{ top: '50%', transform: 'translateY(-50%)', left: '-6px' }}
-        isConnectable={isConnectable}
-      />
-      <Handle
-        type="source"
-        position={Position.Right}
-        style={{ top: '50%', transform: 'translateY(-50%)', right: '-6px' }}
-        isConnectable={isConnectable}
-      />
     </Card>
   );
 };
