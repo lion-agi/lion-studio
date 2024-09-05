@@ -73,46 +73,57 @@ const AssistantNode = ({ data, isConnectable, selected }) => {
         />
       </CardHeader>
       {isExpanded && (
-        <CardContent className="node-content text-xs">
+        <CardContent className="node-content text-xs space-y-2">
           {isEditing ? (
             <>
-              <Input
-                className="node-input mb-2 text-xs"
-                name="label"
-                placeholder="Assistant name"
-                value={editedData.label}
-                onChange={handleInputChange}
-              />
-              <Textarea
-                className="node-input mb-2 text-xs"
-                name="description"
-                placeholder="Description"
-                value={editedData.description}
-                onChange={handleInputChange}
-              />
-              <Input
-                className="node-input mb-2 text-xs"
-                name="model"
-                placeholder="Model"
-                value={editedData.model}
-                onChange={handleInputChange}
-              />
-              <Input
-                className="node-input mb-2 text-xs"
-                name="temperature"
-                type="number"
-                placeholder="Temperature"
-                value={editedData.temperature}
-                onChange={handleInputChange}
-              />
-              <Input
-                className="node-input mb-2 text-xs"
-                name="maxTokens"
-                type="number"
-                placeholder="Max Tokens"
-                value={editedData.maxTokens}
-                onChange={handleInputChange}
-              />
+              <div className="space-y-1">
+                <label className="text-xs font-medium">Name:</label>
+                <Input
+                  className="node-input text-xs h-7 px-2 py-1 border border-accent-300"
+                  name="label"
+                  value={editedData.label}
+                  onChange={handleInputChange}
+                />
+              </div>
+              <div className="space-y-1">
+                <label className="text-xs font-medium">Description:</label>
+                <Textarea
+                  className="node-input text-xs px-2 py-1 border border-accent-300"
+                  name="description"
+                  value={editedData.description}
+                  onChange={handleInputChange}
+                  rows={2}
+                />
+              </div>
+              <div className="space-y-1">
+                <label className="text-xs font-medium">Model:</label>
+                <Input
+                  className="node-input text-xs h-7 px-2 py-1 border border-accent-300"
+                  name="model"
+                  value={editedData.model}
+                  onChange={handleInputChange}
+                />
+              </div>
+              <div className="space-y-1">
+                <label className="text-xs font-medium">Temperature:</label>
+                <Input
+                  className="node-input text-xs h-7 px-2 py-1 border border-accent-300"
+                  name="temperature"
+                  type="number"
+                  value={editedData.temperature}
+                  onChange={handleInputChange}
+                />
+              </div>
+              <div className="space-y-1">
+                <label className="text-xs font-medium">Max Tokens:</label>
+                <Input
+                  className="node-input text-xs h-7 px-2 py-1 border border-accent-300"
+                  name="maxTokens"
+                  type="number"
+                  value={editedData.maxTokens}
+                  onChange={handleInputChange}
+                />
+              </div>
               <div className="flex justify-end space-x-2 mt-2">
                 <Button size="sm" variant="outline" onClick={handleCancel}>
                   <X className="w-3 h-3 mr-1" />
@@ -126,11 +137,27 @@ const AssistantNode = ({ data, isConnectable, selected }) => {
             </>
           ) : (
             <>
-              <p className="mb-2"><strong>Description:</strong> {editedData.description}</p>
-              <p className="mb-2"><strong>Model:</strong> {editedData.model}</p>
-              <p className="mb-2"><strong>Temperature:</strong> {editedData.temperature}</p>
-              <p className="mb-2"><strong>Max Tokens:</strong> {editedData.maxTokens}</p>
-              <Button size="sm" className="node-button text-xs">
+              <div className="space-y-1">
+                <p className="font-medium">Name:</p>
+                <p className="border border-accent-300 rounded px-2 py-1">{editedData.label}</p>
+              </div>
+              <div className="space-y-1">
+                <p className="font-medium">Description:</p>
+                <p className="border border-accent-300 rounded px-2 py-1">{editedData.description}</p>
+              </div>
+              <div className="space-y-1">
+                <p className="font-medium">Model:</p>
+                <p className="border border-accent-300 rounded px-2 py-1">{editedData.model}</p>
+              </div>
+              <div className="space-y-1">
+                <p className="font-medium">Temperature:</p>
+                <p className="border border-accent-300 rounded px-2 py-1">{editedData.temperature}</p>
+              </div>
+              <div className="space-y-1">
+                <p className="font-medium">Max Tokens:</p>
+                <p className="border border-accent-300 rounded px-2 py-1">{editedData.maxTokens}</p>
+              </div>
+              <Button size="sm" className="node-button text-xs w-full">
                 <Zap className="w-3 h-3 mr-1" />
                 Train
               </Button>
