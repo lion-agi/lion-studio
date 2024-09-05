@@ -21,7 +21,7 @@ const nodeCategories = [
     name: 'Advanced',
     nodes: [
       { type: 'database', icon: <Database />, label: 'Database' },
-      { type: 'workflow', icon: <Workflow />, label: 'Nested Workflow' },
+      { type: 'workflow', icon: <Workflow />, label: 'Workflow' },
       { type: 'api', icon: <Zap />, label: 'API Call' },
     ]
   }
