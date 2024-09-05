@@ -2,7 +2,7 @@ import React from 'react';
 import BaseNode from './BaseNode';
 import { Bot } from 'lucide-react';
 
-const AssistantNode = (props) => {
+const Assistant = (props) => {
   return (
     <BaseNode 
       {...props} 
@@ -16,4 +16,4 @@ const AssistantNode = (props) => {
   );
 };
 
-export default AssistantNode;
+export default Assistant;

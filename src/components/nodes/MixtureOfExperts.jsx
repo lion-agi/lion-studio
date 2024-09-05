@@ -7,7 +7,7 @@ const MixtureOfExperts = (props) => {
     <BaseNode 
       {...props} 
       icon={Users} 
-      type="group"
+      type="moe"
       baseColor="shrimpRed"
       gradientFrom="from-red-400/20"
       gradientTo="to-red-300/10"

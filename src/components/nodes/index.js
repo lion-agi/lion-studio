@@ -1,23 +1,20 @@
-import HumanUser from './UserNode';
 import Assistant from './AgentNode';
-import AssistantNode from './AssistantNode';
-import GroupNode from './GroupNode';
-import Initializer from './InitializerNode';
-import NestedChatNode from './NestedChatNode';
-import NoteNode from './NoteNode';
-import APICall from './ApiNode';
-import WorkflowNode from './WorkflowNode';
-import DatabaseNode from './DatabaseNode';
+import Conversation from './Conversation';
+import Database from './DatabaseNode';
+import HumanUser from './HumanUser';
+import Initializer from './Initializer';
+import MixtureOfExperts from './MixtureOfExperts';
+import Note from './Note';
+import Workflow from './WorkflowNode';
+
 
 export const nodeTypes = {
+  assistant: Assistant,
+  conversation: Conversation,
+  database: Database,
   user: HumanUser,
-  agent: Assistant,
-  assistant: AssistantNode,
-  group: GroupNode,
   initializer: Initializer,
-  nestedChat: NestedChatNode,
-  note: NoteNode,
-  api: APICall,
-  workflow: WorkflowNode,
-  database: DatabaseNode,
+  moe: MixtureOfExperts,
+  note: Note,
+  workflow: Workflow
 };

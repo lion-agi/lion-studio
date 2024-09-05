@@ -2,7 +2,7 @@ import React from 'react';
 import BaseNode from './BaseNode';
 import { Database } from 'lucide-react';
 
-const DatabaseNode = (props) => {
+const Database = (props) => {
   return (
     <BaseNode 
       {...props} 
@@ -18,4 +18,4 @@ const DatabaseNode = (props) => {
   );
 };
 
-export default DatabaseNode;
+export default Database;

@@ -2,7 +2,7 @@ import React from 'react';
 import BaseNode from './BaseNode';
 import { Workflow } from 'lucide-react';
 
-const WorkflowNode = (props) => {
+const Workflow = (props) => {
   return (
     <BaseNode 
       {...props} 
@@ -18,4 +18,4 @@ const WorkflowNode = (props) => {
   );
 };
 
-export default WorkflowNode;
+export default Workflow;
