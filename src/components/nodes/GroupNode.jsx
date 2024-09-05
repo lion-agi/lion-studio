@@ -3,7 +3,7 @@ import { Handle, Position } from 'reactflow';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import { Users, UserPlus, Edit, Trash2, Save, X, ChevronDown, ChevronUp } from 'lucide-react';
+import { Users, UserPlus, Edit, Trash2, Save, X, ChevronDown, ChevronUp, ArrowRight } from 'lucide-react';
 
 const GroupNode = ({ data, isConnectable, selected }) => {
   const [isExpanded, setIsExpanded] = useState(false);
@@ -107,7 +107,9 @@ const GroupNode = ({ data, isConnectable, selected }) => {
         position={Position.Left}
         style={{ top: '50%', transform: 'translateY(-50%)', left: '-6px' }}
         isConnectable={isConnectable}
-      />
+      >
+        <ArrowRight className="h-3 w-3 text-green-500 absolute -left-4 top-1/2 -translate-y-1/2" />
+      </Handle>
       <Handle
         type="source"
         position={Position.Right}
