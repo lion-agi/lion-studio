@@ -58,18 +58,6 @@ const GroupNode = ({ data, isConnectable, selected }) => {
           </div>
           {isExpanded ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
         </CardTitle>
-        <Handle
-          type="target"
-          position={Position.Left}
-          style={{ top: '50%', transform: 'translateY(-50%)', left: '-6px' }}
-          isConnectable={isConnectable}
-        />
-        <Handle
-          type="source"
-          position={Position.Right}
-          style={{ top: '50%', transform: 'translateY(-50%)', right: '-6px' }}
-          isConnectable={isConnectable}
-        />
       </CardHeader>
       {isExpanded && (
         <CardContent className="node-content">
@@ -114,6 +102,18 @@ const GroupNode = ({ data, isConnectable, selected }) => {
           </Button>
         </div>
       )}
+      <Handle
+        type="target"
+        position={Position.Left}
+        style={{ top: '50%', transform: 'translateY(-50%)', left: '-6px' }}
+        isConnectable={isConnectable}
+      />
+      <Handle
+        type="source"
+        position={Position.Right}
+        style={{ top: '50%', transform: 'translateY(-50%)', right: '-6px' }}
+        isConnectable={isConnectable}
+      />
     </Card>
   );
 };
