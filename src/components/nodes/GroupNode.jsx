@@ -8,12 +8,12 @@ const GroupNode = (props) => {
       {...props} 
       icon={Users} 
       type="group"
-      baseColor="brushedSilver"
-      gradientFrom="from-gray-400/20"
-      gradientTo="to-gray-300/10"
-      iconColor="text-gray-600"
+      baseColor="orange"
+      gradientFrom="from-orange-400/20"
+      gradientTo="to-orange-300/10"
+      iconColor="text-orange-600"
     >
-      Mixture of Experts
+      Mixture Of Experts
     </BaseNode>
   );
 };
