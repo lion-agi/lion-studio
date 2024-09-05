@@ -10,7 +10,7 @@ import Registration from "./pages/Registration";
 import Login from "./pages/Login";
 import UserProfile from "./pages/UserProfile";
 import ImageUpload from "./pages/ImageUpload";
-import WorkflowEditor from "./components/WorkflowEditor";
+import Workflows from "./components/WorkflowEditor";
 import EmailConfirmation from "./pages/EmailConfirmation";
 import AuthCallback from "./pages/AuthCallback";
 import KnowledgeBase from "./components/KnowledgeBase";
@@ -33,7 +33,7 @@ const App = () => (
                 <Route path="/login" element={<Login />} />
                 <Route path="/profile" element={<UserProfile />} />
                 <Route path="/upload" element={<ImageUpload />} />
-                <Route path="/editor" element={<WorkflowEditor />} />
+                <Route path="/workflows" element={<Workflows />} />
                 <Route path="/logout" element={<Navigate to="/" replace />} />
                 <Route path="/email-confirmation" element={<EmailConfirmation />} />
                 <Route path="/auth/callback" element={<AuthCallback />} />

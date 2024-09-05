@@ -9,7 +9,7 @@ const tabs = [
   { name: 'Fine-tuning', href: '/fine-tuning' },
   { name: 'Knowledge bases', href: '/knowledge-bases' },
   { name: 'Evaluations', href: '/evaluations' },
-  { name: 'Editor', href: '/editor' },
+  { name: 'Workflows', href: '/workflows' },
   { name: 'Monitoring', href: '/monitoring' },
 ];
 
