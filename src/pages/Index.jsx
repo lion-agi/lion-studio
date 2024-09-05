@@ -1,127 +1,79 @@
-import React from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import { useSupabaseAuth } from '@/integrations/supabase';
-import { ArrowRight, Zap, Workflow, Bot, LogOut } from 'lucide-react';
+import { ArrowRight, Home, Zap, BookOpen, HelpCircle, MessageSquare, Settings, Download, Trash2 } from 'lucide-react';
 
 const Index = () => {
   const { session, logout } = useSupabaseAuth();
-  const navigate = useNavigate();
-
-  const handleLogout = async () => {
-    await logout();
-    navigate('/');
-  };
+  const [knowledgeBases, setKnowledgeBases] = useState([
+    { id: 1, title: "Attention is All You Need", content: "View Content" },
+    { id: 2, title: "Artificial Intelligence Index Report 2024", content: "View Content" },
+    { id: 3, title: "PaLM-E: An Embodied Multimodal Language Model", content: "View Content" },
+    { id: 4, title: "Generative Agents: Interactive Simulacra of Human Behavior", content: "View Content" },
+    { id: 5, title: "Large Language Models Encode Clinical Knowledge", content: "View Content" },
+    { id: 6, title: "Position: Levels of AGI for Operationalizing Progress on the Path to AGI", content: "View Content" },
+  ]);
 
   return (
-    <div className="min-h-screen bg-background">
-      <header className="p-4 flex justify-between items-center">
-        <img src="/lion-studio-logo.jpeg" alt="Lion Studio Logo" className="w-24 h-24 object-contain" />
-        <nav>
-          {session ? (
-            <>
-              <Link to="/profile">
-                <Button variant="ghost" className="mr-2">Profile</Button>
-              </Link>
-              <Link to="/upload">
-                <Button variant="ghost" className="mr-2">Upload Images</Button>
-              </Link>
-              <Link to="/editor">
-                <Button variant="ghost" className="mr-2">Workflow Editor</Button>
-              </Link>
-              <Button variant="ghost" onClick={handleLogout}>
-                <LogOut className="mr-2 h-4 w-4" />
-                Log out
-              </Button>
-            </>
-          ) : (
-            <>
-              <Link to="/login">
-                <Button variant="ghost" className="mr-2">Log in</Button>
-              </Link>
-              <Link to="/register">
-                <Button>Sign up</Button>
-              </Link>
-            </>
-          )}
+    <div className="flex h-screen bg-background">
+      {/* Sidebar */}
+      <aside className="w-64 bg-card text-card-foreground p-4 hidden md:block">
+        <nav className="space-y-2">
+          <NavItem icon={<Home className="h-5 w-5" />} label="Home" />
+          <NavItem icon={<Zap className="h-5 w-5" />} label="Generate" />
+          <NavItem icon={<BookOpen className="h-5 w-5" />} label="My Library" />
+          <NavItem icon={<HelpCircle className="h-5 w-5" />} label="Help" />
+          <NavItem icon={<MessageSquare className="h-5 w-5" />} label="Feedback" />
+          <NavItem icon={<Settings className="h-5 w-5" />} label="Admin" />
         </nav>
-      </header>
+      </aside>
 
-      <main className="container mx-auto px-4">
-        <section className="py-20 text-center">
-          <div className="max-w-3xl mx-auto">
-            <h1 className="text-5xl font-bold mb-6 bg-gradient-to-r from-purple-600 to-indigo-600 bg-clip-text text-transparent">
-              Intelligent Workflow Automation
-            </h1>
-            <p className="text-xl mb-8 text-muted-foreground">
-              Streamline your business processes with AI-powered automation solutions
-            </p>
-            <Link to={session ? "/editor" : "/register"}>
-              <Button size="lg" className="bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700">
-                Get Started <ArrowRight className="ml-2 h-5 w-5" />
-              </Button>
-            </Link>
-          </div>
-        </section>
+      {/* Main content */}
+      <main className="flex-1 p-8 overflow-auto">
+        <h1 className="text-3xl font-bold mb-6">Transform your content into engaging AI-generated audio discussions</h1>
+        <p className="text-lg mb-6">Elevate your content with Muse: AI-powered summaries and lifelike audio narrations at your fingertips.</p>
+        
+        <Button className="mb-8">Add API Keys To Start</Button>
 
-        <section className="py-20">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <FeatureCard
-              icon={<Zap className="h-10 w-10 text-yellow-500" />}
-              title="Lightning Fast"
-              description="Accelerate your workflows with our high-performance automation engine."
-            />
-            <FeatureCard
-              icon={<Workflow className="h-10 w-10 text-green-500" />}
-              title="Flexible Workflows"
-              description="Design and customize workflows to fit your unique business needs."
-            />
-            <FeatureCard
-              icon={<Bot className="h-10 w-10 text-blue-500" />}
-              title="AI-Powered"
-              description="Leverage cutting-edge AI to make your workflows smarter and more efficient."
-            />
-          </div>
-        </section>
-
-        <section className="py-20 text-center">
-          <div className="max-w-3xl mx-auto">
-            <h2 className="text-3xl font-bold mb-6">Ready to Transform Your Business?</h2>
-            <p className="text-xl mb-8 text-muted-foreground">
-              Join thousands of companies already using Lion Studio for their workflow automation needs.
-            </p>
-            <Link to="/register">
-              <Button size="lg" className="bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700">
-                Start Your Free Trial
-              </Button>
-            </Link>
-          </div>
-        </section>
-      </main>
-
-      <footer className="bg-card mt-20">
-        <div className="container mx-auto px-4 py-8">
-          <div className="flex flex-col md:flex-row justify-between items-center">
-            <p className="text-muted-foreground mb-4 md:mb-0">
-              © 2024 Lion Studio Workflow Automation. All rights reserved.
-            </p>
-            <div className="flex space-x-4">
-              <Link to="/about" className="text-muted-foreground hover:text-foreground">About</Link>
-              <Link to="/contact" className="text-muted-foreground hover:text-foreground">Contact</Link>
-              <Link to="/privacy" className="text-muted-foreground hover:text-foreground">Privacy Policy</Link>
-            </div>
-          </div>
+        <div className="flex justify-between items-center mb-4">
+          <h2 className="text-2xl font-semibold">Public</h2>
+          <Button variant="outline">Retry All</Button>
         </div>
-      </footer>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          {knowledgeBases.map((kb) => (
+            <KnowledgeBaseCard key={kb.id} title={kb.title} content={kb.content} />
+          ))}
+        </div>
+      </main>
     </div>
   );
 };
 
-const FeatureCard = ({ icon, title, description }) => (
-  <div className="bg-card p-6 rounded-lg shadow-lg text-center">
-    <div className="mb-4 flex justify-center">{icon}</div>
-    <h3 className="text-xl font-semibold mb-2">{title}</h3>
-    <p className="text-muted-foreground">{description}</p>
+const NavItem = ({ icon, label }) => (
+  <Link to="/" className="flex items-center space-x-2 p-2 rounded-lg hover:bg-accent">
+    {icon}
+    <span>{label}</span>
+  </Link>
+);
+
+const KnowledgeBaseCard = ({ title, content }) => (
+  <div className="bg-card text-card-foreground p-4 rounded-lg shadow">
+    <h3 className="font-semibold mb-2">{title}</h3>
+    <p className="text-blue-500 hover:underline mb-2">{content}</p>
+    <div className="flex justify-between items-center">
+      <Button variant="ghost" size="icon">
+        <Download className="h-4 w-4" />
+      </Button>
+      <Button variant="ghost" size="icon">
+        <Trash2 className="h-4 w-4" />
+      </Button>
+    </div>
+    <div className="mt-2 p-2 bg-muted text-muted-foreground rounded">
+      Audio Unavailable
+    </div>
   </div>
 );
 
