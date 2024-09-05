@@ -1,12 +1,12 @@
 import React from 'react';
 import BaseNode from './BaseNode';
-import { Database } from 'lucide-react';
+import { Database as DatabaseIcon } from 'lucide-react';
 
-const Database = (props) => {
+const DatabaseNode = (props) => {
   return (
     <BaseNode 
       {...props} 
-      icon={Database} 
+      icon={DatabaseIcon} 
       type="database"
       baseColor="indigo"
       gradientFrom="from-indigo-400/20"
@@ -18,4 +18,4 @@ const Database = (props) => {
   );
 };
 
-export default Database;
+export default DatabaseNode;

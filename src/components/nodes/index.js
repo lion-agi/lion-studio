@@ -1,20 +1,19 @@
 import Assistant from './AgentNode';
-import Conversation from './Conversation';
-import Database from './DatabaseNode';
+import ConversationNode from './Conversation';
+import DatabaseNode from './DatabaseNode';
 import HumanUser from './HumanUser';
 import Initializer from './Initializer';
 import MixtureOfExperts from './MixtureOfExperts';
 import Note from './Note';
-import Workflow from './WorkflowNode';
-
+import WorkflowNode from './WorkflowNode';
 
 export const nodeTypes = {
   assistant: Assistant,
-  conversation: Conversation,
-  database: Database,
+  conversation: ConversationNode,
+  database: DatabaseNode,
   user: HumanUser,
   initializer: Initializer,
   moe: MixtureOfExperts,
   note: Note,
-  workflow: Workflow
+  workflow: WorkflowNode
 };

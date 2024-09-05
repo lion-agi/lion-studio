@@ -1,12 +1,12 @@
 import React from 'react';
 import BaseNode from './BaseNode';
-import { Workflow } from 'lucide-react';
+import { Workflow as WorkflowIcon } from 'lucide-react';
 
-const Workflow = (props) => {
+const WorkflowNode = (props) => {
   return (
     <BaseNode 
       {...props} 
-      icon={Workflow} 
+      icon={WorkflowIcon} 
       type="workflow"
       baseColor="green"
       gradientFrom="from-green-400/20"
@@ -18,4 +18,4 @@ const Workflow = (props) => {
   );
 };
 
-export default Workflow;
+export default WorkflowNode;
