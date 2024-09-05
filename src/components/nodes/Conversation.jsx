@@ -1,12 +1,12 @@
 import React from 'react';
 import BaseNode from './BaseNode';
-import { Conversation as ConversationIcon } from 'lucide-react';
+import { MessageSquare } from 'lucide-react';
 
 const ConversationNode = (props) => {
   return (
     <BaseNode 
       {...props} 
-      icon={ConversationIcon} 
+      icon={MessageSquare} 
       type="conversation"
       baseColor="brown"
       gradientFrom="from-brown-400/20"
