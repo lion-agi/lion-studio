@@ -3,7 +3,7 @@ import ThreadItem from './ThreadItem';
 
 const ThreadList = ({ threads }) => {
   return (
-    <div className="space-y-4">
+    <div className="space-y-4 px-4">
       {threads.map((thread) => (
         <ThreadItem key={thread.id} thread={thread} />
       ))}
