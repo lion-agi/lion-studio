@@ -17,14 +17,12 @@ import { useWorkflowState } from '../hooks/useWorkflowState';
 import { useWorkflowHandlers } from '../hooks/useWorkflowHandlers';
 import { useWorkflowModals } from '../hooks/useWorkflowModals';
 
-const GRID_SIZE = 20; // Size of each grid cell
+const GRID_SIZE = 20;
 
-const snapToGrid = (x, y) => {
-  return {
-    x: Math.round(x / GRID_SIZE) * GRID_SIZE,
-    y: Math.round(y / GRID_SIZE) * GRID_SIZE,
-  };
-};
+const snapToGrid = (x, y) => ({
+  x: Math.round(x / GRID_SIZE) * GRID_SIZE,
+  y: Math.round(y / GRID_SIZE) * GRID_SIZE,
+});
 
 const WorkflowEditor = () => {
   const [nodes, setNodes, onNodesChange] = useNodesState([]);
@@ -77,12 +75,7 @@ const WorkflowEditor = () => {
 
   const handleSaveNode = useCallback((nodeId, newData) => {
     setNodes((nds) =>
-      nds.map((node) => {
-        if (node.id === nodeId) {
-          return { ...node, data: { ...node.data, ...newData, onSave: handleSaveNode, onDelete: handleDeleteNode } };
-        }
-        return node;
-      })
+      nds.map((node) => (node.id === nodeId ? { ...node, data: { ...node.data, ...newData } } : node))
     );
     updateWorkflowData();
   }, [setNodes]);
@@ -123,12 +116,7 @@ const WorkflowEditor = () => {
   const onNodeDragStop = useCallback((event, node) => {
     const { x, y } = snapToGrid(node.position.x, node.position.y);
     setNodes((nds) =>
-      nds.map((n) => {
-        if (n.id === node.id) {
-          return { ...n, position: { x, y } };
-        }
-        return n;
-      })
+      nds.map((n) => (n.id === node.id ? { ...n, position: { x, y } } : n))
     );
   }, [setNodes]);
 
@@ -178,12 +166,7 @@ const WorkflowEditor = () => {
               snapGrid={[GRID_SIZE, GRID_SIZE]}
               fitView
             >
-              <Background
-                variant="dots"
-                gap={GRID_SIZE}
-                size={1}
-                color="#4B5563"
-              />
+              <Background variant="dots" gap={GRID_SIZE} size={1} color="#4B5563" />
               <Controls />
               <MiniMap
                 nodeColor={(node) => {
@@ -191,7 +174,7 @@ const WorkflowEditor = () => {
                     case 'user': return '#3B82F6';
                     case 'agent': return '#10B981';
                     case 'assistant': return '#F59E0B';
-                    case 'group': return '#8B5CF6';
+                    case 'group': return '#FF4136';
                     case 'initializer': return '#EF4444';
                     case 'nestedChat': return '#EC4899';
                     case 'note': return '#6366F1';

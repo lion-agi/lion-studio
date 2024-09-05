@@ -6,7 +6,7 @@ import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { Edit, Trash2, Save, X, ChevronDown, ChevronUp } from 'lucide-react';
 
-const BaseNode = ({ data, isConnectable, selected, icon: Icon, type, baseColor = "blue", gradientFrom = "from-blue-400/20", gradientTo = "to-blue-300/10", iconColor = "text-blue-600" }) => {
+const BaseNode = ({ data, isConnectable, selected, icon: Icon, type, baseColor = "blue", gradientFrom = "from-blue-400/20", gradientTo = "to-blue-300/10", iconColor = "text-blue-600", children }) => {
   const [isExpanded, setIsExpanded] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
@@ -19,7 +19,7 @@ const BaseNode = ({ data, isConnectable, selected, icon: Icon, type, baseColor =
 
   const handleSave = useCallback(() => {
     if (data.onSave) {
-      data.onSave(editedData);
+      data.onSave(data.id, editedData);
     }
     setIsEditing(false);
   }, [editedData, data]);
@@ -55,7 +55,7 @@ const BaseNode = ({ data, isConnectable, selected, icon: Icon, type, baseColor =
         <CardTitle className={`text-${baseColor}-foreground font-bold flex items-center justify-between text-sm`}>
           <div className="flex items-center">
             <Icon className={`w-4 h-4 mr-2 ${iconColor}`} />
-            {data.label}
+            {editedData.label || children}
           </div>
           {isExpanded ? <ChevronUp className="w-3 h-3" /> : <ChevronDown className="w-3 h-3" />}
         </CardTitle>
@@ -78,16 +78,16 @@ const BaseNode = ({ data, isConnectable, selected, icon: Icon, type, baseColor =
             <>
               <Input
                 className="node-input mb-2 text-xs h-7 px-2 py-1"
-                name="name"
-                placeholder="Node name"
-                value={editedData.name}
+                name="label"
+                placeholder="Node label"
+                value={editedData.label || ''}
                 onChange={handleInputChange}
               />
               <Textarea
                 className="node-input mb-2 text-xs px-2 py-1"
                 name="description"
                 placeholder="Node description"
-                value={editedData.description}
+                value={editedData.description || ''}
                 onChange={handleInputChange}
                 rows={2}
               />
@@ -104,8 +104,8 @@ const BaseNode = ({ data, isConnectable, selected, icon: Icon, type, baseColor =
             </>
           ) : (
             <>
-              <p className="mb-2 text-xs"><strong>Name:</strong> {editedData.name}</p>
-              <p className="mb-2 text-xs"><strong>Description:</strong> {editedData.description}</p>
+              <p className="mb-2 text-xs"><strong>Label:</strong> {editedData.label || children}</p>
+              <p className="mb-2 text-xs"><strong>Description:</strong> {editedData.description || 'No description'}</p>
             </>
           )}
         </CardContent>
