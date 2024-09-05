@@ -7,6 +7,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { PlusCircle, Search } from 'lucide-react';
 import ThreadItem from './ThreadItem';
+import PageItem from './PageItem';
 
 const KnowledgeBase = () => {
   const [searchTerm, setSearchTerm] = useState('');
@@ -22,57 +23,89 @@ const KnowledgeBase = () => {
   const threads = [
     {
       id: 1,
-      title: "using pydantic, how to use annotated and field as function parameter",
-      content: "To use Pydantic's Annotated and Field as function parameters, you can combine them to create validated and documented function arguments. Here's how to do it: 1. Import the...",
-      createdAt: "27 days ago",
+      title: "Quantum-Inspired Cognitive Algorithms",
+      content: "Quantum-inspired algorithms are computational methods that draw inspiration from quantum mechanics principles but can be implemented on classical computers...",
+      createdAt: "2 days ago",
       collection: "agentic",
       views: 0,
-      timeToRead: "1mo"
+      timeToRead: "5 min",
+      status: "Draft"
     },
     {
       id: 2,
-      title: "how to run a startup script .sh file in macos terminal",
-      content: "To run a startup script (.sh file) in macOS Terminal, you have a few options: 1. Add the script to your login items: Go to System Preferences > Users & Groups Select your user...",
-      createdAt: "29 days ago",
+      title: "The Tao and Complex Systems",
+      content: "The intersection of Eastern philosophy, complex systems theory, and modern physics reveals intriguing parallels in how we understand the fundamental nature of reality...",
+      createdAt: "1 week ago",
       collection: "agentic",
       views: 0,
-      timeToRead: "1mo"
+      timeToRead: "7 min",
+      status: "Draft"
     },
     {
       id: 3,
-      title: "in graph theory, after a hyperedge is formed, is it academically correct for the hyper ed...",
-      content: "Yes, in graph theory, it is academically correct for a hyperedge to connect to more nodes after it is initially formed. This flexibility is one of the key features that distinguishes...",
-      createdAt: "1 month ago",
+      title: "Efficient Knowledge Graph Structures",
+      content: "Cognitive architectures and large-scale knowledge representation systems often rely on graph-based structures to organize and retrieve information efficiently...",
+      createdAt: "2 weeks ago",
       collection: "agentic",
-      views: 0,
-      timeToRead: "1mo"
+      views: 1,
+      timeToRead: "10 min"
     },
     {
       id: 4,
-      title: "how to hide pydantic model attributes",
-      content: "To hide Pydantic model attributes, there are a few approaches you can take: 1. Use private attributes with underscore prefixes: from pydantic import BaseModel class...",
-      createdAt: "1 month ago",
+      title: "Promoting AI Problem-Solving Techniques",
+      content: "Enhancing AI language models' problem-solving capabilities involves implementing various techniques such as decomposition, abstraction, and analogical reasoning...",
+      createdAt: "3 weeks ago",
       collection: "agentic",
-      views: 0,
-      timeToRead: "1mo"
+      views: 1,
+      timeToRead: "8 min"
     },
     {
       id: 5,
-      title: "pending",
-      content: "Based on the search result provided, I can offer information about the word \"pending\" and its usage: \"Pending\" is a commonly used term that generally refers to something that is n...",
+      title: "AI Multi-Agent Systems: Challenges and Opportunities",
+      content: "Large language models (LLMs) have revolutionized natural language processing, but their integration into multi-agent systems presents both exciting opportunities and significant challenges...",
       createdAt: "1 month ago",
       collection: "agentic",
-      views: 0,
-      timeToRead: "1mo"
+      views: 1,
+      timeToRead: "12 min"
     },
     {
       id: 6,
-      title: "how to use pydantic parent class to create child class via pydantic mor?",
-      content: "To use a Pydantic parent class to create a child class via Pydantic, you can follow these steps: 1. Define the parent class using Pydantic's BaseModel: from pydantic import BaseModel...",
+      title: "How to Deprecate Functions with Pydantic",
+      content: "Pydantic offers several options for marking functions or methods as deprecated, allowing developers to gracefully phase out old APIs while maintaining backwards compatibility...",
       createdAt: "1 month ago",
       collection: "agentic",
-      views: 0,
-      timeToRead: "1mo"
+      views: 2,
+      timeToRead: "6 min"
+    }
+  ];
+
+  const pages = [
+    {
+      id: 1,
+      title: "AI Startups' Go-to-Market Strategies",
+      content: "Effective go-to-market strategies for AI startups often involve a combination of thought leadership, strategic partnerships, and targeted solution selling...",
+      createdAt: "3 days ago",
+      collection: "agentic",
+      views: 5,
+      timeToRead: "15 min"
+    },
+    {
+      id: 2,
+      title: "Architectural Patterns for Agentic AI",
+      content: "Designing robust and scalable architectures for agentic AI systems requires careful consideration of modularity, communication protocols, and decision-making frameworks...",
+      createdAt: "1 week ago",
+      collection: "agentic",
+      views: 3,
+      timeToRead: "20 min"
+    },
+    {
+      id: 3,
+      title: "Optimizing LionAGI's Element Class",
+      content: "The Element class in LionAGI serves as a fundamental building block for constructing complex AI agents. Optimizing its performance and flexibility is crucial for system-wide improvements...",
+      createdAt: "2 weeks ago",
+      collection: "agentic",
+      views: 7,
+      timeToRead: "12 min"
     }
   ];
 
@@ -200,7 +233,13 @@ const KnowledgeBase = () => {
             ))}
           </div>
         </TabsContent>
-        <TabsContent value="pages">Pages content</TabsContent>
+        <TabsContent value="pages">
+          <div className="space-y-4">
+            {pages.map((page) => (
+              <PageItem key={page.id} page={page} />
+            ))}
+          </div>
+        </TabsContent>
       </Tabs>
 
       <div className="mt-6">
