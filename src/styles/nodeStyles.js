@@ -1,7 +1,7 @@
 export const nodeColors = {
   assistant: '#CD7F32', // Brushed bronze color
   user: '#22c55e',
-  group: '#eab308',
+  group: '#FF4136', // Shrimp red
   note: '#f97316',
   initializer: '#ec4899',
   database: '#8b5cf6',
