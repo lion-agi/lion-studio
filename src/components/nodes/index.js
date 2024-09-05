@@ -5,6 +5,9 @@ import GroupNode from './GroupNode';
 import InitializerNode from './InitializerNode';
 import NestedChatNode from './NestedChatNode';
 import NoteNode from './NoteNode';
+import ApiNode from './ApiNode';
+import WorkflowNode from './WorkflowNode';
+import DatabaseNode from './DatabaseNode';
 
 export const nodeTypes = {
   user: UserNode,
@@ -14,4 +17,7 @@ export const nodeTypes = {
   initializer: InitializerNode,
   nestedChat: NestedChatNode,
   note: NoteNode,
+  api: ApiNode,
+  workflow: WorkflowNode,
+  database: DatabaseNode,
 };
