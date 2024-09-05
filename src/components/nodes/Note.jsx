@@ -1,13 +1,30 @@
 import React from 'react';
 import BaseNode from './BaseNode';
 import { StickyNote } from 'lucide-react';
+import { useAddNode, useUpdateNode, useDeleteNode } from '@/integrations/supabase/hooks/nodes';
 
 let noteCounter = 0;
 
 const Note = ({ data, ...props }) => {
+  const addNode = useAddNode();
+  const updateNode = useUpdateNode();
+  const deleteNode = useDeleteNode();
+
   const nodeLabel = data.label || `unnamed${++noteCounter}`;
   const getDisplayLabel = (label) => `Note: ${label}`;
   
+  const handleSave = (id, newData) => {
+    if (id) {
+      updateNode.mutate({ id, ...newData });
+    } else {
+      addNode.mutate({ ...newData, type: 'note', user_id: data.user_id });
+    }
+  };
+
+  const handleDelete = (id) => {
+    deleteNode.mutate(id);
+  };
+
   return (
     <BaseNode 
       {...props}
@@ -15,15 +32,8 @@ const Note = ({ data, ...props }) => {
         ...data,
         label: nodeLabel,
         getDisplayLabel: getDisplayLabel,
-        onSave: (id, newData) => {
-          // Update the node data when saved
-          if (props.data && typeof props.data.onSave === 'function') {
-            props.data.onSave(id, {
-              ...newData,
-              label: newData.label || nodeLabel,
-            });
-          }
-        },
+        onSave: handleSave,
+        onDelete: handleDelete,
       }}
       icon={StickyNote} 
       type="note"

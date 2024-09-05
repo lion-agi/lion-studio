@@ -5,12 +5,14 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { Edit, Trash2, Save, X, ChevronDown, ChevronUp } from 'lucide-react';
+import { useUpdateNode } from '@/integrations/supabase/hooks/nodes';
 
-const BaseNode = ({ data, isConnectable, selected, icon: Icon, type, baseColor = "blue", gradientFrom = "from-blue-400/20", gradientTo = "to-blue-300/10", iconColor = "text-blue-600", children }) => {
+const BaseNode = ({ id, data, isConnectable, selected, icon: Icon, type, baseColor = "blue", gradientFrom = "from-blue-400/20", gradientTo = "to-blue-300/10", iconColor = "text-blue-600", children }) => {
   const [isExpanded, setIsExpanded] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
   const [editedData, setEditedData] = useState({ ...data });
+  const updateNode = useUpdateNode();
 
   const handleEdit = useCallback(() => {
     setIsEditing(true);
@@ -18,13 +20,11 @@ const BaseNode = ({ data, isConnectable, selected, icon: Icon, type, baseColor =
   }, []);
 
   const handleSave = useCallback(() => {
-    if (typeof data.onSave === 'function') {
-      data.onSave(data.id, editedData);
-    }
+    updateNode.mutate({ id, ...editedData });
     setIsEditing(false);
     // Update the data state to reflect changes immediately
     Object.assign(data, editedData);
-  }, [editedData, data]);
+  }, [id, editedData, data, updateNode]);
 
   const handleCancel = useCallback(() => {
     setEditedData({ ...data });
@@ -39,9 +39,9 @@ const BaseNode = ({ data, isConnectable, selected, icon: Icon, type, baseColor =
 
   const handleDelete = useCallback(() => {
     if (typeof data.onDelete === 'function') {
-      data.onDelete(data.id);
+      data.onDelete(id);
     }
-  }, [data]);
+  }, [data, id]);
 
   const toggleExpand = useCallback(() => {
     setIsExpanded(!isExpanded);
