@@ -19,7 +19,7 @@ export const getNodeStyle = (type, isSelected) => {
     boxShadow: isSelected 
       ? `0 0 0 2px ${color}, 0 4px 10px rgba(0, 0, 0, 0.1)` 
       : '0 2px 5px rgba(0, 0, 0, 0.1)',
-    borderRadius: '8px',
+    borderRadius: '6px',
     transition: 'all 0.3s ease',
   };
 };
@@ -30,16 +30,20 @@ export const getHeaderStyle = (type) => {
     background: `${color}`,
     color: 'white',
     textShadow: '0 1px 2px rgba(0, 0, 0, 0.1)',
-    borderBottom: `3px solid ${color}`,
-    borderTopLeftRadius: '8px',
-    borderTopRightRadius: '8px',
-    padding: '8px 12px',
+    borderBottom: `2px solid ${color}`,
+    borderTopLeftRadius: '6px',
+    borderTopRightRadius: '6px',
+    padding: '6px 8px',
   };
 };
 
 export const getContentStyle = () => ({
   background: 'rgba(255, 255, 255, 0.9)',
-  padding: '12px',
-  borderBottomLeftRadius: '8px',
-  borderBottomRightRadius: '8px',
+  padding: '8px',
+  borderBottomLeftRadius: '6px',
+  borderBottomRightRadius: '6px',
 });
+
+export const nodeCardStyle = "w-56 p-2";
+export const nodeHeaderStyle = "text-xs font-semibold mb-1";
+export const nodeContentStyle = "text-xs space-y-1";
