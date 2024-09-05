@@ -6,7 +6,7 @@ import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { Edit, Trash2, Save, X, ChevronDown, ChevronUp } from 'lucide-react';
 
-const BaseNode = ({ data, isConnectable, selected, icon: Icon, type }) => {
+const BaseNode = ({ data, isConnectable, selected, icon: Icon, type, baseColor = "blue", gradientFrom = "from-blue-400/20", gradientTo = "to-blue-300/10", iconColor = "text-blue-600" }) => {
   const [isExpanded, setIsExpanded] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
@@ -47,14 +47,14 @@ const BaseNode = ({ data, isConnectable, selected, icon: Icon, type }) => {
 
   return (
     <Card 
-      className={`node-card w-64 bg-gradient-to-br from-blue-400/20 to-blue-300/10 backdrop-blur-sm ${selected ? 'selected' : ''}`}
+      className={`node-card w-64 bg-gradient-to-br ${gradientFrom} ${gradientTo} backdrop-blur-sm ${selected ? 'selected' : ''}`}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
       <CardHeader className="node-header relative cursor-pointer p-3" onClick={toggleExpand}>
-        <CardTitle className="text-blue-foreground font-bold flex items-center justify-between text-sm">
+        <CardTitle className={`text-${baseColor}-foreground font-bold flex items-center justify-between text-sm`}>
           <div className="flex items-center">
-            <Icon className="w-4 h-4 mr-2" />
+            <Icon className={`w-4 h-4 mr-2 ${iconColor}`} />
             {data.label}
           </div>
           {isExpanded ? <ChevronUp className="w-3 h-3" /> : <ChevronDown className="w-3 h-3" />}
