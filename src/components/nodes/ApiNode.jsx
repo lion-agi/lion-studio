@@ -4,6 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Textarea } from "@/components/ui/textarea"
 import { Zap, Save, Edit, Trash2, X, ChevronDown, ChevronUp } from 'lucide-react';
+import { getNodeStyle, getHeaderStyle, getContentStyle } from '../../styles/nodeStyles';
 
 const ApiNode = ({ data, isConnectable, selected }) => {
   const [isExpanded, setIsExpanded] = useState(false);
@@ -44,35 +45,28 @@ const ApiNode = ({ data, isConnectable, selected }) => {
     setIsExpanded(!isExpanded);
   }, [isExpanded]);
 
+  const nodeStyle = getNodeStyle('api', selected);
+  const headerStyle = getHeaderStyle('api');
+  const contentStyle = getContentStyle();
+
   return (
     <Card 
-      className={`node-card w-64 bg-gradient-to-br from-blue-400/20 to-blue-300/10 backdrop-blur-sm ${selected ? 'selected' : ''}`}
+      className="w-64"
+      style={nodeStyle}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
-      <CardHeader className="node-header bg-blue-300/30 relative cursor-pointer" onClick={toggleExpand}>
-        <CardTitle className="text-blue-foreground font-bold flex items-center justify-between">
+      <CardHeader className="cursor-pointer" style={headerStyle} onClick={toggleExpand}>
+        <CardTitle className="text-white font-bold flex items-center justify-between">
           <div className="flex items-center">
             <Zap className="w-6 h-6 mr-2" />
             {editedData.label}
           </div>
           {isExpanded ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
         </CardTitle>
-        <Handle
-          type="target"
-          position={Position.Left}
-          style={{ top: '50%', transform: 'translateY(-50%)', left: '-6px' }}
-          isConnectable={isConnectable}
-        />
-        <Handle
-          type="source"
-          position={Position.Right}
-          style={{ top: '50%', transform: 'translateY(-50%)', right: '-6px' }}
-          isConnectable={isConnectable}
-        />
       </CardHeader>
       {isExpanded && (
-        <CardContent className="node-content">
+        <CardContent style={contentStyle}>
           {isEditing ? (
             <>
               <Textarea
@@ -108,6 +102,18 @@ const ApiNode = ({ data, isConnectable, selected }) => {
           </Button>
         </div>
       )}
+      <Handle
+        type="target"
+        position={Position.Left}
+        style={{ top: '50%', transform: 'translateY(-50%)', left: '-6px' }}
+        isConnectable={isConnectable}
+      />
+      <Handle
+        type="source"
+        position={Position.Right}
+        style={{ top: '50%', transform: 'translateY(-50%)', right: '-6px' }}
+        isConnectable={isConnectable}
+      />
     </Card>
   );
 };
