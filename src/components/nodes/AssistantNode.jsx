@@ -6,7 +6,7 @@ import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { Bot, Zap, Edit, Trash2, Save, X } from 'lucide-react';
 
-const AssistantNode = ({ data, isConnectable, onDelete, onSave }) => {
+const AssistantNode = ({ data, isConnectable }) => {
   const [isExpanded, setIsExpanded] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [editedData, setEditedData] = useState({ ...data });
@@ -17,10 +17,12 @@ const AssistantNode = ({ data, isConnectable, onDelete, onSave }) => {
   }, []);
 
   const handleSave = useCallback(() => {
-    onSave(editedData);
+    if (data.onSave) {
+      data.onSave(editedData);
+    }
     setIsEditing(false);
     setIsExpanded(false);
-  }, [editedData, onSave]);
+  }, [editedData, data]);
 
   const handleCancel = useCallback(() => {
     setEditedData({ ...data });
@@ -32,6 +34,12 @@ const AssistantNode = ({ data, isConnectable, onDelete, onSave }) => {
     const { name, value } = e.target;
     setEditedData(prev => ({ ...prev, [name]: value }));
   }, []);
+
+  const handleDelete = useCallback(() => {
+    if (data.onDelete) {
+      data.onDelete(data.id);
+    }
+  }, [data]);
 
   return (
     <Card className={`node-card w-64 bg-gradient-to-br from-accent-200 to-accent-100 ${isExpanded ? 'expanded' : ''}`}>
@@ -122,7 +130,7 @@ const AssistantNode = ({ data, isConnectable, onDelete, onSave }) => {
           <Button variant="ghost" size="icon" onClick={handleEdit}>
             <Edit className="h-4 w-4" />
           </Button>
-          <Button variant="ghost" size="icon" onClick={() => onDelete(data.id)}>
+          <Button variant="ghost" size="icon" onClick={handleDelete}>
             <Trash2 className="h-4 w-4" />
           </Button>
         </div>

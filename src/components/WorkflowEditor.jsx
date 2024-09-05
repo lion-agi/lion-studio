@@ -65,26 +65,41 @@ const WorkflowEditor = () => {
     setIsSecondaryNavExpanded(true);
   };
 
-  const exportToJson = useCallback(() => {
-    if (reactFlowInstance) {
-      const flow = reactFlowInstance.toObject();
-      return flow;
-    }
-    return null;
-  }, [reactFlowInstance]);
+  const handleSaveNode = useCallback((nodeId, newData) => {
+    setNodes((nds) =>
+      nds.map((node) => {
+        if (node.id === nodeId) {
+          return { ...node, data: { ...node.data, ...newData, onSave: handleSaveNode, onDelete: handleDeleteNode } };
+        }
+        return node;
+      })
+    );
+  }, [setNodes]);
 
-  const handleLoadGraph = (graphData) => {
-    if (graphData && graphData.nodes && graphData.edges) {
-      setNodes(graphData.nodes);
-      setEdges(graphData.edges);
-    }
-  };
+  const handleDeleteNode = useCallback((nodeId) => {
+    setNodes((nds) => nds.filter((node) => node.id !== nodeId));
+    setEdges((eds) => eds.filter((edge) => edge.source !== nodeId && edge.target !== nodeId));
+  }, [setNodes, setEdges]);
+
+  const handleAddNode = useCallback((nodeData) => {
+    const newNode = {
+      id: `${nodeData.type}-${nodes.length + 1}`,
+      type: nodeData.type,
+      position: { x: Math.random() * 500, y: Math.random() * 500 },
+      data: { 
+        ...nodeData,
+        onSave: handleSaveNode,
+        onDelete: handleDeleteNode
+      },
+    };
+    setNodes((nds) => nds.concat(newNode));
+  }, [nodes, setNodes, handleSaveNode, handleDeleteNode]);
 
   return (
     <div className="h-screen flex flex-col bg-gradient-to-br from-gray-900 to-gray-800 text-white">
       <div className="flex flex-grow overflow-hidden">
         <LeftSidebar
-          onExportJSON={exportToJson}
+          onExportJSON={handleExportJSON}
           onSaveLoad={() => setShowSaveLoadDialog(true)}
           onCreateAgenticFlow={handleCreateAgenticFlow}
           onShowHelp={() => setShowHelpOverlay(true)}
@@ -132,7 +147,7 @@ const WorkflowEditor = () => {
               <Background color="#4B5563" gap={16} />
             </ReactFlow>
           </div>
-          <NodeCreationCard onAddNode={addNode} />
+          <NodeCreationCard onAddNode={handleAddNode} />
         </div>
       </div>
       {showSaveLoadDialog && (
@@ -140,7 +155,17 @@ const WorkflowEditor = () => {
           isOpen={showSaveLoadDialog}
           onClose={() => setShowSaveLoadDialog(false)}
           onSave={handleSaveLoad}
-          onLoad={handleLoadGraph}
+          onLoad={(loadedData) => {
+            setNodes(loadedData.nodes.map(node => ({
+              ...node,
+              data: {
+                ...node.data,
+                onSave: handleSaveNode,
+                onDelete: handleDeleteNode
+              }
+            })));
+            setEdges(loadedData.edges);
+          }}
           graphData={{ nodes, edges }}
         />
       )}
