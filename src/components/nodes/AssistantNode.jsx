@@ -10,14 +10,7 @@ const AssistantNode = ({ data, isConnectable, selected }) => {
   const [isExpanded, setIsExpanded] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
-  const [editedData, setEditedData] = useState({
-    label: data.label || 'Assistant',
-    description: data.description || 'A helpful AI assistant',
-    model: data.model || 'openai/gpt-4',
-    temperature: data.temperature || 0.7,
-    maxTokens: data.maxTokens || 1500,
-    ...data
-  });
+  const [editedData, setEditedData] = useState({ ...data });
 
   const handleEdit = useCallback(() => {
     setIsEditing(true);
@@ -32,14 +25,7 @@ const AssistantNode = ({ data, isConnectable, selected }) => {
   }, [editedData, data]);
 
   const handleCancel = useCallback(() => {
-    setEditedData({
-      label: data.label || 'Assistant',
-      description: data.description || 'A helpful AI assistant',
-      model: data.model || 'openai/gpt-4',
-      temperature: data.temperature || 0.7,
-      maxTokens: data.maxTokens || 1500,
-      ...data
-    });
+    setEditedData({ ...data });
     setIsEditing(false);
     setIsExpanded(false);
   }, [data]);
@@ -69,7 +55,7 @@ const AssistantNode = ({ data, isConnectable, selected }) => {
         <CardTitle className="text-accent-foreground font-bold flex items-center justify-between text-sm">
           <div className="flex items-center">
             <Bot className="w-4 h-4 mr-2" />
-            Assistant
+            {data.label}
           </div>
           {isExpanded ? <ChevronUp className="w-3 h-3" /> : <ChevronDown className="w-3 h-3" />}
         </CardTitle>
@@ -90,57 +76,28 @@ const AssistantNode = ({ data, isConnectable, selected }) => {
         <CardContent className="node-content text-xs space-y-3 p-3">
           {isEditing ? (
             <>
-              <div className="space-y-2">
-                <label className="text-xs font-medium">Name:</label>
-                <Input
-                  className="node-input text-xs h-7 px-2 py-1 border border-accent-300"
-                  name="label"
-                  value={editedData.label}
-                  onChange={handleInputChange}
-                />
-              </div>
-              <div className="space-y-2">
-                <label className="text-xs font-medium">Description:</label>
-                <Textarea
-                  className="node-input text-xs px-2 py-1 border border-accent-300"
-                  name="description"
-                  value={editedData.description}
-                  onChange={handleInputChange}
-                  rows={2}
-                />
-              </div>
-              <div className="space-y-2">
-                <label className="text-xs font-medium">Model:</label>
-                <Input
-                  className="node-input text-xs h-7 px-2 py-1 border border-accent-300"
-                  name="model"
-                  value={editedData.model}
-                  onChange={handleInputChange}
-                />
-              </div>
-              <div className="space-y-2">
-                <label className="text-xs font-medium">Temperature:</label>
-                <Input
-                  className="node-input text-xs h-7 px-2 py-1 border border-accent-300"
-                  name="temperature"
-                  type="number"
-                  step="0.1"
-                  min="0"
-                  max="1"
-                  value={editedData.temperature}
-                  onChange={handleInputChange}
-                />
-              </div>
-              <div className="space-y-2">
-                <label className="text-xs font-medium">Max Tokens:</label>
-                <Input
-                  className="node-input text-xs h-7 px-2 py-1 border border-accent-300"
-                  name="maxTokens"
-                  type="number"
-                  value={editedData.maxTokens}
-                  onChange={handleInputChange}
-                />
-              </div>
+              {/* Render editable fields */}
+              {Object.entries(editedData).map(([key, value]) => (
+                <div key={key} className="space-y-2">
+                  <label className="text-xs font-medium">{key}:</label>
+                  {typeof value === 'string' ? (
+                    <Input
+                      className="node-input text-xs h-7 px-2 py-1 border border-accent-300"
+                      name={key}
+                      value={value}
+                      onChange={handleInputChange}
+                    />
+                  ) : (
+                    <Textarea
+                      className="node-input text-xs px-2 py-1 border border-accent-300"
+                      name={key}
+                      value={value}
+                      onChange={handleInputChange}
+                      rows={2}
+                    />
+                  )}
+                </div>
+              ))}
               <div className="flex justify-end space-x-2 mt-3">
                 <Button size="sm" variant="outline" onClick={handleCancel} className="text-xs py-1 h-7">
                   <X className="w-3 h-3 mr-1" />
@@ -154,29 +111,16 @@ const AssistantNode = ({ data, isConnectable, selected }) => {
             </>
           ) : (
             <>
-              <div className="space-y-2">
-                <p className="font-medium">Name:</p>
-                <p className="border border-accent-300 rounded px-2 py-1">{editedData.label}</p>
-              </div>
-              <div className="space-y-2">
-                <p className="font-medium">Description:</p>
-                <p className="border border-accent-300 rounded px-2 py-1">{editedData.description}</p>
-              </div>
-              <div className="space-y-2">
-                <p className="font-medium">Model:</p>
-                <p className="border border-accent-300 rounded px-2 py-1">{editedData.model}</p>
-              </div>
-              <div className="space-y-2">
-                <p className="font-medium">Temperature:</p>
-                <p className="border border-accent-300 rounded px-2 py-1">{editedData.temperature}</p>
-              </div>
-              <div className="space-y-2">
-                <p className="font-medium">Max Tokens:</p>
-                <p className="border border-accent-300 rounded px-2 py-1">{editedData.maxTokens}</p>
-              </div>
+              {/* Render read-only fields */}
+              {Object.entries(editedData).map(([key, value]) => (
+                <div key={key} className="space-y-2">
+                  <p className="font-medium">{key}:</p>
+                  <p className="border border-accent-300 rounded px-2 py-1">{value}</p>
+                </div>
+              ))}
               <Button size="sm" className="node-button text-xs w-full py-1 h-7 mt-3">
                 <Zap className="w-3 h-3 mr-1" />
-                Train
+                Execute
               </Button>
             </>
           )}
