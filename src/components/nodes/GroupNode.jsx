@@ -4,6 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Users, UserPlus, Edit, Trash2, Save, X, ChevronDown, ChevronUp } from 'lucide-react';
+import { getNodeStyle, getHeaderStyle, getContentStyle } from '../../styles/nodeStyles';
 
 const GroupNode = ({ data, isConnectable, selected }) => {
   const [isExpanded, setIsExpanded] = useState(false);
@@ -44,39 +45,32 @@ const GroupNode = ({ data, isConnectable, selected }) => {
     setIsExpanded(!isExpanded);
   }, [isExpanded]);
 
+  const nodeStyle = getNodeStyle('group', selected);
+  const headerStyle = getHeaderStyle('group');
+  const contentStyle = getContentStyle();
+
   return (
     <Card 
-      className={`node-card w-64 bg-gradient-to-br from-green-400/20 to-green-300/10 backdrop-blur-sm ${selected ? 'selected' : ''}`}
+      className="w-64 overflow-hidden"
+      style={nodeStyle}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
-      <CardHeader className="node-header bg-green-300/30 relative cursor-pointer" onClick={toggleExpand}>
-        <CardTitle className="text-green-foreground font-bold flex items-center justify-between">
+      <CardHeader className="cursor-pointer" style={headerStyle} onClick={toggleExpand}>
+        <CardTitle className="text-white font-bold flex items-center justify-between">
           <div className="flex items-center">
             <Users className="w-6 h-6 mr-2" />
             {editedData.label}
           </div>
           {isExpanded ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
         </CardTitle>
-        <Handle
-          type="target"
-          position={Position.Left}
-          style={{ top: '50%', transform: 'translateY(-50%)', left: '-6px' }}
-          isConnectable={isConnectable}
-        />
-        <Handle
-          type="source"
-          position={Position.Right}
-          style={{ top: '50%', transform: 'translateY(-50%)', right: '-6px' }}
-          isConnectable={isConnectable}
-        />
       </CardHeader>
       {isExpanded && (
-        <CardContent className="node-content">
+        <CardContent style={contentStyle}>
           {isEditing ? (
             <>
               <Input
-                className="node-input mb-2"
+                className="mb-2"
                 name="label"
                 placeholder="Group name"
                 value={editedData.label}
@@ -96,7 +90,7 @@ const GroupNode = ({ data, isConnectable, selected }) => {
           ) : (
             <>
               <p className="mb-2"><strong>Group Name:</strong> {editedData.label}</p>
-              <Button size="sm" className="node-button bg-green-500 hover:bg-green-600">
+              <Button size="sm" className="w-full bg-orange-500 hover:bg-orange-600 text-white">
                 <UserPlus className="w-4 h-4 mr-2" />
                 Add Members
               </Button>
@@ -114,6 +108,18 @@ const GroupNode = ({ data, isConnectable, selected }) => {
           </Button>
         </div>
       )}
+      <Handle
+        type="target"
+        position={Position.Left}
+        style={{ top: '50%', transform: 'translateY(-50%)', left: '-6px' }}
+        isConnectable={isConnectable}
+      />
+      <Handle
+        type="source"
+        position={Position.Right}
+        style={{ top: '50%', transform: 'translateY(-50%)', right: '-6px' }}
+        isConnectable={isConnectable}
+      />
     </Card>
   );
 };
