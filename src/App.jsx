@@ -15,7 +15,6 @@ import EmailConfirmation from "./pages/EmailConfirmation";
 import AuthCallback from "./pages/AuthCallback";
 import KnowledgeBase from "./components/KnowledgeBase";
 import Monitoring from "./components/Monitoring";
-import Assistants from "./components/Assistants";
 
 const queryClient = new QueryClient();
 
@@ -46,7 +45,6 @@ const App = () => (
                 <Route path="/knowledge-bases" element={<KnowledgeBase />} />
                 <Route path="/evaluations" element={<div>Evaluations Page</div>} />
                 <Route path="/monitoring" element={<Monitoring />} />
-                <Route path="/assistants" element={<Assistants />} />
               </Routes>
             </main>
           </div>

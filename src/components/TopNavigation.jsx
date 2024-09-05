@@ -12,7 +12,6 @@ const tabs = [
   { name: 'Evaluations', href: '/evaluations' },
   { name: 'Editor', href: '/editor' },
   { name: 'Monitoring', href: '/monitoring' },
-  { name: 'Assistants', href: '/assistants' },
 ];
 
 const TopNavigation = React.memo(() => {
