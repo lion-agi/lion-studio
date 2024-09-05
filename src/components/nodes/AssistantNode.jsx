@@ -1,79 +1,129 @@
-import React, { useState, useEffect } from 'react';
-import { Handle, Position, useStoreApi } from 'reactflow';
+import React, { useState, useCallback } from 'react';
+import { Handle, Position } from 'reactflow';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
-import { Bot, Zap, Edit, Trash2, Copy } from 'lucide-react';
+import { Bot, Zap, Edit, Trash2, Save, X } from 'lucide-react';
 
-const AssistantNode = ({ data, selected }) => {
+const AssistantNode = ({ data, isConnectable, onDelete, onSave }) => {
   const [isExpanded, setIsExpanded] = useState(false);
-  const [showButtons, setShowButtons] = useState(false);
-  const store = useStoreApi();
+  const [isEditing, setIsEditing] = useState(false);
+  const [editedData, setEditedData] = useState({ ...data });
 
-  useEffect(() => {
-    const unsubscribe = store.subscribe(
-      state => state.nodeInternals.get(data.id)?.selected,
-      selected => {
-        setShowButtons(selected);
-      }
-    );
-    return () => unsubscribe();
-  }, [data.id, store]);
+  const handleEdit = useCallback(() => {
+    setIsEditing(true);
+    setIsExpanded(true);
+  }, []);
 
-  const handleEdit = () => {
-    console.log('Edit node:', data.id);
-  };
+  const handleSave = useCallback(() => {
+    onSave(editedData);
+    setIsEditing(false);
+    setIsExpanded(false);
+  }, [editedData, onSave]);
 
-  const handleDelete = () => {
-    console.log('Delete node:', data.id);
-  };
+  const handleCancel = useCallback(() => {
+    setEditedData({ ...data });
+    setIsEditing(false);
+    setIsExpanded(false);
+  }, [data]);
 
-  const handleDuplicate = () => {
-    console.log('Duplicate node:', data.id);
-  };
+  const handleInputChange = useCallback((e) => {
+    const { name, value } = e.target;
+    setEditedData(prev => ({ ...prev, [name]: value }));
+  }, []);
 
   return (
-    <Card className={`node-card w-64 bg-gradient-to-br from-accent-200 to-accent-100 ${selected ? 'selected' : ''}`}>
-      <CardHeader className="node-header bg-accent-300 relative" onClick={() => setIsExpanded(!isExpanded)}>
+    <Card className={`node-card w-64 bg-gradient-to-br from-accent-200 to-accent-100 ${isExpanded ? 'expanded' : ''}`}>
+      <CardHeader className="node-header bg-accent-300 relative" onClick={() => !isEditing && setIsExpanded(!isExpanded)}>
         <CardTitle className="text-accent-foreground font-bold flex items-center">
           <Bot className="w-6 h-6 mr-2" />
-          {data.label}
+          {editedData.label}
         </CardTitle>
         <Handle
           type="target"
           position={Position.Left}
           style={{ top: '50%', transform: 'translateY(-50%)', left: '-6px' }}
+          isConnectable={isConnectable}
         />
         <Handle
           type="source"
           position={Position.Right}
           style={{ top: '50%', transform: 'translateY(-50%)', right: '-6px' }}
+          isConnectable={isConnectable}
         />
       </CardHeader>
-      {isExpanded && (
-        <CardContent className="node-content">
-          <Input className="node-input mb-2" placeholder="Assistant name" value={data.name || ''} readOnly />
-          <Textarea className="node-input mb-2" placeholder="Description" value={data.description || ''} readOnly />
-          <Input className="node-input mb-2" placeholder="Model" value={data.model || ''} readOnly />
-          <Input className="node-input mb-2" placeholder="Temperature" value={data.temperature || ''} readOnly />
-          <Input className="node-input mb-2" placeholder="Max Tokens" value={data.maxTokens || ''} readOnly />
-          <Button size="sm" className="node-button">
-            <Zap className="w-4 h-4 mr-2" />
-            Train
-          </Button>
-        </CardContent>
-      )}
-      {showButtons && (
+      <CardContent className={`node-content ${isExpanded ? '' : 'hidden'}`}>
+        {isEditing ? (
+          <>
+            <Input
+              className="node-input mb-2"
+              name="label"
+              placeholder="Assistant name"
+              value={editedData.label}
+              onChange={handleInputChange}
+            />
+            <Textarea
+              className="node-input mb-2"
+              name="description"
+              placeholder="Description"
+              value={editedData.description}
+              onChange={handleInputChange}
+            />
+            <Input
+              className="node-input mb-2"
+              name="model"
+              placeholder="Model"
+              value={editedData.model}
+              onChange={handleInputChange}
+            />
+            <Input
+              className="node-input mb-2"
+              name="temperature"
+              type="number"
+              placeholder="Temperature"
+              value={editedData.temperature}
+              onChange={handleInputChange}
+            />
+            <Input
+              className="node-input mb-2"
+              name="maxTokens"
+              type="number"
+              placeholder="Max Tokens"
+              value={editedData.maxTokens}
+              onChange={handleInputChange}
+            />
+            <div className="flex justify-end space-x-2 mt-2">
+              <Button size="sm" variant="outline" onClick={handleCancel}>
+                <X className="w-4 h-4 mr-2" />
+                Cancel
+              </Button>
+              <Button size="sm" onClick={handleSave}>
+                <Save className="w-4 h-4 mr-2" />
+                Save
+              </Button>
+            </div>
+          </>
+        ) : (
+          <>
+            <p className="mb-2"><strong>Description:</strong> {editedData.description}</p>
+            <p className="mb-2"><strong>Model:</strong> {editedData.model}</p>
+            <p className="mb-2"><strong>Temperature:</strong> {editedData.temperature}</p>
+            <p className="mb-2"><strong>Max Tokens:</strong> {editedData.maxTokens}</p>
+            <Button size="sm" className="node-button">
+              <Zap className="w-4 h-4 mr-2" />
+              Train
+            </Button>
+          </>
+        )}
+      </CardContent>
+      {!isEditing && (
         <div className="absolute top-0 right-0 p-1 bg-background/80 rounded-bl">
           <Button variant="ghost" size="icon" onClick={handleEdit}>
             <Edit className="h-4 w-4" />
           </Button>
-          <Button variant="ghost" size="icon" onClick={handleDelete}>
+          <Button variant="ghost" size="icon" onClick={() => onDelete(data.id)}>
             <Trash2 className="h-4 w-4" />
-          </Button>
-          <Button variant="ghost" size="icon" onClick={handleDuplicate}>
-            <Copy className="h-4 w-4" />
           </Button>
         </div>
       )}
