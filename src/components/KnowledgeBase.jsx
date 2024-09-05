@@ -8,17 +8,13 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { PlusCircle, Search } from 'lucide-react';
 import ThreadItem from './ThreadItem';
 import PageItem from './PageItem';
+import CreateCollectionForm from './CreateCollectionForm';
+import ThreadList from './ThreadList';
+import PageList from './PageList';
 
 const KnowledgeBase = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [isCreateCollectionOpen, setIsCreateCollectionOpen] = useState(false);
-  const [newCollection, setNewCollection] = useState({
-    title: '',
-    emoji: '',
-    description: '',
-    aiPrompt: '',
-    privacy: 'Shareable'
-  });
 
   const threads = [
     {
@@ -109,18 +105,6 @@ const KnowledgeBase = () => {
     }
   ];
 
-  const handleCreateCollection = () => {
-    console.log('Creating collection:', newCollection);
-    setIsCreateCollectionOpen(false);
-    setNewCollection({
-      title: '',
-      emoji: '',
-      description: '',
-      aiPrompt: '',
-      privacy: 'Shareable'
-    });
-  };
-
   return (
     <div className="container mx-auto p-4">
       <div className="flex justify-between items-center mb-6">
@@ -159,64 +143,7 @@ const KnowledgeBase = () => {
             <DialogHeader>
               <DialogTitle>Create Collection</DialogTitle>
             </DialogHeader>
-            <div className="grid gap-4 py-4">
-              <div className="grid grid-cols-4 items-center gap-4">
-                <label htmlFor="title" className="text-right">Title</label>
-                <Input
-                  id="title"
-                  value={newCollection.title}
-                  onChange={(e) => setNewCollection({...newCollection, title: e.target.value})}
-                  className="col-span-3"
-                  placeholder="Vacation Planning"
-                />
-              </div>
-              <div className="grid grid-cols-4 items-center gap-4">
-                <label htmlFor="emoji" className="text-right">Emoji</label>
-                <Input
-                  id="emoji"
-                  value={newCollection.emoji}
-                  onChange={(e) => setNewCollection({...newCollection, emoji: e.target.value})}
-                  className="col-span-3"
-                  placeholder="+"
-                />
-              </div>
-              <div className="grid grid-cols-4 items-center gap-4">
-                <label htmlFor="description" className="text-right">Description</label>
-                <Textarea
-                  id="description"
-                  value={newCollection.description}
-                  onChange={(e) => setNewCollection({...newCollection, description: e.target.value})}
-                  className="col-span-3"
-                  placeholder="Planning a trip to Europe"
-                />
-              </div>
-              <div className="grid grid-cols-4 items-center gap-4">
-                <label htmlFor="aiPrompt" className="text-right">AI Prompt</label>
-                <Textarea
-                  id="aiPrompt"
-                  value={newCollection.aiPrompt}
-                  onChange={(e) => setNewCollection({...newCollection, aiPrompt: e.target.value})}
-                  className="col-span-3"
-                  placeholder="You are a travel agent. Help me plan my trip around boutique hotels, local food, and museums."
-                />
-              </div>
-              <div className="grid grid-cols-4 items-center gap-4">
-                <label htmlFor="privacy" className="text-right">Privacy</label>
-                <Select
-                  value={newCollection.privacy}
-                  onValueChange={(value) => setNewCollection({...newCollection, privacy: value})}
-                >
-                  <SelectTrigger className="col-span-3">
-                    <SelectValue placeholder="Select privacy setting" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="Shareable">Shareable</SelectItem>
-                    <SelectItem value="Private">Private</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-            </div>
-            <Button onClick={handleCreateCollection}>Create</Button>
+            <CreateCollectionForm onClose={() => setIsCreateCollectionOpen(false)} />
           </DialogContent>
         </Dialog>
       </div>
@@ -227,18 +154,10 @@ const KnowledgeBase = () => {
           <TabsTrigger value="pages">Pages</TabsTrigger>
         </TabsList>
         <TabsContent value="threads">
-          <div className="space-y-4">
-            {threads.map((thread) => (
-              <ThreadItem key={thread.id} thread={thread} />
-            ))}
-          </div>
+          <ThreadList threads={threads} />
         </TabsContent>
         <TabsContent value="pages">
-          <div className="space-y-4">
-            {pages.map((page) => (
-              <PageItem key={page.id} page={page} />
-            ))}
-          </div>
+          <PageList pages={pages} />
         </TabsContent>
       </Tabs>
 

@@ -1,25 +1,26 @@
 import React from 'react';
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { MoreHorizontal, Plus } from 'lucide-react';
 
 const PageItem = ({ page }) => {
   return (
-    <div className="border-b border-gray-200 py-4">
-      <div className="flex justify-between items-start">
-        <div className="flex-grow">
-          <h3 className="text-lg font-semibold mb-1">{page.title}</h3>
-          <p className="text-sm text-gray-600 mb-2">{page.content}</p>
-          <div className="flex items-center text-xs text-gray-500">
-            <span>{page.createdAt}</span>
-            <span className="mx-2">•</span>
-            <span>{page.collection}</span>
-            <span className="mx-2">•</span>
-            <span>{page.views} views</span>
-            <span className="mx-2">•</span>
-            <span>{page.timeToRead}</span>
-          </div>
+    <Card className="h-full">
+      <CardHeader>
+        <CardTitle className="text-lg font-semibold">{page.title}</CardTitle>
+      </CardHeader>
+      <CardContent>
+        <p className="text-sm text-gray-600 mb-4 line-clamp-3">{page.content}</p>
+        <div className="flex items-center text-xs text-gray-500 mb-4">
+          <span>{page.createdAt}</span>
+          <span className="mx-2">•</span>
+          <span>{page.collection}</span>
+          <span className="mx-2">•</span>
+          <span>{page.views} views</span>
+          <span className="mx-2">•</span>
+          <span>{page.timeToRead}</span>
         </div>
-        <div className="flex items-center space-x-2">
+        <div className="flex justify-end space-x-2">
           <Button variant="ghost" size="sm">
             <Plus className="h-4 w-4" />
           </Button>
@@ -27,8 +28,8 @@ const PageItem = ({ page }) => {
             <MoreHorizontal className="h-4 w-4" />
           </Button>
         </div>
-      </div>
-    </div>
+      </CardContent>
+    </Card>
   );
 };
 
