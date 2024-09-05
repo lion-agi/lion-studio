@@ -12,6 +12,7 @@ import LeftSidebar from './LeftSidebar';
 import SecondaryNavigation from './SecondaryNavigation';
 import NodeCreationCard from './NodeCreationCard';
 import SaveLoadDialog from './SaveLoadDialog';
+import JSONModal from './JSONModal';
 import { nodeTypes } from './nodes';
 import { useWorkflowState } from '../hooks/useWorkflowState';
 import { useWorkflowHandlers } from '../hooks/useWorkflowHandlers';
@@ -27,11 +28,11 @@ const snapToGrid = (x, y) => ({
 const WorkflowEditor = () => {
   const [nodes, setNodes, onNodesChange] = useNodesState([]);
   const [edges, setEdges, onEdgesChange] = useEdgesState([]);
+  const [jsonData, setJsonData] = useState(null);
   const reactFlowWrapper = useRef(null);
   const [reactFlowInstance, setReactFlowInstance] = useState(null);
   const [activeFeature, setActiveFeature] = useState('workflows');
   const [isSecondaryNavExpanded, setIsSecondaryNavExpanded] = useState(true);
-  const [workflowData, setWorkflowData] = useState({});
 
   const {
     sidebarExpanded,
@@ -77,13 +78,11 @@ const WorkflowEditor = () => {
     setNodes((nds) =>
       nds.map((node) => (node.id === nodeId ? { ...node, data: { ...node.data, ...newData } } : node))
     );
-    updateWorkflowData();
   }, [setNodes]);
 
   const handleDeleteNode = useCallback((nodeId) => {
     setNodes((nds) => nds.filter((node) => node.id !== nodeId));
     setEdges((eds) => eds.filter((edge) => edge.source !== nodeId && edge.target !== nodeId));
-    updateWorkflowData();
   }, [setNodes, setEdges]);
 
   const handleAddNode = useCallback((nodeData) => {
@@ -99,19 +98,15 @@ const WorkflowEditor = () => {
       },
     };
     setNodes((nds) => nds.concat(newNode));
-    updateWorkflowData();
   }, [nodes, setNodes, handleSaveNode, handleDeleteNode]);
 
-  const updateWorkflowData = useCallback(() => {
+  const handleExportJSON = useCallback(() => {
     if (reactFlowInstance) {
       const flow = reactFlowInstance.toObject();
-      setWorkflowData(flow);
+      setJsonData(flow);
+      setShowJSONModal(true);
     }
-  }, [reactFlowInstance]);
-
-  const handleExportJSON = useCallback(() => {
-    return workflowData;
-  }, [workflowData]);
+  }, [reactFlowInstance, setShowJSONModal]);
 
   const onNodeDragStop = useCallback((event, node) => {
     const { x, y } = snapToGrid(node.position.x, node.position.y);
@@ -205,9 +200,15 @@ const WorkflowEditor = () => {
               }
             })));
             setEdges(loadedData.edges);
-            setWorkflowData(loadedData);
           }}
-          graphData={workflowData}
+          graphData={{ nodes, edges }}
+        />
+      )}
+      {showJSONModal && (
+        <JSONModal
+          isOpen={showJSONModal}
+          onClose={() => setShowJSONModal(false)}
+          jsonData={jsonData}
         />
       )}
     </div>
