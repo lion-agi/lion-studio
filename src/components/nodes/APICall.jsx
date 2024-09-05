@@ -7,7 +7,7 @@ const APICall = (props) => {
     <BaseNode 
       {...props} 
       icon={Zap} 
-      type="api"
+      type="APICall"
       baseColor="pink"
       gradientFrom="from-pink-400/20"
       gradientTo="to-pink-300/10"

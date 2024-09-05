@@ -11,7 +11,7 @@ import ConversationNode from './Conversation';
 export const nodeTypes = {
   assistant: AssistantNode,
   user: HumanUser,
-  moe: MixtureOfExperts,
+  experts: MixtureOfExperts,
   note: Note,
   initializer: Initializer,
   database: DatabaseNode,

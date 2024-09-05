@@ -23,7 +23,7 @@ const nodeCategories = [
       { type: 'workflow', icon: <Workflow />, label: 'Workflow' },
       { type: 'api', icon: <Zap />, label: 'API Call' },
       { type: 'conversation', icon: <MessageSquare />, label: 'Conversation' },
-      { type: 'moe', icon: <Users />, label: 'Mixture Of Experts' },
+      { type: 'experts', icon: <Users />, label: 'Mixture Of Experts' },
     ]
   }
 ];
