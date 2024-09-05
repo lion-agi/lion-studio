@@ -12,15 +12,8 @@ const AssistantNode = (props) => {
       gradientFrom="from-amber-700/20"
       gradientTo="to-amber-600/10"
       iconColor="text-amber-800"
-      nodeData={{
-        name: props.data.name || 'Assistant',
-        model: props.data.model || 'GPT-3.5',
-        temperature: props.data.temperature || 0.7,
-        maxTokens: props.data.maxTokens || 150,
-        systemPrompt: props.data.systemPrompt || ''
-      }}
     >
-      Assistant
+      Assistant Node
     </BaseNode>
   );
 };
