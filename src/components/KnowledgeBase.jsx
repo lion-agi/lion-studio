@@ -7,6 +7,7 @@ import { PlusCircle, Search } from 'lucide-react';
 import CreateCollectionForm from './CreateCollectionForm';
 import ThreadList from './ThreadList';
 import PageList from './PageList';
+import DataSourceList from './DataSourceList';
 
 const KnowledgeBase = () => {
   const [searchTerm, setSearchTerm] = useState('');
@@ -101,6 +102,25 @@ const KnowledgeBase = () => {
     }
   ];
 
+  const dataSources = [
+    {
+      id: 1,
+      name: "Google Drive",
+      type: "Cloud Storage",
+      lastSync: "2 hours ago",
+      totalFiles: 1250,
+      usedSpace: "15 GB"
+    },
+    {
+      id: 2,
+      name: "AWS S3 Bucket",
+      type: "Object Storage",
+      lastSync: "1 day ago",
+      totalFiles: 3750,
+      usedSpace: "50 GB"
+    }
+  ];
+
   return (
     <div className="container mx-auto p-4">
       <div className="flex justify-between items-center mb-6">
@@ -148,12 +168,16 @@ const KnowledgeBase = () => {
         <TabsList>
           <TabsTrigger value="threads">Threads</TabsTrigger>
           <TabsTrigger value="pages">Pages</TabsTrigger>
+          <TabsTrigger value="dataSources">Data Sources</TabsTrigger>
         </TabsList>
         <TabsContent value="threads">
           <ThreadList threads={threads} />
         </TabsContent>
         <TabsContent value="pages">
           <PageList pages={pages} />
+        </TabsContent>
+        <TabsContent value="dataSources">
+          <DataSourceList dataSources={dataSources} />
         </TabsContent>
       </Tabs>
 
