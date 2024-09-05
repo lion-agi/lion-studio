@@ -3,7 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
-import { ChevronDown, Search, Bot, User, Users, StickyNote, Cog, Plus, Database, Workflow, Zap } from 'lucide-react';
+import { ChevronDown, Search, Bot, User, Users, StickyNote, Play, Plus, Database, Workflow, Zap } from 'lucide-react';
 import Draggable from 'react-draggable';
 
 const nodeCategories = [
@@ -12,9 +12,9 @@ const nodeCategories = [
     nodes: [
       { type: 'assistant', icon: <Bot />, label: 'Assistant' },
       { type: 'user', icon: <User />, label: 'User Proxy' },
-      { type: 'group', icon: <Users />, label: 'Group Chat' },
+      { type: 'group', icon: <Users />, label: 'Mixture Of Experts' },
       { type: 'note', icon: <StickyNote />, label: 'Note' },
-      { type: 'initializer', icon: <Cog />, label: 'Config' },
+      { type: 'initializer', icon: <Play />, label: 'Start' },
     ]
   },
   {
