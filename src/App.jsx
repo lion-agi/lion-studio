@@ -13,6 +13,7 @@ import ImageUpload from "./pages/ImageUpload";
 import WorkflowEditor from "./components/WorkflowEditor";
 import EmailConfirmation from "./pages/EmailConfirmation";
 import AuthCallback from "./pages/AuthCallback";
+import KnowledgeBase from "./components/KnowledgeBase";
 
 const queryClient = new QueryClient();
 
@@ -40,7 +41,7 @@ const App = () => (
                 <Route path="/connections" element={<div>Connections Page</div>} />
                 <Route path="/prompts" element={<div>Prompts Page</div>} />
                 <Route path="/fine-tuning" element={<div>Fine-tuning Page</div>} />
-                <Route path="/knowledge-bases" element={<div>Knowledge Bases Page</div>} />
+                <Route path="/knowledge-bases" element={<KnowledgeBase />} />
                 <Route path="/evaluations" element={<div>Evaluations Page</div>} />
               </Routes>
             </main>
