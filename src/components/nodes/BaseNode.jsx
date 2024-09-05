@@ -5,14 +5,12 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { Edit, Trash2, Save, X, ChevronDown, ChevronUp } from 'lucide-react';
-import { useUpdateNode } from '@/integrations/supabase/hooks/nodes';
 
-const BaseNode = ({ id, data, isConnectable, selected, icon: Icon, type, baseColor = "blue", gradientFrom = "from-blue-400/20", gradientTo = "to-blue-300/10", iconColor = "text-blue-600", children }) => {
+const BaseNode = ({ data, isConnectable, selected, icon: Icon, type, baseColor = "blue", gradientFrom = "from-blue-400/20", gradientTo = "to-blue-300/10", iconColor = "text-blue-600", children }) => {
   const [isExpanded, setIsExpanded] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
   const [editedData, setEditedData] = useState({ ...data });
-  const updateNode = useUpdateNode();
 
   const handleEdit = useCallback(() => {
     setIsEditing(true);
@@ -20,11 +18,14 @@ const BaseNode = ({ id, data, isConnectable, selected, icon: Icon, type, baseCol
   }, []);
 
   const handleSave = useCallback(() => {
-    updateNode.mutate({ id, ...editedData });
+    if (data.onSave) {
+      data.onSave(data.id, editedData);
+    }
     setIsEditing(false);
     // Update the data state to reflect changes immediately
-    Object.assign(data, editedData);
-  }, [id, editedData, data, updateNode]);
+    data.label = editedData.label;
+    data.description = editedData.description;
+  }, [editedData, data]);
 
   const handleCancel = useCallback(() => {
     setEditedData({ ...data });
@@ -38,10 +39,10 @@ const BaseNode = ({ id, data, isConnectable, selected, icon: Icon, type, baseCol
   }, []);
 
   const handleDelete = useCallback(() => {
-    if (typeof data.onDelete === 'function') {
-      data.onDelete(id);
+    if (data.onDelete) {
+      data.onDelete(data.id);
     }
-  }, [data, id]);
+  }, [data]);
 
   const toggleExpand = useCallback(() => {
     setIsExpanded(!isExpanded);
@@ -83,7 +84,7 @@ const BaseNode = ({ id, data, isConnectable, selected, icon: Icon, type, baseCol
               <Input
                 className="node-input mb-2 text-xs h-7 px-2 py-1"
                 name="label"
-                placeholder="label"
+                placeholder="Node label"
                 value={editedData.label || ''}
                 onChange={handleInputChange}
               />
