@@ -5,6 +5,7 @@ import ReactFlow, {
   MiniMap,
   useNodesState,
   useEdgesState,
+  MarkerType,
 } from 'reactflow';
 import 'reactflow/dist/style.css';
 import LeftSidebar from './LeftSidebar';
@@ -15,6 +16,15 @@ import { nodeTypes } from './nodes';
 import { useWorkflowState } from '../hooks/useWorkflowState';
 import { useWorkflowHandlers } from '../hooks/useWorkflowHandlers';
 import { useWorkflowModals } from '../hooks/useWorkflowModals';
+
+const GRID_SIZE = 20; // Size of each grid cell
+
+const snapToGrid = (x, y) => {
+  return {
+    x: Math.round(x / GRID_SIZE) * GRID_SIZE,
+    y: Math.round(y / GRID_SIZE) * GRID_SIZE,
+  };
+};
 
 const WorkflowEditor = () => {
   const [nodes, setNodes, onNodesChange] = useNodesState([]);
@@ -84,10 +94,11 @@ const WorkflowEditor = () => {
   }, [setNodes, setEdges]);
 
   const handleAddNode = useCallback((nodeData) => {
+    const position = snapToGrid(Math.random() * 500, Math.random() * 500);
     const newNode = {
       id: `${nodeData.type}-${nodes.length + 1}`,
       type: nodeData.type,
-      position: { x: Math.random() * 500, y: Math.random() * 500 },
+      position,
       data: { 
         ...nodeData,
         onSave: handleSaveNode,
@@ -108,6 +119,29 @@ const WorkflowEditor = () => {
   const handleExportJSON = useCallback(() => {
     return workflowData;
   }, [workflowData]);
+
+  const onNodeDragStop = useCallback((event, node) => {
+    const { x, y } = snapToGrid(node.position.x, node.position.y);
+    setNodes((nds) =>
+      nds.map((n) => {
+        if (n.id === node.id) {
+          return { ...n, position: { x, y } };
+        }
+        return n;
+      })
+    );
+  }, [setNodes]);
+
+  const customEdgeOptions = {
+    type: 'smoothstep',
+    markerEnd: {
+      type: MarkerType.ArrowClosed,
+    },
+    style: {
+      strokeWidth: 2,
+      stroke: '#6366F1',
+    },
+  };
 
   return (
     <div className="h-screen flex flex-col bg-gradient-to-br from-gray-900 to-gray-800 text-white">
@@ -132,16 +166,24 @@ const WorkflowEditor = () => {
               edges={edges}
               onNodesChange={onNodesChange}
               onEdgesChange={onEdgesChange}
-              onConnect={onConnect}
+              onConnect={(params) => onConnect({ ...params, ...customEdgeOptions })}
               onInit={setReactFlowInstance}
               onDrop={onDrop}
               onDragOver={onDragOver}
               onNodeClick={onNodeClick}
+              onNodeDragStop={onNodeDragStop}
               nodeTypes={nodeTypes}
-              onNodesDelete={updateWorkflowData}
-              onEdgesDelete={updateWorkflowData}
+              defaultEdgeOptions={customEdgeOptions}
+              snapToGrid={true}
+              snapGrid={[GRID_SIZE, GRID_SIZE]}
               fitView
             >
+              <Background
+                variant="dots"
+                gap={GRID_SIZE}
+                size={1}
+                color="#4B5563"
+              />
               <Controls />
               <MiniMap
                 nodeColor={(node) => {
@@ -160,7 +202,6 @@ const WorkflowEditor = () => {
                 zoomable
                 pannable
               />
-              <Background color="#4B5563" gap={16} />
             </ReactFlow>
           </div>
           <NodeCreationCard onAddNode={handleAddNode} />
