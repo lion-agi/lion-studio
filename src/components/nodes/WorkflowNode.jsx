@@ -21,8 +21,7 @@ const WorkflowNode = ({ data, isConnectable, selected }) => {
       data.onSave(editedData);
     }
     setIsEditing(false);
-  }, [edit
-edData, data]);
+  }, [editedData, data]);
 
   const handleCancel = useCallback(() => {
     setEditedData({ ...data });
