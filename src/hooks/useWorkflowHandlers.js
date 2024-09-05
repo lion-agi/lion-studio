@@ -1,7 +1,10 @@
-import { useCallback } from 'react';
+import { useCallback, useRef, useState } from 'react';
 import { addEdge } from 'reactflow';
 
-export const useWorkflowHandlers = (nodes, setNodes, edges, setEdges, reactFlowWrapper, reactFlowInstance, sidebarExpanded, setSidebarExpanded) => {
+export const useWorkflowHandlers = (nodes, setNodes, edges, setEdges) => {
+  const reactFlowWrapper = useRef(null);
+  const [reactFlowInstance, setReactFlowInstance] = useState(null);
+
   const onConnect = useCallback((params) => setEdges((eds) => addEdge({
     ...params,
     type: 'smoothstep',
@@ -9,24 +12,6 @@ export const useWorkflowHandlers = (nodes, setNodes, edges, setEdges, reactFlowW
     style: { stroke: '#6366F1', strokeWidth: 2 },
     markerEnd: { type: 'arrowclosed', color: '#6366F1' },
   }, eds)), [setEdges]);
-
-  const addNode = useCallback((nodeData) => {
-    const newNode = {
-      id: `${nodeData.type}-${nodes.length + 1}`,
-      type: nodeData.type,
-      position: { x: Math.random() * 500, y: Math.random() * 500 },
-      data: { label: nodeData.name, ...nodeData },
-    };
-    setNodes((nds) => nds.concat(newNode));
-  }, [nodes, setNodes]);
-
-  const toggleSidebar = useCallback(() => {
-    setSidebarExpanded(!sidebarExpanded);
-  }, [sidebarExpanded, setSidebarExpanded]);
-
-  const toggleCategory = useCallback((category) => {
-    // This function should be implemented in the component that manages category state
-  }, []);
 
   const onDragOver = useCallback((event) => {
     event.preventDefault();
@@ -36,11 +21,6 @@ export const useWorkflowHandlers = (nodes, setNodes, edges, setEdges, reactFlowW
   const onDrop = useCallback(
     (event) => {
       event.preventDefault();
-
-      if (!reactFlowWrapper.current || !reactFlowInstance) {
-        console.error('ReactFlow is not initialized');
-        return;
-      }
 
       const reactFlowBounds = reactFlowWrapper.current.getBoundingClientRect();
       const type = event.dataTransfer.getData('application/reactflow');
@@ -59,50 +39,50 @@ export const useWorkflowHandlers = (nodes, setNodes, edges, setEdges, reactFlowW
 
       setNodes((nds) => nds.concat(newNode));
     },
-    [nodes, setNodes, reactFlowInstance, reactFlowWrapper]
+    [nodes, setNodes, reactFlowInstance]
   );
 
-  const handleExportJSON = useCallback(() => {
-    const graphData = { nodes, edges };
-    console.log('Exporting JSON:', graphData);
-    // Implement actual export logic here
-  }, [nodes, edges]);
+  const onNodeDragStop = useCallback((event, node) => {
+    const { x, y } = node.position;
+    setNodes((nds) =>
+      nds.map((n) => (n.id === node.id ? { ...n, position: { x: Math.round(x / 20) * 20, y: Math.round(y / 20) * 20 } } : n))
+    );
+  }, [setNodes]);
 
-  const handleSaveLoad = useCallback(() => {
-    console.log('Save/Load dialog should be shown');
-    // Implement save/load dialog logic here
+  const handleExportJSON = useCallback(() => {
+    if (reactFlowInstance) {
+      const flow = reactFlowInstance.toObject();
+      console.log(flow);
+      // Here you would typically save or process the JSON data
+    }
+  }, [reactFlowInstance]);
+
+  const handleSaveLoad = useCallback((savedGraph) => {
+    console.log('Graph saved:', savedGraph);
+    // Here you would typically implement the actual save logic
   }, []);
 
   const handleCreateAgenticFlow = useCallback((flowConfig) => {
     console.log('Creating new flow:', flowConfig);
-    // Implement the logic to create a new flow based on the configuration
-  }, []);
-
-  const handleOpenNodeWizard = useCallback((nodeType) => {
-    console.log('Opening node wizard for type:', nodeType);
-    // Implement node wizard opening logic here
+    // Here you would implement the logic to create a new flow based on the configuration
   }, []);
 
   const onNodeClick = useCallback((event, node) => {
-    setNodes((nds) =>
-      nds.map((n) => ({
-        ...n,
-        selected: n.id === node.id,
-      }))
-    );
-  }, [setNodes]);
+    console.log('Node clicked:', node);
+    // Here you would implement any node click behavior
+  }, []);
 
   return {
+    reactFlowWrapper,
+    reactFlowInstance,
+    setReactFlowInstance,
     onConnect,
-    addNode,
-    toggleSidebar,
-    toggleCategory,
     onDragOver,
     onDrop,
+    onNodeDragStop,
     handleExportJSON,
     handleSaveLoad,
     handleCreateAgenticFlow,
-    handleOpenNodeWizard,
     onNodeClick,
   };
 };

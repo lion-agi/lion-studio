@@ -19,54 +19,45 @@ const snapToGrid = (x, y) => ({
 });
 
 const WorkflowEditor = () => {
-  const [nodes, setNodes, onNodesChange] = useNodesState([]);
-  const [edges, setEdges, onEdgesChange] = useEdgesState([]);
-  const [jsonData, setJsonData] = useState(null);
-  const reactFlowWrapper = useRef(null);
-  const [reactFlowInstance, setReactFlowInstance] = useState(null);
-  const [activeFeature, setActiveFeature] = useState('workflows');
-  const [isSecondaryNavExpanded, setIsSecondaryNavExpanded] = useState(true);
-
-  const { sidebarExpanded, setSidebarExpanded } = useWorkflowState();
+  const {
+    nodes,
+    edges,
+    onNodesChange,
+    onEdgesChange,
+    setNodes,
+    setEdges,
+  } = useWorkflowState();
 
   const {
+    reactFlowWrapper,
+    reactFlowInstance,
+    setReactFlowInstance,
     onConnect,
-    addNode,
     onDragOver,
     onDrop,
+    onNodeDragStop,
+    handleExportJSON,
     handleSaveLoad,
     handleCreateAgenticFlow,
     onNodeClick,
-  } = useWorkflowHandlers(nodes, setNodes, edges, setEdges, reactFlowWrapper, reactFlowInstance, sidebarExpanded, setSidebarExpanded);
+  } = useWorkflowHandlers(nodes, setNodes, edges, setEdges);
 
   const {
     showJSONModal,
     showSaveLoadDialog,
     setShowJSONModal,
     setShowSaveLoadDialog,
+    jsonData,
+    setJsonData,
   } = useWorkflowModals();
+
+  const [activeFeature, setActiveFeature] = useState('workflows');
+  const [isSecondaryNavExpanded, setIsSecondaryNavExpanded] = useState(true);
 
   const handleFeatureChange = useCallback((feature) => {
     setActiveFeature(feature);
     setIsSecondaryNavExpanded(true);
   }, []);
-
-  const handleExportJSON = useCallback(() => {
-    if (reactFlowInstance) {
-      const flow = reactFlowInstance.toObject();
-      setJsonData(flow);
-      setShowJSONModal(true);
-    }
-  }, [reactFlowInstance, setShowJSONModal]);
-
-  const onNodeDragStop = useCallback((event, node) => {
-    if (node && node.position) {
-      const { x, y } = snapToGrid(node.position.x, node.position.y);
-      setNodes((nds) =>
-        nds.map((n) => (n.id === node.id ? { ...n, position: { x, y } } : n))
-      );
-    }
-  }, [setNodes]);
 
   const customEdgeOptions = {
     type: 'smoothstep',
@@ -109,44 +100,49 @@ const WorkflowEditor = () => {
             >
               <Background variant="dots" gap={GRID_SIZE} size={1} color="#4B5563" />
               <Controls />
-              <MiniMap nodeColor={(node) => {
-                switch (node.type) {
-                  case 'user': return '#3B82F6';
-                  case 'agent': return '#10B981';
-                  case 'assistant': return '#F59E0B';
-                  case 'group': return '#FF4136';
-                  case 'initializer': return '#EF4444';
-                  case 'nestedChat': return '#EC4899';
-                  case 'note': return '#6366F1';
-                  default: return '#64748B';
-                }
-              }} nodeStrokeWidth={3} zoomable pannable />
+              <MiniMap nodeColor={getNodeColor} nodeStrokeWidth={3} zoomable pannable />
             </ReactFlow>
           </div>
-          <NodeCreationCard onAddNode={addNode} />
+          <NodeCreationCard onAddNode={(nodeData) => setNodes((nds) => [...nds, createNode(nodeData)])} />
         </div>
       </div>
-      {showSaveLoadDialog && (
-        <SaveLoadDialog
-          isOpen={showSaveLoadDialog}
-          onClose={() => setShowSaveLoadDialog(false)}
-          onSave={handleSaveLoad}
-          onLoad={(loadedData) => {
-            setNodes(loadedData.nodes);
-            setEdges(loadedData.edges);
-          }}
-          graphData={{ nodes, edges }}
-        />
-      )}
-      {showJSONModal && (
-        <JSONModal
-          isOpen={showJSONModal}
-          onClose={() => setShowJSONModal(false)}
-          jsonData={jsonData}
-        />
-      )}
+      <SaveLoadDialog
+        isOpen={showSaveLoadDialog}
+        onClose={() => setShowSaveLoadDialog(false)}
+        onSave={handleSaveLoad}
+        onLoad={(loadedData) => {
+          setNodes(loadedData.nodes);
+          setEdges(loadedData.edges);
+        }}
+        graphData={{ nodes, edges }}
+      />
+      <JSONModal
+        isOpen={showJSONModal}
+        onClose={() => setShowJSONModal(false)}
+        jsonData={jsonData}
+      />
     </div>
   );
 };
+
+const getNodeColor = (node) => {
+  switch (node.type) {
+    case 'user': return '#3B82F6';
+    case 'agent': return '#10B981';
+    case 'assistant': return '#F59E0B';
+    case 'group': return '#FF4136';
+    case 'initializer': return '#EF4444';
+    case 'nestedChat': return '#EC4899';
+    case 'note': return '#6366F1';
+    default: return '#64748B';
+  }
+};
+
+const createNode = (nodeData) => ({
+  id: `${nodeData.type}-${Date.now()}`,
+  type: nodeData.type,
+  position: { x: Math.random() * 500, y: Math.random() * 500 },
+  data: { label: nodeData.name, ...nodeData },
+});
 
 export default WorkflowEditor;

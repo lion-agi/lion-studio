@@ -1,17 +1,15 @@
-import { useState } from 'react';
+import { useNodesState, useEdgesState } from 'reactflow';
 
 export const useWorkflowState = () => {
-  const [sidebarExpanded, setSidebarExpanded] = useState(true);
-  const [expandedCategories, setExpandedCategories] = useState({
-    basic: true,
-    advanced: false,
-    extensions: false,
-  });
+  const [nodes, setNodes, onNodesChange] = useNodesState([]);
+  const [edges, setEdges, onEdgesChange] = useEdgesState([]);
 
   return {
-    sidebarExpanded,
-    expandedCategories,
-    setSidebarExpanded,
-    setExpandedCategories,
+    nodes,
+    edges,
+    onNodesChange,
+    onEdgesChange,
+    setNodes,
+    setEdges,
   };
 };
