@@ -5,7 +5,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { PlusCircle, Search } from 'lucide-react';
+import { PlusCircle, Search, MoreHorizontal, Plus } from 'lucide-react';
 
 const KnowledgeBase = () => {
   const [searchTerm, setSearchTerm] = useState('');
@@ -18,21 +18,13 @@ const KnowledgeBase = () => {
     privacy: 'Shareable'
   });
 
-  const knowledgeItems = [
-    { title: "Quantum-Inspired Cognitive Algorithms", content: "Quantum-inspired algorithms are...", status: "Draft" },
-    { title: "The Tao and Complex Systems", content: "The intersection of Eastern philosophy, complex...", status: "Draft" },
-    { title: "Efficient Knowledge Graph Structures", content: "Cognitive architectures and large-scale knowledge...", views: 1 },
-    { title: "Promoting AI Problem-Solving Techniques", content: "Enhancing AI language models' problem-solving...", views: 1 },
-    { title: "AI Multi-Agent Systems: Challenges", content: "Large language models (LLMs) have revolutionize...", views: 1 },
-    { title: "How to Deprecate Functions with Pydantic", content: "Pydantic offers several options for marking...", views: 2 },
-    { title: "AI Startups' Go-to-Market Strategies", content: "AI startups focusing on...", status: "Draft" },
-    { title: "Architectural Patterns for Agentic AI", content: "The development of...", views: 1 },
-    { title: "Optimizing LionAGI's Element Class", content: "Pydantic, a popular data...", views: 2 },
+  const threads = [
+    { title: "using pydantic, how to use annotated and field as function parameter", content: "To use Pydantic's Annotated and Field as function parameters, you can combine them to create validated and documented function arguments. Here's how to do it: 1. Import the...", createdAt: "27 days ago" },
+    { title: "how to run a startup script .sh file in macos terminal", content: "To run a startup script (.sh file) in macOS Terminal, you have a few options: 1. Add the script to your login items: Go to System Preferences > Users & Groups Select your user...", createdAt: "29 days ago" },
+    { title: "in graph theory, after a hyperedge is formed, is it academically correct for the hyper ed...", content: "Yes, in graph theory, it is academically correct for a hyperedge to connect to more nodes after it is initially formed. This flexibility is one of the key features that distinguishes...", createdAt: "1 month ago" },
+    { title: "how to hide pydantic model attributes", content: "To hide Pydantic model attributes, there are a few approaches you can take: 1. Use private attributes with underscore prefixes: from pydantic import BaseModel class...", createdAt: "1 month ago" },
+    { title: "pending", content: "Based on the search result provided, I can offer information about the word \"pending\" and its usage: \"Pending\" is a commonly used term that generally refers to something that is n...", createdAt: "1 month ago" },
   ];
-
-  const filteredItems = knowledgeItems.filter(item =>
-    item.title.toLowerCase().includes(searchTerm.toLowerCase())
-  );
 
   const handleCreateCollection = () => {
     console.log('Creating collection:', newCollection);
@@ -146,24 +138,37 @@ const KnowledgeBase = () => {
         </Dialog>
       </div>
 
-      <Tabs defaultValue="pages">
+      <Tabs defaultValue="threads">
         <TabsList>
           <TabsTrigger value="threads">Threads</TabsTrigger>
           <TabsTrigger value="pages">Pages</TabsTrigger>
         </TabsList>
-        <TabsContent value="threads">Threads content</TabsContent>
-        <TabsContent value="pages">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {filteredItems.map((item, index) => (
+        <TabsContent value="threads">
+          <div className="space-y-4">
+            {threads.map((thread, index) => (
               <div key={index} className="bg-card p-4 rounded-lg shadow">
-                <h3 className="font-semibold mb-2">{item.title}</h3>
-                <p className="text-sm text-muted-foreground mb-2">{item.content}</p>
+                <div className="flex justify-between items-start mb-2">
+                  <h3 className="font-semibold text-lg">{thread.title}</h3>
+                  <div className="flex items-center space-x-2">
+                    <Button variant="ghost" size="sm">
+                      <Plus className="h-4 w-4" />
+                    </Button>
+                    <Button variant="ghost" size="sm">
+                      <MoreHorizontal className="h-4 w-4" />
+                    </Button>
+                  </div>
+                </div>
+                <p className="text-sm text-muted-foreground mb-2">{thread.content}</p>
                 <div className="flex justify-between items-center text-xs text-muted-foreground">
-                  {item.status && <span>{item.status}</span>}
-                  {item.views && <span>{item.views} view{item.views > 1 ? 's' : ''}</span>}
+                  <span>{thread.createdAt}</span>
                 </div>
               </div>
             ))}
+          </div>
+        </TabsContent>
+        <TabsContent value="pages">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {/* Pages content */}
           </div>
         </TabsContent>
       </Tabs>
