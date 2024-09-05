@@ -79,7 +79,15 @@ const WorkflowEditor = () => {
   const handleDeleteNode = useCallback((nodeId) => {
     setNodes((nds) => nds.filter((node) => node.id !== nodeId));
     setEdges((eds) => eds.filter((edge) => edge.source !== nodeId && edge.target !== nodeId));
-  }, [setNodes, setEdges]);
+    
+    // Update the JSON representation
+    if (reactFlowInstance) {
+      const updatedFlow = reactFlowInstance.toObject();
+      updatedFlow.nodes = updatedFlow.nodes.filter((node) => node.id !== nodeId);
+      updatedFlow.edges = updatedFlow.edges.filter((edge) => edge.source !== nodeId && edge.target !== nodeId);
+      // You might want to save this updated flow or update your state here
+    }
+  }, [setNodes, setEdges, reactFlowInstance]);
 
   const handleAddNode = useCallback((nodeData) => {
     const newNode = {
