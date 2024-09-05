@@ -50,11 +50,11 @@ const DatabaseNode = ({ data, isConnectable, selected }) => {
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
-      <CardHeader className="node-header bg-purple-300/30 relative cursor-pointer" onClick={toggleExpand}>
+      <CardHeader className="node-header relative cursor-pointer" onClick={toggleExpand}>
         <CardTitle className="text-purple-foreground font-bold flex items-center justify-between text-sm">
           <div className="flex items-center">
             <Database className="w-5 h-5 mr-2" />
-            {editedData.label}
+            Database
           </div>
           {isExpanded ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
         </CardTitle>
