@@ -65,11 +65,19 @@ const WorkflowEditor = () => {
     style: { strokeWidth: 2, stroke: '#6366F1' },
   };
 
+  const handleJSONExport = useCallback(() => {
+    if (reactFlowInstance) {
+      const flow = reactFlowInstance.toObject();
+      setJsonData(flow);
+      setShowJSONModal(true);
+    }
+  }, [reactFlowInstance, setJsonData, setShowJSONModal]);
+
   return (
     <div className="h-screen flex flex-col bg-gradient-to-br from-gray-900 to-gray-800 text-white">
       <div className="flex flex-grow overflow-hidden">
         <LeftSidebar
-          onExportJSON={handleExportJSON}
+          onExportJSON={handleJSONExport}
           onSaveLoad={() => setShowSaveLoadDialog(true)}
           onCreateAgenticFlow={handleCreateAgenticFlow}
           onFeatureChange={handleFeatureChange}
