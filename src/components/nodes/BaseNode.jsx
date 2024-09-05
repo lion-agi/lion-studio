@@ -83,7 +83,7 @@ const BaseNode = ({ id, data, isConnectable, selected, icon: Icon, type, baseCol
               <Input
                 className="node-input mb-2 text-xs h-7 px-2 py-1"
                 name="label"
-                placeholder="Node label"
+                placeholder="label"
                 value={editedData.label || ''}
                 onChange={handleInputChange}
               />
