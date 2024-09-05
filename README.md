@@ -11,7 +11,8 @@
 **Note:** very alpha, not ready for anything serious, play around and write issues : ) 
 
 
-![PHOTO-2024-09-04-14-11-17](https://github.com/user-attachments/assets/898d9aa4-ae30-4545-ae27-43b526fe4513)
+<img width="1402" alt="image" src="https://github.com/user-attachments/assets/0c71e226-ad35-49df-b11e-91389d031a51">
+
 
 
 
