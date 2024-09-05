@@ -12,7 +12,6 @@ const nodeCategories = [
     nodes: [
       { type: 'assistant', icon: <Bot />, label: 'Assistant' },
       { type: 'user', icon: <User />, label: 'Human User' },
-      { type: 'group', icon: <Users />, label: 'Mixture Of Experts' },
       { type: 'note', icon: <StickyNote />, label: 'Note' },
       { type: 'initializer', icon: <Play />, label: 'Start' },
     ]
@@ -24,6 +23,7 @@ const nodeCategories = [
       { type: 'workflow', icon: <Workflow />, label: 'Workflow' },
       { type: 'api', icon: <Zap />, label: 'API Call' },
       { type: 'conversation', icon: <MessageSquare />, label: 'Conversation' },
+      { type: 'moe', icon: <Users />, label: 'Mixture Of Experts' },
     ]
   }
 ];
