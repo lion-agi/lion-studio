@@ -23,6 +23,7 @@ const WorkflowEditor = () => {
   const [reactFlowInstance, setReactFlowInstance] = useState(null);
   const [activeFeature, setActiveFeature] = useState('workflows');
   const [isSecondaryNavExpanded, setIsSecondaryNavExpanded] = useState(true);
+  const [workflowData, setWorkflowData] = useState({});
 
   const {
     sidebarExpanded,
@@ -38,7 +39,6 @@ const WorkflowEditor = () => {
     toggleCategory,
     onDragOver,
     onDrop,
-    handleExportJSON,
     handleSaveLoad,
     handleCreateAgenticFlow,
     handleOpenNodeWizard,
@@ -74,20 +74,14 @@ const WorkflowEditor = () => {
         return node;
       })
     );
+    updateWorkflowData();
   }, [setNodes]);
 
   const handleDeleteNode = useCallback((nodeId) => {
     setNodes((nds) => nds.filter((node) => node.id !== nodeId));
     setEdges((eds) => eds.filter((edge) => edge.source !== nodeId && edge.target !== nodeId));
-    
-    // Update the JSON representation
-    if (reactFlowInstance) {
-      const updatedFlow = reactFlowInstance.toObject();
-      updatedFlow.nodes = updatedFlow.nodes.filter((node) => node.id !== nodeId);
-      updatedFlow.edges = updatedFlow.edges.filter((edge) => edge.source !== nodeId && edge.target !== nodeId);
-      // You might want to save this updated flow or update your state here
-    }
-  }, [setNodes, setEdges, reactFlowInstance]);
+    updateWorkflowData();
+  }, [setNodes, setEdges]);
 
   const handleAddNode = useCallback((nodeData) => {
     const newNode = {
@@ -101,7 +95,19 @@ const WorkflowEditor = () => {
       },
     };
     setNodes((nds) => nds.concat(newNode));
+    updateWorkflowData();
   }, [nodes, setNodes, handleSaveNode, handleDeleteNode]);
+
+  const updateWorkflowData = useCallback(() => {
+    if (reactFlowInstance) {
+      const flow = reactFlowInstance.toObject();
+      setWorkflowData(flow);
+    }
+  }, [reactFlowInstance]);
+
+  const handleExportJSON = useCallback(() => {
+    return workflowData;
+  }, [workflowData]);
 
   return (
     <div className="h-screen flex flex-col bg-gradient-to-br from-gray-900 to-gray-800 text-white">
@@ -132,6 +138,8 @@ const WorkflowEditor = () => {
               onDragOver={onDragOver}
               onNodeClick={onNodeClick}
               nodeTypes={nodeTypes}
+              onNodesDelete={updateWorkflowData}
+              onEdgesDelete={updateWorkflowData}
               fitView
             >
               <Controls />
@@ -173,8 +181,9 @@ const WorkflowEditor = () => {
               }
             })));
             setEdges(loadedData.edges);
+            setWorkflowData(loadedData);
           }}
-          graphData={{ nodes, edges }}
+          graphData={workflowData}
         />
       )}
     </div>
