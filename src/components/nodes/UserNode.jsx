@@ -46,17 +46,17 @@ const UserNode = ({ data, isConnectable, selected }) => {
 
   return (
     <Card 
-      className={`node-card w-83 bg-gradient-to-br from-blue-400/20 to-blue-300/10 backdrop-blur-sm ${selected ? 'selected' : ''}`}
+      className={`node-card w-64 bg-gradient-to-br from-blue-400/20 to-blue-300/10 backdrop-blur-sm ${selected ? 'selected' : ''}`}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
-      <CardHeader className="node-header bg-blue-300/30 relative cursor-pointer" onClick={toggleExpand}>
-        <CardTitle className="text-blue-foreground font-bold flex items-center justify-between text-sm">
+      <CardHeader className="node-header relative cursor-pointer" onClick={toggleExpand}>
+        <CardTitle className="text-blue-foreground font-bold flex items-center justify-between text-xs">
           <div className="flex items-center">
-            <User className="w-5 h-5 mr-2" />
-            {editedData.label}
+            <User className="w-4 h-4 mr-2" />
+            Human User
           </div>
-          {isExpanded ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
+          {isExpanded ? <ChevronUp className="w-3 h-3" /> : <ChevronDown className="w-3 h-3" />}
         </CardTitle>
         <Handle
           type="target"
@@ -76,7 +76,7 @@ const UserNode = ({ data, isConnectable, selected }) => {
           {isEditing ? (
             <>
               <Input
-                className="node-input mb-2"
+                className="node-input mb-2 text-xs"
                 name="label"
                 placeholder="User name"
                 value={editedData.label}
@@ -84,27 +84,27 @@ const UserNode = ({ data, isConnectable, selected }) => {
               />
               <div className="flex justify-end space-x-2 mt-2">
                 <Button size="sm" variant="outline" onClick={handleCancel}>
-                  <X className="w-4 h-4 mr-2" />
+                  <X className="w-3 h-3 mr-1" />
                   Cancel
                 </Button>
                 <Button size="sm" onClick={handleSave}>
-                  <Save className="w-4 h-4 mr-2" />
+                  <Save className="w-3 h-3 mr-1" />
                   Save
                 </Button>
               </div>
             </>
           ) : (
-            <p className="mb-2"><strong>User Name:</strong> {editedData.label}</p>
+            <p className="mb-2 text-xs"><strong>User Name:</strong> {editedData.label}</p>
           )}
         </CardContent>
       )}
       {!isEditing && (isHovered || selected) && (
         <div className="absolute top-0 right-0 p-1 bg-background/80 rounded-bl">
           <Button variant="ghost" size="icon" onClick={handleEdit}>
-            <Edit className="h-4 w-4" />
+            <Edit className="h-3 w-3" />
           </Button>
           <Button variant="ghost" size="icon" onClick={handleDelete}>
-            <Trash2 className="h-4 w-4" />
+            <Trash2 className="h-3 w-3" />
           </Button>
         </div>
       )}
