@@ -8,11 +8,13 @@ const DatabaseNode = (props) => {
       {...props} 
       icon={Database} 
       type="database"
-      baseColor="lavender"
-      gradientFrom="from-lavender-400/20"
-      gradientTo="to-lavender-300/10"
-      iconColor="text-lavender-600"
-    />
+      baseColor="indigo"
+      gradientFrom="from-indigo-400/20"
+      gradientTo="to-indigo-300/10"
+      iconColor="text-indigo-600"
+    >
+      Database
+    </BaseNode>
   );
 };
 
