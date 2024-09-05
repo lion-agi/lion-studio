@@ -1,7 +1,7 @@
 import UserNode from './UserNode';
 import AgentNode from './AgentNode';
 import AssistantNode from './AssistantNode';
-import MixtureOfExpertsNode from './MixtureOfExpertsNode';
+import GroupNode from './GroupNode';
 import InitializerNode from './InitializerNode';
 import NestedChatNode from './NestedChatNode';
 import NoteNode from './NoteNode';
@@ -13,7 +13,7 @@ export const nodeTypes = {
   user: UserNode,
   agent: AgentNode,
   assistant: AssistantNode,
-  mixtureOfExperts: MixtureOfExpertsNode,
+  group: GroupNode,
   initializer: InitializerNode,
   nestedChat: NestedChatNode,
   note: NoteNode,
