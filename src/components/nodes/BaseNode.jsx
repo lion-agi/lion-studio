@@ -47,12 +47,12 @@ const BaseNode = ({ data, isConnectable, selected, icon: Icon, type }) => {
 
   return (
     <Card 
-      className={`node-card w-64 bg-gradient-to-br from-${type}-200 to-${type}-100 ${isExpanded ? 'expanded' : ''}`}
+      className={`node-card w-64 bg-gradient-to-br from-blue-400/20 to-blue-300/10 backdrop-blur-sm ${selected ? 'selected' : ''}`}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
       <CardHeader className="node-header relative cursor-pointer p-3" onClick={toggleExpand}>
-        <CardTitle className={`text-${type}-foreground font-bold flex items-center justify-between text-sm`}>
+        <CardTitle className="text-blue-foreground font-bold flex items-center justify-between text-sm">
           <div className="flex items-center">
             <Icon className="w-4 h-4 mr-2" />
             {data.label}
@@ -73,31 +73,25 @@ const BaseNode = ({ data, isConnectable, selected, icon: Icon, type }) => {
         />
       </CardHeader>
       {isExpanded && (
-        <CardContent className="node-content text-xs space-y-3 p-3">
+        <CardContent className="node-content p-3">
           {isEditing ? (
             <>
-              {Object.entries(editedData).map(([key, value]) => (
-                <div key={key} className="space-y-2">
-                  <label className="text-xs font-medium">{key}:</label>
-                  {typeof value === 'string' ? (
-                    <Input
-                      className="node-input text-xs h-7 px-2 py-1 border border-accent-300"
-                      name={key}
-                      value={value}
-                      onChange={handleInputChange}
-                    />
-                  ) : (
-                    <Textarea
-                      className="node-input text-xs px-2 py-1 border border-accent-300"
-                      name={key}
-                      value={value}
-                      onChange={handleInputChange}
-                      rows={2}
-                    />
-                  )}
-                </div>
-              ))}
-              <div className="flex justify-end space-x-2 mt-3">
+              <Input
+                className="node-input mb-2 text-xs h-7 px-2 py-1"
+                name="name"
+                placeholder="Node name"
+                value={editedData.name}
+                onChange={handleInputChange}
+              />
+              <Textarea
+                className="node-input mb-2 text-xs px-2 py-1"
+                name="description"
+                placeholder="Node description"
+                value={editedData.description}
+                onChange={handleInputChange}
+                rows={2}
+              />
+              <div className="flex justify-end space-x-2 mt-2">
                 <Button size="sm" variant="outline" onClick={handleCancel} className="text-xs py-1 h-7">
                   <X className="w-3 h-3 mr-1" />
                   Cancel
@@ -110,12 +104,8 @@ const BaseNode = ({ data, isConnectable, selected, icon: Icon, type }) => {
             </>
           ) : (
             <>
-              {Object.entries(editedData).map(([key, value]) => (
-                <div key={key} className="space-y-2">
-                  <p className="font-medium">{key}:</p>
-                  <p className="border border-accent-300 rounded px-2 py-1">{value}</p>
-                </div>
-              ))}
+              <p className="mb-2 text-xs"><strong>Name:</strong> {editedData.name}</p>
+              <p className="mb-2 text-xs"><strong>Description:</strong> {editedData.description}</p>
             </>
           )}
         </CardContent>
