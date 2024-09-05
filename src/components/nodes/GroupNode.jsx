@@ -108,7 +108,7 @@ const GroupNode = ({ data, isConnectable, selected }) => {
         style={{ top: '50%', transform: 'translateY(-50%)', left: '-6px' }}
         isConnectable={isConnectable}
       >
-        <ArrowRight className="h-3 w-3 text-green-500 absolute -left-4 top-1/2 -translate-y-1/2" />
+        <ArrowRight className="h-5 w-5 text-[#6366F1] absolute -left-6 top-1/2 -translate-y-1/2" />
       </Handle>
       <Handle
         type="source"
