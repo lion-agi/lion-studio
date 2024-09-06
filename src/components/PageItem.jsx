@@ -20,29 +20,11 @@ const PageItem = ({ page, onOpenModal, onDelete, onEdit, onAddToCollection }) =>
     };
   }, []);
 
-  const handleDelete = () => {
-    if (onDelete) {
-      onDelete(page.id);
+  const handleAction = (action) => {
+    if (action) {
+      action(page.id);
     } else {
-      console.warn('onDelete function not provided to PageItem');
-    }
-    setShowOptions(false);
-  };
-
-  const handleEdit = () => {
-    if (onEdit) {
-      onEdit(page.id);
-    } else {
-      console.warn('onEdit function not provided to PageItem');
-    }
-    setShowOptions(false);
-  };
-
-  const handleAddToCollection = () => {
-    if (onAddToCollection) {
-      onAddToCollection(page.id);
-    } else {
-      console.warn('onAddToCollection function not provided to PageItem');
+      console.warn(`${action.name} function not provided to PageItem`);
     }
     setShowOptions(false);
   };
@@ -72,34 +54,31 @@ const PageItem = ({ page, onOpenModal, onDelete, onEdit, onAddToCollection }) =>
               <MoreHorizontal className="h-4 w-4" />
             </Button>
             {showOptions && (
-              <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg z-10">
+              <div className="absolute right-0 mt-2 bg-white rounded-md shadow-lg z-10">
                 <div className="py-1">
                   <Button
                     variant="ghost"
                     size="sm"
-                    className="w-full flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                    onClick={handleDelete}
+                    className="w-full flex items-center justify-center p-2 text-gray-700 hover:bg-gray-100"
+                    onClick={() => handleAction(onDelete)}
                   >
-                    <Trash2 className="h-4 w-4 mr-2" />
-                    Delete
+                    <Trash2 className="h-4 w-4" />
                   </Button>
                   <Button
                     variant="ghost"
                     size="sm"
-                    className="w-full flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                    onClick={handleEdit}
+                    className="w-full flex items-center justify-center p-2 text-gray-700 hover:bg-gray-100"
+                    onClick={() => handleAction(onEdit)}
                   >
-                    <Edit className="h-4 w-4 mr-2" />
-                    Edit
+                    <Edit className="h-4 w-4" />
                   </Button>
                   <Button
                     variant="ghost"
                     size="sm"
-                    className="w-full flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                    onClick={handleAddToCollection}
+                    className="w-full flex items-center justify-center p-2 text-gray-700 hover:bg-gray-100"
+                    onClick={() => handleAction(onAddToCollection)}
                   >
-                    <FolderPlus className="h-4 w-4 mr-2" />
-                    Add to Collection
+                    <FolderPlus className="h-4 w-4" />
                   </Button>
                 </div>
               </div>
