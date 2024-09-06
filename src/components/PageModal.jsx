@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Badge } from "@/components/ui/badge";
 import { X } from 'lucide-react';
-import ReactMarkdown from 'react-markdown';
+import Markdown from 'react-markdown';
 
 const PageModal = ({ page, isOpen, onClose }) => {
   return (
@@ -19,7 +19,7 @@ const PageModal = ({ page, isOpen, onClose }) => {
         <ScrollArea className="flex-grow">
           <div className="p-6 space-y-6">
             <div className="prose prose-invert max-w-none">
-              <ReactMarkdown>{page.content}</ReactMarkdown>
+              <Markdown>{page.content}</Markdown>
             </div>
             <div className="grid grid-cols-2 gap-4 text-sm text-gray-400">
               <InfoItem label="Date" value={page.createdAt} />
