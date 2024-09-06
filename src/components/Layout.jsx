@@ -1,5 +1,5 @@
 import React from 'react';
-import TopNavigation from "./TopNavigation";
+import TopNavigation from "./navbar/TopNavigation";
 
 const Layout = ({ children }) => {
   return (

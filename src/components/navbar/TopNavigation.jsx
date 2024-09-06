@@ -6,7 +6,7 @@ const tabs = [
   { name: 'Workflows Editor', href: '/editor' },
   { name: 'Prompts', href: '/prompts' },
   { name: 'Connections', href: '/connections' },
-  { name: 'Library', href: '/knowledge-bases' },
+  { name: 'Library', href: '/library' },
   { name: 'Evaluations', href: '/evaluations' },
   { name: 'Deployments', href: '/deployments' },
   { name: 'Monitoring', href: '/monitoring' }

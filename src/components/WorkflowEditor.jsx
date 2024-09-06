@@ -1,8 +1,8 @@
-import React, { useState, useCallback, useRef } from 'react';
-import ReactFlow, { Background, Controls, MiniMap, useNodesState, useEdgesState, MarkerType } from 'reactflow';
+import React, { useCallback, useState } from 'react';
+import ReactFlow, { Background, Controls, MiniMap, MarkerType } from 'reactflow';
 import 'reactflow/dist/style.css';
-import LeftSidebar from './LeftSidebar';
-import SecondaryNavigation from './SecondaryNavigation';
+import ConsoleHeader from './header/ConsoleHeader';
+import ConsolePageHeader from './header/ConsolePageHeader';
 import NodeCreationCard from './NodeCreationCard';
 import SaveLoadDialog from './SaveLoadDialog';
 import JSONModal from './JSONModal';
@@ -51,13 +51,7 @@ const WorkflowEditor = () => {
     setJsonData,
   } = useWorkflowModals();
 
-  const [activeFeature, setActiveFeature] = useState('workflows');
-  const [isSecondaryNavExpanded, setIsSecondaryNavExpanded] = useState(true);
-
-  const handleFeatureChange = useCallback((feature) => {
-    setActiveFeature(feature);
-    setIsSecondaryNavExpanded(true);
-  }, []);
+  const [activeView, setActiveView] = useState('main');
 
   const customEdgeOptions = {
     type: 'smoothstep',
@@ -73,47 +67,60 @@ const WorkflowEditor = () => {
     }
   }, [reactFlowInstance, setJsonData, setShowJSONModal]);
 
-  return (
-    <div className="h-screen flex flex-col bg-gradient-to-br from-gray-900 to-gray-800 text-white">
-      <div className="flex flex-grow overflow-hidden">
-        <LeftSidebar
-          onExportJSON={handleJSONExport}
-          onSaveLoad={() => setShowSaveLoadDialog(true)}
-          onCreateAgenticFlow={handleCreateAgenticFlow}
-          onFeatureChange={handleFeatureChange}
-        />
-        <SecondaryNavigation
-          activeFeature={activeFeature}
-          isExpanded={isSecondaryNavExpanded}
-          toggleExpanded={() => setIsSecondaryNavExpanded(!isSecondaryNavExpanded)}
-        />
-        <div className="flex-grow flex relative">
-          <div className="flex-grow" ref={reactFlowWrapper}>
-            <ReactFlow
-              nodes={nodes}
-              edges={edges}
-              onNodesChange={onNodesChange}
-              onEdgesChange={onEdgesChange}
-              onConnect={onConnect}
-              onInit={setReactFlowInstance}
-              onDrop={onDrop}
-              onDragOver={onDragOver}
-              onNodeClick={onNodeClick}
-              onNodeDragStop={onNodeDragStop}
-              nodeTypes={nodeTypes}
-              defaultEdgeOptions={customEdgeOptions}
-              snapToGrid={true}
-              snapGrid={[GRID_SIZE, GRID_SIZE]}
-              fitView
-            >
-              <Background variant="dots" gap={GRID_SIZE} size={1} color="#4B5563" />
-              <Controls />
-              <MiniMap nodeColor={getNodeColor} nodeStrokeWidth={3} zoomable pannable />
-            </ReactFlow>
+  const renderMainContent = () => {
+    switch (activeView) {
+      case 'main':
+        return (
+          <div className="flex-grow flex" style={{ height: 'calc(100vh - 180px)' }}>
+            <div className="flex-grow relative" ref={reactFlowWrapper}>
+              <ReactFlow
+                nodes={nodes}
+                edges={edges}
+                onNodesChange={onNodesChange}
+                onEdgesChange={onEdgesChange}
+                onConnect={onConnect}
+                onInit={setReactFlowInstance}
+                onDrop={onDrop}
+                onDragOver={onDragOver}
+                onNodeClick={onNodeClick}
+                onNodeDragStop={onNodeDragStop}
+                nodeTypes={nodeTypes}
+                defaultEdgeOptions={customEdgeOptions}
+                snapToGrid={true}
+                snapGrid={[GRID_SIZE, GRID_SIZE]}
+                fitView
+              >
+                <Background variant="dots" gap={GRID_SIZE} size={1} color="#4B5563" />
+                <Controls />
+                <MiniMap nodeColor={getNodeColor} nodeStrokeWidth={3} zoomable pannable />
+              </ReactFlow>
+            </div>
+            <NodeCreationCard onAddNode={(nodeData) => setNodes((nds) => [...nds, createNode(nodeData)])} />
           </div>
-          <NodeCreationCard onAddNode={(nodeData) => setNodes((nds) => [...nds, createNode(nodeData)])} />
-        </div>
-      </div>
+        );
+      case 'settings':
+        return <div className="flex-grow p-4">Workflow Settings (Placeholder)</div>;
+      case 'help':
+        return <div className="flex-grow p-4">Workflow Help Documentation (Placeholder)</div>;
+      default:
+        return null;
+    }
+  };
+
+  return (
+    <div className="flex flex-col h-screen bg-gray-900 text-white">
+      <ConsoleHeader />
+      <ConsolePageHeader 
+        title="Workflow Editor"
+        activeView={activeView}
+        onViewChange={setActiveView}
+        onExportJSON={handleJSONExport}
+        onSaveLoad={() => setShowSaveLoadDialog(true)}
+        onCreateNew={handleCreateAgenticFlow}
+      />
+      <main className="flex-grow overflow-hidden">
+        {renderMainContent()}
+      </main>
       <SaveLoadDialog
         isOpen={showSaveLoadDialog}
         onClose={() => setShowSaveLoadDialog(false)}

@@ -4,16 +4,16 @@ import { Input } from "@/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { PlusCircle, Search, MessageSquare, FileText, FolderPlus } from 'lucide-react';
-import CreateCollectionForm from '../CreateCollectionForm';
-import ThreadList from './ThreadList';
-import PageItem from './PageItem';
-import CollectionItem from './CollectionItem';
-import DataSourceList from './DataSourceList';
-import ThreadModal from './ThreadModal';
-import PageModal from './PageModal';
-import DataSourceModal from './DataSourceModal';
-import EmptyState from './EmptyState';
-import { useKnowledgeBase } from './useKnowledgeBase';
+import CreateCollectionForm from '../components/CreateCollectionForm';
+import ThreadList from '../components/library/ThreadList';
+import PageItem from '../components/library/PageItem';
+import CollectionItem from '../components/library/CollectionItem';
+import DataSourceList from '../components/library/DataSourceList';
+import ThreadModal from '../components/library/ThreadModal';
+import PageModal from '../components/library/PageModal';
+import DataSourceModal from '../components/library/DataSourceModal';
+import EmptyState from '../components/library/EmptyState';
+import { useKnowledgeBase } from '../components/library/useKnowledgeBase';
 
 const Library = () => {
   const {
