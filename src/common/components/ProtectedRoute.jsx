@@ -1,17 +1,16 @@
 import React from 'react';
 import { Navigate, useLocation } from 'react-router-dom';
-import { useSupabaseAuth } from '../../integrations/supabase/auth';
+import { useStore } from './store';
 
 const ProtectedRoute = ({ children }) => {
-  const { user, loading } = useSupabaseAuth();
+  const { session, loading } = useStore();
   const location = useLocation();
 
   if (loading) {
-    return <div>Loading...</div>;
+    return <div>Loading...</div>; // Or a more sophisticated loading component
   }
 
-  if (!user) {
-    // Redirect to login page, but save the current location
+  if (!session) {
     return <Navigate to="/login" state={{ from: location }} replace />;
   }
 

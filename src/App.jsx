@@ -34,49 +34,18 @@ const ConsoleLayout = ({ children }) => (
   </div>
 );
 
-const AppRoutes = () => {
-  const { session, loading } = useStore();
-
-  if (loading) {
-    return <div>Loading...</div>;
-  }
-
-  return (
-    <Routes>
-      {/* Main website routes */}
-      <Route path="/" element={<Home />} />
-      <Route path="/login" element={session ? <Navigate to="/console/dashboard" replace /> : <Login />} />
-      <Route path="/register" element={session ? <Navigate to="/console/dashboard" replace /> : <Registration />} />
-      <Route path="/auth/callback" element={<AuthCallback />} />
-      <Route path="/email-confirmation" element={<EmailConfirmation />} />
-
-      {/* Console routes */}
-      <Route path="/console" element={<ProtectedRoute><ConsoleLayout><Navigate to="/console/dashboard" replace /></ConsoleLayout></ProtectedRoute>} />
-      <Route path="/console/workflow" element={<ProtectedRoute><ConsoleLayout><WorkflowEditor /></ConsoleLayout></ProtectedRoute>} />
-      <Route path="/console/library" element={<ProtectedRoute><ConsoleLayout><Library /></ConsoleLayout></ProtectedRoute>} />
-      <Route path="/console/monitoring" element={<ProtectedRoute><ConsoleLayout><Monitoring /></ConsoleLayout></ProtectedRoute>} />
-      <Route path="/console/dashboard" element={<ProtectedRoute><ConsoleLayout><Dashboard /></ConsoleLayout></ProtectedRoute>} />
-      <Route path="/console/connections" element={<ProtectedRoute><ConsoleLayout><Connections /></ConsoleLayout></ProtectedRoute>} />
-      <Route path="/console/deployment" element={<ProtectedRoute><ConsoleLayout><Deployment /></ConsoleLayout></ProtectedRoute>} />
-
-      {/* User profile route */}
-      <Route path="/profile" element={<ProtectedRoute><UserProfile /></ProtectedRoute>} />
-
-      {/* Catch-all route */}
-      <Route path="*" element={<Navigate to="/" replace />} />
-    </Routes>
-  );
-};
-
 const App = () => {
-  const setSession = useStore((state) => state.setSession);
-  const setLoading = useStore((state) => state.setLoading);
+  const { session, setSession, setLoading } = useStore();
 
   useEffect(() => {
-    supabase.auth.getSession().then(({ data: { session } }) => {
+    const initializeAuth = async () => {
+      setLoading(true);
+      const { data: { session } } = await supabase.auth.getSession();
       setSession(session);
       setLoading(false);
-    });
+    };
+
+    initializeAuth();
 
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
       setSession(session);
@@ -90,7 +59,29 @@ const App = () => {
       <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
         <SupabaseAuthProvider>
           <Router>
-            <AppRoutes />
+            <Routes>
+              {/* Main website routes */}
+              <Route path="/" element={<Home />} />
+              <Route path="/login" element={session ? <Navigate to="/console/dashboard" replace /> : <Login />} />
+              <Route path="/register" element={session ? <Navigate to="/console/dashboard" replace /> : <Registration />} />
+              <Route path="/auth/callback" element={<AuthCallback />} />
+              <Route path="/email-confirmation" element={<EmailConfirmation />} />
+
+              {/* Console routes */}
+              <Route path="/console" element={<ProtectedRoute><ConsoleLayout><Navigate to="/console/dashboard" replace /></ConsoleLayout></ProtectedRoute>} />
+              <Route path="/console/workflow" element={<ProtectedRoute><ConsoleLayout><WorkflowEditor /></ConsoleLayout></ProtectedRoute>} />
+              <Route path="/console/library" element={<ProtectedRoute><ConsoleLayout><Library /></ConsoleLayout></ProtectedRoute>} />
+              <Route path="/console/monitoring" element={<ProtectedRoute><ConsoleLayout><Monitoring /></ConsoleLayout></ProtectedRoute>} />
+              <Route path="/console/dashboard" element={<ProtectedRoute><ConsoleLayout><Dashboard /></ConsoleLayout></ProtectedRoute>} />
+              <Route path="/console/connections" element={<ProtectedRoute><ConsoleLayout><Connections /></ConsoleLayout></ProtectedRoute>} />
+              <Route path="/console/deployment" element={<ProtectedRoute><ConsoleLayout><Deployment /></ConsoleLayout></ProtectedRoute>} />
+
+              {/* User profile route */}
+              <Route path="/profile" element={<ProtectedRoute><UserProfile /></ProtectedRoute>} />
+
+              {/* Catch-all route */}
+              <Route path="*" element={<Navigate to="/" replace />} />
+            </Routes>
             <Toaster />
           </Router>
         </SupabaseAuthProvider>
