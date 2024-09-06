@@ -13,7 +13,7 @@ import ImageUpload from "./pages/ImageUpload";
 import WorkflowEditor from "./components/WorkflowEditor";
 import EmailConfirmation from "./pages/EmailConfirmation";
 import AuthCallback from "./pages/AuthCallback";
-import KnowledgeBase from "./components/KnowledgeBase";
+import KnowledgeBase from "./components/knowledge_base/KnowledgeBase";
 import Monitoring from "./components/Monitoring";
 
 const queryClient = new QueryClient();
