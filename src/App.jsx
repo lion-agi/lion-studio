@@ -6,7 +6,6 @@ import { Toaster } from "@/components/ui/toaster";
 import { SupabaseAuthProvider, useSupabaseAuth } from './integrations/supabase';
 
 // Import components
-import MainWebsiteHeader from './components/header/MainWebsiteHeader';
 import ConsoleHeader from './components/header/ConsoleHeader';
 import Home from './pages/Home';
 import Login from './pages/Login';
@@ -20,13 +19,6 @@ import Library from './pages/Library';
 
 // Create a client
 const queryClient = new QueryClient();
-
-const MainWebsiteLayout = ({ children }) => (
-  <div className="min-h-screen bg-background font-sans antialiased">
-    <MainWebsiteHeader />
-    {children}
-  </div>
-);
 
 const ConsoleLayout = ({ children }) => (
   <div className="min-h-screen bg-background font-sans antialiased">
@@ -43,9 +35,9 @@ const ProtectedRoute = ({ children }) => {
 const AppRoutes = () => (
   <Routes>
     {/* Main website routes */}
-    <Route path="/" element={<MainWebsiteLayout><Home /></MainWebsiteLayout>} />
-    <Route path="/login" element={<MainWebsiteLayout><Login /></MainWebsiteLayout>} />
-    <Route path="/register" element={<MainWebsiteLayout><Registration /></MainWebsiteLayout>} />
+    <Route path="/" element={<Home />} />
+    <Route path="/login" element={<Login />} />
+    <Route path="/register" element={<Registration />} />
     <Route path="/auth/callback" element={<AuthCallback />} />
     <Route path="/email-confirmation" element={<EmailConfirmation />} />
 
