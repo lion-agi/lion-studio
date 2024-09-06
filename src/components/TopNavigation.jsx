@@ -21,17 +21,17 @@ const TopNavigation = React.memo(() => {
   }, []);
 
   return (
-    <nav className="bg-gray-100 px-4 py-2 border-b border-gray-200 overflow-x-auto whitespace-nowrap">
+    <nav className="bg-gray-900 px-4 py-4 border-b border-gray-800 overflow-x-auto whitespace-nowrap">
       <ul className="flex space-x-1">
         {tabs.map((tab) => (
           <li key={tab.name}>
             <Link
               to={tab.href}
               className={cn(
-                "px-3 py-2 text-sm font-medium rounded-t-lg transition-all duration-200 ease-in-out hover:bg-gray-200",
+                "px-4 py-2 text-sm font-medium rounded-md transition-all duration-200 ease-in-out",
                 activeTab === tab.href
-                  ? "bg-white text-blue-600 border-t border-l border-r border-gray-200 relative transform -translate-y-px after:content-[''] after:absolute after:bottom-[-2px] after:left-0 after:w-full after:h-[2px] after:bg-blue-600"
-                  : "text-gray-600"
+                  ? "bg-gradient-to-r from-purple-600 to-indigo-600 text-white"
+                  : "text-gray-300 hover:bg-gray-800 hover:text-white"
               )}
               onClick={() => handleTabClick(tab.href)}
               data-testid={`nav-${tab.name.toLowerCase().replace(' ', '-')}`}
