@@ -3,7 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { MoreHorizontal, Plus } from 'lucide-react';
 
-const PageItem = ({ page }) => {
+const PageItem = ({ page, onOpenModal }) => {
   return (
     <Card className="h-full">
       <CardHeader>
@@ -21,7 +21,7 @@ const PageItem = ({ page }) => {
           <span>{page.timeToRead}</span>
         </div>
         <div className="flex justify-end space-x-2">
-          <Button variant="ghost" size="sm">
+          <Button variant="ghost" size="sm" onClick={() => onOpenModal(page)}>
             <Plus className="h-4 w-4" />
           </Button>
           <Button variant="ghost" size="sm">

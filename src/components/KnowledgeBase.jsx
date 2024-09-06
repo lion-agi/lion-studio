@@ -9,11 +9,15 @@ import ThreadList from './ThreadList';
 import PageList from './PageList';
 import DataSourceList from './DataSourceList';
 import ThreadModal from './ThreadModal';
+import PageModal from './PageModal';
+import DataSourceModal from './DataSourceModal';
 
 const KnowledgeBase = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [isCreateCollectionOpen, setIsCreateCollectionOpen] = useState(false);
   const [selectedThread, setSelectedThread] = useState(null);
+  const [selectedPage, setSelectedPage] = useState(null);
+  const [selectedDataSource, setSelectedDataSource] = useState(null);
 
   const threads = [
     { id: 1, title: "Quantum-Inspired Cognitive Algorithms", content: "Quantum-inspired algorithms are computational methods that draw inspiration from quantum mechanics principles but can be implemented on classical computers...", createdAt: "2 days ago", collection: "agentic", views: 0, timeToRead: "5 min", status: "Draft" },
@@ -59,12 +63,22 @@ const KnowledgeBase = () => {
     </div>
   );
 
-  const handleOpenModal = (thread) => {
+  const handleOpenThreadModal = (thread) => {
     setSelectedThread(thread);
+  };
+
+  const handleOpenPageModal = (page) => {
+    setSelectedPage(page);
+  };
+
+  const handleOpenDataSourceModal = (dataSource) => {
+    setSelectedDataSource(dataSource);
   };
 
   const handleCloseModal = () => {
     setSelectedThread(null);
+    setSelectedPage(null);
+    setSelectedDataSource(null);
   };
 
   return (
@@ -120,7 +134,7 @@ const KnowledgeBase = () => {
           <div className="space-y-8">
             <div>
               <h2 className="text-xl font-semibold mb-6 mt-8 group-name">Threads</h2>
-              <ThreadList threads={threads} onOpenModal={handleOpenModal} />
+              <ThreadList threads={threads} onOpenModal={handleOpenThreadModal} />
             </div>
             {renderCollectionsCard()}
           </div>
@@ -128,13 +142,13 @@ const KnowledgeBase = () => {
         <TabsContent value="pages">
           <div className="mt-8">
             <h2 className="text-xl font-semibold mb-6 group-name">Pages</h2>
-            <PageList pages={pages} />
+            <PageList pages={pages} onOpenModal={handleOpenPageModal} />
             {renderCollectionsCard()}
           </div>
         </TabsContent>
         <TabsContent value="dataSources">
           <div className="mt-8">
-            <DataSourceList dataSources={dataSources} />
+            <DataSourceList dataSources={dataSources} onOpenModal={handleOpenDataSourceModal} />
           </div>
         </TabsContent>
       </Tabs>
@@ -143,6 +157,22 @@ const KnowledgeBase = () => {
         <ThreadModal
           thread={selectedThread}
           isOpen={!!selectedThread}
+          onClose={handleCloseModal}
+        />
+      )}
+
+      {selectedPage && (
+        <PageModal
+          page={selectedPage}
+          isOpen={!!selectedPage}
+          onClose={handleCloseModal}
+        />
+      )}
+
+      {selectedDataSource && (
+        <DataSourceModal
+          dataSource={selectedDataSource}
+          isOpen={!!selectedDataSource}
           onClose={handleCloseModal}
         />
       )}

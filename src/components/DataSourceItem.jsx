@@ -3,7 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { MoreHorizontal, RefreshCw } from 'lucide-react';
 
-const DataSourceItem = ({ dataSource }) => {
+const DataSourceItem = ({ dataSource, onOpenModal }) => {
   return (
     <Card className="h-full">
       <CardHeader>
@@ -21,7 +21,7 @@ const DataSourceItem = ({ dataSource }) => {
           {dataSource.usedSpace && <p><strong>Used Space:</strong> {dataSource.usedSpace}</p>}
         </div>
         <div className="flex justify-end space-x-2 mt-4">
-          <Button variant="ghost" size="sm">
+          <Button variant="ghost" size="sm" onClick={() => onOpenModal(dataSource)}>
             <RefreshCw className="h-4 w-4" />
           </Button>
           <Button variant="ghost" size="sm">
