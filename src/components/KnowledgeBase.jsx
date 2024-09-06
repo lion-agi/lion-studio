@@ -50,6 +50,21 @@ const KnowledgeBase = () => {
     ]
   };
 
+  const renderCollectionsCard = () => (
+    <div className="mt-8">
+      <h2 className="text-xl font-semibold mb-4 group-name">Collections</h2>
+      <div className="bg-card p-4 rounded-lg shadow">
+        <div className="flex items-center justify-between">
+          <div>
+            <h3 className="font-semibold">agentic</h3>
+            <p className="text-sm text-muted-foreground">0 threads • 1mo</p>
+          </div>
+          <div className="w-8 h-8 bg-gray-300 rounded-full"></div>
+        </div>
+      </div>
+    </div>
+  );
+
   const handleOpenThreadModal = (thread) => {
     setSelectedThread(thread);
   };
@@ -69,6 +84,7 @@ const KnowledgeBase = () => {
   };
 
   const handleDeletePage = (pageId) => {
+    // Implement delete logic here
     toast({
       title: "Page Deleted",
       description: `Page with ID ${pageId} has been deleted.`,
@@ -76,6 +92,7 @@ const KnowledgeBase = () => {
   };
 
   const handleEditPage = (pageId) => {
+    // Implement edit logic here
     toast({
       title: "Edit Page",
       description: `Editing page with ID ${pageId}.`,
@@ -83,6 +100,7 @@ const KnowledgeBase = () => {
   };
 
   const handleAddPageToCollection = (pageId) => {
+    // Implement add to collection logic here
     toast({
       title: "Add to Collection",
       description: `Adding page with ID ${pageId} to collection.`,
@@ -139,19 +157,31 @@ const KnowledgeBase = () => {
           <TabsTrigger value="dataSources">Data Sources</TabsTrigger>
         </TabsList>
         <TabsContent value="threads">
-          <ThreadList threads={threads} onOpenModal={handleOpenThreadModal} />
+          <div className="space-y-8">
+            <div>
+              <h2 className="text-xl font-semibold mb-6 mt-8 group-name">Threads</h2>
+              <ThreadList threads={threads} onOpenModal={handleOpenThreadModal} />
+            </div>
+            {renderCollectionsCard()}
+          </div>
         </TabsContent>
         <TabsContent value="pages">
-          <PageList 
-            pages={pages} 
-            onOpenModal={handleOpenPageModal}
-            onDelete={handleDeletePage}
-            onEdit={handleEditPage}
-            onAddToCollection={handleAddPageToCollection}
-          />
+          <div className="mt-8">
+            <h2 className="text-xl font-semibold mb-6 group-name">Pages</h2>
+            <PageList 
+              pages={pages} 
+              onOpenModal={handleOpenPageModal}
+              onDelete={handleDeletePage}
+              onEdit={handleEditPage}
+              onAddToCollection={handleAddPageToCollection}
+            />
+            {renderCollectionsCard()}
+          </div>
         </TabsContent>
         <TabsContent value="dataSources">
-          <DataSourceList dataSources={dataSources} onOpenModal={handleOpenDataSourceModal} />
+          <div className="mt-8">
+            <DataSourceList dataSources={dataSources} onOpenModal={handleOpenDataSourceModal} />
+          </div>
         </TabsContent>
       </Tabs>
 
