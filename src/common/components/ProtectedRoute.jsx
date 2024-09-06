@@ -4,13 +4,15 @@ import { useSupabaseAuth } from '../../integrations/supabase/auth';
 
 const ProtectedRoute = ({ children }) => {
   const { user, loading } = useSupabaseAuth();
+  const location = useLocation();
 
   if (loading) {
     return <div>Loading...</div>;
   }
 
   if (!user) {
-    return <Navigate to="/login" replace />;
+    // Redirect to login page, but save the current location
+    return <Navigate to="/login" state={{ from: location }} replace />;
   }
 
   return children;

@@ -1,57 +1,73 @@
-import React, { createContext, useContext, useEffect, useState } from 'react';
-import { authService } from '../../features/auth/services/authService';
+import { useState, useEffect, createContext, useContext } from 'react';
+import { supabase } from './supabase.js';
 import { useQueryClient } from '@tanstack/react-query';
+import { Auth } from '@supabase/auth-ui-react';
+import { ThemeSupa } from '@supabase/auth-ui-shared';
 
-const AuthContext = createContext();
+const SupabaseAuthContext = createContext();
 
 export const SupabaseAuthProvider = ({ children }) => {
-  const [user, setUser] = useState(null);
+  return (
+    <SupabaseAuthProviderInner>
+      {children}
+    </SupabaseAuthProviderInner>
+  );
+}
+
+export const SupabaseAuthProviderInner = ({ children }) => {
+  const [session, setSession] = useState(null);
   const [loading, setLoading] = useState(true);
   const queryClient = useQueryClient();
 
   useEffect(() => {
-    const initializeAuth = async () => {
-      const currentUser = await authService.getCurrentUser();
-      setUser(currentUser);
+    const getSession = async () => {
+      setLoading(true);
+      const { data: { session } } = await supabase.auth.getSession();
+      setSession(session);
       setLoading(false);
     };
 
-    initializeAuth();
-
-    const { data: authListener } = authService.onAuthStateChange(async (event, session) => {
-      setUser(session?.user ?? null);
-      setLoading(false);
+    const { data: authListener } = supabase.auth.onAuthStateChange(async (event, session) => {
+      console.log(`Supabase auth event: ${event}`);
+      setSession(session);
       queryClient.invalidateQueries('user');
+      setLoading(false);
     });
 
+    getSession();
+
     return () => {
-      if (authListener && typeof authListener.unsubscribe === 'function') {
-        authListener.unsubscribe();
-      }
+      authListener.subscription.unsubscribe();
     };
   }, [queryClient]);
 
-  const value = {
-    user,
-    loading,
-    signIn: authService.signIn,
-    signUp: authService.signUp,
-    signOut: authService.signOut,
-    getUserProfile: authService.getUserProfile,
-    updateUserProfile: authService.updateUserProfile,
+  const logout = async () => {
+    await supabase.auth.signOut();
+    setSession(null);
+    queryClient.invalidateQueries('user');
   };
 
   return (
-    <AuthContext.Provider value={value}>
-      {!loading && children}
-    </AuthContext.Provider>
+    <SupabaseAuthContext.Provider value={{ session, loading, logout }}>
+      {children}
+    </SupabaseAuthContext.Provider>
   );
 };
 
 export const useSupabaseAuth = () => {
-  const context = useContext(AuthContext);
-  if (context === undefined) {
-    throw new Error('useSupabaseAuth must be used within a SupabaseAuthProvider');
-  }
+  const context = useContext(SupabaseAuthContext);
+
+  if (context === undefined)
+    throw new Error("useSupabaseAuth must be used within a SupabaseAuthProvider");
+
   return context;
 };
+
+export const SupabaseAuthUI = () => (
+  <Auth
+    supabaseClient={supabase}
+    appearance={{ theme: ThemeSupa }}
+    theme="default"
+    providers={[]}
+  />
+);
