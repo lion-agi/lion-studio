@@ -1,6 +1,6 @@
 import { useState, useCallback, useEffect } from 'react';
 import { useToast } from "@/components/ui/use-toast";
-import { threads, pages, dataSources } from './mockData';
+import { threads, pages as initialPages, dataSources } from './mockData';
 import { debounce } from 'lodash';
 
 export const useKnowledgeBase = () => {
@@ -13,6 +13,7 @@ export const useKnowledgeBase = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
   const [collections, setCollections] = useState([]);
+  const [pages, setPages] = useState(initialPages);
   const { toast } = useToast();
 
   // Enhance search functionality
@@ -69,7 +70,7 @@ export const useKnowledgeBase = () => {
       title: "Page Deleted",
       description: `Page with ID ${pageId} has been deleted.`,
     });
-  }, []);
+  }, [toast]);
 
   const handleEditPage = useCallback((pageId, updatedPageData) => {
     setPages(prevPages => prevPages.map(page => 
@@ -79,7 +80,7 @@ export const useKnowledgeBase = () => {
       title: "Page Updated",
       description: `Page with ID ${pageId} has been updated.`,
     });
-  }, []);
+  }, [toast]);
 
   const handleAddPageToCollection = useCallback((pageId, collectionId) => {
     setCollections(prevCollections => prevCollections.map(collection => 
@@ -91,7 +92,7 @@ export const useKnowledgeBase = () => {
       title: "Page Added to Collection",
       description: `Page added to collection successfully.`,
     });
-  }, []);
+  }, [toast]);
 
   const addCollection = useCallback((newCollection) => {
     setCollections(prevCollections => [...prevCollections, newCollection]);
@@ -99,7 +100,7 @@ export const useKnowledgeBase = () => {
       title: "Collection Created",
       description: "New collection has been created successfully.",
     });
-  }, []);
+  }, [toast]);
 
   const deleteCollection = useCallback((collectionId) => {
     setCollections(prevCollections => prevCollections.filter(collection => collection.id !== collectionId));
@@ -107,7 +108,7 @@ export const useKnowledgeBase = () => {
       title: "Collection Deleted",
       description: `Collection with ID ${collectionId} has been deleted.`,
     });
-  }, []);
+  }, [toast]);
 
   return {
     searchTerm,
@@ -121,6 +122,7 @@ export const useKnowledgeBase = () => {
     isLoading,
     error,
     collections,
+    pages,
     handleOpenThreadModal,
     handleOpenPageModal,
     handleOpenDataSourceModal,
@@ -131,7 +133,6 @@ export const useKnowledgeBase = () => {
     addCollection,
     deleteCollection,
     threads,
-    pages,
     dataSources,
   };
 };
