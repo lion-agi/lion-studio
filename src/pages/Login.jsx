@@ -19,10 +19,9 @@ const Login = () => {
 
   useEffect(() => {
     if (user) {
-      const from = location.state?.from?.pathname || '/console';
-      navigate(from, { replace: true });
+      navigate('/console');
     }
-  }, [user, navigate, location.state]);
+  }, [user, navigate]);
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -34,6 +33,7 @@ const Login = () => {
         title: "Success",
         description: "Logged in successfully",
       });
+      navigate('/console');
     } catch (error) {
       setError('Invalid email or password. Please try again.');
       toast({
@@ -53,6 +53,7 @@ const Login = () => {
         title: "Success",
         description: `Logged in with ${provider} successfully`,
       });
+      navigate('/console');
     } catch (error) {
       toast({
         title: "Error",
