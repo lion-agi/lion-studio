@@ -21,6 +21,7 @@ const PageModal = ({ page = defaultPage, isOpen, onClose, onEdit }) => {
   const handleEdit = () => {
     if (typeof onEdit === 'function') {
       onEdit(page);
+      onClose();
     } else {
       console.warn('onEdit prop is not a function');
     }
@@ -29,35 +30,35 @@ const PageModal = ({ page = defaultPage, isOpen, onClose, onEdit }) => {
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="sm:max-w-[700px] max-h-[90vh] overflow-y-auto bg-[#1a1b26] text-gray-200 border-gray-700 p-0">
-        <DialogHeader className="p-8 pb-4">
+        <DialogHeader className="p-6">
           <DialogTitle className="text-2xl font-bold text-white">{page.title}</DialogTitle>
           <Button
             variant="ghost"
             size="icon"
-            className="absolute right-6 top-6 text-gray-400 hover:text-white"
+            className="absolute right-4 top-4 text-gray-400 hover:text-white"
             onClick={onClose}
           >
-            <X className="h-6 w-6" />
+            <X className="h-5 w-5" />
           </Button>
         </DialogHeader>
-        <div className="px-8 py-6 space-y-6">
+        <div className="px-6 py-4 space-y-6">
           <div className="prose prose-invert prose-lg max-w-none">
             <ReactMarkdown>{page.content}</ReactMarkdown>
           </div>
-          <div className="grid grid-cols-2 gap-x-6 gap-y-3 text-base text-gray-300">
-            <InfoItem label="Date" value={page.created_at} />
+          <div className="grid grid-cols-2 gap-x-6 gap-y-3 text-sm text-gray-300">
+            <InfoItem label="Date" value={new Date(page.created_at).toLocaleDateString()} />
             <InfoItem label="Category" value={page.category} />
             <InfoItem label="Word Count" value={page.word_count} />
             <InfoItem label="Views" value={page.views} />
             <InfoItem label="Author" value={page.author} />
-            <InfoItem label="Last Modified" value={page.updated_at} />
+            <InfoItem label="Last Modified" value={new Date(page.updated_at).toLocaleDateString()} />
           </div>
           {page.tags && page.tags.length > 0 && (
             <div>
-              <h3 className="text-lg font-semibold text-white mb-3">Tags</h3>
+              <h3 className="text-lg font-semibold text-white mb-2">Tags</h3>
               <div className="flex flex-wrap gap-2">
                 {page.tags.map((tag, index) => (
-                  <span key={index} className="px-3 py-1 bg-purple-900 text-purple-100 rounded-full text-sm">
+                  <span key={index} className="px-2 py-1 bg-purple-900 text-purple-100 rounded-full text-xs">
                     {tag}
                   </span>
                 ))}
@@ -66,8 +67,8 @@ const PageModal = ({ page = defaultPage, isOpen, onClose, onEdit }) => {
           )}
           {page.related_pages && page.related_pages.length > 0 && (
             <div>
-              <h3 className="text-lg font-semibold text-white mb-3">Related Pages</h3>
-              <ul className="list-disc list-inside text-purple-400 text-base space-y-1">
+              <h3 className="text-lg font-semibold text-white mb-2">Related Pages</h3>
+              <ul className="list-disc list-inside text-purple-400 text-sm space-y-1">
                 {page.related_pages.map((relatedPage, index) => (
                   <li key={index}>{relatedPage}</li>
                 ))}
@@ -75,12 +76,12 @@ const PageModal = ({ page = defaultPage, isOpen, onClose, onEdit }) => {
             </div>
           )}
         </div>
-        <div className="px-8 py-6 border-t border-gray-700 mt-6">
+        <div className="px-6 py-4 border-t border-gray-700 mt-4">
           <div className="flex justify-between">
             <Button onClick={handleEdit} className="bg-blue-600 hover:bg-blue-700 text-white">
               Edit
             </Button>
-            <Button onClick={onClose} className="bg-purple-600 hover:bg-purple-700 text-white">
+            <Button onClick={onClose} className="bg-gray-600 hover:bg-gray-700 text-white">
               Close
             </Button>
           </div>

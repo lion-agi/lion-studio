@@ -11,17 +11,20 @@ const PagesManager = () => {
   const [isEditing, setIsEditing] = useState(false);
 
   useEffect(() => {
-    // Fetch pages from API
     fetchPages();
   }, []);
 
   const fetchPages = async () => {
     try {
       const response = await fetch('/api/pages');
+      if (!response.ok) {
+        throw new Error('Failed to fetch pages');
+      }
       const data = await response.json();
       setPages(data);
     } catch (error) {
       console.error('Error fetching pages:', error);
+      // You might want to set an error state here and display it to the user
     }
   };
 
@@ -49,42 +52,57 @@ const PagesManager = () => {
 
   const handleDelete = async (pageId) => {
     try {
-      await fetch(`/api/pages/${pageId}`, { method: 'DELETE' });
+      const response = await fetch(`/api/pages/${pageId}`, { method: 'DELETE' });
+      if (!response.ok) {
+        throw new Error('Failed to delete page');
+      }
       setPages(pages.filter(page => page.id !== pageId));
     } catch (error) {
       console.error('Error deleting page:', error);
+      // You might want to show an error message to the user here
     }
   };
 
   const handleSave = async (pageData) => {
     try {
+      let response;
       if (isEditing) {
-        const response = await fetch(`/api/pages/${selectedPage.id}`, {
+        response = await fetch(`/api/pages/${selectedPage.id}`, {
           method: 'PUT',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(pageData),
         });
-        const updatedPage = await response.json();
-        setPages(pages.map(page => page.id === updatedPage.id ? updatedPage : page));
       } else {
-        const response = await fetch('/api/pages', {
+        response = await fetch('/api/pages', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(pageData),
         });
-        const newPage = await response.json();
-        setPages([newPage, ...pages]);
       }
+
+      if (!response.ok) {
+        throw new Error('Failed to save page');
+      }
+
+      const savedPage = await response.json();
+
+      if (isEditing) {
+        setPages(pages.map(page => page.id === savedPage.id ? savedPage : page));
+      } else {
+        setPages([savedPage, ...pages]);
+      }
+
       setIsFormOpen(false);
       setSelectedPage(null);
       setIsEditing(false);
     } catch (error) {
       console.error('Error saving page:', error);
+      // You might want to show an error message to the user here
     }
   };
 
   return (
-    <div>
+    <div className="container mx-auto p-4 space-y-8">
       <PageList
         pages={pages}
         onOpenModal={handleOpenModal}

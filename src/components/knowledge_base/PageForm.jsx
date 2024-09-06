@@ -9,7 +9,7 @@ const PageForm = ({ page, isOpen, onClose, onSave }) => {
   const [formData, setFormData] = useState({
     title: '',
     content: '',
-    category_id: '',
+    category: '',
     tags: '',
   });
 
@@ -18,8 +18,15 @@ const PageForm = ({ page, isOpen, onClose, onSave }) => {
       setFormData({
         title: page.title || '',
         content: page.content || '',
-        category_id: page.category_id || '',
+        category: page.category || '',
         tags: page.tags ? page.tags.join(', ') : '',
+      });
+    } else {
+      setFormData({
+        title: '',
+        content: '',
+        category: '',
+        tags: '',
       });
     }
   }, [page]);
@@ -31,27 +38,27 @@ const PageForm = ({ page, isOpen, onClose, onSave }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    const tags = formData.tags.split(',').map(tag => tag.trim());
+    const tags = formData.tags.split(',').map(tag => tag.trim()).filter(Boolean);
     onSave({ ...formData, tags });
   };
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="sm:max-w-[700px] bg-[#1a1b26] text-gray-200 border-gray-700 p-0">
-        <DialogHeader className="p-8 pb-4">
+        <DialogHeader className="p-6">
           <DialogTitle className="text-2xl font-bold text-white">
             {page ? 'Edit Page' : 'Create New Page'}
           </DialogTitle>
           <Button
             variant="ghost"
             size="icon"
-            className="absolute right-6 top-6 text-gray-400 hover:text-white"
+            className="absolute right-4 top-4 text-gray-400 hover:text-white"
             onClick={onClose}
           >
-            <X className="h-6 w-6" />
+            <X className="h-5 w-5" />
           </Button>
         </DialogHeader>
-        <form onSubmit={handleSubmit} className="px-8 py-6 space-y-6">
+        <form onSubmit={handleSubmit} className="p-6 space-y-4">
           <div>
             <label htmlFor="title" className="block text-sm font-medium text-gray-300">Title</label>
             <Input
@@ -60,7 +67,7 @@ const PageForm = ({ page, isOpen, onClose, onSave }) => {
               value={formData.title}
               onChange={handleChange}
               required
-              className="mt-1 bg-navy-800 text-white"
+              className="mt-1 bg-navy-800 text-white border-gray-600"
             />
           </div>
           <div>
@@ -71,17 +78,17 @@ const PageForm = ({ page, isOpen, onClose, onSave }) => {
               value={formData.content}
               onChange={handleChange}
               required
-              className="mt-1 h-40 bg-navy-800 text-white"
+              className="mt-1 h-40 bg-navy-800 text-white border-gray-600"
             />
           </div>
           <div>
-            <label htmlFor="category_id" className="block text-sm font-medium text-gray-300">Category ID</label>
+            <label htmlFor="category" className="block text-sm font-medium text-gray-300">Category</label>
             <Input
-              id="category_id"
-              name="category_id"
-              value={formData.category_id}
+              id="category"
+              name="category"
+              value={formData.category}
               onChange={handleChange}
-              className="mt-1 bg-navy-800 text-white"
+              className="mt-1 bg-navy-800 text-white border-gray-600"
             />
           </div>
           <div>
@@ -91,12 +98,12 @@ const PageForm = ({ page, isOpen, onClose, onSave }) => {
               name="tags"
               value={formData.tags}
               onChange={handleChange}
-              className="mt-1 bg-navy-800 text-white"
+              className="mt-1 bg-navy-800 text-white border-gray-600"
             />
           </div>
-          <div className="flex justify-end space-x-3">
-            <Button type="button" onClick={onClose} variant="secondary">Cancel</Button>
-            <Button type="submit" variant="default">Save</Button>
+          <div className="flex justify-end space-x-3 pt-4">
+            <Button type="button" onClick={onClose} variant="secondary" className="bg-gray-600 text-white hover:bg-gray-700">Cancel</Button>
+            <Button type="submit" variant="default" className="bg-blue-600 text-white hover:bg-blue-700">Save</Button>
           </div>
         </form>
       </DialogContent>
