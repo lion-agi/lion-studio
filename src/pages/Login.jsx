@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Link, useNavigate, useLocation } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { Button } from "@/common/components/ui/button";
 import { Input } from "@/common/components/ui/input";
 import { useSupabaseAuth } from '@/integrations/supabase/auth';
@@ -12,16 +12,15 @@ const Login = () => {
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
-  const { user } = useSupabaseAuth();
+  const { session } = useSupabaseAuth();
   const navigate = useNavigate();
-  const location = useLocation();
   const { toast } = useToast();
 
   useEffect(() => {
-    if (user) {
+    if (session) {
       navigate('/console');
     }
-  }, [user, navigate]);
+  }, [session, navigate]);
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -35,6 +34,7 @@ const Login = () => {
       });
       navigate('/console');
     } catch (error) {
+      console.error("Login error:", error);
       setError('Invalid email or password. Please try again.');
       toast({
         title: "Error",
@@ -55,6 +55,7 @@ const Login = () => {
       });
       navigate('/console');
     } catch (error) {
+      console.error(`OAuth login error:`, error);
       toast({
         title: "Error",
         description: `Failed to log in with ${provider}: ${error.message}`,
@@ -63,7 +64,7 @@ const Login = () => {
     }
   };
 
-  if (user) {
+  if (session) {
     return null;
   }
 
