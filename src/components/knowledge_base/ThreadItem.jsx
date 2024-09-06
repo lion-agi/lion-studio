@@ -1,58 +1,34 @@
 import React from 'react';
-import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Eye, Trash2, Edit } from 'lucide-react';
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import { MoreHorizontal, Plus } from 'lucide-react';
 
-const ThreadItem = ({ thread, onOpenModal, onDelete, onEdit }) => {
+const ThreadItem = ({ thread, onOpenModal }) => {
   return (
-    <Card className="bg-gradient-to-br from-navy-900 to-navy-800 text-white hover:shadow-lg transition-all duration-300 ease-in-out animate-fade-in">
-      <CardContent className="p-4">
-        <h3 className="text-lg font-semibold mb-2 text-purple-300">{thread.title}</h3>
-        <p className="text-sm text-gray-300 mb-4 bg-navy-700 bg-opacity-50 p-2 rounded-md">{thread.content.substring(0, 100)}...</p>
-        <div className="flex justify-between items-center">
-          <span className="text-xs text-gray-400">{new Date(thread.createdAt).toLocaleDateString()}</span>
-          <div className="space-x-2">
-            <TooltipProvider>
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <Button variant="ghost" size="sm" onClick={() => onOpenModal(thread)} className="text-purple-300 hover:text-purple-100 hover:bg-purple-800">
-                    <Eye className="h-4 w-4" />
-                  </Button>
-                </TooltipTrigger>
-                <TooltipContent>
-                  <p>View Thread</p>
-                </TooltipContent>
-              </Tooltip>
-            </TooltipProvider>
-            <TooltipProvider>
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <Button variant="ghost" size="sm" onClick={() => onEdit(thread.id)} className="text-blue-300 hover:text-blue-100 hover:bg-blue-800">
-                    <Edit className="h-4 w-4" />
-                  </Button>
-                </TooltipTrigger>
-                <TooltipContent>
-                  <p>Edit Thread</p>
-                </TooltipContent>
-              </Tooltip>
-            </TooltipProvider>
-            <TooltipProvider>
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <Button variant="ghost" size="sm" onClick={() => onDelete(thread.id)} className="text-red-300 hover:text-red-100 hover:bg-red-800">
-                    <Trash2 className="h-4 w-4" />
-                  </Button>
-                </TooltipTrigger>
-                <TooltipContent>
-                  <p>Delete Thread</p>
-                </TooltipContent>
-              </Tooltip>
-            </TooltipProvider>
+    <div className="bg-gradient-to-br from-gray-800 to-gray-700 rounded-lg shadow-md p-3 transition-all duration-300 ease-in-out hover:shadow-lg">
+      <div className="flex justify-between items-start">
+        <div className="flex-grow cursor-pointer" onClick={() => onOpenModal(thread)}>
+          <h3 className="text-lg font-semibold mb-1 text-purple-300">{thread.title}</h3>
+          <p className="text-sm text-gray-300 mb-2">{thread.content}</p>
+          <div className="flex items-center text-xs text-gray-400 space-x-2">
+            <span>{thread.createdAt}</span>
+            <span>•</span>
+            <span>{thread.collection}</span>
+            <span>•</span>
+            <span>{thread.views} views</span>
+            <span>•</span>
+            <span>{thread.timeToRead}</span>
           </div>
         </div>
-      </CardContent>
-    </Card>
+        <div className="flex items-center space-x-1">
+          <Button variant="ghost" size="sm" className="text-gray-400 hover:text-white hover:bg-gray-600">
+            <Plus className="h-4 w-4" />
+          </Button>
+          <Button variant="ghost" size="sm" className="text-gray-400 hover:text-white hover:bg-gray-600">
+            <MoreHorizontal className="h-4 w-4" />
+          </Button>
+        </div>
+      </div>
+    </div>
   );
 };
 
