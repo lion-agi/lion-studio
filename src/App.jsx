@@ -8,7 +8,7 @@ import { supabase } from './integrations/supabase/supabase';
 import { SupabaseAuthProvider } from './integrations/supabase/auth';
 
 // Import components
-import ConsoleHeader from './common/components/header/ConsoleHeader';
+import ConsoleHeader from './features/console/components/ConsoleHeader';
 import Home from './pages/Home';
 import Login from './pages/Login';
 import Registration from './pages/Registration';
