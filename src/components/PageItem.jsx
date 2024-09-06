@@ -30,12 +30,12 @@ const PageItem = ({ page, onOpenModal, onDelete, onEdit, onAddToCollection }) =>
   };
 
   return (
-    <Card className="h-full">
+    <Card className="h-full bg-navy-900 text-gray-200">
       <CardHeader>
         <CardTitle className="text-lg font-semibold">{page.title}</CardTitle>
       </CardHeader>
       <CardContent>
-        <p className="text-sm text-gray-600 mb-4 line-clamp-3">{page.content}</p>
+        <p className="text-sm text-gray-400 mb-4 line-clamp-3">{page.content}</p>
         <div className="flex items-center text-xs text-gray-500 mb-4">
           <span>{page.createdAt}</span>
           <span className="mx-2">•</span>
@@ -46,20 +46,30 @@ const PageItem = ({ page, onOpenModal, onDelete, onEdit, onAddToCollection }) =>
           <span>{page.timeToRead}</span>
         </div>
         <div className="flex justify-end space-x-2">
-          <Button variant="ghost" size="sm" onClick={() => onOpenModal(page)}>
+          <Button 
+            variant="ghost" 
+            size="sm" 
+            onClick={() => onOpenModal(page)}
+            className="text-gray-400 hover:text-gray-200 hover:bg-navy-700 transition-colors duration-200"
+          >
             <BookOpen className="h-4 w-4" />
           </Button>
           <div className="relative" ref={optionsRef}>
-            <Button variant="ghost" size="sm" onClick={() => setShowOptions(!showOptions)}>
+            <Button 
+              variant="ghost" 
+              size="sm" 
+              onClick={() => setShowOptions(!showOptions)}
+              className="text-gray-400 hover:text-gray-200 hover:bg-navy-700 transition-colors duration-200"
+            >
               <MoreHorizontal className="h-4 w-4" />
             </Button>
             {showOptions && (
-              <div className="absolute right-0 mt-2 bg-white rounded-md shadow-lg z-10 p-1">
-                <div className="flex">
+              <div className="absolute right-0 mt-2 bg-navy-800 rounded-md shadow-lg z-10 p-1">
+                <div className="flex space-x-1">
                   <Button
                     variant="ghost"
                     size="sm"
-                    className="p-2 text-gray-700 hover:bg-gray-100 rounded-md transition-colors duration-200"
+                    className="p-2 text-gray-400 hover:text-gray-200 hover:bg-navy-700 rounded-md transition-colors duration-200"
                     onClick={() => handleAction(onDelete)}
                   >
                     <Trash2 className="h-4 w-4" />
@@ -67,7 +77,7 @@ const PageItem = ({ page, onOpenModal, onDelete, onEdit, onAddToCollection }) =>
                   <Button
                     variant="ghost"
                     size="sm"
-                    className="p-2 text-gray-700 hover:bg-gray-100 rounded-md transition-colors duration-200"
+                    className="p-2 text-gray-400 hover:text-gray-200 hover:bg-navy-700 rounded-md transition-colors duration-200"
                     onClick={() => handleAction(onEdit)}
                   >
                     <Edit className="h-4 w-4" />
@@ -75,7 +85,7 @@ const PageItem = ({ page, onOpenModal, onDelete, onEdit, onAddToCollection }) =>
                   <Button
                     variant="ghost"
                     size="sm"
-                    className="p-2 text-gray-700 hover:bg-gray-100 rounded-md transition-colors duration-200"
+                    className="p-2 text-gray-400 hover:text-gray-200 hover:bg-navy-700 rounded-md transition-colors duration-200"
                     onClick={() => handleAction(onAddToCollection)}
                   >
                     <FolderPlus className="h-4 w-4" />
