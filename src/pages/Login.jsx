@@ -1,21 +1,22 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useSupabaseAuth } from '@/integrations/supabase/auth';
 import { useToast } from "@/components/ui/use-toast";
 import { Alert, AlertDescription } from "@/components/ui/alert";
+import { authService } from '../services/authService';
 
 const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
-  const { user, signIn } = useSupabaseAuth();
+  const { user } = useSupabaseAuth();
   const navigate = useNavigate();
   const { toast } = useToast();
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (user) {
       navigate('/console');
     }
@@ -26,7 +27,7 @@ const Login = () => {
     setLoading(true);
     setError('');
     try {
-      const { error } = await signIn(email, password);
+      const { error } = await authService.signIn(email, password);
       if (error) throw error;
       toast({
         title: "Success",
@@ -45,12 +46,22 @@ const Login = () => {
     }
   };
 
-  const handleOAuthLogin = (provider) => {
-    toast({
-      title: "Not Implemented",
-      description: `${provider} login is not yet integrated.`,
-      variant: "warning",
-    });
+  const handleOAuthLogin = async (provider) => {
+    try {
+      const { error } = await authService.signInWithProvider(provider);
+      if (error) throw error;
+      toast({
+        title: "Success",
+        description: `Logged in with ${provider} successfully`,
+      });
+      navigate('/console');
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: `Failed to log in with ${provider}: ${error.message}`,
+        variant: "destructive",
+      });
+    }
   };
 
   if (user) {
@@ -107,7 +118,7 @@ const Login = () => {
             <Button
               variant="outline"
               className="w-full flex items-center justify-center"
-              onClick={() => handleOAuthLogin('Google')}
+              onClick={() => handleOAuthLogin('google')}
             >
               <svg className="w-5 h-5 mr-2" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                 <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
@@ -120,7 +131,7 @@ const Login = () => {
             <Button
               variant="outline"
               className="w-full flex items-center justify-center"
-              onClick={() => handleOAuthLogin('Apple')}
+              onClick={() => handleOAuthLogin('apple')}
             >
               <svg className="w-5 h-5 mr-2" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                 <path d="M17.05 20.28c-.98.95-2.05.88-3.09.41-1.09-.5-2.08-.52-3.23 0-1.44.66-2.2.53-3.05-.41C3.21 15.64 3.9 8.25 9.04 7.91c1.22.07 2.06.63 2.79.63.73 0 2.09-.62 3.54-.53 1.55.12 2.69.77 3.43 1.91-3.05 1.75-2.54 5.93.71 7.13-.65 1.37-1.47 2.73-2.46 3.23zM15.31 6.08c-1.39-.91-2.58-.94-2.76-1.66C13.62.52 17.5.02 17.5.02s.07 2.99-2.19 6.06z"/>
