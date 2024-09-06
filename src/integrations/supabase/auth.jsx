@@ -3,6 +3,7 @@ import { supabase } from './supabase.js';
 import { useQueryClient } from '@tanstack/react-query';
 import { Auth } from '@supabase/auth-ui-react';
 import { ThemeSupa } from '@supabase/auth-ui-shared';
+import { authService } from '../../services/authService';
 
 const SupabaseAuthContext = createContext();
 
@@ -42,7 +43,7 @@ export const SupabaseAuthProviderInner = ({ children }) => {
   }, [queryClient]);
 
   const logout = async () => {
-    await supabase.auth.signOut();
+    await authService.signOut();
     setSession(null);
     queryClient.invalidateQueries('user');
   };
