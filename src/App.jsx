@@ -1,9 +1,10 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ThemeProvider } from "@/components/theme-provider";
 import { Toaster } from "@/components/ui/toaster";
-import { SupabaseAuthProvider, useSupabaseAuth } from './integrations/supabase';
+import { useStore } from './store';
+import { supabase } from './integrations/supabase/supabase';
 
 // Import components
 import ConsoleHeader from './components/header/ConsoleHeader';
@@ -32,7 +33,7 @@ const ConsoleLayout = ({ children }) => (
 );
 
 const ProtectedRoute = ({ children }) => {
-  const { session } = useSupabaseAuth();
+  const session = useStore((state) => state.session);
   return session ? children : <Navigate to="/login" replace />;
 };
 
@@ -59,16 +60,30 @@ const AppRoutes = () => (
 );
 
 const App = () => {
+  const setSession = useStore((state) => state.setSession);
+  const setLoading = useStore((state) => state.setLoading);
+
+  useEffect(() => {
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setSession(session);
+      setLoading(false);
+    });
+
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+      setSession(session);
+    });
+
+    return () => subscription.unsubscribe();
+  }, [setSession, setLoading]);
+
   return (
     <QueryClientProvider client={queryClient}>
-      <SupabaseAuthProvider>
-        <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
-          <Router>
-            <AppRoutes />
-            <Toaster />
-          </Router>
-        </ThemeProvider>
-      </SupabaseAuthProvider>
+      <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
+        <Router>
+          <AppRoutes />
+          <Toaster />
+        </Router>
+      </ThemeProvider>
     </QueryClientProvider>
   );
 };
