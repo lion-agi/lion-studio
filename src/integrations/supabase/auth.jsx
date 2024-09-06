@@ -25,7 +25,9 @@ export const SupabaseAuthProvider = ({ children }) => {
     });
 
     return () => {
-      authListener.unsubscribe();
+      if (authListener && typeof authListener.unsubscribe === 'function') {
+        authListener.unsubscribe();
+      }
     };
   }, [queryClient]);
 
