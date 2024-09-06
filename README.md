@@ -10,9 +10,10 @@
 
 **Note:** very alpha, not ready for anything serious, play around and write issues : ) 
 
+<img width="1394" alt="Screenshot 2024-09-06 at 10 34 03 AM" src="https://github.com/user-attachments/assets/0a5a4108-b637-49a0-acc9-3e05ae62e36c">
 
-<img width="1402" alt="image" src="https://github.com/user-attachments/assets/0c71e226-ad35-49df-b11e-91389d031a51">
 
+<img width="1394" alt="Screenshot 2024-09-06 at 10 34 33 AM" src="https://github.com/user-attachments/assets/76d1976e-98d5-4d48-b2f8-e6c8fd0f9d5a">
 
 
 
