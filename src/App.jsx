@@ -34,27 +34,73 @@ const ConsoleLayout = ({ children }) => (
   </div>
 );
 
-const AppRoutes = () => (
-  <Routes>
-    {/* Main website routes */}
-    <Route path="/" element={<Home />} />
-    <Route path="/login" element={<Login />} />
-    <Route path="/register" element={<Registration />} />
-    <Route path="/auth/callback" element={<AuthCallback />} />
-    <Route path="/email-confirmation" element={<EmailConfirmation />} />
+const AppRoutes = () => {
+  const { session } = useStore();
 
-    {/* Console routes */}
-    <Route path="/console" element={<ProtectedRoute><ConsoleLayout><Navigate to="/console/workflow" replace /></ConsoleLayout></ProtectedRoute>} />
-    <Route path="/console/workflow" element={<ProtectedRoute><ConsoleLayout><WorkflowEditor /></ConsoleLayout></ProtectedRoute>} />
-    <Route path="/console/library" element={<ProtectedRoute><ConsoleLayout><Library /></ConsoleLayout></ProtectedRoute>} />
-    <Route path="/console/monitoring" element={<ProtectedRoute><ConsoleLayout><Monitoring /></ConsoleLayout></ProtectedRoute>} />
-    <Route path="/console/dashboard" element={<ProtectedRoute><ConsoleLayout><Dashboard /></ConsoleLayout></ProtectedRoute>} />
-    <Route path="/console/connections" element={<ProtectedRoute><ConsoleLayout><Connections /></ConsoleLayout></ProtectedRoute>} />
-    <Route path="/console/deployment" element={<ProtectedRoute><ConsoleLayout><Deployment /></ConsoleLayout></ProtectedRoute>} />
+  return (
+    <Routes>
+      {/* Main website routes */}
+      <Route path="/" element={<Home />} />
+      <Route path="/login" element={session ? <Navigate to="/console" replace /> : <Login />} />
+      <Route path="/register" element={session ? <Navigate to="/console" replace /> : <Registration />} />
+      <Route path="/auth/callback" element={<AuthCallback />} />
+      <Route path="/email-confirmation" element={<EmailConfirmation />} />
 
-    {/* Add more console routes as needed */}
-  </Routes>
-);
+      {/* Console routes */}
+      <Route path="/console" element={
+        <ProtectedRoute>
+          <ConsoleLayout>
+            <Navigate to="/console/dashboard" replace />
+          </ConsoleLayout>
+        </ProtectedRoute>
+      } />
+      <Route path="/console/workflow" element={
+        <ProtectedRoute>
+          <ConsoleLayout>
+            <WorkflowEditor />
+          </ConsoleLayout>
+        </ProtectedRoute>
+      } />
+      <Route path="/console/library" element={
+        <ProtectedRoute>
+          <ConsoleLayout>
+            <Library />
+          </ConsoleLayout>
+        </ProtectedRoute>
+      } />
+      <Route path="/console/monitoring" element={
+        <ProtectedRoute>
+          <ConsoleLayout>
+            <Monitoring />
+          </ConsoleLayout>
+        </ProtectedRoute>
+      } />
+      <Route path="/console/dashboard" element={
+        <ProtectedRoute>
+          <ConsoleLayout>
+            <Dashboard />
+          </ConsoleLayout>
+        </ProtectedRoute>
+      } />
+      <Route path="/console/connections" element={
+        <ProtectedRoute>
+          <ConsoleLayout>
+            <Connections />
+          </ConsoleLayout>
+        </ProtectedRoute>
+      } />
+      <Route path="/console/deployment" element={
+        <ProtectedRoute>
+          <ConsoleLayout>
+            <Deployment />
+          </ConsoleLayout>
+        </ProtectedRoute>
+      } />
+
+      {/* Add more console routes as needed */}
+    </Routes>
+  );
+};
 
 const App = () => {
   const setSession = useStore((state) => state.setSession);
