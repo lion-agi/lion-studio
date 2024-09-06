@@ -6,9 +6,10 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 import { PlusCircle, Search } from 'lucide-react';
 import CreateCollectionForm from './CreateCollectionForm';
 import ThreadList from './ThreadList';
-import PagesManager from '../features/pages/PagesManager';
+import PageList from './PageList';
 import DataSourceList from './DataSourceList';
 import ThreadModal from './ThreadModal';
+import PageModal from './PageModal';
 import DataSourceModal from './DataSourceModal';
 import { useToast } from "@/components/ui/use-toast";
 
@@ -16,6 +17,7 @@ const KnowledgeBase = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [isCreateCollectionOpen, setIsCreateCollectionOpen] = useState(false);
   const [selectedThread, setSelectedThread] = useState(null);
+  const [selectedPage, setSelectedPage] = useState(null);
   const [selectedDataSource, setSelectedDataSource] = useState(null);
   const { toast } = useToast();
 
@@ -26,6 +28,12 @@ const KnowledgeBase = () => {
     { id: 4, title: "Promoting AI Problem-Solving Techniques", content: "Enhancing AI language models' problem-solving capabilities involves implementing various techniques such as decomposition, abstraction, and analogical reasoning...", createdAt: "3 weeks ago", collection: "agentic", views: 1, timeToRead: "8 min" },
     { id: 5, title: "AI Multi-Agent Systems: Challenges and Opportunities", content: "Large language models (LLMs) have revolutionized natural language processing, but their integration into multi-agent systems presents both exciting opportunities and significant challenges...", createdAt: "1 month ago", collection: "agentic", views: 1, timeToRead: "12 min" },
     { id: 6, title: "How to Deprecate Functions with Pydantic", content: "Pydantic offers several options for marking functions or methods as deprecated, allowing developers to gracefully phase out old APIs while maintaining backwards compatibility...", createdAt: "1 month ago", collection: "agentic", views: 2, timeToRead: "6 min" }
+  ];
+
+  const pages = [
+    { id: 1, title: "AI Startups' Go-to-Market Strategies", content: "Effective go-to-market strategies for AI startups often involve a combination of thought leadership, strategic partnerships, and targeted solution selling...", createdAt: "3 days ago", collection: "agentic", views: 5, timeToRead: "15 min" },
+    { id: 2, title: "Architectural Patterns for Agentic AI", content: "Designing robust and scalable architectures for agentic AI systems requires careful consideration of modularity, communication protocols, and decision-making frameworks...", createdAt: "1 week ago", collection: "agentic", views: 3, timeToRead: "20 min" },
+    { id: 3, title: "Optimizing LionAGI's Element Class", content: "The Element class in LionAGI serves as a fundamental building block for constructing complex AI agents. Optimizing its performance and flexibility is crucial for system-wide improvements...", createdAt: "2 weeks ago", collection: "agentic", views: 7, timeToRead: "12 min" }
   ];
 
   const dataSources = {
@@ -61,13 +69,42 @@ const KnowledgeBase = () => {
     setSelectedThread(thread);
   };
 
+  const handleOpenPageModal = (page) => {
+    setSelectedPage(page);
+  };
+
   const handleOpenDataSourceModal = (dataSource) => {
     setSelectedDataSource(dataSource);
   };
 
   const handleCloseModal = () => {
     setSelectedThread(null);
+    setSelectedPage(null);
     setSelectedDataSource(null);
+  };
+
+  const handleDeletePage = (pageId) => {
+    // Implement delete logic here
+    toast({
+      title: "Page Deleted",
+      description: `Page with ID ${pageId} has been deleted.`,
+    });
+  };
+
+  const handleEditPage = (pageId) => {
+    // Implement edit logic here
+    toast({
+      title: "Edit Page",
+      description: `Editing page with ID ${pageId}.`,
+    });
+  };
+
+  const handleAddPageToCollection = (pageId) => {
+    // Implement add to collection logic here
+    toast({
+      title: "Add to Collection",
+      description: `Adding page with ID ${pageId} to collection.`,
+    });
   };
 
   return (
@@ -130,7 +167,14 @@ const KnowledgeBase = () => {
         </TabsContent>
         <TabsContent value="pages">
           <div className="mt-8">
-            <PagesManager />
+            <h2 className="text-xl font-semibold mb-6 group-name">Pages</h2>
+            <PageList 
+              pages={pages} 
+              onOpenModal={handleOpenPageModal}
+              onDelete={handleDeletePage}
+              onEdit={handleEditPage}
+              onAddToCollection={handleAddPageToCollection}
+            />
             {renderCollectionsCard()}
           </div>
         </TabsContent>
@@ -145,6 +189,14 @@ const KnowledgeBase = () => {
         <ThreadModal
           thread={selectedThread}
           isOpen={!!selectedThread}
+          onClose={handleCloseModal}
+        />
+      )}
+
+      {selectedPage && (
+        <PageModal
+          page={selectedPage}
+          isOpen={!!selectedPage}
           onClose={handleCloseModal}
         />
       )}
