@@ -1,52 +1,11 @@
 import React from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { Button } from "@/components/ui/button";
-import { useSupabaseAuth } from '@/integrations/supabase';
-import { ArrowRight, Zap, Workflow, Bot, LogOut } from 'lucide-react';
+import { ArrowRight, Zap, Workflow, Bot } from 'lucide-react';
 
 const Index = () => {
-  const { session, logout } = useSupabaseAuth();
-  const navigate = useNavigate();
-
-  const handleLogout = async () => {
-    await logout();
-    navigate('/');
-  };
-
   return (
     <div className="min-h-screen bg-background">
-      <header className="p-4 flex justify-between items-center">
-        <img src="/lion-studio-logo.jpeg" alt="Lion Studio Logo" className="w-24 h-24 object-contain" />
-        <nav>
-          {session ? (
-            <>
-              <Link to="/profile">
-                <Button variant="ghost" className="mr-2">Profile</Button>
-              </Link>
-              <Link to="/upload">
-                <Button variant="ghost" className="mr-2">Upload Images</Button>
-              </Link>
-              <Link to="/editor">
-                <Button variant="ghost" className="mr-2">Workflow Editor</Button>
-              </Link>
-              <Button variant="ghost" onClick={handleLogout}>
-                <LogOut className="mr-2 h-4 w-4" />
-                Log out
-              </Button>
-            </>
-          ) : (
-            <>
-              <Link to="/login">
-                <Button variant="ghost" className="mr-2">Log in</Button>
-              </Link>
-              <Link to="/register">
-                <Button>Sign up</Button>
-              </Link>
-            </>
-          )}
-        </nav>
-      </header>
-
       <main className="container mx-auto px-4">
         <section className="py-20 text-center">
           <div className="max-w-3xl mx-auto">
@@ -56,7 +15,7 @@ const Index = () => {
             <p className="text-xl mb-8 text-muted-foreground">
               Streamline your business processes with AI-powered automation solutions
             </p>
-            <Link to={session ? "/editor" : "/register"}>
+            <Link to="/register">
               <Button size="lg" className="bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700">
                 Get Started <ArrowRight className="ml-2 h-5 w-5" />
               </Button>
