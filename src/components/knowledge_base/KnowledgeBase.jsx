@@ -4,7 +4,7 @@ import { Input } from "@/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { PlusCircle, Search } from 'lucide-react';
-import CreateCollectionForm from '../CreateCollectionForm';
+import CreateCollectionForm from './CreateCollectionForm';
 import ThreadList from './ThreadList';
 import PageList from './PageList';
 import DataSourceList from './DataSourceList';
