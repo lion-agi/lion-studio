@@ -5,11 +5,15 @@ import { Eye, Trash2, Edit } from 'lucide-react';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 
 const PageItem = ({ page, onOpenModal, onDelete, onEdit }) => {
+  if (!page) {
+    return null; // or return a placeholder component
+  }
+
   return (
     <Card className="bg-navy-800 text-white hover:shadow-lg transition-all duration-300 ease-in-out animate-fade-in">
       <CardContent className="p-4">
         <h3 className="text-lg font-semibold mb-2">{page.title}</h3>
-        <p className="text-sm text-gray-300 mb-4">{page.content.substring(0, 100)}...</p>
+        <p className="text-sm text-gray-300 mb-4">{page.content ? page.content.substring(0, 100) + '...' : 'No content'}</p>
         <div className="flex justify-between items-center">
           <span className="text-xs text-gray-400">{new Date(page.created_at).toLocaleDateString()}</span>
           <div className="space-x-2">
