@@ -5,6 +5,7 @@ import { ThemeProvider } from "@/components/theme-provider";
 import { Toaster } from "@/components/ui/toaster";
 import { useStore } from './store';
 import { supabase } from './integrations/supabase/supabase';
+import { SupabaseAuthProvider } from './integrations/supabase/auth';
 
 // Import components
 import ConsoleHeader from './components/header/ConsoleHeader';
@@ -79,10 +80,12 @@ const App = () => {
   return (
     <QueryClientProvider client={queryClient}>
       <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
-        <Router>
-          <AppRoutes />
-          <Toaster />
-        </Router>
+        <SupabaseAuthProvider>
+          <Router>
+            <AppRoutes />
+            <Toaster />
+          </Router>
+        </SupabaseAuthProvider>
       </ThemeProvider>
     </QueryClientProvider>
   );
