@@ -59,7 +59,8 @@ const KnowledgeBase = () => {
             placeholder="Search your threads..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-80 bg-navy-800 text-gray-200"
+            className="w-80 bg-navy-800 text-gray-200 placeholder-gray-400"
+            style={{ color: '#E2E8F0' }}
           />
           <Button variant="outline" size="icon" className="bg-navy-700 text-gray-200">
             <Search className="h-4 w-4" />
