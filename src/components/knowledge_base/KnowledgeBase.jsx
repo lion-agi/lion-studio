@@ -1,9 +1,9 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import { PlusCircle, Search, MessageSquare, FileText, FolderPlus } from 'lucide-react';
+import { PlusCircle, Search } from 'lucide-react';
 import CreateCollectionForm from '../CreateCollectionForm';
 import ThreadList from './ThreadList';
 import PageItem from './PageItem';
@@ -19,28 +19,61 @@ const KnowledgeBase = () => {
   const {
     searchTerm,
     setSearchTerm,
+    searchResults,
     isCreateCollectionOpen,
     setIsCreateCollectionOpen,
     selectedThread,
     selectedPage,
     selectedDataSource,
-    handleOpenThreadModal,
-    handleOpenPageModal,
-    handleOpenDataSourceModal,
+    handleOpenModal,
     handleCloseModal,
-    handleDeletePage,
-    handleEditPage,
-    handleAddPageToCollection,
+    handleCRUDOperation,
     threads,
     pages,
     dataSources,
     collections,
+    setSortCriteria,
+    setFilterCriteria,
+    currentPage,
+    setCurrentPage,
+    totalPages,
   } = useKnowledgeBase();
 
-  const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 12;
+  const renderPagination = () => (
+    <div className="flex justify-center mt-4 space-x-2">
+      <Button onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))} disabled={currentPage === 1}>
+        Previous
+      </Button>
+      <span className="self-center">
+        Page {currentPage} of {totalPages}
+      </span>
+      <Button onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))} disabled={currentPage === totalPages}>
+        Next
+      </Button>
+    </div>
+  );
 
-  const paginatedPages = pages ? pages.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage) : [];
+  const renderContent = (items, ItemComponent, emptyMessage, itemType) => {
+    if (items.length === 0) {
+      return <EmptyState message={emptyMessage} />;
+    }
+    return (
+      <>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {items.map((item) => (
+            <ItemComponent
+              key={item.id}
+              item={item}
+              onOpenModal={() => handleOpenModal(item, itemType)}
+              onDelete={() => handleCRUDOperation('Delete', itemType, item.id)}
+              onEdit={() => handleCRUDOperation('Edit', itemType, item.id)}
+            />
+          ))}
+        </div>
+        {renderPagination()}
+      </>
+    );
+  };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-navy-900 to-indigo-900 p-8 text-gray-100">
@@ -50,7 +83,7 @@ const KnowledgeBase = () => {
           <div className="relative w-full md:w-80">
             <Input
               type="text"
-              placeholder="Search your threads..."
+              placeholder="Search..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               className="w-full bg-navy-800 text-gray-200 placeholder-gray-400 border-gray-600 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 pr-10"
@@ -59,120 +92,38 @@ const KnowledgeBase = () => {
           </div>
         </div>
 
-        <div className="flex flex-col md:flex-row space-y-4 md:space-y-0 md:space-x-4 mb-8">
-          <Button variant="secondary" className="text-gray-200 bg-navy-700 hover:bg-navy-600 flex items-center">
-            <MessageSquare className="h-4 w-4 mr-2" />
-            Thread
-          </Button>
-          <Button variant="secondary" className="text-gray-200 bg-navy-700 hover:bg-navy-600 flex items-center">
-            <FileText className="h-4 w-4 mr-2" />
-            Page
-          </Button>
-          <Dialog open={isCreateCollectionOpen} onOpenChange={setIsCreateCollectionOpen}>
-            <DialogTrigger asChild>
-              <Button variant="secondary" className="text-gray-200 bg-navy-700 hover:bg-navy-600 flex items-center">
-                <FolderPlus className="h-4 w-4 mr-2" />
-                Collection
-              </Button>
-            </DialogTrigger>
-            <DialogContent className="sm:max-w-[425px] bg-navy-800 text-gray-200">
-              <DialogHeader>
-                <DialogTitle>Create Collection</DialogTitle>
-              </DialogHeader>
-              <CreateCollectionForm onClose={() => setIsCreateCollectionOpen(false)} />
-            </DialogContent>
-          </Dialog>
-        </div>
+        {searchResults.length > 0 && (
+          <div className="mb-8">
+            <h2 className="text-2xl font-bold mb-4">Search Results</h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {searchResults.map((item) => (
+                <div key={item.id} className="bg-navy-800 p-4 rounded-lg">
+                  <h3 className="text-lg font-semibold">{item.title}</h3>
+                  <p className="text-sm text-gray-400">{item.type}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
 
         <Tabs defaultValue="threads" className="mt-8">
           <TabsList className="bg-navy-800 p-1 rounded-lg mb-6">
-            <TabsTrigger value="threads" className="data-[state=active]:bg-navy-700 text-gray-200">Threads</TabsTrigger>
-            <TabsTrigger value="pages" className="data-[state=active]:bg-navy-700 text-gray-200">Pages</TabsTrigger>
-            <TabsTrigger value="collections" className="data-[state=active]:bg-navy-700 text-gray-200">Collections</TabsTrigger>
-            <TabsTrigger value="dataSources" className="data-[state=active]:bg-navy-700 text-gray-200">Data Sources</TabsTrigger>
+            <TabsTrigger value="threads">Threads</TabsTrigger>
+            <TabsTrigger value="pages">Pages</TabsTrigger>
+            <TabsTrigger value="collections">Collections</TabsTrigger>
+            <TabsTrigger value="dataSources">Data Sources</TabsTrigger>
           </TabsList>
           <TabsContent value="threads">
-            {threads && threads.length > 0 ? (
-              <ThreadList threads={threads} onOpenModal={handleOpenThreadModal} />
-            ) : (
-              <EmptyState message="No threads found. Create your first thread!" icon={MessageSquare} />
-            )}
+            {renderContent(threads, ThreadList, "No threads found. Create your first thread!", "thread")}
           </TabsContent>
           <TabsContent value="pages">
-            {pages && pages.length > 0 ? (
-              <>
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                  {paginatedPages.map((page) => (
-                    <PageItem
-                      key={page.id}
-                      page={page}
-                      onOpenModal={handleOpenPageModal}
-                      onDelete={handleDeletePage}
-                      onEdit={handleEditPage}
-                    />
-                  ))}
-                  <Button
-                    onClick={() => handleOpenPageModal(null)}
-                    className="h-full flex items-center justify-center bg-navy-700 hover:bg-navy-600 text-gray-200"
-                  >
-                    <PlusCircle className="h-8 w-8 mr-2" />
-                    Create New Page
-                  </Button>
-                </div>
-                {pages.length > itemsPerPage && (
-                  <div className="mt-8 flex justify-center">
-                    <Button
-                      onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
-                      disabled={currentPage === 1}
-                    >
-                      Previous
-                    </Button>
-                    <span className="mx-4">
-                      Page {currentPage} of {Math.ceil(pages.length / itemsPerPage)}
-                    </span>
-                    <Button
-                      onClick={() => setCurrentPage((prev) => Math.min(prev + 1, Math.ceil(pages.length / itemsPerPage)))}
-                      disabled={currentPage === Math.ceil(pages.length / itemsPerPage)}
-                    >
-                      Next
-                    </Button>
-                  </div>
-                )}
-              </>
-            ) : (
-              <EmptyState message="No pages found. Create your first page!" icon={FileText} />
-            )}
+            {renderContent(pages, PageItem, "No pages found. Create your first page!", "page")}
           </TabsContent>
           <TabsContent value="collections">
-            {collections && collections.length > 0 ? (
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {collections.map((collection) => (
-                  <CollectionItem
-                    key={collection.id}
-                    collection={collection}
-                    onOpenModal={handleOpenPageModal}
-                    onDelete={handleDeletePage}
-                    onEdit={handleEditPage}
-                  />
-                ))}
-                <Button
-                  onClick={() => setIsCreateCollectionOpen(true)}
-                  className="h-full flex items-center justify-center bg-navy-700 hover:bg-navy-600 text-gray-200"
-                >
-                  <PlusCircle className="h-8 w-8 mr-2" />
-                  Create New Collection
-                </Button>
-              </div>
-            ) : (
-              <EmptyState message="No collections found. Create your first collection!" icon={FolderPlus} />
-            )}
+            {renderContent(collections, CollectionItem, "No collections found. Create your first collection!", "collection")}
           </TabsContent>
           <TabsContent value="dataSources">
-            {dataSources ? (
-              <DataSourceList dataSources={dataSources} onOpenModal={handleOpenDataSourceModal} />
-            ) : (
-              <EmptyState message="No data sources found. Add your first data source!" icon={FolderPlus} />
-            )}
+            {renderContent(dataSources, DataSourceList, "No data sources found. Add your first data source!", "dataSource")}
           </TabsContent>
         </Tabs>
 
@@ -199,6 +150,21 @@ const KnowledgeBase = () => {
             onClose={handleCloseModal}
           />
         )}
+
+        <Dialog open={isCreateCollectionOpen} onOpenChange={setIsCreateCollectionOpen}>
+          <DialogTrigger asChild>
+            <Button className="mt-4">
+              <PlusCircle className="mr-2 h-4 w-4" />
+              Create New Collection
+            </Button>
+          </DialogTrigger>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>Create New Collection</DialogTitle>
+            </DialogHeader>
+            <CreateCollectionForm onClose={() => setIsCreateCollectionOpen(false)} />
+          </DialogContent>
+        </Dialog>
       </div>
     </div>
   );
