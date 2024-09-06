@@ -43,7 +43,7 @@ const Library = () => {
   const paginatedPages = pages ? pages.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage) : [];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 to-indigo-900 text-gray-100 p-8">
+    <div className="min-h-screen bg-gray-900 text-gray-100 p-8">
       <div className="container mx-auto">
         <div className="flex flex-col md:flex-row justify-between items-center mb-12">
           <h1 className="text-4xl md:text-5xl font-bold mb-6 md:mb-0 text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-600">Library</h1>
