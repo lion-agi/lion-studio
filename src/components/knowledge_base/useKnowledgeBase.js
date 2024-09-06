@@ -68,6 +68,10 @@ export const useKnowledgeBase = () => {
   }, [searchTerm, debouncedSearch]);
 
   const sortAndFilterItems = useCallback((items) => {
+    if (!Array.isArray(items)) {
+      console.error('Expected an array for items, but received:', items);
+      return [];
+    }
     return items
       .filter(item => {
         for (let key in filterCriteria) {
