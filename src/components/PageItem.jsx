@@ -77,7 +77,7 @@ const PageItem = ({ page, onOpenModal, onDelete, onEdit, onAddToCollection }) =>
                   <Button
                     variant="ghost"
                     size="sm"
-                    className="w-full flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                    className="w-full flex items-center px-4 py-2 hover:bg-gray-500"
                     onClick={handleDelete}
                   >
                     <Trash2 className="h-4 w-4 mr-2" />
@@ -86,7 +86,7 @@ const PageItem = ({ page, onOpenModal, onDelete, onEdit, onAddToCollection }) =>
                   <Button
                     variant="ghost"
                     size="sm"
-                    className="w-full flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                    className="w-full flex items-center px-4 py-2 hover:bg-gray-500"
                     onClick={handleEdit}
                   >
                     <Edit className="h-4 w-4 mr-2" />
@@ -95,7 +95,7 @@ const PageItem = ({ page, onOpenModal, onDelete, onEdit, onAddToCollection }) =>
                   <Button
                     variant="ghost"
                     size="sm"
-                    className="w-full flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                    className="w-full flex items-center px-4 py-2 hover:bg-gray-500"
                     onClick={handleAddToCollection}
                   >
                     <FolderPlus className="h-4 w-4 mr-2" />
