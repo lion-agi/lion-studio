@@ -44,7 +44,7 @@ const KnowledgeBase = () => {
 
   const renderCollectionsCard = () => (
     <div className="mt-8">
-      <h2 className="text-xl font-semibold mb-4">Collections</h2>
+      <h2 className="text-xl font-semibold mb-4 group-name">Collections</h2>
       <div className="bg-card p-4 rounded-lg shadow">
         <div className="flex items-center justify-between">
           <div>
@@ -109,20 +109,21 @@ const KnowledgeBase = () => {
         <TabsContent value="threads">
           <div className="space-y-8">
             <div>
-              <h2 className="text-xl font-semibold mb-6 mt-8">Threads</h2>
+              <h2 className="text-xl font-semibold mb-6 mt-8 group-name">Threads</h2>
               <ThreadList threads={threads} />
             </div>
             {renderCollectionsCard()}
           </div>
         </TabsContent>
         <TabsContent value="pages">
-          <div className="px-8 mt-8">
+          <div className="mt-8">
+            <h2 className="text-xl font-semibold mb-6 group-name">Pages</h2>
             <PageList pages={pages} />
             {renderCollectionsCard()}
           </div>
         </TabsContent>
         <TabsContent value="dataSources">
-          <div className="px-8 mt-8">
+          <div className="mt-8">
             <DataSourceList dataSources={dataSources} />
           </div>
         </TabsContent>
