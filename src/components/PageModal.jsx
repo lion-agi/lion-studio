@@ -4,20 +4,20 @@ import { Button } from "@/components/ui/button";
 import { X } from 'lucide-react';
 import ReactMarkdown from 'react-markdown';
 
-const samplePage = {
-  title: "AI Startups' Go-to-Market Strategies",
-  content: "Effective go-to-market strategies for AI startups often involve a combination of thought leadership, strategic partnerships, and targeted solution selling...\n\n## Key Components\n1. Thought Leadership\n2. Strategic Partnerships\n3. Targeted Solution Selling\n\n> Innovation is the key to success in the AI market.",
-  createdAt: "3 days ago",
-  collection: "agentic",
-  wordCount: 19,
-  views: 5,
-  author: "John Doe",
-  lastModified: "2023-05-15",
-  tags: ["AI", "Machine Learning", "Data Science"],
-  relatedPages: ["Page1", "Page2", "Page3"]
+const defaultPage = {
+  title: "No Page Selected",
+  content: "No content available.",
+  createdAt: "",
+  collection: "",
+  wordCount: 0,
+  views: 0,
+  author: "",
+  lastModified: "",
+  tags: [],
+  relatedPages: []
 };
 
-const PageModal = ({ page = samplePage, isOpen, onClose }) => {
+const PageModal = ({ page = defaultPage, isOpen, onClose }) => {
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="sm:max-w-[700px] max-h-[90vh] overflow-y-auto bg-[#1a1b26] text-gray-200 border-gray-700 p-0">
@@ -44,24 +44,28 @@ const PageModal = ({ page = samplePage, isOpen, onClose }) => {
             <InfoItem label="Author" value={page.author} />
             <InfoItem label="Last Modified" value={page.lastModified} />
           </div>
-          <div>
-            <h3 className="text-lg font-semibold text-white mb-3">Tags</h3>
-            <div className="flex flex-wrap gap-2">
-              {page.tags.map((tag) => (
-                <span key={tag} className="px-3 py-1 bg-purple-900 text-purple-100 rounded-full text-sm">
-                  {tag}
-                </span>
-              ))}
+          {page.tags && page.tags.length > 0 && (
+            <div>
+              <h3 className="text-lg font-semibold text-white mb-3">Tags</h3>
+              <div className="flex flex-wrap gap-2">
+                {page.tags.map((tag, index) => (
+                  <span key={index} className="px-3 py-1 bg-purple-900 text-purple-100 rounded-full text-sm">
+                    {tag}
+                  </span>
+                ))}
+              </div>
             </div>
-          </div>
-          <div>
-            <h3 className="text-lg font-semibold text-white mb-3">Related Pages</h3>
-            <ul className="list-disc list-inside text-purple-400 text-base space-y-1">
-              {page.relatedPages.map((relatedPage) => (
-                <li key={relatedPage}>{relatedPage}</li>
-              ))}
-            </ul>
-          </div>
+          )}
+          {page.relatedPages && page.relatedPages.length > 0 && (
+            <div>
+              <h3 className="text-lg font-semibold text-white mb-3">Related Pages</h3>
+              <ul className="list-disc list-inside text-purple-400 text-base space-y-1">
+                {page.relatedPages.map((relatedPage, index) => (
+                  <li key={index}>{relatedPage}</li>
+                ))}
+              </ul>
+            </div>
+          )}
         </div>
         <div className="px-8 py-6 border-t border-gray-700 mt-6">
           <Button onClick={onClose} className="w-full bg-purple-600 hover:bg-purple-700 text-white text-lg py-6">
