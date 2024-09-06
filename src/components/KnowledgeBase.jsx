@@ -8,10 +8,12 @@ import CreateCollectionForm from './CreateCollectionForm';
 import ThreadList from './ThreadList';
 import PageList from './PageList';
 import DataSourceList from './DataSourceList';
+import ThreadModal from './ThreadModal';
 
 const KnowledgeBase = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [isCreateCollectionOpen, setIsCreateCollectionOpen] = useState(false);
+  const [selectedThread, setSelectedThread] = useState(null);
 
   const threads = [
     { id: 1, title: "Quantum-Inspired Cognitive Algorithms", content: "Quantum-inspired algorithms are computational methods that draw inspiration from quantum mechanics principles but can be implemented on classical computers...", createdAt: "2 days ago", collection: "agentic", views: 0, timeToRead: "5 min", status: "Draft" },
@@ -56,6 +58,14 @@ const KnowledgeBase = () => {
       </div>
     </div>
   );
+
+  const handleOpenModal = (thread) => {
+    setSelectedThread(thread);
+  };
+
+  const handleCloseModal = () => {
+    setSelectedThread(null);
+  };
 
   return (
     <div className="container mx-auto p-8">
@@ -110,7 +120,7 @@ const KnowledgeBase = () => {
           <div className="space-y-8">
             <div>
               <h2 className="text-xl font-semibold mb-6 mt-8 group-name">Threads</h2>
-              <ThreadList threads={threads} />
+              <ThreadList threads={threads} onOpenModal={handleOpenModal} />
             </div>
             {renderCollectionsCard()}
           </div>
@@ -128,6 +138,14 @@ const KnowledgeBase = () => {
           </div>
         </TabsContent>
       </Tabs>
+
+      {selectedThread && (
+        <ThreadModal
+          thread={selectedThread}
+          isOpen={!!selectedThread}
+          onClose={handleCloseModal}
+        />
+      )}
     </div>
   );
 };

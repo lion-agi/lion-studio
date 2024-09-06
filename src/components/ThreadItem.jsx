@@ -2,11 +2,11 @@ import React from 'react';
 import { Button } from "@/components/ui/button";
 import { MoreHorizontal, Plus } from 'lucide-react';
 
-const ThreadItem = ({ thread }) => {
+const ThreadItem = ({ thread, onOpenModal }) => {
   return (
     <div className="border-b border-gray-200 py-4">
       <div className="flex justify-between items-start">
-        <div className="flex-grow">
+        <div className="flex-grow cursor-pointer" onClick={() => onOpenModal(thread)}>
           <h3 className="text-lg font-semibold mb-1">{thread.title}</h3>
           <p className="text-sm text-gray-600 mb-2">{thread.content}</p>
           <div className="flex items-center text-xs text-gray-500">
