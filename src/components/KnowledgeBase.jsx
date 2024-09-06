@@ -43,7 +43,7 @@ const KnowledgeBase = () => {
   };
 
   const renderCollectionsCard = () => (
-    <div className="mt-8">
+    <div className="mt-8 px-6">
       <h2 className="text-xl font-semibold mb-4 group-name">Collections</h2>
       <div className="bg-card p-4 rounded-lg shadow">
         <div className="flex items-center justify-between">
@@ -107,23 +107,23 @@ const KnowledgeBase = () => {
           <TabsTrigger value="dataSources">Data Sources</TabsTrigger>
         </TabsList>
         <TabsContent value="threads">
-          <div className="space-y-8">
-            <div>
-              <h2 className="text-xl font-semibold mb-6 mt-8 group-name">Threads</h2>
+          <div className="space-y-8 mt-8">
+            <div className="px-6">
+              <h2 className="text-xl font-semibold mb-6 group-name">Threads</h2>
               <ThreadList threads={threads} />
             </div>
             {renderCollectionsCard()}
           </div>
         </TabsContent>
         <TabsContent value="pages">
-          <div className="mt-8">
+          <div className="mt-8 px-6">
             <h2 className="text-xl font-semibold mb-6 group-name">Pages</h2>
             <PageList pages={pages} />
             {renderCollectionsCard()}
           </div>
         </TabsContent>
         <TabsContent value="dataSources">
-          <div className="mt-8">
+          <div className="mt-8 px-6">
             <DataSourceList dataSources={dataSources} />
           </div>
         </TabsContent>
