@@ -53,6 +53,9 @@ const Home = () => {
           <div className="max-w-6xl mx-auto text-center">
             <p>Ready to Transform Your Business?</p>
             <p className="mt-2">Join thousands of companies already using Lion Studio for their workflow automation</p>
+            <Link to="/register" className="mt-4 inline-block">
+              <Button size="lg" className="bg-purple-600 hover:bg-purple-700">Sign Up Now</Button>
+            </Link>
           </div>
         </footer>
       </div>
