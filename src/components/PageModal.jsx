@@ -18,6 +18,14 @@ const defaultPage = {
 };
 
 const PageModal = ({ page = defaultPage, isOpen, onClose, onEdit }) => {
+  const handleEdit = () => {
+    if (typeof onEdit === 'function') {
+      onEdit(page);
+    } else {
+      console.warn('onEdit prop is not a function');
+    }
+  };
+
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="sm:max-w-[700px] max-h-[90vh] overflow-y-auto bg-[#1a1b26] text-gray-200 border-gray-700 p-0">
@@ -69,7 +77,7 @@ const PageModal = ({ page = defaultPage, isOpen, onClose, onEdit }) => {
         </div>
         <div className="px-8 py-6 border-t border-gray-700 mt-6">
           <div className="flex justify-between">
-            <Button onClick={() => onEdit(page)} className="bg-blue-600 hover:bg-blue-700 text-white">
+            <Button onClick={handleEdit} className="bg-blue-600 hover:bg-blue-700 text-white">
               Edit
             </Button>
             <Button onClick={onClose} className="bg-purple-600 hover:bg-purple-700 text-white">
