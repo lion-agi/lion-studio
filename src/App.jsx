@@ -35,69 +35,35 @@ const ConsoleLayout = ({ children }) => (
 );
 
 const AppRoutes = () => {
-  const { session } = useStore();
+  const { session, loading } = useStore();
+
+  if (loading) {
+    return <div>Loading...</div>;
+  }
 
   return (
     <Routes>
       {/* Main website routes */}
       <Route path="/" element={<Home />} />
-      <Route path="/login" element={session ? <Navigate to="/console" replace /> : <Login />} />
-      <Route path="/register" element={session ? <Navigate to="/console" replace /> : <Registration />} />
+      <Route path="/login" element={session ? <Navigate to="/console/dashboard" replace /> : <Login />} />
+      <Route path="/register" element={session ? <Navigate to="/console/dashboard" replace /> : <Registration />} />
       <Route path="/auth/callback" element={<AuthCallback />} />
       <Route path="/email-confirmation" element={<EmailConfirmation />} />
 
       {/* Console routes */}
-      <Route path="/console" element={
-        <ProtectedRoute>
-          <ConsoleLayout>
-            <Navigate to="/console/dashboard" replace />
-          </ConsoleLayout>
-        </ProtectedRoute>
-      } />
-      <Route path="/console/workflow" element={
-        <ProtectedRoute>
-          <ConsoleLayout>
-            <WorkflowEditor />
-          </ConsoleLayout>
-        </ProtectedRoute>
-      } />
-      <Route path="/console/library" element={
-        <ProtectedRoute>
-          <ConsoleLayout>
-            <Library />
-          </ConsoleLayout>
-        </ProtectedRoute>
-      } />
-      <Route path="/console/monitoring" element={
-        <ProtectedRoute>
-          <ConsoleLayout>
-            <Monitoring />
-          </ConsoleLayout>
-        </ProtectedRoute>
-      } />
-      <Route path="/console/dashboard" element={
-        <ProtectedRoute>
-          <ConsoleLayout>
-            <Dashboard />
-          </ConsoleLayout>
-        </ProtectedRoute>
-      } />
-      <Route path="/console/connections" element={
-        <ProtectedRoute>
-          <ConsoleLayout>
-            <Connections />
-          </ConsoleLayout>
-        </ProtectedRoute>
-      } />
-      <Route path="/console/deployment" element={
-        <ProtectedRoute>
-          <ConsoleLayout>
-            <Deployment />
-          </ConsoleLayout>
-        </ProtectedRoute>
-      } />
+      <Route path="/console" element={<ProtectedRoute><ConsoleLayout><Navigate to="/console/dashboard" replace /></ConsoleLayout></ProtectedRoute>} />
+      <Route path="/console/workflow" element={<ProtectedRoute><ConsoleLayout><WorkflowEditor /></ConsoleLayout></ProtectedRoute>} />
+      <Route path="/console/library" element={<ProtectedRoute><ConsoleLayout><Library /></ConsoleLayout></ProtectedRoute>} />
+      <Route path="/console/monitoring" element={<ProtectedRoute><ConsoleLayout><Monitoring /></ConsoleLayout></ProtectedRoute>} />
+      <Route path="/console/dashboard" element={<ProtectedRoute><ConsoleLayout><Dashboard /></ConsoleLayout></ProtectedRoute>} />
+      <Route path="/console/connections" element={<ProtectedRoute><ConsoleLayout><Connections /></ConsoleLayout></ProtectedRoute>} />
+      <Route path="/console/deployment" element={<ProtectedRoute><ConsoleLayout><Deployment /></ConsoleLayout></ProtectedRoute>} />
 
-      {/* Add more console routes as needed */}
+      {/* User profile route */}
+      <Route path="/profile" element={<ProtectedRoute><UserProfile /></ProtectedRoute>} />
+
+      {/* Catch-all route */}
+      <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
   );
 };
