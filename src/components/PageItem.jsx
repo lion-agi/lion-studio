@@ -20,6 +20,33 @@ const PageItem = ({ page, onOpenModal, onDelete, onEdit, onAddToCollection }) =>
     };
   }, []);
 
+  const handleDelete = () => {
+    if (onDelete) {
+      onDelete(page.id);
+    } else {
+      console.warn('onDelete function not provided to PageItem');
+    }
+    setShowOptions(false);
+  };
+
+  const handleEdit = () => {
+    if (onEdit) {
+      onEdit(page.id);
+    } else {
+      console.warn('onEdit function not provided to PageItem');
+    }
+    setShowOptions(false);
+  };
+
+  const handleAddToCollection = () => {
+    if (onAddToCollection) {
+      onAddToCollection(page.id);
+    } else {
+      console.warn('onAddToCollection function not provided to PageItem');
+    }
+    setShowOptions(false);
+  };
+
   return (
     <Card className="h-full">
       <CardHeader>
@@ -51,7 +78,7 @@ const PageItem = ({ page, onOpenModal, onDelete, onEdit, onAddToCollection }) =>
                     variant="ghost"
                     size="sm"
                     className="w-full flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                    onClick={() => { onDelete(page.id); setShowOptions(false); }}
+                    onClick={handleDelete}
                   >
                     <Trash2 className="h-4 w-4 mr-2" />
                     Delete
@@ -60,7 +87,7 @@ const PageItem = ({ page, onOpenModal, onDelete, onEdit, onAddToCollection }) =>
                     variant="ghost"
                     size="sm"
                     className="w-full flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                    onClick={() => { onEdit(page.id); setShowOptions(false); }}
+                    onClick={handleEdit}
                   >
                     <Edit className="h-4 w-4 mr-2" />
                     Edit
@@ -69,7 +96,7 @@ const PageItem = ({ page, onOpenModal, onDelete, onEdit, onAddToCollection }) =>
                     variant="ghost"
                     size="sm"
                     className="w-full flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                    onClick={() => { onAddToCollection(page.id); setShowOptions(false); }}
+                    onClick={handleAddToCollection}
                   >
                     <FolderPlus className="h-4 w-4 mr-2" />
                     Add to Collection

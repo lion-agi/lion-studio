@@ -11,6 +11,7 @@ import DataSourceList from './DataSourceList';
 import ThreadModal from './ThreadModal';
 import PageModal from './PageModal';
 import DataSourceModal from './DataSourceModal';
+import { useToast } from "@/components/ui/use-toast";
 
 const KnowledgeBase = () => {
   const [searchTerm, setSearchTerm] = useState('');
@@ -18,6 +19,7 @@ const KnowledgeBase = () => {
   const [selectedThread, setSelectedThread] = useState(null);
   const [selectedPage, setSelectedPage] = useState(null);
   const [selectedDataSource, setSelectedDataSource] = useState(null);
+  const { toast } = useToast();
 
   const threads = [
     { id: 1, title: "Quantum-Inspired Cognitive Algorithms", content: "Quantum-inspired algorithms are computational methods that draw inspiration from quantum mechanics principles but can be implemented on classical computers...", createdAt: "2 days ago", collection: "agentic", views: 0, timeToRead: "5 min", status: "Draft" },
@@ -81,6 +83,30 @@ const KnowledgeBase = () => {
     setSelectedDataSource(null);
   };
 
+  const handleDeletePage = (pageId) => {
+    // Implement delete logic here
+    toast({
+      title: "Page Deleted",
+      description: `Page with ID ${pageId} has been deleted.`,
+    });
+  };
+
+  const handleEditPage = (pageId) => {
+    // Implement edit logic here
+    toast({
+      title: "Edit Page",
+      description: `Editing page with ID ${pageId}.`,
+    });
+  };
+
+  const handleAddPageToCollection = (pageId) => {
+    // Implement add to collection logic here
+    toast({
+      title: "Add to Collection",
+      description: `Adding page with ID ${pageId} to collection.`,
+    });
+  };
+
   return (
     <div className="container mx-auto p-8">
       <div className="flex justify-between items-center mb-8">
@@ -142,7 +168,13 @@ const KnowledgeBase = () => {
         <TabsContent value="pages">
           <div className="mt-8">
             <h2 className="text-xl font-semibold mb-6 group-name">Pages</h2>
-            <PageList pages={pages} onOpenModal={handleOpenPageModal} />
+            <PageList 
+              pages={pages} 
+              onOpenModal={handleOpenPageModal}
+              onDelete={handleDeletePage}
+              onEdit={handleEditPage}
+              onAddToCollection={handleAddPageToCollection}
+            />
             {renderCollectionsCard()}
           </div>
         </TabsContent>
