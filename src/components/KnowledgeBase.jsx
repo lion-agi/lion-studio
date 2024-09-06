@@ -109,7 +109,7 @@ const KnowledgeBase = () => {
         <TabsContent value="threads">
           <div className="space-y-8">
             <div>
-              <h2 className="text-xl font-semibold mb-4">Threads</h2>
+              <h2 className="text-xl font-semibold mb-6 mt-8">Threads</h2>
               <ThreadList threads={threads} />
             </div>
             {renderCollectionsCard()}
