@@ -2,35 +2,52 @@ import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Button } from "@/components/ui/button";
 import { useSupabaseAuth } from '@/integrations/supabase';
-import { ArrowRight, Zap, Workflow, Bot } from 'lucide-react';
+import { ArrowRight, Zap, Workflow, Bot, LogOut } from 'lucide-react';
 
 const Index = () => {
-  const { session } = useSupabaseAuth();
+  const { session, logout } = useSupabaseAuth();
   const navigate = useNavigate();
 
+  const handleLogout = async () => {
+    await logout();
+    navigate('/');
+  };
+
   return (
-    <div className="min-h-screen bg-background flex flex-col">
+    <div className="min-h-screen bg-background">
       <header className="p-4 flex justify-between items-center">
         <img src="/lion-studio-logo.jpeg" alt="Lion Studio Logo" className="w-24 h-24 object-contain" />
         <nav>
           {session ? (
-            <Button onClick={() => navigate('/editor')} className="bg-purple-600 hover:bg-purple-700">
-              Go to Workflow Editor
-            </Button>
+            <>
+              <Link to="/profile">
+                <Button variant="ghost" className="mr-2">Profile</Button>
+              </Link>
+              <Link to="/upload">
+                <Button variant="ghost" className="mr-2">Upload Images</Button>
+              </Link>
+              <Link to="/editor">
+                <Button variant="ghost" className="mr-2">Workflow Editor</Button>
+              </Link>
+              <Button variant="ghost" onClick={handleLogout}>
+                <LogOut className="mr-2 h-4 w-4" />
+                Log out
+              </Button>
+            </>
           ) : (
             <>
               <Link to="/login">
                 <Button variant="ghost" className="mr-2">Log in</Button>
               </Link>
               <Link to="/register">
-                <Button className="bg-purple-600 hover:bg-purple-700">Sign up</Button>
+                <Button>Sign up</Button>
               </Link>
             </>
           )}
         </nav>
       </header>
 
-      <main className="flex-grow container mx-auto px-4">
+      <main className="container mx-auto px-4">
         <section className="py-20 text-center">
           <div className="max-w-3xl mx-auto">
             <h1 className="text-5xl font-bold mb-6 bg-gradient-to-r from-purple-600 to-indigo-600 bg-clip-text text-transparent">
@@ -82,16 +99,16 @@ const Index = () => {
         </section>
       </main>
 
-      <footer className="bg-card mt-auto">
-        <div className="container mx-auto px-4 py-6">
-          <div className="flex justify-between items-center">
-            <p className="text-sm text-muted-foreground">
-              © 2024 Lion Studio Workflow Automation
+      <footer className="bg-card mt-20">
+        <div className="container mx-auto px-4 py-8">
+          <div className="flex flex-col md:flex-row justify-between items-center">
+            <p className="text-muted-foreground mb-4 md:mb-0">
+              © 2024 Lion Studio Workflow Automation. All rights reserved.
             </p>
             <div className="flex space-x-4">
-              <Link to="/about" className="text-sm text-muted-foreground hover:text-foreground">About</Link>
-              <Link to="/contact" className="text-sm text-muted-foreground hover:text-foreground">Contact</Link>
-              <Link to="/privacy" className="text-sm text-muted-foreground hover:text-foreground">Privacy</Link>
+              <Link to="/about" className="text-muted-foreground hover:text-foreground">About</Link>
+              <Link to="/contact" className="text-muted-foreground hover:text-foreground">Contact</Link>
+              <Link to="/privacy" className="text-muted-foreground hover:text-foreground">Privacy Policy</Link>
             </div>
           </div>
         </div>
