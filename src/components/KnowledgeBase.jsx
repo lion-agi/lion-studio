@@ -107,8 +107,13 @@ const KnowledgeBase = () => {
           <TabsTrigger value="dataSources">Data Sources</TabsTrigger>
         </TabsList>
         <TabsContent value="threads">
-          <ThreadList threads={threads} />
-          {renderCollectionsCard()}
+          <div className="space-y-8">
+            <div>
+              <h2 className="text-xl font-semibold mb-4">Threads</h2>
+              <ThreadList threads={threads} />
+            </div>
+            {renderCollectionsCard()}
+          </div>
         </TabsContent>
         <TabsContent value="pages">
           <div className="px-8 mt-8">
