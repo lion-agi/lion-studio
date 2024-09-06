@@ -34,8 +34,42 @@ const ConsoleLayout = ({ children }) => (
   </div>
 );
 
+const AppRoutes = () => {
+  const { session, loading } = useStore();
+
+  if (loading) {
+    return <div>Loading...</div>;
+  }
+
+  return (
+    <Routes>
+      {/* Main website routes */}
+      <Route path="/" element={<Home />} />
+      <Route path="/login" element={session ? <Navigate to="/console/dashboard" replace /> : <Login />} />
+      <Route path="/register" element={session ? <Navigate to="/console/dashboard" replace /> : <Registration />} />
+      <Route path="/auth/callback" element={<AuthCallback />} />
+      <Route path="/email-confirmation" element={<EmailConfirmation />} />
+
+      {/* Console routes */}
+      <Route path="/console" element={<ProtectedRoute><ConsoleLayout><Navigate to="/console/dashboard" replace /></ConsoleLayout></ProtectedRoute>} />
+      <Route path="/console/workflow" element={<ProtectedRoute><ConsoleLayout><WorkflowEditor /></ConsoleLayout></ProtectedRoute>} />
+      <Route path="/console/library" element={<ProtectedRoute><ConsoleLayout><Library /></ConsoleLayout></ProtectedRoute>} />
+      <Route path="/console/monitoring" element={<ProtectedRoute><ConsoleLayout><Monitoring /></ConsoleLayout></ProtectedRoute>} />
+      <Route path="/console/dashboard" element={<ProtectedRoute><ConsoleLayout><Dashboard /></ConsoleLayout></ProtectedRoute>} />
+      <Route path="/console/connections" element={<ProtectedRoute><ConsoleLayout><Connections /></ConsoleLayout></ProtectedRoute>} />
+      <Route path="/console/deployment" element={<ProtectedRoute><ConsoleLayout><Deployment /></ConsoleLayout></ProtectedRoute>} />
+
+      {/* User profile route */}
+      <Route path="/profile" element={<ProtectedRoute><UserProfile /></ProtectedRoute>} />
+
+      {/* Catch-all route */}
+      <Route path="*" element={<Navigate to="/" replace />} />
+    </Routes>
+  );
+};
+
 const App = () => {
-  const { session, setSession, setLoading } = useStore();
+  const { setSession, setLoading } = useStore();
 
   useEffect(() => {
     const initializeAuth = async () => {
@@ -49,6 +83,7 @@ const App = () => {
 
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
       setSession(session);
+      setLoading(false);
     });
 
     return () => subscription.unsubscribe();
@@ -59,29 +94,7 @@ const App = () => {
       <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
         <SupabaseAuthProvider>
           <Router>
-            <Routes>
-              {/* Main website routes */}
-              <Route path="/" element={<Home />} />
-              <Route path="/login" element={session ? <Navigate to="/console/dashboard" replace /> : <Login />} />
-              <Route path="/register" element={session ? <Navigate to="/console/dashboard" replace /> : <Registration />} />
-              <Route path="/auth/callback" element={<AuthCallback />} />
-              <Route path="/email-confirmation" element={<EmailConfirmation />} />
-
-              {/* Console routes */}
-              <Route path="/console" element={<ProtectedRoute><ConsoleLayout><Navigate to="/console/dashboard" replace /></ConsoleLayout></ProtectedRoute>} />
-              <Route path="/console/workflow" element={<ProtectedRoute><ConsoleLayout><WorkflowEditor /></ConsoleLayout></ProtectedRoute>} />
-              <Route path="/console/library" element={<ProtectedRoute><ConsoleLayout><Library /></ConsoleLayout></ProtectedRoute>} />
-              <Route path="/console/monitoring" element={<ProtectedRoute><ConsoleLayout><Monitoring /></ConsoleLayout></ProtectedRoute>} />
-              <Route path="/console/dashboard" element={<ProtectedRoute><ConsoleLayout><Dashboard /></ConsoleLayout></ProtectedRoute>} />
-              <Route path="/console/connections" element={<ProtectedRoute><ConsoleLayout><Connections /></ConsoleLayout></ProtectedRoute>} />
-              <Route path="/console/deployment" element={<ProtectedRoute><ConsoleLayout><Deployment /></ConsoleLayout></ProtectedRoute>} />
-
-              {/* User profile route */}
-              <Route path="/profile" element={<ProtectedRoute><UserProfile /></ProtectedRoute>} />
-
-              {/* Catch-all route */}
-              <Route path="*" element={<Navigate to="/" replace />} />
-            </Routes>
+            <AppRoutes />
             <Toaster />
           </Router>
         </SupabaseAuthProvider>
