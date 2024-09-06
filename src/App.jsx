@@ -13,9 +13,13 @@ import Registration from './pages/Registration';
 import UserProfile from './pages/UserProfile';
 import AuthCallback from './pages/AuthCallback';
 import EmailConfirmation from './pages/EmailConfirmation';
-import ImageUpload from './pages/ImageUpload';
 import WorkflowEditor from './components/WorkflowEditor';
-import Library from './pages/Library';
+
+import Monitoring from './pages/console/Monitoring';
+import Library from './pages/console/Library';
+import Dashboard from './pages/console/Dashboard';
+import Connections from './pages/console/Connections';
+import Deployment from './pages/console/Deployment';
 
 // Create a client
 const queryClient = new QueryClient();
@@ -42,11 +46,13 @@ const AppRoutes = () => (
     <Route path="/email-confirmation" element={<EmailConfirmation />} />
 
     {/* Console routes */}
-    <Route path="/console" element={<ProtectedRoute><ConsoleLayout><Navigate to="/console/workflows" replace /></ConsoleLayout></ProtectedRoute>} />
-    <Route path="/console/workflows" element={<ProtectedRoute><ConsoleLayout><WorkflowEditor /></ConsoleLayout></ProtectedRoute>} />
+    <Route path="/console" element={<ProtectedRoute><ConsoleLayout><Navigate to="/console/workflow" replace /></ConsoleLayout></ProtectedRoute>} />
+    <Route path="/console/workflow" element={<ProtectedRoute><ConsoleLayout><WorkflowEditor /></ConsoleLayout></ProtectedRoute>} />
     <Route path="/console/library" element={<ProtectedRoute><ConsoleLayout><Library /></ConsoleLayout></ProtectedRoute>} />
-    <Route path="/console/profile" element={<ProtectedRoute><ConsoleLayout><UserProfile /></ConsoleLayout></ProtectedRoute>} />
-    <Route path="/console/upload" element={<ProtectedRoute><ConsoleLayout><ImageUpload /></ConsoleLayout></ProtectedRoute>} />
+    <Route path="/console/monitoring" element={<ProtectedRoute><ConsoleLayout><Monitoring /></ConsoleLayout></ProtectedRoute>} />
+    <Route path="/console/dashboard" element={<ProtectedRoute><ConsoleLayout><Dashboard /></ConsoleLayout></ProtectedRoute>} />
+    <Route path="/console/connections" element={<ProtectedRoute><ConsoleLayout><Connections /></ConsoleLayout></ProtectedRoute>} />
+    <Route path="/console/deployment" element={<ProtectedRoute><ConsoleLayout><Deployment /></ConsoleLayout></ProtectedRoute>} />
 
     {/* Add more console routes as needed */}
   </Routes>

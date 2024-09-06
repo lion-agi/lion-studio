@@ -9,9 +9,8 @@ const Initializer = (props) => {
       icon={Play} 
       type="initializer"
       baseColor="purple"
-      gradientFrom="from-purple-400/20"
-      gradientTo="to-purple-300/10"
-      iconColor="text-purple-600"
+      gradientFrom="from-purple-700/30"
+      gradientTo="to-purple-400/10"
     >
       Start
     </BaseNode>

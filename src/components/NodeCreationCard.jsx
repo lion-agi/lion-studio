@@ -22,7 +22,6 @@ const nodeCategories = [
       { type: 'database', icon: <Database />, label: 'Database' },
       { type: 'workflow', icon: <Workflow />, label: 'Workflow' },
       { type: 'api', icon: <Zap />, label: 'API Call' },
-      { type: 'conversation', icon: <MessageSquare />, label: 'Conversation' },
       { type: 'experts', icon: <Users />, label: 'Mixture Of Experts' },
     ]
   }

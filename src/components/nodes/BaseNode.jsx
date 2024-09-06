@@ -6,7 +6,17 @@ import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { Edit, Trash2, Save, X, ChevronDown, ChevronUp } from 'lucide-react';
 
-const BaseNode = ({ data, isConnectable, selected, icon: Icon, type, baseColor = "blue", gradientFrom = "from-blue-400/20", gradientTo = "to-blue-300/10", iconColor = "text-blue-600", children }) => {
+const BaseNode = ({ 
+  data, 
+  isConnectable, 
+  selected, 
+  icon: Icon, 
+  type,
+  baseColor,
+  gradientFrom,
+  gradientTo,
+  children 
+}) => {
   const [isExpanded, setIsExpanded] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
@@ -22,7 +32,7 @@ const BaseNode = ({ data, isConnectable, selected, icon: Icon, type, baseColor =
       data.onSave(data.id, editedData);
     }
     setIsEditing(false);
-  }, [editedData, data]);
+  }, [data, editedData]);
 
   const handleCancel = useCallback(() => {
     setEditedData({ ...data });
@@ -32,9 +42,8 @@ const BaseNode = ({ data, isConnectable, selected, icon: Icon, type, baseColor =
 
   const handleInputChange = useCallback((e) => {
     const { name, value } = e.target;
-    if (name === 'label' && !data.isLabelEditable) return;
     setEditedData(prev => ({ ...prev, [name]: value }));
-  }, [data.isLabelEditable]);
+  }, []);
 
   const handleDelete = useCallback(() => {
     if (data.onDelete) {
@@ -43,19 +52,19 @@ const BaseNode = ({ data, isConnectable, selected, icon: Icon, type, baseColor =
   }, [data]);
 
   const toggleExpand = useCallback(() => {
-    setIsExpanded(!isExpanded);
-  }, [isExpanded]);
+    setIsExpanded(prev => !prev);
+  }, []);
 
   return (
     <Card 
-      className={`node-card w-64 bg-gradient-to-br ${gradientFrom} ${gradientTo} backdrop-blur-sm ${selected ? 'selected' : ''}`}
+      className={`node-card w-64 bg-gradient-to-br ${gradientFrom} ${gradientTo} backdrop-blur-sm ${selected ? 'ring-2 ring-${baseColor}-400 ring-opacity-50' : ''}`}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
       <CardHeader className="node-header relative cursor-pointer p-3" onClick={toggleExpand}>
-        <CardTitle className={`text-${baseColor}-foreground font-bold flex items-center justify-between text-sm`}>
+        <CardTitle className={`text-${baseColor}-100 font-bold flex items-center justify-between text-sm`}>
           <div className="flex items-center">
-            <Icon className={`w-4 h-4 mr-2 ${iconColor}`} />
+            <Icon className={`w-4 h-4 mr-2 text-${baseColor}-100`} />
             {data.label || children}
           </div>
           {isExpanded ? <ChevronUp className="w-3 h-3" /> : <ChevronDown className="w-3 h-3" />}
@@ -63,13 +72,27 @@ const BaseNode = ({ data, isConnectable, selected, icon: Icon, type, baseColor =
         <Handle
           type="target"
           position={Position.Left}
-          style={{ top: '50%', transform: 'translateY(-50%)', left: '-8px' }}
+          style={{ 
+            left: '-8px', 
+            top: '50%', 
+            transform: 'translateY(-50%)', 
+            width: '12px', 
+            height: '12px',
+            background: `var(--${baseColor}-400)`
+          }}
           isConnectable={isConnectable}
         />
         <Handle
           type="source"
           position={Position.Right}
-          style={{ top: '50%', transform: 'translateY(-50%)', right: '-8px' }}
+          style={{ 
+            right: '-8px', 
+            top: '50%', 
+            transform: 'translateY(-50%)', 
+            width: '12px', 
+            height: '12px',
+            background: `var(--${baseColor}-400)`
+          }}
           isConnectable={isConnectable}
         />
       </CardHeader>
@@ -77,17 +100,15 @@ const BaseNode = ({ data, isConnectable, selected, icon: Icon, type, baseColor =
         <CardContent className="node-content p-3">
           {isEditing ? (
             <>
-              {data.isLabelEditable && (
-                <Input
-                  className="node-input mb-2 text-xs h-7 px-2 py-1"
-                  name="originalLabel"
-                  placeholder="Node label"
-                  value={editedData.originalLabel || ''}
-                  onChange={handleInputChange}
-                />
-              )}
+              <Input
+                className={`node-input mb-2 text-xs h-7 px-2 py-1 bg-${baseColor}-800 text-${baseColor}-100 border-${baseColor}-600`}
+                name="label"
+                placeholder="Node label"
+                value={editedData.label || ''}
+                onChange={handleInputChange}
+              />
               <Textarea
-                className="node-input mb-2 text-xs px-2 py-1"
+                className={`node-input mb-2 text-xs px-2 py-1 bg-${baseColor}-800 text-${baseColor}-100 border-${baseColor}-600`}
                 name="description"
                 placeholder="Node description"
                 value={editedData.description || ''}
@@ -95,11 +116,11 @@ const BaseNode = ({ data, isConnectable, selected, icon: Icon, type, baseColor =
                 rows={2}
               />
               <div className="flex justify-end space-x-2 mt-2">
-                <Button size="sm" variant="outline" onClick={handleCancel} className="text-xs py-1 h-7">
+                <Button size="sm" variant="outline" onClick={handleCancel} className={`text-xs py-1 h-7 bg-${baseColor}-700 text-${baseColor}-100 border-${baseColor}-600 hover:bg-${baseColor}-600`}>
                   <X className="w-3 h-3 mr-1" />
                   Cancel
                 </Button>
-                <Button size="sm" onClick={handleSave} className="text-xs py-1 h-7">
+                <Button size="sm" onClick={handleSave} className={`text-xs py-1 h-7 bg-${baseColor}-600 text-${baseColor}-100 hover:bg-${baseColor}-500`}>
                   <Save className="w-3 h-3 mr-1" />
                   Save
                 </Button>
@@ -107,18 +128,18 @@ const BaseNode = ({ data, isConnectable, selected, icon: Icon, type, baseColor =
             </>
           ) : (
             <>
-              <p className="mb-2 text-xs"><strong>Label:</strong> {data.originalLabel || children}</p>
-              <p className="mb-2 text-xs"><strong>Description:</strong> {editedData.description || 'No description'}</p>
+              <p className={`mb-2 text-xs text-${baseColor}-100`}><strong>Label:</strong> {data.label || children}</p>
+              <p className={`mb-2 text-xs text-${baseColor}-200`}><strong>Description:</strong> {editedData.description || 'No description'}</p>
             </>
           )}
         </CardContent>
       )}
       {!isEditing && (isHovered || selected) && (
         <div className="absolute top-0 right-0 p-1 bg-background/80 rounded-bl">
-          <Button variant="ghost" size="icon" onClick={handleEdit} className="h-7 w-7">
+          <Button variant="ghost" size="icon" onClick={handleEdit} className={`h-7 w-7 text-${baseColor}-100 hover:bg-${baseColor}-700`}>
             <Edit className="h-3 w-3" />
           </Button>
-          <Button variant="ghost" size="icon" onClick={handleDelete} className="h-7 w-7">
+          <Button variant="ghost" size="icon" onClick={handleDelete} className={`h-7 w-7 text-${baseColor}-100 hover:bg-${baseColor}-700`}>
             <Trash2 className="h-3 w-3" />
           </Button>
         </div>

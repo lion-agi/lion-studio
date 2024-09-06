@@ -1,19 +1,45 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { Button } from "@/components/ui/button";
+import { useSupabaseAuth } from '@/integrations/supabase';
 
 const Home = () => {
   console.log("Rendering Home component");
+  const navigate = useNavigate();
+  const { session, logout } = useSupabaseAuth();
+
+  const handleLoginClick = () => {
+    navigate('/login');
+  };
+
+  const handleLogoutClick = async () => {
+    try {
+      await logout();
+      // Optionally, you can navigate to a specific page after logout
+      // navigate('/');
+    } catch (error) {
+      console.error("Error during logout:", error);
+    }
+  };
+
+  const handleEditorClick = () => {
+    navigate('/console');
+  };
   
   try {
     return (
       <div className="min-h-screen bg-background text-foreground flex flex-col">
         <header className="p-4 flex justify-between items-center">
           <img src="/lion-studio-logo.jpeg" alt="Lion Studio Logo" className="w-12 h-12" />
-          <nav>
-            <Link to="/login">
-              <Button variant="ghost">Log in</Button>
-            </Link>
+          <nav className="space-x-2">
+            {session ? (
+              <>
+                <Button variant="ghost" onClick={handleEditorClick}>Go to Console</Button>
+                <Button variant="ghost" onClick={handleLogoutClick}>Log out</Button>
+              </>
+            ) : (
+              <Button variant="ghost" onClick={handleLoginClick}>Log in</Button>
+            )}
           </nav>
         </header>
         
@@ -24,9 +50,11 @@ const Home = () => {
           <p className="text-xl mb-8 max-w-2xl">
             Streamline your business processes with AI-powered automation solutions
           </p>
-          <Link to="/register">
-            <Button size="lg" className="bg-purple-600 hover:bg-purple-700">Get Started</Button>
-          </Link>
+          {!session && (
+            <Link to="/register">
+              <Button size="lg" className="bg-purple-600 hover:bg-purple-700">Get Started</Button>
+            </Link>
+          )}
         </main>
 
         <section className="py-16 px-4">
@@ -53,9 +81,11 @@ const Home = () => {
           <div className="max-w-6xl mx-auto text-center">
             <p>Ready to Transform Your Business?</p>
             <p className="mt-2">Join thousands of companies already using Lion Studio for their workflow automation</p>
-            <Link to="/register" className="mt-4 inline-block">
-              <Button size="lg" className="bg-purple-600 hover:bg-purple-700">Sign Up Now</Button>
-            </Link>
+            {!session && (
+              <Link to="/register" className="mt-4 inline-block">
+                <Button size="lg" className="bg-purple-600 hover:bg-purple-700">Sign Up Now</Button>
+              </Link>
+            )}
           </div>
         </footer>
       </div>

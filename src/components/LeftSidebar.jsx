@@ -7,7 +7,7 @@ import { Switch } from "@/components/ui/switch";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Save, Upload, PlusCircle, HelpCircle, Settings, FileJson, Workflow, Zap, Link, MessageSquare, Brain, Database, Activity } from 'lucide-react';
 import { useToast } from "@/components/ui/use-toast";
-import JSONModal from '../JSONModal';
+import JSONModal from './JSONModal';
 
 const LeftSidebar = ({ onExportJSON, onSaveLoad, onCreateAgenticFlow, onShowHelp, onFeatureChange }) => {
   const { toast } = useToast();

@@ -4,16 +4,16 @@ import { Input } from "@/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { PlusCircle, Search, MessageSquare, FileText, FolderPlus } from 'lucide-react';
-import CreateCollectionForm from '../components/CreateCollectionForm';
-import ThreadList from '../components/library/ThreadList';
-import PageItem from '../components/library/PageItem';
-import CollectionItem from '../components/library/CollectionItem';
-import DataSourceList from '../components/library/DataSourceList';
-import ThreadModal from '../components/library/ThreadModal';
-import PageModal from '../components/library/PageModal';
-import DataSourceModal from '../components/library/DataSourceModal';
-import EmptyState from '../components/library/EmptyState';
-import { useKnowledgeBase } from '../components/library/useKnowledgeBase';
+import CreateCollectionForm from '../../components/CreateCollectionForm';
+import ThreadList from '../../components/library/ThreadList';
+import PageItem from '../../components/library/PageItem';
+import CollectionItem from '../../components/library/CollectionItem';
+import DataSourceList from '../../components/library/DataSourceList';
+import ThreadModal from '../../components/library/ThreadModal';
+import PageModal from '../../components/library/PageModal';
+import DataSourceModal from '../../components/library/DataSourceModal';
+import EmptyState from '../../components/library/EmptyState';
+import { useKnowledgeBase } from '../../components/library/useKnowledgeBase';
 
 const Library = () => {
   const {
@@ -46,7 +46,7 @@ const Library = () => {
     <div className="min-h-screen bg-gray-900 text-gray-100 p-8">
       <div className="container mx-auto">
         <div className="flex flex-col md:flex-row justify-between items-center mb-12">
-          <h1 className="text-4xl md:text-5xl font-bold mb-6 md:mb-0 text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-600 pb-1">Library</h1>
+          <h1 className="text-2xl font-bold mb-6 md:mb-0 text-gray-100"></h1>
           <div className="relative w-full md:w-80">
             <Input
               type="text"
@@ -59,7 +59,6 @@ const Library = () => {
           </div>
         </div>
 
-        <ActionButtons setIsCreateCollectionOpen={setIsCreateCollectionOpen} />
 
         <LibraryTabs
           threads={threads}

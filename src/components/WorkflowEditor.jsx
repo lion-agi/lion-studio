@@ -1,8 +1,6 @@
-import React, { useCallback, useState } from 'react';
-import ReactFlow, { Background, Controls, MiniMap, MarkerType } from 'reactflow';
+import React, { useMemo } from 'react';
+import ReactFlow, { Background, Controls, MiniMap, Panel } from 'reactflow';
 import 'reactflow/dist/style.css';
-import ConsoleHeader from './header/ConsoleHeader';
-import ConsolePageHeader from './header/ConsolePageHeader';
 import NodeCreationCard from './NodeCreationCard';
 import SaveLoadDialog from './SaveLoadDialog';
 import JSONModal from './JSONModal';
@@ -10,13 +8,9 @@ import { nodeTypes } from './nodes';
 import { useWorkflowState } from '../hooks/useWorkflowState';
 import { useWorkflowHandlers } from '../hooks/useWorkflowHandlers';
 import { useWorkflowModals } from '../hooks/useWorkflowModals';
+import { useEdgeHighlighting } from '../hooks/useEdgeHighlighting';
 
 const GRID_SIZE = 20;
-
-const snapToGrid = (x, y) => ({
-  x: Math.round(x / GRID_SIZE) * GRID_SIZE,
-  y: Math.round(y / GRID_SIZE) * GRID_SIZE,
-});
 
 const WorkflowEditor = () => {
   const {
@@ -39,7 +33,6 @@ const WorkflowEditor = () => {
     handleExportJSON,
     handleSaveLoad,
     handleCreateAgenticFlow,
-    onNodeClick,
   } = useWorkflowHandlers(nodes, setNodes, edges, setEdges);
 
   const {
@@ -51,76 +44,74 @@ const WorkflowEditor = () => {
     setJsonData,
   } = useWorkflowModals();
 
-  const [activeView, setActiveView] = useState('main');
+  const { onNodeClick, edgeOptions, getEdgeStyle } = useEdgeHighlighting(edges, setEdges);
 
-  const customEdgeOptions = {
-    type: 'smoothstep',
-    markerEnd: { type: MarkerType.ArrowClosed },
-    style: { strokeWidth: 2, stroke: '#6366F1' },
-  };
-
-  const handleJSONExport = useCallback(() => {
-    if (reactFlowInstance) {
-      const flow = reactFlowInstance.toObject();
-      setJsonData(flow);
-      setShowJSONModal(true);
-    }
-  }, [reactFlowInstance, setJsonData, setShowJSONModal]);
-
-  const renderMainContent = () => {
-    switch (activeView) {
-      case 'main':
-        return (
-          <div className="flex-grow flex" style={{ height: 'calc(100vh - 180px)' }}>
-            <div className="flex-grow relative" ref={reactFlowWrapper}>
-              <ReactFlow
-                nodes={nodes}
-                edges={edges}
-                onNodesChange={onNodesChange}
-                onEdgesChange={onEdgesChange}
-                onConnect={onConnect}
-                onInit={setReactFlowInstance}
-                onDrop={onDrop}
-                onDragOver={onDragOver}
-                onNodeClick={onNodeClick}
-                onNodeDragStop={onNodeDragStop}
-                nodeTypes={nodeTypes}
-                defaultEdgeOptions={customEdgeOptions}
-                snapToGrid={true}
-                snapGrid={[GRID_SIZE, GRID_SIZE]}
-                fitView
-              >
-                <Background variant="dots" gap={GRID_SIZE} size={1} color="#4B5563" />
-                <Controls />
-                <MiniMap nodeColor={getNodeColor} nodeStrokeWidth={3} zoomable pannable />
-              </ReactFlow>
-            </div>
-            <NodeCreationCard onAddNode={(nodeData) => setNodes((nds) => [...nds, createNode(nodeData)])} />
-          </div>
-        );
-      case 'settings':
-        return <div className="flex-grow p-4">Workflow Settings (Placeholder)</div>;
-      case 'help':
-        return <div className="flex-grow p-4">Workflow Help Documentation (Placeholder)</div>;
-      default:
-        return null;
-    }
-  };
+  const styledEdges = useMemo(() => 
+    edges.map(edge => ({
+      ...edge,
+      style: getEdgeStyle(edge),
+    })),
+    [edges, getEdgeStyle]
+  );
 
   return (
-    <div className="flex flex-col h-screen bg-gray-900 text-white">
-      <ConsoleHeader />
-      <ConsolePageHeader 
-        title="Workflow Editor"
-        activeView={activeView}
-        onViewChange={setActiveView}
-        onExportJSON={handleJSONExport}
-        onSaveLoad={() => setShowSaveLoadDialog(true)}
-        onCreateNew={handleCreateAgenticFlow}
-      />
-      <main className="flex-grow overflow-hidden">
-        {renderMainContent()}
-      </main>
+    <div className="flex-grow flex" style={{ height: 'calc(100vh - 180px)' }}>
+      <div className="flex-grow relative" ref={reactFlowWrapper}>
+        <ReactFlow
+          nodes={nodes}
+          edges={styledEdges}
+          onNodesChange={onNodesChange}
+          onEdgesChange={onEdgesChange}
+          onConnect={onConnect}
+          onInit={setReactFlowInstance}
+          onDrop={onDrop}
+          onDragOver={onDragOver}
+          onNodeClick={onNodeClick}
+          onNodeDragStop={onNodeDragStop}
+          nodeTypes={nodeTypes}
+          defaultEdgeOptions={edgeOptions}
+          snapToGrid={true}
+          snapGrid={[GRID_SIZE, GRID_SIZE]}
+          fitView
+          style={{
+            backgroundColor: '#2C3E50', // Dark muted blue-gray background
+          }}
+        >
+          <Background 
+            variant="dots" 
+            gap={GRID_SIZE} 
+            size={1} 
+            color="rgba(255, 255, 255, 0.05)" 
+            style={{ zIndex: -1 }}
+          />
+          <Controls 
+            style={{
+              button: {
+                backgroundColor: '#34495E',
+                color: '#ECF0F1',
+                border: 'none',
+                borderRadius: '4px',
+                boxShadow: '0 1px 3px rgba(0, 0, 0, 0.2)',
+              },
+            }}
+          />
+          <MiniMap 
+            nodeColor={getNodeColor} 
+            nodeStrokeWidth={3} 
+            zoomable 
+            pannable
+            style={{
+              backgroundColor: '#34495E',
+              border: 'none',
+              borderRadius: '4px',
+              boxShadow: '0 1px 3px rgba(0, 0, 0, 0.2)',
+            }}
+          />
+          <Panel position="top-right" style={{ margin: '10px' }}>
+            <NodeCreationCard onAddNode={(nodeData) => setNodes((nds) => [...nds, createNode(nodeData)])} />
+          </Panel>
+        </ReactFlow>
+      </div>
       <SaveLoadDialog
         isOpen={showSaveLoadDialog}
         onClose={() => setShowSaveLoadDialog(false)}
@@ -142,14 +133,14 @@ const WorkflowEditor = () => {
 
 const getNodeColor = (node) => {
   switch (node.type) {
-    case 'user': return '#3B82F6';
-    case 'agent': return '#10B981';
-    case 'assistant': return '#F59E0B';
-    case 'group': return '#FF4136';
-    case 'initializer': return '#EF4444';
-    case 'conversation': return '#EC4899';
-    case 'note': return '#6366F1';
-    default: return '#64748B';
+    case 'user': return '#3498DB';      // Muted blue
+    case 'agent': return '#2ECC71';     // Muted green
+    case 'assistant': return '#F39C12'; // Muted orange
+    case 'group': return '#E74C3C';     // Muted red
+    case 'initializer': return '#9B59B6'; // Muted purple
+    case 'conversation': return '#1ABC9C'; // Muted teal
+    case 'note': return '#34495E';      // Muted navy
+    default: return '#95A5A6';          // Muted gray
   }
 };
 

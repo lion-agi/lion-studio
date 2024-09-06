@@ -8,10 +8,9 @@ const AssistantNode = (props) => {
       {...props} 
       icon={Bot} 
       type="Assistant"
-      baseColor="brushedBronze"
-      gradientFrom="from-amber-700/20"
-      gradientTo="to-amber-600/10"
-      iconColor="text-amber-800"
+      baseColor="amber"
+      gradientFrom="from-amber-800/30"
+      gradientTo="to-amber-700/10"
     >
       Assistant Node
     </BaseNode>

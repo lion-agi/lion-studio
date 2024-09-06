@@ -21,9 +21,8 @@ const Note = ({ data, ...props }) => {
       icon={StickyNote} 
       type="note"
       baseColor="yellow"
-      gradientFrom="from-yellow-400/20"
-      gradientTo="to-yellow-300/10"
-      iconColor="text-yellow-600"
+      gradientFrom="from-yellow-500/30"
+      gradientTo="to-yellow-400/10"
     >
       {nodeTitle}
     </BaseNode>

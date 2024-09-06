@@ -9,9 +9,8 @@ const DatabaseNode = (props) => {
       icon={Database} 
       type="database"
       baseColor="indigo"
-      gradientFrom="from-indigo-400/20"
-      gradientTo="to-indigo-300/10"
-      iconColor="text-indigo-600"
+      gradientFrom="from-indigo-500/30"
+      gradientTo="to-indigo-400/10"
     >
       Database Node
     </BaseNode>

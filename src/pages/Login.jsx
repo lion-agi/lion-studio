@@ -18,7 +18,7 @@ const Login = () => {
 
   React.useEffect(() => {
     if (session) {
-      navigate('/editor');
+      navigate('/console');
     }
   }, [session, navigate]);
 
@@ -36,7 +36,7 @@ const Login = () => {
         title: "Success",
         description: "Logged in successfully",
       });
-      navigate('/editor');
+      navigate('/console');
     } catch (error) {
       setError('Invalid email or password. Please try again.');
       toast({

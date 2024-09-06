@@ -9,9 +9,8 @@ const MixtureOfExperts = (props) => {
       icon={Users} 
       type="experts"
       baseColor="red"
-      gradientFrom="from-red-400/20"
-      gradientTo="to-red-300/10"
-      iconColor="text-red-600"
+      gradientFrom="from-red-700/30"
+      gradientTo="to-red-400/10"
     >
       Mixture of Experts
     </BaseNode>

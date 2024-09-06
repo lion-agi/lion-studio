@@ -9,9 +9,8 @@ const HumanUser = (props) => {
       icon={User} 
       type="user"
       baseColor="blue"
-      gradientFrom="from-blue-400/20"
+      gradientFrom="from-blue-400/30"
       gradientTo="to-blue-300/10"
-      iconColor="text-blue-600"
     >
       User Node
     </BaseNode>
