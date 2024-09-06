@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+import { Button } from "@/common/components/ui/button";
+import { Input } from "@/common/components/ui/input";
 import { useSupabaseAuth } from '@/integrations/supabase/auth';
-import { useToast } from "@/components/ui/use-toast";
-import { Alert, AlertDescription } from "@/components/ui/alert";
-import { authService } from '../services/authService';
+import { useToast } from "@/common/components/ui/use-toast";
+import { Alert, AlertDescription } from "@/common/components/ui/alert";
+import { authService } from '../features/auth/services/authService';
 
 const Login = () => {
   const [email, setEmail] = useState('');

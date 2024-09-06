@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
-import { authService } from '../../services/authService';
+import { authService } from '../../features/auth/services/authService';
 import { useQueryClient } from '@tanstack/react-query';
 
 const AuthContext = createContext();

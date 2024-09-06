@@ -1,5 +1,5 @@
 import React from 'react';
-import { WorkflowEditorContainer } from '../../components/workflow/WorkflowEditor';
+import { WorkflowEditorContainer } from '../../features/workflow/WorkflowEditor1';
 
 const Workflow = () => {
   return (

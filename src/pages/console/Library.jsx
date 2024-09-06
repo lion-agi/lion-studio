@@ -1,19 +1,19 @@
 import React, { useState } from 'react';
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { Button } from "@/common/components/ui/button";
+import { Input } from "@/common/components/ui/input";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/common/components/ui/tabs";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/common/components/ui/dialog";
 import { PlusCircle, Search, MessageSquare, FileText, FolderPlus } from 'lucide-react';
-import CreateCollectionForm from '../../components/CreateCollectionForm';
-import ThreadList from '../../components/library/ThreadList';
-import PageItem from '../../components/library/PageItem';
-import CollectionItem from '../../components/library/CollectionItem';
-import DataSourceList from '../../components/library/DataSourceList';
-import ThreadModal from '../../components/library/ThreadModal';
-import PageModal from '../../components/library/PageModal';
-import DataSourceModal from '../../components/library/DataSourceModal';
-import EmptyState from '../../components/library/EmptyState';
-import { useKnowledgeBase } from '../../components/library/useKnowledgeBase';
+import CreateCollectionForm from '../../common/components/CreateCollectionForm';
+import ThreadList from '../../features/library/components/ThreadList';
+import PageItem from '../../features/library/components/PageItem';
+import CollectionItem from '../../features/library/components/CollectionItem';
+import DataSourceList from '../../features/library/components/DataSourceList';
+import ThreadModal from '../../features/library/components/ThreadModal';
+import PageModal from '../../features/library/components/PageModal';
+import DataSourceModal from '../../features/library/components/DataSourceModal';
+import EmptyState from '../../features/library/components/EmptyState';
+import { useKnowledgeBase } from '../../features/library/hooks/useKnowledgeBase';
 
 const Library = () => {
   const {

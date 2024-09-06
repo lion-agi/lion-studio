@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/supabase';
-import { useToast } from "@/components/ui/use-toast";
+import { useToast } from "@/common/components/ui/use-toast";
 
 const AuthCallback = () => {
   const navigate = useNavigate();

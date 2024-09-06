@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/supabase';
-import { Button } from "@/components/ui/button";
-import { useToast } from "@/components/ui/use-toast";
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { Button } from "@/common/components/ui/button";
+import { useToast } from "@/common/components/ui/use-toast";
+import { Alert, AlertDescription, AlertTitle } from "@/common/components/ui/alert";
 import { CheckCircle2, XCircle } from 'lucide-react';
 
 const EmailConfirmation = () => {

@@ -1,22 +1,22 @@
 import React, { useEffect } from 'react';
 import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { ThemeProvider } from "@/components/theme-provider";
-import { Toaster } from "@/components/ui/toaster";
+import { ThemeProvider } from "@/common/components/theme-provider";
+import { Toaster } from "@/common/components/ui/toaster";
 import { useStore } from './store';
 import { supabase } from './integrations/supabase/supabase';
 import { SupabaseAuthProvider } from './integrations/supabase/auth';
 
 // Import components
-import ConsoleHeader from './components/header/ConsoleHeader';
+import ConsoleHeader from './common/components/header/ConsoleHeader';
 import Home from './pages/Home';
 import Login from './pages/Login';
 import Registration from './pages/Registration';
 import UserProfile from './pages/UserProfile';
 import AuthCallback from './pages/AuthCallback';
 import EmailConfirmation from './pages/EmailConfirmation';
-import WorkflowEditor from './components/WorkflowEditor';
-import ProtectedRoute from './components/ProtectedRoute';
+import WorkflowEditor from './common/components/WorkflowEditor';
+import ProtectedRoute from './common/components/ProtectedRoute';
 
 import Monitoring from './pages/console/Monitoring';
 import Library from './pages/console/Library';

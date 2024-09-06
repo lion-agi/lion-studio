@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Button } from "@/components/ui/button";
+import { Button } from "@/common/components/ui/button";
 import { useSupabaseAuth } from '@/integrations/supabase';
 
 const Home = () => {

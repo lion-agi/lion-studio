@@ -1,12 +1,12 @@
 import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Checkbox } from "@/components/ui/checkbox";
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { Button } from "@/common/components/ui/button";
+import { Input } from "@/common/components/ui/input";
+import { Checkbox } from "@/common/components/ui/checkbox";
+import { Alert, AlertDescription, AlertTitle } from "@/common/components/ui/alert";
 import { InfoIcon } from 'lucide-react';
-import { useRegistration } from '../hooks/useRegistration';
-import SocialSignUpButtons from '../components/SocialSignUpButtons';
+import { useRegistration } from '../common/hooks/useRegistration';
+import SocialSignUpButtons from '../common/components/SocialSignUpButtons';
 
 const Registration = () => {
   const {
