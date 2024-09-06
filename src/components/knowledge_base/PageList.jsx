@@ -12,7 +12,7 @@ const PageList = ({ pages, onOpenModal, onDelete, onEdit, onCreateNew }) => {
           <Plus className="h-4 w-4 mr-2" /> Create New Page
         </Button>
       </div>
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10">
         {pages.map((page) => (
           <PageItem
             key={page.id}
