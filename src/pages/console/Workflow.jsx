@@ -1,10 +1,13 @@
 import React from 'react';
-import { WorkflowEditorContainer } from '../../features/workflow/WorkflowEditorContainer';
+import { WorkflowEditor } from '../../features/workflow/WorkflowEditor';
+import { WorkflowSettingsProvider } from '../../features/workflow/WorkflowSettingsContext';
 
 const Workflow = () => {
   return (
     <div className="h-screen">
-      <WorkflowEditorContainer />
+      <WorkflowSettingsProvider>
+        <WorkflowEditor />
+      </WorkflowSettingsProvider>
     </div>
   );
 };

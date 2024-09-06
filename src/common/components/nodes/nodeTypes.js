@@ -1,19 +1,17 @@
-import APICall from './nodes/APICall';
-import AssistantNode from './nodes/AssistantNode';
-import UserNode from './nodes/UserNode';
-import NoteNode from './nodes/NoteNode';
-import DatabaseNode from './nodes/DatabaseNode';
-import WorkflowNode from './nodes/WorkflowNode';
-import ConversationNode from './nodes/ConversationNode';
-import ExpertsNode from './nodes/ExpertsNode';
+import APICall from './APICall';
+import AssistantNode from './AssistantNode';
+import HumanUser from './HumanUser';
+import Note from './Note';
+import DatabaseNode from './DatabaseNode';
+import WorkflowNode from './WorkflowNode';
+import MixtureOfExperts from './MixtureOfExperts';
 
 export const nodeTypes = {
   apiCall: APICall,
   assistant: AssistantNode,
-  user: UserNode,
-  note: NoteNode,
+  user: HumanUser,
+  note: Note,
   database: DatabaseNode,
   workflow: WorkflowNode,
-  conversation: ConversationNode,
-  experts: ExpertsNode,
+  experts: MixtureOfExperts,
 };

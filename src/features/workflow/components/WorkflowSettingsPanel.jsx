@@ -4,20 +4,26 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Switch } from "@/common/components/ui/switch";
 import { Slider } from "@/common/components/ui/slider";
 import { Label } from "@/common/components/ui/label";
-import { reactFlowBackgroundColors } from './colorPalettes';
+
+const backgroundColors = {
+  'Dark Blue': '#1A2530',
+  'Light Gray': '#F0F4F8',
+  'Dark Gray': '#2C3E50',
+  'Navy': '#34495E',
+};
 
 const WorkflowSettingsPanel = () => {
-  const {
-    backgroundColor,
-    setBackgroundColor,
-    gridSize,
-    setGridSize,
-    snapToGrid,
-    setSnapToGrid
+  const { 
+    backgroundColor, 
+    setBackgroundColor, 
+    gridSize, 
+    setGridSize, 
+    snapToGrid, 
+    setSnapToGrid 
   } = useWorkflowSettings();
 
   return (
-    <div className="space-y-4">
+    <div className="p-4 space-y-4 bg-background/80 backdrop-blur-sm rounded-lg">
       <div>
         <Label>Background Color</Label>
         <Select value={backgroundColor} onValueChange={setBackgroundColor}>
@@ -25,11 +31,11 @@ const WorkflowSettingsPanel = () => {
             <SelectValue placeholder="Select background color" />
           </SelectTrigger>
           <SelectContent>
-            {Object.entries(reactFlowBackgroundColors).map(([name, color]) => (
+            {Object.entries(backgroundColors).map(([name, color]) => (
               <SelectItem key={color} value={color}>
                 <div className="flex items-center">
                   <div className="w-4 h-4 rounded-full mr-2" style={{ backgroundColor: color }} />
-                  {name.replace(/([A-Z])/g, ' $1').trim()}
+                  {name}
                 </div>
               </SelectItem>
             ))}

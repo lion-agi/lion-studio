@@ -1,16 +1,16 @@
 import React, { useMemo } from 'react';
 import ReactFlow, { Background, Controls, MiniMap, Panel } from 'reactflow';
 import 'reactflow/dist/style.css';
-import { useWorkflowState } from '../../../common/hooks/useWorkflowState';
-import { useWorkflowHandlers } from '../../../common/hooks/useWorkflowHandlers';
-import { useEdgeHighlighting } from '../../../common/hooks/useEdgeHighlighting';
-import { useWorkflowSettings } from './WorkflowSettingsContext';
-import NodeCreationPanel from './NodeCreationPanel';
-import WorkflowSettingsPanel from './WorkflowSettingsPanel';
-import WorkflowToolbar from './WorkflowToolbar';
-import { nodeTypes } from './nodeTypes';
-import SaveLoadDialog from './SaveLoadDialog';
-import JSONModal from './JSONModal';
+import NodeCreationCard from './NodeCreationCard';
+import SaveLoadDialog from '@/common/components/SaveLoadDialog';
+import JSONModal from '@/common/components/JSONModal';
+import { nodeTypes } from '@/common/components/nodes';
+import { useWorkflowState } from '../hooks/useWorkflowState';
+import { useWorkflowHandlers } from '../hooks/useWorkflowHandlers';
+import { useWorkflowModals } from '../hooks/useWorkflowModals';
+import { useEdgeHighlighting } from '../hooks/useEdgeHighlighting';
+
+const GRID_SIZE = 20;
 
 const WorkflowEditor = () => {
   const {
@@ -33,16 +33,18 @@ const WorkflowEditor = () => {
     handleExportJSON,
     handleSaveLoad,
     handleCreateAgenticFlow,
-    showSaveLoadDialog,
-    setShowSaveLoadDialog,
-    showJSONModal,
-    setShowJSONModal,
-    jsonData,
   } = useWorkflowHandlers(nodes, setNodes, edges, setEdges);
 
-  const { onNodeClick, edgeOptions, getEdgeStyle } = useEdgeHighlighting(edges, setEdges);
+  const {
+    showJSONModal,
+    showSaveLoadDialog,
+    setShowJSONModal,
+    setShowSaveLoadDialog,
+    jsonData,
+    setJsonData,
+  } = useWorkflowModals();
 
-  const { backgroundColor, gridSize, snapToGrid } = useWorkflowSettings();
+  const { onNodeClick, edgeOptions, getEdgeStyle } = useEdgeHighlighting(edges, setEdges);
 
   const styledEdges = useMemo(() => 
     edges.map(edge => ({
@@ -53,43 +55,63 @@ const WorkflowEditor = () => {
   );
 
   return (
-    <div className="h-screen w-full relative" ref={reactFlowWrapper}>
-      <ReactFlow
-        nodes={nodes}
-        edges={styledEdges}
-        onNodesChange={onNodesChange}
-        onEdgesChange={onEdgesChange}
-        onConnect={onConnect}
-        onInit={setReactFlowInstance}
-        onDrop={onDrop}
-        onDragOver={onDragOver}
-        onNodeClick={onNodeClick}
-        onNodeDragStop={onNodeDragStop}
-        nodeTypes={nodeTypes}
-        defaultEdgeOptions={edgeOptions}
-        snapToGrid={snapToGrid}
-        snapGrid={[gridSize, gridSize]}
-        fitView
-        style={{ backgroundColor }}
-      >
-        <Background 
-          variant="dots" 
-          gap={gridSize} 
-          size={1} 
-          color={backgroundColor === '#1A2530' ? '#2C3E50' : '#1A2530'} 
-        />
-        <Controls />
-        <MiniMap nodeColor={(node) => node.data.color} zoomable pannable />
-        <Panel position="top-right" className="bg-background/80 backdrop-blur-sm rounded-lg p-2">
-          <WorkflowToolbar 
-            onExportJSON={handleExportJSON}
-            onSaveLoad={() => setShowSaveLoadDialog(true)}
-            onCreateFlow={handleCreateAgenticFlow}
+    <div className="flex-grow flex" style={{ height: 'calc(100vh - 180px)' }}>
+      <div className="flex-grow relative" ref={reactFlowWrapper}>
+        <ReactFlow
+          nodes={nodes}
+          edges={styledEdges}
+          onNodesChange={onNodesChange}
+          onEdgesChange={onEdgesChange}
+          onConnect={onConnect}
+          onInit={setReactFlowInstance}
+          onDrop={onDrop}
+          onDragOver={onDragOver}
+          onNodeClick={onNodeClick}
+          onNodeDragStop={onNodeDragStop}
+          nodeTypes={nodeTypes}
+          defaultEdgeOptions={edgeOptions}
+          snapToGrid={true}
+          snapGrid={[GRID_SIZE, GRID_SIZE]}
+          fitView
+          style={{
+            backgroundColor: '#2C3E50', // Dark muted blue-gray background
+          }}
+        >
+          <Background 
+            variant="dots" 
+            gap={GRID_SIZE} 
+            size={1} 
+            color="rgba(255, 255, 255, 0.05)" 
+            style={{ zIndex: -1 }}
           />
-          <WorkflowSettingsPanel />
-        </Panel>
-      </ReactFlow>
-      <NodeCreationPanel onAddNode={(node) => setNodes((nds) => [...nds, node])} />
+          <Controls 
+            style={{
+              button: {
+                backgroundColor: '#34495E',
+                color: '#ECF0F1',
+                border: 'none',
+                borderRadius: '4px',
+                boxShadow: '0 1px 3px rgba(0, 0, 0, 0.2)',
+              },
+            }}
+          />
+          <MiniMap 
+            nodeColor={getNodeColor} 
+            nodeStrokeWidth={3} 
+            zoomable 
+            pannable
+            style={{
+              backgroundColor: '#34495E',
+              border: 'none',
+              borderRadius: '4px',
+              boxShadow: '0 1px 3px rgba(0, 0, 0, 0.2)',
+            }}
+          />
+          <Panel position="top-right" style={{ margin: '10px' }}>
+            <NodeCreationCard onAddNode={(nodeData) => setNodes((nds) => [...nds, createNode(nodeData)])} />
+          </Panel>
+        </ReactFlow>
+      </div>
       <SaveLoadDialog
         isOpen={showSaveLoadDialog}
         onClose={() => setShowSaveLoadDialog(false)}
@@ -108,5 +130,25 @@ const WorkflowEditor = () => {
     </div>
   );
 };
+
+const getNodeColor = (node) => {
+  switch (node.type) {
+    case 'user': return '#3498DB';      // Muted blue
+    case 'agent': return '#2ECC71';     // Muted green
+    case 'assistant': return '#F39C12'; // Muted orange
+    case 'group': return '#E74C3C';     // Muted red
+    case 'initializer': return '#9B59B6'; // Muted purple
+    case 'conversation': return '#1ABC9C'; // Muted teal
+    case 'note': return '#34495E';      // Muted navy
+    default: return '#95A5A6';          // Muted gray
+  }
+};
+
+const createNode = (nodeData) => ({
+  id: `${nodeData.type}-${Date.now()}`,
+  type: nodeData.type,
+  position: { x: Math.random() * 500, y: Math.random() * 500 },
+  data: { label: nodeData.name, ...nodeData },
+});
 
 export default WorkflowEditor;

@@ -1,12 +1,17 @@
 import React, { createContext, useContext, useState } from 'react';
-import { reactFlowBackgroundColors } from './colorPalettes';
 
 const WorkflowSettingsContext = createContext();
 
-export const useWorkflowSettings = () => useContext(WorkflowSettingsContext);
+export const useWorkflowSettings = () => {
+  const context = useContext(WorkflowSettingsContext);
+  if (!context) {
+    throw new Error('useWorkflowSettings must be used within a WorkflowSettingsProvider');
+  }
+  return context;
+};
 
 export const WorkflowSettingsProvider = ({ children }) => {
-  const [backgroundColor, setBackgroundColor] = useState(reactFlowBackgroundColors.midnightBlue);
+  const [backgroundColor, setBackgroundColor] = useState('#1A2530');
   const [gridSize, setGridSize] = useState(20);
   const [snapToGrid, setSnapToGrid] = useState(true);
 
