@@ -2,8 +2,7 @@ import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { useSupabaseAuth } from '@/integrations/supabase';
-import { supabase } from '@/integrations/supabase/supabase';
+import { useSupabaseAuth } from '@/integrations/supabase/auth';
 import { useToast } from "@/components/ui/use-toast";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 
@@ -12,25 +11,22 @@ const Login = () => {
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
-  const { session } = useSupabaseAuth();
+  const { user, signIn } = useSupabaseAuth();
   const navigate = useNavigate();
   const { toast } = useToast();
 
   React.useEffect(() => {
-    if (session) {
+    if (user) {
       navigate('/console');
     }
-  }, [session, navigate]);
+  }, [user, navigate]);
 
   const handleLogin = async (e) => {
     e.preventDefault();
     setLoading(true);
     setError('');
     try {
-      const { error } = await supabase.auth.signInWithPassword({
-        email,
-        password,
-      });
+      const { error } = await signIn(email, password);
       if (error) throw error;
       toast({
         title: "Success",
@@ -57,7 +53,7 @@ const Login = () => {
     });
   };
 
-  if (session) {
+  if (user) {
     return null;
   }
 

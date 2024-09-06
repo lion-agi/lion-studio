@@ -16,6 +16,7 @@ import UserProfile from './pages/UserProfile';
 import AuthCallback from './pages/AuthCallback';
 import EmailConfirmation from './pages/EmailConfirmation';
 import WorkflowEditor from './components/WorkflowEditor';
+import ProtectedRoute from './components/ProtectedRoute';
 
 import Monitoring from './pages/console/Monitoring';
 import Library from './pages/console/Library';
@@ -32,11 +33,6 @@ const ConsoleLayout = ({ children }) => (
     {children}
   </div>
 );
-
-const ProtectedRoute = ({ children }) => {
-  const session = useStore((state) => state.session);
-  return session ? children : <Navigate to="/login" replace />;
-};
 
 const AppRoutes = () => (
   <Routes>
