@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Button } from "@/common/components/ui/button";
 import { Input } from "@/common/components/ui/input";
@@ -16,7 +16,7 @@ const Login = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (session) {
       navigate('/console');
     }
@@ -36,7 +36,9 @@ const Login = () => {
         title: "Success",
         description: "Logged in successfully",
       });
-      navigate('/console');
+      setTimeout(() => {
+        navigate('/console');
+      }, 1500);
     } catch (error) {
       setError('Invalid email or password. Please try again.');
       toast({
