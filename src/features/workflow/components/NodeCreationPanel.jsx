@@ -7,6 +7,11 @@ import { nodeCategories } from './nodeCategories';
 const NodeCreationPanel = ({ onAddNode }) => {
   const [isExpanded, setIsExpanded] = useState(true);
 
+  const handleAddNode = (node) => {
+    const position = { x: Math.random() * 500, y: Math.random() * 500 };
+    onAddNode({ ...node, position });
+  };
+
   return (
     <div className={`absolute top-0 ${isExpanded ? 'left-0' : '-left-64'} h-full transition-all duration-300 ease-in-out`}>
       <Collapsible open={isExpanded} onOpenChange={setIsExpanded}>
@@ -24,12 +29,12 @@ const NodeCreationPanel = ({ onAddNode }) => {
               </CollapsibleTrigger>
               <CollapsibleContent className="ml-4 space-y-2">
                 {nodes.map((node) => (
-                  <Button 
-                    key={node.type} 
-                    variant="ghost" 
-                    size="sm" 
+                  <Button
+                    key={node.type}
+                    variant="ghost"
+                    size="sm"
                     className="w-full justify-start"
-                    onClick={() => onAddNode(node)}
+                    onClick={() => handleAddNode(node)}
                   >
                     <node.icon className="mr-2 h-4 w-4" />
                     {node.label}

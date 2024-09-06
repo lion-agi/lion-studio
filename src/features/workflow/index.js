@@ -1,2 +1,2 @@
-export { default as WorkflowEditor } from './WorkflowEditor';
-export { default as WorkflowEditorContainer } from './WorkflowEditorContainer';
+export { default as WorkflowEditor } from './components/WorkflowEditor';
+export { default as WorkflowEditorContainer } from './components/WorkflowEditorContainer';

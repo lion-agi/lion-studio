@@ -1,12 +1,16 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Button } from "@/common/components/ui/button";
+import WorkflowSettingsPanel from './WorkflowSettingsPanel';
 
 const WorkflowToolbar = ({ onExportJSON, onSaveLoad, onCreateFlow }) => (
-  <div className="absolute top-4 left-4 z-10 bg-white p-4 rounded-lg shadow-md">
-    <Button onClick={onExportJSON}>Export JSON</Button>
-    <Button onClick={onSaveLoad}>Save/Load</Button>
-    <Button onClick={onCreateFlow}>Create Flow</Button>
+  <div className="flex flex-col space-y-2">
+    <div className="flex space-x-2">
+      <Button onClick={onExportJSON} size="sm">Export JSON</Button>
+      <Button onClick={onSaveLoad} size="sm">Save/Load</Button>
+      <Button onClick={onCreateFlow} size="sm">Create Flow</Button>
+    </div>
+    <WorkflowSettingsPanel />
   </div>
 );
 
