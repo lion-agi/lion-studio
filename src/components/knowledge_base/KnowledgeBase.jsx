@@ -40,7 +40,7 @@ const KnowledgeBase = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 12;
 
-  const paginatedPages = pages.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
+  const paginatedPages = pages ? pages.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage) : [];
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-navy-900 to-indigo-900 p-8 text-gray-100">
@@ -92,14 +92,14 @@ const KnowledgeBase = () => {
             <TabsTrigger value="dataSources" className="data-[state=active]:bg-navy-700 text-gray-200">Data Sources</TabsTrigger>
           </TabsList>
           <TabsContent value="threads">
-            {threads.length > 0 ? (
+            {threads && threads.length > 0 ? (
               <ThreadList threads={threads} onOpenModal={handleOpenThreadModal} />
             ) : (
               <EmptyState message="No threads found. Create your first thread!" icon={MessageSquare} />
             )}
           </TabsContent>
           <TabsContent value="pages">
-            {pages.length > 0 ? (
+            {pages && pages.length > 0 ? (
               <>
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                   {paginatedPages.map((page) => (
@@ -144,7 +144,7 @@ const KnowledgeBase = () => {
             )}
           </TabsContent>
           <TabsContent value="collections">
-            {collections.length > 0 ? (
+            {collections && collections.length > 0 ? (
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {collections.map((collection) => (
                   <CollectionItem
@@ -168,7 +168,11 @@ const KnowledgeBase = () => {
             )}
           </TabsContent>
           <TabsContent value="dataSources">
-            <DataSourceList dataSources={dataSources} onOpenModal={handleOpenDataSourceModal} />
+            {dataSources ? (
+              <DataSourceList dataSources={dataSources} onOpenModal={handleOpenDataSourceModal} />
+            ) : (
+              <EmptyState message="No data sources found. Add your first data source!" icon={FolderPlus} />
+            )}
           </TabsContent>
         </Tabs>
 
