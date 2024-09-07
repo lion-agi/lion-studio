@@ -3,48 +3,17 @@ import { Card, CardContent } from "@/common/components/ui/card";
 import { Button } from "@/common/components/ui/button";
 import { Eye, Trash2, Edit } from 'lucide-react';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/common/components/ui/tooltip";
-import { Badge } from "@/common/components/ui/badge";
-
-const mockTypeNames = {
-  1: 'SQL Database',
-  2: 'NoSQL Database',
-  3: 'REST API',
-  4: 'GraphQL API',
-  5: 'File Storage',
-  6: 'Message Queue',
-  7: 'Search Engine',
-  8: 'Cache',
-  9: 'Blockchain',
-  10: 'IoT Device'
-};
 
 const DataSourceItem = ({ dataSource, onOpenModal, onDelete, onEdit }) => {
-  const formatDate = (dateString) => {
-    const date = new Date(dateString);
-    return date.toLocaleString('en-US', { 
-      year: 'numeric', 
-      month: '2-digit', 
-      day: '2-digit',
-      hour: '2-digit',
-      minute: '2-digit',
-      second: '2-digit',
-      hour12: false
-    });
-  };
-
   return (
     <Card className="bg-gray-800 text-gray-100 hover:shadow-lg transition-all duration-300 ease-in-out animate-fade-in">
       <CardContent className="p-4">
-        <div className="flex justify-between items-start mb-2">
-          <h3 className="text-lg font-semibold text-purple-300">{dataSource.name}</h3>
-          <Badge variant="outline" className="text-xs">
-            {mockTypeNames[dataSource.type_id] || 'Unknown Type'}
-          </Badge>
-        </div>
-        <p className="text-sm text-gray-300 mb-4 bg-navy-700 bg-opacity-50 p-2 rounded-md">{dataSource.description}</p>
+        <h3 className="text-lg font-semibold mb-2 text-purple-300">{dataSource.name}</h3>
+        <p className="text-sm text-gray-300 mb-4 bg-navy-700 bg-opacity-50 p-2 rounded-md">{dataSource.type}</p>
         <div className="space-y-1 text-xs text-gray-400">
-          <p><strong>Last Sync:</strong> {formatDate(dataSource.last_sync)}</p>
+          <p><strong>Last Sync:</strong> {dataSource.last_health_check || 'N/A'}</p>
           <p><strong>Health Status:</strong> {dataSource.health_status || 'N/A'}</p>
+          <p><strong>Description:</strong> {dataSource.description || 'N/A'}</p>
         </div>
         <div className="flex justify-end space-x-2 mt-4">
           <TooltipProvider>
