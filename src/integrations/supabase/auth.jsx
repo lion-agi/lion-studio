@@ -23,9 +23,14 @@ export const SupabaseAuthProviderInner = ({ children }) => {
   useEffect(() => {
     const getSession = async () => {
       setLoading(true);
-      const { data: { session } } = await supabase.auth.getSession();
-      setSession(session);
-      setLoading(false);
+      try {
+        const { data: { session } } = await supabase.auth.getSession();
+        setSession(session);
+      } catch (error) {
+        console.error('Error fetching session:', error);
+      } finally {
+        setLoading(false);
+      }
     };
 
     const { data: authListener } = supabase.auth.onAuthStateChange(async (event, session) => {
@@ -43,9 +48,13 @@ export const SupabaseAuthProviderInner = ({ children }) => {
   }, [queryClient]);
 
   const logout = async () => {
-    await authService.signOut();
-    setSession(null);
-    queryClient.invalidateQueries('user');
+    try {
+      await authService.signOut();
+      setSession(null);
+      queryClient.invalidateQueries('user');
+    } catch (error) {
+      console.error('Error logging out:', error);
+    }
   };
 
   return (

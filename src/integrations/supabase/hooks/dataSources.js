@@ -3,7 +3,10 @@ import { supabase } from '../supabase';
 
 const fromSupabase = async (query) => {
     const { data, error } = await query;
-    if (error) throw error;
+    if (error) {
+        console.error('Supabase error:', error);
+        throw error;
+    }
     return data;
 };
 
@@ -18,6 +21,9 @@ export const useDataSources = (options = {}) => useQuery({
             }
             return data;
         } catch (error) {
+            if (error.status === 404) {
+                console.error('404 error fetching data sources:', error);
+            }
             console.error('Unexpected error:', error);
             return [];
         }
@@ -27,14 +33,34 @@ export const useDataSources = (options = {}) => useQuery({
 
 export const useDataSource = (id, options = {}) => useQuery({
     queryKey: ['dataSources', id],
-    queryFn: () => fromSupabase(supabase.from('data_sources').select('*').eq('id', id).single()),
+    queryFn: async () => {
+        try {
+            return await fromSupabase(supabase.from('data_sources').select('*').eq('id', id).single());
+        } catch (error) {
+            if (error.status === 404) {
+                console.error('404 error fetching data source:', error);
+            }
+            console.error('Error fetching data source:', error);
+            throw error;
+        }
+    },
     ...options,
 });
 
 export const useAddDataSource = () => {
     const queryClient = useQueryClient();
     return useMutation({
-        mutationFn: (newDataSource) => fromSupabase(supabase.from('data_sources').insert([newDataSource])),
+        mutationFn: async (newDataSource) => {
+            try {
+                return await fromSupabase(supabase.from('data_sources').insert([newDataSource]));
+            } catch (error) {
+                if (error.status === 404) {
+                    console.error('404 error adding data source:', error);
+                }
+                console.error('Error adding data source:', error);
+                throw error;
+            }
+        },
         onSuccess: () => {
             queryClient.invalidateQueries('dataSources');
         },
@@ -44,7 +70,17 @@ export const useAddDataSource = () => {
 export const useUpdateDataSource = () => {
     const queryClient = useQueryClient();
     return useMutation({
-        mutationFn: ({ id, ...updateData }) => fromSupabase(supabase.from('data_sources').update(updateData).eq('id', id)),
+        mutationFn: async ({ id, ...updateData }) => {
+            try {
+                return await fromSupabase(supabase.from('data_sources').update(updateData).eq('id', id));
+            } catch (error) {
+                if (error.status === 404) {
+                    console.error('404 error updating data source:', error);
+                }
+                console.error('Error updating data source:', error);
+                throw error;
+            }
+        },
         onSuccess: () => {
             queryClient.invalidateQueries('dataSources');
         },
@@ -54,7 +90,17 @@ export const useUpdateDataSource = () => {
 export const useDeleteDataSource = () => {
     const queryClient = useQueryClient();
     return useMutation({
-        mutationFn: (id) => fromSupabase(supabase.from('data_sources').delete().eq('id', id)),
+        mutationFn: async (id) => {
+            try {
+                return await fromSupabase(supabase.from('data_sources').delete().eq('id', id));
+            } catch (error) {
+                if (error.status === 404) {
+                    console.error('404 error deleting data source:', error);
+                }
+                console.error('Error deleting data source:', error);
+                throw error;
+            }
+        },
         onSuccess: () => {
             queryClient.invalidateQueries('dataSources');
         },

@@ -93,6 +93,7 @@ const Library = () => {
   }
 
   if (error) {
+    console.error('Error fetching data:', error);
     return <div>Error: {error.message}</div>;
   }
 

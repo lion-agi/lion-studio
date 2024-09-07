@@ -3,19 +3,42 @@ import { supabase } from '../supabase';
 
 const fromSupabase = async (query) => {
     const { data, error } = await query;
-    if (error) throw error;
+    if (error) {
+        console.error('Supabase error:', error);
+        throw error;
+    }
     return data;
 };
 
 export const usePages = (options = {}) => useQuery({
     queryKey: ['pages'],
-    queryFn: () => fromSupabase(supabase.from('pages').select('*')),
+    queryFn: async () => {
+        try {
+            return await fromSupabase(supabase.from('pages').select('*').order('created_at', { ascending: false }));
+        } catch (error) {
+            if (error.status === 404) {
+                console.error('404 error fetching pages:', error);
+            }
+            console.error('Error fetching pages:', error);
+            throw error;
+        }
+    },
     ...options,
 });
 
 export const usePage = (id, options = {}) => useQuery({
     queryKey: ['pages', id],
-    queryFn: () => fromSupabase(supabase.from('pages').select('*').eq('id', id).single()),
+    queryFn: async () => {
+        try {
+            return await fromSupabase(supabase.from('pages').select('*').eq('id', id).single());
+        } catch (error) {
+            if (error.status === 404) {
+                console.error('404 error fetching page:', error);
+            }
+            console.error('Error fetching page:', error);
+            throw error;
+        }
+    },
     ...options,
 });
 
@@ -25,8 +48,22 @@ export const useAddPage = () => {
         mutationFn: async (newPage) => {
             const { data: { user } } = await supabase.auth.getUser();
             if (!user) throw new Error('User not authenticated');
-            const pageWithUser = { ...newPage, user_id: user.id };
-            return fromSupabase(supabase.from('pages').insert([pageWithUser]).select());
+            const pageWithUser = { 
+                ...newPage, 
+                id: user.id,
+                created_at: new Date().toISOString(),
+                updated_at: new Date().toISOString(),
+                is_active: true,
+            };
+            try {
+                return await fromSupabase(supabase.from('pages').insert([pageWithUser]).select());
+            } catch (error) {
+                if (error.status === 404) {
+                    console.error('404 error adding page:', error);
+                }
+                console.error('Error adding page:', error);
+                throw error;
+            }
         },
         onSuccess: () => {
             queryClient.invalidateQueries('pages');
@@ -40,7 +77,19 @@ export const useUpdatePage = () => {
         mutationFn: async ({ id, ...updates }) => {
             const { data: { user } } = await supabase.auth.getUser();
             if (!user) throw new Error('User not authenticated');
-            return fromSupabase(supabase.from('pages').update(updates).eq('id', id).eq('user_id', user.id).select());
+            const updatedPage = {
+                ...updates,
+                last_activity_at: new Date().toISOString(),
+            };
+            try {
+                return await fromSupabase(supabase.from('pages').update(updatedPage).eq('id', id).eq('user_id', user.id).select());
+            } catch (error) {
+                if (error.status === 404) {
+                    console.error('404 error updating page:', error);
+                }
+                console.error('Error updating page:', error);
+                throw error;
+            }
         },
         onSuccess: () => {
             queryClient.invalidateQueries('pages');
@@ -54,7 +103,15 @@ export const useDeletePage = () => {
         mutationFn: async (id) => {
             const { data: { user } } = await supabase.auth.getUser();
             if (!user) throw new Error('User not authenticated');
-            return fromSupabase(supabase.from('pages').delete().eq('id', id).eq('user_id', user.id));
+            try {
+                return await fromSupabase(supabase.from('pages').delete().eq('id', id).eq('user_id', user.id));
+            } catch (error) {
+                if (error.status === 404) {
+                    console.error('404 error deleting page:', error);
+                }
+                console.error('Error deleting page:', error);
+                throw error;
+            }
         },
         onSuccess: () => {
             queryClient.invalidateQueries('pages');
@@ -64,44 +121,16 @@ export const useDeletePage = () => {
 
 export const useSearchPages = () => {
     return useMutation({
-        mutationFn: (searchQuery) => fromSupabase(supabase.rpc('search_pages', { search_query: searchQuery })),
+        mutationFn: async (searchQuery) => {
+            try {
+                return await fromSupabase(supabase.rpc('search_pages', { search_query: searchQuery }));
+            } catch (error) {
+                if (error.status === 404) {
+                    console.error('404 error searching pages:', error);
+                }
+                console.error('Error searching pages:', error);
+                throw error;
+            }
+        },
     });
-};
-
-export const addSamplePages = async () => {
-    const { data: { user } } = await supabase.auth.getUser();
-    if (!user) throw new Error('User not authenticated');
-
-    const samplePages = [
-        {
-            title: 'Getting Started with Lion Studio',
-            content: 'Welcome to Lion Studio! This guide will help you get started with our powerful workflow automation platform.',
-            category: 'Tutorial',
-            tags: ['beginner', 'introduction'],
-            status: 'published',
-            author: 'Lion Team',
-            user_id: user.id
-        },
-        {
-            title: 'Advanced Workflow Techniques',
-            content: 'Learn advanced techniques to optimize your workflows and increase productivity using Lion Studio.',
-            category: 'Advanced',
-            tags: ['workflow', 'optimization'],
-            status: 'published',
-            author: 'Jane Doe',
-            user_id: user.id
-        },
-        {
-            title: 'Integrating External APIs',
-            content: 'Discover how to seamlessly integrate external APIs into your Lion Studio workflows for enhanced functionality.',
-            category: 'Integration',
-            tags: ['api', 'integration'],
-            status: 'draft',
-            author: 'John Smith',
-            user_id: user.id
-        }
-    ];
-
-    const { error } = await supabase.from('pages').insert(samplePages);
-    if (error) throw error;
 };
