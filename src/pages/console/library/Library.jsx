@@ -10,7 +10,6 @@ import Modals from './Modals';
 import PageForm from '../../../features/library/components/PageForm';
 import { usePages, useAddPage, useUpdatePage, useDeletePage } from '../../../integrations/supabase/hooks/pages';
 import { useThreads } from '../../../integrations/supabase/hooks/threads';
-import { useDataSources } from '../../../integrations/supabase/hooks/dataSources';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
 const queryClient = new QueryClient();
@@ -33,7 +32,6 @@ const InfoModal = ({ isOpen, onClose }) => (
           <li>Threads: Conversation chains and discussions</li>
           <li>Pages: Individual documents and notes</li>
           <li>Collections: Organized groups of related content</li>
-          <li>Data Sources: External data connections</li>
         </ul>
         <p className="mt-4">Use the search bar to quickly find specific items across all categories.</p>
       </div>
@@ -47,7 +45,6 @@ const Library = () => {
 
   const { data: pages, isLoading: pagesLoading, error: pagesError } = usePages();
   const { data: threads, isLoading: threadsLoading, error: threadsError } = useThreads();
-  const { data: dataSources, isLoading: dataSourcesLoading, error: dataSourcesError } = useDataSources();
   
   const addPage = useAddPage();
   const updatePage = useUpdatePage();
@@ -57,7 +54,6 @@ const Library = () => {
   const [isCreateCollectionOpen, setIsCreateCollectionOpen] = useState(false);
   const [selectedThread, setSelectedThread] = useState(null);
   const [selectedPage, setSelectedPage] = useState(null);
-  const [selectedDataSource, setSelectedDataSource] = useState(null);
   const [isCreatePageOpen, setIsCreatePageOpen] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [isInfoModalOpen, setIsInfoModalOpen] = useState(false);
@@ -65,11 +61,9 @@ const Library = () => {
 
   const handleOpenThreadModal = (thread) => setSelectedThread(thread);
   const handleOpenPageModal = (page) => setSelectedPage(page);
-  const handleOpenDataSourceModal = (dataSource) => setSelectedDataSource(dataSource);
   const handleCloseModal = () => {
     setSelectedThread(null);
     setSelectedPage(null);
-    setSelectedDataSource(null);
   };
 
   const handleDeletePage = async (id) => {
@@ -111,8 +105,8 @@ const Library = () => {
 
   const paginatedPages = filteredPages.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
 
-  const isLoading = pagesLoading || threadsLoading || dataSourcesLoading;
-  const error = pagesError || threadsError || dataSourcesError;
+  const isLoading = pagesLoading || threadsLoading;
+  const error = pagesError || threadsError;
 
   if (isLoading) {
     return <LoadingSpinner />;
@@ -157,12 +151,10 @@ const Library = () => {
             threads={threads}
             pages={paginatedPages}
             collections={[]} // You might want to add a hook for collections
-            dataSources={dataSources}
             handleOpenThreadModal={handleOpenThreadModal}
             handleOpenPageModal={handleOpenPageModal}
             handleDeletePage={handleDeletePage}
             handleEditPage={handleEditPage}
-            handleOpenDataSourceModal={handleOpenDataSourceModal}
             setIsCreateCollectionOpen={setIsCreateCollectionOpen}
             handleCreateNewPage={handleCreateNewPage}
             error={error}
@@ -177,7 +169,6 @@ const Library = () => {
           <Modals
             selectedThread={selectedThread}
             selectedPage={selectedPage}
-            selectedDataSource={selectedDataSource}
             handleCloseModal={handleCloseModal}
             isCreateCollectionOpen={isCreateCollectionOpen}
             setIsCreateCollectionOpen={setIsCreateCollectionOpen}

@@ -12,7 +12,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { AlertTriangle, CheckCircle2, XCircle, Database, Cloud, FileText, Link as LinkIcon, Brain, Search } from 'lucide-react';
 
 const ConnectionCard = ({ name, type, status, icon: Icon }) => (
-  <Card className="bg-gray-800 hover:bg-gray-700 transition-c`olors">
+  <Card className="bg-gray-800 hover:bg-gray-700 transition-colors">
     <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
       <CardTitle className="text-lg font-semibold text-gray-100">{name}</CardTitle>
       <Icon className="h-5 w-5 text-gray-400" />
