@@ -35,6 +35,7 @@ const CostTrendChart = ({ data }) => (
             tickFormatter={(value) => formatCurrency(value)}
             tick={{ fill: '#9CA3AF' }}
             tickLine={{ stroke: '#9CA3AF' }}
+            width={80}
           />
           <Tooltip content={<CustomTooltip />} />
           <Line 
