@@ -49,21 +49,15 @@ const NewDeploymentDialog = ({ isOpen, onClose }) => (
     <DialogContent className="sm:max-w-[425px]">
       <DialogHeader>
         <DialogTitle>Create New Deployment</DialogTitle>
-        <DialogDescription>
-          Set up a new deployment for your application.
-        </DialogDescription>
+        <DialogDescription>Set up a new deployment for your application.</DialogDescription>
       </DialogHeader>
       <div className="grid gap-4 py-4">
         <div className="grid grid-cols-4 items-center gap-4">
-          <Label htmlFor="name" className="text-right">
-            Name
-          </Label>
+          <Label htmlFor="name" className="text-right">Name</Label>
           <Input id="name" className="col-span-3" />
         </div>
         <div className="grid grid-cols-4 items-center gap-4">
-          <Label htmlFor="environment" className="text-right">
-            Environment
-          </Label>
+          <Label htmlFor="environment" className="text-right">Environment</Label>
           <Select>
             <SelectTrigger className="col-span-3">
               <SelectValue placeholder="Select environment" />
@@ -76,9 +70,7 @@ const NewDeploymentDialog = ({ isOpen, onClose }) => (
           </Select>
         </div>
         <div className="grid grid-cols-4 items-center gap-4">
-          <Label htmlFor="version" className="text-right">
-            Version
-          </Label>
+          <Label htmlFor="version" className="text-right">Version</Label>
           <Input id="version" className="col-span-3" />
         </div>
       </div>
@@ -141,8 +133,7 @@ const Deployment = () => {
         <TabsList className="bg-muted">
           <TabsTrigger value="overview" className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">Overview</TabsTrigger>
           <TabsTrigger value="history" className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">History</TabsTrigger>
-          <TabsTrigger value="settings" className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">Settings</TabsT
-rigger>
+          <TabsTrigger value="settings" className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">Settings</TabsTrigger>
         </TabsList>
 
         <TabsContent value="overview" className="space-y-6">
