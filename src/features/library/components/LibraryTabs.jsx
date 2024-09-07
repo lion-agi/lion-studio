@@ -26,11 +26,11 @@ const LibraryTabs = ({
   error
 }) => (
   <Tabs value={activeTab} onValueChange={onTabChange} className="mt-8">
-    <TabsList className="bg-gray-800 p-1 rounded-lg mb-6">
-      <TabsTrigger value="threads" className="data-[state=active]:bg-purple-700 text-gray-200">Threads</TabsTrigger>
-      <TabsTrigger value="pages" className="data-[state=active]:bg-purple-700 text-gray-200">Pages</TabsTrigger>
-      <TabsTrigger value="collections" className="data-[state=active]:bg-purple-700 text-gray-200">Collections</TabsTrigger>
-      <TabsTrigger value="dataSources" className="data-[state=active]:bg-purple-700 text-gray-200">Data Sources</TabsTrigger>
+    <TabsList className="bg-gray-800">
+      <TabsTrigger value="threads" className="data-[state=active]:bg-purple-600 data-[state=active]:text-white">Threads</TabsTrigger>
+      <TabsTrigger value="pages" className="data-[state=active]:bg-purple-600 data-[state=active]:text-white">Pages</TabsTrigger>
+      <TabsTrigger value="collections" className="data-[state=active]:bg-purple-600 data-[state=active]:text-white">Collections</TabsTrigger>
+      <TabsTrigger value="dataSources" className="data-[state=active]:bg-purple-600 data-[state=active]:text-white">Data Sources</TabsTrigger>
     </TabsList>
     {error ? (
       <Alert variant="destructive">
