@@ -10,22 +10,20 @@ import { Badge } from "@/common/components/ui/badge";
 import { Switch } from "@/common/components/ui/switch";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/common/components/ui/select";
 import { AlertTriangle, CheckCircle2, XCircle, Database, Cloud, FileText, Link as LinkIcon, Brain, Search } from 'lucide-react';
+import DataSourceList from '../../features/library/components/DataSourceList';
 
-const ConnectionCard = ({ name, type, status, icon: Icon }) => (
-  <Card className="bg-gray-800 hover:bg-gray-700 transition-c`olors">
-    <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-      <CardTitle className="text-lg font-semibold text-gray-100">{name}</CardTitle>
-      <Icon className="h-5 w-5 text-gray-400" />
-    </CardHeader>
-    <CardContent>
-      <Badge variant={status === 'Connected' ? 'success' : 'secondary'}>{status}</Badge>
-    </CardContent>
-    <CardFooter className="flex justify-between">
-      <Button variant="outline" size="sm">Configure</Button>
-      <Switch checked={status === 'Connected'} />
-    </CardFooter>
-  </Card>
-);
+const mockTypeNames = {
+  1: 'SQL Database',
+  2: 'NoSQL Database',
+  3: 'REST API',
+  4: 'GraphQL API',
+  5: 'File Storage',
+  6: 'Message Queue',
+  7: 'Search Engine',
+  8: 'Cache',
+  9: 'Blockchain',
+  10: 'IoT Device'
+};
 
 const NewConnectionDialog = ({ isOpen, onClose }) => (
   <Dialog open={isOpen} onOpenChange={onClose}>
@@ -52,9 +50,9 @@ const NewConnectionDialog = ({ isOpen, onClose }) => (
               <SelectValue placeholder="Select type" />
             </SelectTrigger>
             <SelectContent className="bg-gray-700 text-gray-100">
-              <SelectItem value="database">Database</SelectItem>
-              <SelectItem value="api">API</SelectItem>
-              <SelectItem value="storage">Storage</SelectItem>
+              {Object.entries(mockTypeNames).map(([id, name]) => (
+                <SelectItem key={id} value={id}>{name}</SelectItem>
+              ))}
             </SelectContent>
           </Select>
         </div>
@@ -78,18 +76,32 @@ const Connections = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [typeFilter, setTypeFilter] = useState('All Types');
 
-  const connections = [
-    { name: 'PostgreSQL Database', type: 'database', status: 'Connected', icon: Database },
-    { name: 'AWS S3 Bucket', type: 'cloud', status: 'Connected', icon: Cloud },
-    { name: 'Google Drive', type: 'file', status: 'Disconnected', icon: FileText },
-    { name: 'Stripe API', type: 'api', status: 'Connected', icon: LinkIcon },
-    { name: 'OpenAI GPT-3', type: 'ai', status: 'Connected', icon: Brain },
+  const dataSources = [
+    { id: 1, name: 'PostgreSQL Database', type_id: 1, description: 'Main application database', last_sync: '2023-05-15T14:30:45', health_status: 'Healthy' },
+    { id: 2, name: 'MongoDB Atlas', type_id: 2, description: 'NoSQL database for user data', last_sync: '2023-05-15T15:45:30', health_status: 'Warning' },
+    { id: 3, name: 'Stripe API', type_id: 3, description: 'Payment processing API', last_sync: '2023-05-15T16:20:15', health_status: 'Healthy' },
+    { id: 4, name: 'AWS S3 Bucket', type_id: 5, description: 'File storage for user uploads', last_sync: '2023-05-15T17:10:00', health_status: 'Healthy' },
+    { id: 5, name: 'Elasticsearch', type_id: 7, description: 'Search engine for product catalog', last_sync: '2023-05-15T18:05:30', health_status: 'Error' },
   ];
 
-  const filteredConnections = connections
-    .filter(conn => activeTab === 'all' || conn.type === activeTab)
-    .filter(conn => conn.name.toLowerCase().includes(searchTerm.toLowerCase()))
-    .filter(conn => typeFilter === 'All Types' || conn.type === typeFilter.toLowerCase());
+  const filteredDataSources = dataSources
+    .filter(source => source.name.toLowerCase().includes(searchTerm.toLowerCase()))
+    .filter(source => typeFilter === 'All Types' || mockTypeNames[source.type_id] === typeFilter);
+
+  const handleOpenModal = (dataSource) => {
+    console.log('Opening modal for:', dataSource);
+    // Implement modal opening logic here
+  };
+
+  const handleDelete = (id) => {
+    console.log('Deleting data source:', id);
+    // Implement delete logic here
+  };
+
+  const handleEdit = (id) => {
+    console.log('Editing data source:', id);
+    // Implement edit logic here
+  };
 
   return (
     <div className="min-h-screen bg-gray-900 text-gray-100">
@@ -103,11 +115,9 @@ const Connections = () => {
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="All Types">All Types</SelectItem>
-                <SelectItem value="Database">Database</SelectItem>
-                <SelectItem value="Cloud">Cloud Storage</SelectItem>
-                <SelectItem value="File">File Storage</SelectItem>
-                <SelectItem value="API">APIs</SelectItem>
-                <SelectItem value="AI">AI Models</SelectItem>
+                {Object.values(mockTypeNames).map((name) => (
+                  <SelectItem key={name} value={name}>{name}</SelectItem>
+                ))}
               </SelectContent>
             </Select>
             <div className="relative w-full md:w-80">
@@ -131,24 +141,12 @@ const Connections = () => {
           </AlertDescription>
         </Alert>
 
-        <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-          <TabsList className="bg-gray-800">
-            <TabsTrigger value="all" className="data-[state=active]:bg-purple-600 data-[state=active]:text-white">All</TabsTrigger>
-            <TabsTrigger value="database" className="data-[state=active]:bg-purple-600 data-[state=active]:text-white">Databases</TabsTrigger>
-            <TabsTrigger value="cloud" className="data-[state=active]:bg-purple-600 data-[state=active]:text-white">Cloud Storage</TabsTrigger>
-            <TabsTrigger value="file" className="data-[state=active]:bg-purple-600 data-[state=active]:text-white">File Storage</TabsTrigger>
-            <TabsTrigger value="api" className="data-[state=active]:bg-purple-600 data-[state=active]:text-white">APIs</TabsTrigger>
-            <TabsTrigger value="ai" className="data-[state=active]:bg-purple-600 data-[state=active]:text-white">AI Models</TabsTrigger>
-          </TabsList>
-
-          <TabsContent value={activeTab}>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {filteredConnections.map((conn, index) => (
-                <ConnectionCard key={index} {...conn} />
-              ))}
-            </div>
-          </TabsContent>
-        </Tabs>
+        <DataSourceList 
+          dataSources={filteredDataSources}
+          onOpenModal={handleOpenModal}
+          onDelete={handleDelete}
+          onEdit={handleEdit}
+        />
 
         <div className="flex justify-end mt-6">
           <Button 
