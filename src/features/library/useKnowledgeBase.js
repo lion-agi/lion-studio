@@ -1,7 +1,8 @@
 import { useState, useCallback, useEffect } from 'react';
 import { useToast } from "@/common/components/ui/use-toast";
-import { threads as mockThreads, pages as initialPages, dataSources as mockDataSources } from './mockData';
+import { threads as mockThreads, dataSources as mockDataSources } from './mockData';
 import { supabase } from '@/integrations/supabase/supabase';
+import { usePages, useAddPage, useUpdatePage, useDeletePage } from '@/integrations/supabase/hooks/pages';
 
 export const useKnowledgeBase = () => {
   const [searchTerm, setSearchTerm] = useState('');
@@ -10,10 +11,7 @@ export const useKnowledgeBase = () => {
   const [selectedThread, setSelectedThread] = useState(null);
   const [selectedPage, setSelectedPage] = useState(null);
   const [selectedDataSource, setSelectedDataSource] = useState(null);
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState(null);
   const [collections, setCollections] = useState([]);
-  const [pages, setPages] = useState([]);
   const [threads, setThreads] = useState(mockThreads);
   const { toast } = useToast();
 
@@ -21,27 +19,10 @@ export const useKnowledgeBase = () => {
   const [selectedThreads, setSelectedThreads] = useState([]);
   const [dataSources, setDataSources] = useState(mockDataSources);
 
-  useEffect(() => {
-    fetchPages();
-  }, []);
-
-  const fetchPages = async () => {
-    setIsLoading(true);
-    try {
-      const { data, error } = await supabase.from('pages').select('*');
-      if (error) throw error;
-      setPages(data);
-    } catch (error) {
-      setError(error.message);
-      toast({
-        title: "Error",
-        description: "Failed to fetch pages. Please try again.",
-        variant: "destructive",
-      });
-    } finally {
-      setIsLoading(false);
-    }
-  };
+  const { data: pages, isLoading, error } = usePages();
+  const addPageMutation = useAddPage();
+  const updatePageMutation = useUpdatePage();
+  const deletePageMutation = useDeletePage();
 
   const handleOpenThreadModal = useCallback((thread) => {
     setSelectedThread(thread);
@@ -64,9 +45,7 @@ export const useKnowledgeBase = () => {
 
   const handleDeletePage = useCallback(async (pageId) => {
     try {
-      const { error } = await supabase.from('pages').delete().eq('id', pageId);
-      if (error) throw error;
-      setPages(prevPages => prevPages.filter(page => page.id !== pageId));
+      await deletePageMutation.mutateAsync(pageId);
       toast({
         title: "Page Deleted",
         description: `Page with ID ${pageId} has been deleted.`,
@@ -78,21 +57,11 @@ export const useKnowledgeBase = () => {
         variant: "destructive",
       });
     }
-  }, [toast]);
+  }, [deletePageMutation, toast]);
 
   const handleEditPage = useCallback(async (pageId, updatedPageData) => {
     try {
-      const { data, error } = await supabase
-        .from('pages')
-        .update(updatedPageData)
-        .eq('id', pageId)
-        .single();
-
-      if (error) throw error;
-
-      setPages(prevPages => prevPages.map(page => 
-        page.id === pageId ? { ...page, ...data } : page
-      ));
+      await updatePageMutation.mutateAsync({ id: pageId, ...updatedPageData });
       toast({
         title: "Page Updated",
         description: `Page with ID ${pageId} has been updated.`,
@@ -104,18 +73,11 @@ export const useKnowledgeBase = () => {
         variant: "destructive",
       });
     }
-  }, [toast]);
+  }, [updatePageMutation, toast]);
 
   const handleCreatePage = useCallback(async (pageData) => {
     try {
-      const { data, error } = await supabase
-        .from('pages')
-        .insert([pageData])
-        .single();
-
-      if (error) throw error;
-
-      setPages(prevPages => [...prevPages, data]);
+      await addPageMutation.mutateAsync(pageData);
       setIsCreatePageOpen(false);
       toast({
         title: "Success",
@@ -128,7 +90,7 @@ export const useKnowledgeBase = () => {
         variant: "destructive",
       });
     }
-  }, [toast]);
+  }, [addPageMutation, toast]);
 
   const handleCreateNewPage = useCallback(() => {
     setIsCreatePageOpen(true);

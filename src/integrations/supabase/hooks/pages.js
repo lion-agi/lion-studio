@@ -3,7 +3,7 @@ import { supabase } from '../supabase';
 
 const fromSupabase = async (query) => {
     const { data, error } = await query;
-    if (error) throw new Error(error.message);
+    if (error) throw error;
     return data;
 };
 
@@ -12,21 +12,17 @@ const fromSupabase = async (query) => {
 
 | name           | type                     | format | required |
 |----------------|--------------------------|--------|----------|
-| id             | bigint                   | number | true     |
+| id             | uuid                     | string | true     |
 | title          | varchar(255)             | string | true     |
-| slug           | varchar(255)             | string | true     |
 | content        | text                     | string | true     |
-| author_id      | bigint                   | number | true     |
+| category       | varchar(100)             | string | false    |
+| tags           | text[]                   | array  | false    |
+| status         | varchar(20)              | string | true     |
+| author         | varchar(100)             | string | true     |
 | created_at     | timestamp with time zone | string | true     |
 | updated_at     | timestamp with time zone | string | true     |
-| published_at   | timestamp with time zone | string | false    |
-| status         | varchar(20)              | string | true     |
-| category_id    | bigint                   | number | false    |
-| metadata       | jsonb                    | object | false    |
 
-Foreign key relationships:
-- author_id references authors(id)
-- category_id references categories(id)
+No foreign key relationships identified.
 */
 
 export const usePages = (options = {}) => useQuery({
@@ -74,59 +70,5 @@ export const useDeletePage = () => {
 export const useSearchPages = () => {
     return useMutation({
         mutationFn: (searchQuery) => fromSupabase(supabase.rpc('search_pages', { search_query: searchQuery })),
-    });
-};
-
-export const usePageTags = (pageId, options = {}) => useQuery({
-    queryKey: ['pageTags', pageId],
-    queryFn: () => fromSupabase(supabase.from('page_tags').select('tags(*)').eq('page_id', pageId)),
-    ...options,
-});
-
-export const useAddPageTag = () => {
-    const queryClient = useQueryClient();
-    return useMutation({
-        mutationFn: ({ pageId, tagId }) => fromSupabase(supabase.from('page_tags').insert([{ page_id: pageId, tag_id: tagId }])),
-        onSuccess: (_, variables) => {
-            queryClient.invalidateQueries(['pageTags', variables.pageId]);
-        },
-    });
-};
-
-export const useRemovePageTag = () => {
-    const queryClient = useQueryClient();
-    return useMutation({
-        mutationFn: ({ pageId, tagId }) => fromSupabase(supabase.from('page_tags').delete().match({ page_id: pageId, tag_id: tagId })),
-        onSuccess: (_, variables) => {
-            queryClient.invalidateQueries(['pageTags', variables.pageId]);
-        },
-    });
-};
-
-export const useRelatedPages = (pageId, options = {}) => useQuery({
-    queryKey: ['relatedPages', pageId],
-    queryFn: () => fromSupabase(supabase.from('related_pages').select('related_page_id, pages(*)').eq('page_id', pageId)),
-    ...options,
-});
-
-export const useAddRelatedPage = () => {
-    const queryClient = useQueryClient();
-    return useMutation({
-        mutationFn: ({ pageId, relatedPageId, relationshipType }) => 
-            fromSupabase(supabase.from('related_pages').insert([{ page_id: pageId, related_page_id: relatedPageId, relationship_type: relationshipType }])),
-        onSuccess: (_, variables) => {
-            queryClient.invalidateQueries(['relatedPages', variables.pageId]);
-        },
-    });
-};
-
-export const useRemoveRelatedPage = () => {
-    const queryClient = useQueryClient();
-    return useMutation({
-        mutationFn: ({ pageId, relatedPageId }) => 
-            fromSupabase(supabase.from('related_pages').delete().match({ page_id: pageId, related_page_id: relatedPageId })),
-        onSuccess: (_, variables) => {
-            queryClient.invalidateQueries(['relatedPages', variables.pageId]);
-        },
     });
 };
