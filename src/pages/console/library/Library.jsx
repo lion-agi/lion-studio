@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Input } from "@/common/components/ui/input";
 import { Search } from 'lucide-react';
 import LibraryTabs from '../../../features/library/components/LibraryTabs';
@@ -6,6 +6,9 @@ import Pagination from '../../../features/library/components/Pagination';
 import Modals from './Modals';
 import PageForm from '../../../features/library/components/PageForm';
 import { useKnowledgeBase } from '../../../features/library/useKnowledgeBase';
+import { createPagesTableWithSampleData } from '../../../integrations/supabase/hooks/pages';
+import { createThreadsTableWithSampleData } from '../../../integrations/supabase/hooks/threads';
+import { createDataSourcesTableWithSampleData } from '../../../integrations/supabase/hooks/dataSources';
 
 const LoadingSpinner = () => (
   <div className="flex justify-center items-center h-64">
@@ -38,12 +41,28 @@ const Library = () => {
     collections,
     isLoading,
     error,
+    refetchAll,
   } = useKnowledgeBase();
 
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 12;
 
   const paginatedPages = pages ? pages.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage) : [];
+
+  useEffect(() => {
+    const initializeTables = async () => {
+      try {
+        await createPagesTableWithSampleData();
+        await createThreadsTableWithSampleData();
+        await createDataSourcesTableWithSampleData();
+        refetchAll();
+      } catch (error) {
+        console.error('Error initializing tables:', error);
+      }
+    };
+
+    initializeTables();
+  }, [refetchAll]);
 
   if (isLoading) {
     return <LoadingSpinner />;

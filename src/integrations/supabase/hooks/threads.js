@@ -26,7 +26,21 @@ No foreign key relationships identified.
 
 export const useThreads = (options = {}) => useQuery({
     queryKey: ['threads'],
-    queryFn: () => fromSupabase(supabase.from('threads').select('*')),
+    queryFn: async () => {
+        // Check if the table exists
+        const { data: tableExists, error: tableError } = await supabase
+            .from('information_schema.tables')
+            .select('table_name')
+            .eq('table_name', 'threads')
+            .single();
+
+        if (tableError || !tableExists) {
+            throw new Error('The threads table does not exist. Please create it first.');
+        }
+
+        // If the table exists, fetch the data
+        return fromSupabase(supabase.from('threads').select('*'));
+    },
     ...options,
 });
 
@@ -119,3 +133,31 @@ export const useThreadSummary = (threadId, options = {}) => useQuery({
     queryFn: () => fromSupabase(supabase.rpc('get_thread_summary', { thread_id: threadId })),
     ...options,
 });
+
+// Function to create the threads table and add sample data
+export const createThreadsTableWithSampleData = async () => {
+    // Create the threads table
+    const { error: createError } = await supabase.rpc('create_threads_table');
+    if (createError) throw createError;
+
+    // Add sample data
+    const sampleThreads = [
+        {
+            title: 'Workflow Optimization Discussion',
+            topic: 'Optimization',
+            summary: 'A thread to discuss various workflow optimization techniques.',
+            is_active: true,
+            metadata: { participants: 3, messages: 10 }
+        },
+        {
+            title: 'New Feature Requests',
+            topic: 'Feature Requests',
+            summary: 'Collecting and discussing new feature ideas for Lion Studio.',
+            is_active: true,
+            metadata: { participants: 5, messages: 15 }
+        }
+    ];
+
+    const { error: insertError } = await supabase.from('threads').insert(sampleThreads);
+    if (insertError) throw insertError;
+};

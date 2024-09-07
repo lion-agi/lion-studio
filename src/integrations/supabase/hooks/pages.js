@@ -27,7 +27,21 @@ No foreign key relationships identified.
 
 export const usePages = (options = {}) => useQuery({
     queryKey: ['pages'],
-    queryFn: () => fromSupabase(supabase.from('pages').select('*')),
+    queryFn: async () => {
+        // Check if the table exists
+        const { data: tableExists, error: tableError } = await supabase
+            .from('information_schema.tables')
+            .select('table_name')
+            .eq('table_name', 'pages')
+            .single();
+
+        if (tableError || !tableExists) {
+            throw new Error('The pages table does not exist. Please create it first.');
+        }
+
+        // If the table exists, fetch the data
+        return fromSupabase(supabase.from('pages').select('*'));
+    },
     ...options,
 });
 
@@ -71,4 +85,34 @@ export const useSearchPages = () => {
     return useMutation({
         mutationFn: (searchQuery) => fromSupabase(supabase.rpc('search_pages', { search_query: searchQuery })),
     });
+};
+
+// Function to create the pages table and add sample data
+export const createPagesTableWithSampleData = async () => {
+    // Create the pages table
+    const { error: createError } = await supabase.rpc('create_pages_table');
+    if (createError) throw createError;
+
+    // Add sample data
+    const samplePages = [
+        {
+            title: 'Getting Started with Lion Studio',
+            content: 'Welcome to Lion Studio! This guide will help you get started with our powerful workflow automation platform.',
+            category: 'Tutorial',
+            tags: ['beginner', 'introduction'],
+            status: 'published',
+            author: 'Lion Team'
+        },
+        {
+            title: 'Advanced Workflow Techniques',
+            content: 'Learn advanced techniques to optimize your workflows and increase productivity using Lion Studio.',
+            category: 'Advanced',
+            tags: ['workflow', 'optimization'],
+            status: 'published',
+            author: 'Jane Doe'
+        }
+    ];
+
+    const { error: insertError } = await supabase.from('pages').insert(samplePages);
+    if (insertError) throw insertError;
 };
