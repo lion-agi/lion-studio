@@ -1,7 +1,6 @@
 import { useState, useCallback, useEffect } from 'react';
 import { useToast } from "@/common/components/ui/use-toast";
-import { threads, pages as initialPages, dataSources } from './mockData';
-import { debounce } from 'lodash';
+import { threads as mockThreads, pages as initialPages } from './mockData';
 
 export const useKnowledgeBase = () => {
   const [searchTerm, setSearchTerm] = useState('');
@@ -14,37 +13,23 @@ export const useKnowledgeBase = () => {
   const [error, setError] = useState(null);
   const [collections, setCollections] = useState([]);
   const [pages, setPages] = useState(initialPages);
+  const [threads, setThreads] = useState(mockThreads);
   const { toast } = useToast();
 
-  // Enhance search functionality
-  const debouncedSearch = useCallback(
-    debounce((term) => {
-      setIsLoading(true);
-      setError(null);
-      try {
-        const results = {
-          threads: threads.filter(t => t.title.toLowerCase().includes(term.toLowerCase())),
-          pages: pages.filter(p => p.title.toLowerCase().includes(term.toLowerCase())),
-          dataSources: Object.values(dataSources).flat().filter(d => d.name.toLowerCase().includes(term.toLowerCase()))
-        };
-        setSearchResults(results);
-      } catch (err) {
-        setError('An error occurred while searching');
-        toast({
-          title: "Search Error",
-          description: "Failed to perform search. Please try again.",
-          variant: "destructive",
-        });
-      } finally {
-        setIsLoading(false);
-      }
-    }, 300),
-    []
-  );
+  const [isCreatePageOpen, setIsCreatePageOpen] = useState(false);
+  const [selectedThreads, setSelectedThreads] = useState([]);
+  const [dataSources, setDataSources] = useState(mockDataSources);
 
   useEffect(() => {
-    debouncedSearch(searchTerm);
-  }, [searchTerm, debouncedSearch]);
+    // Simulating API calls to fetch data
+    setThreads(mockThreads);
+    setDataSources(mockDataSources);
+  }, []);
+
+  useEffect(() => {
+    // Simulating API call to fetch threads
+    setThreads(mockThreads);
+  }, []);
 
   const handleOpenThreadModal = useCallback((thread) => {
     setSelectedThread(thread);
@@ -82,33 +67,35 @@ export const useKnowledgeBase = () => {
     });
   }, [toast]);
 
-  const handleAddPageToCollection = useCallback((pageId, collectionId) => {
-    setCollections(prevCollections => prevCollections.map(collection => 
-      collection.id === collectionId
-        ? { ...collection, pages: [...collection.pages, pageId] }
-        : collection
-    ));
-    toast({
-      title: "Page Added to Collection",
-      description: `Page added to collection successfully.`,
-    });
-  }, [toast]);
+  const handleCreatePage = useCallback((pageData) => {
+    // Convert selected threads to page content
+    const content = selectedThreads.map(thread => 
+      `## ${thread.title}\n\n${thread.content}`
+    ).join('\n\n');
 
-  const addCollection = useCallback((newCollection) => {
-    setCollections(prevCollections => [...prevCollections, newCollection]);
-    toast({
-      title: "Collection Created",
-      description: "New collection has been created successfully.",
-    });
-  }, [toast]);
+    const newPage = {
+      id: `page-${Date.now()}`, // Generate a unique ID
+      ...pageData,
+      content,
+      created_at: new Date().toISOString(),
+    };
 
-  const deleteCollection = useCallback((collectionId) => {
-    setCollections(prevCollections => prevCollections.filter(collection => collection.id !== collectionId));
+    setPages(prevPages => [...prevPages, newPage]);
+    setIsCreatePageOpen(false);
+    setSelectedThreads([]);
     toast({
-      title: "Collection Deleted",
-      description: `Collection with ID ${collectionId} has been deleted.`,
+      title: "Success",
+      description: "New page created successfully.",
     });
-  }, [toast]);
+  }, [selectedThreads, toast]);
+
+  const toggleThreadSelection = useCallback((thread) => {
+    setSelectedThreads(prev => 
+      prev.some(t => t.id === thread.id)
+        ? prev.filter(t => t.id !== thread.id)
+        : [...prev, thread]
+    );
+  }, []);
 
   return {
     searchTerm,
@@ -123,16 +110,18 @@ export const useKnowledgeBase = () => {
     error,
     collections,
     pages,
+    threads,
     handleOpenThreadModal,
     handleOpenPageModal,
     handleOpenDataSourceModal,
     handleCloseModal,
     handleDeletePage,
     handleEditPage,
-    handleAddPageToCollection,
-    addCollection,
-    deleteCollection,
-    threads,
+    isCreatePageOpen,
+    setIsCreatePageOpen,
+    selectedThreads,
+    toggleThreadSelection,
+    handleCreatePage,
     dataSources,
   };
 };

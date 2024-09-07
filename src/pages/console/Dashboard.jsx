@@ -6,6 +6,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/common/components/ui
 import { Button } from "@/common/components/ui/button";
 import { Alert, AlertDescription, AlertTitle } from "@/common/components/ui/alert";
 import { Input } from "@/common/components/ui/input";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/common/components/ui/select";
 import { InfoIcon, DownloadIcon, Activity, Clock, AlertTriangle, Search } from 'lucide-react';
 import DashboardHeader from '@/features/dashboard/components/DashboardHeader';
 import SummaryCards from '@/features/dashboard/components/SummaryCards';
@@ -36,6 +37,8 @@ const LoadingSpinner = () => (
 const Dashboard = () => {
   const [activeTab, setActiveTab] = React.useState('overview');
   const [searchTerm, setSearchTerm] = React.useState('');
+  const [timeFilter, setTimeFilter] = React.useState('Last 7 days');
+  const [modelFilter, setModelFilter] = React.useState('All Models');
 
   return (
     <RecoilRoot>
@@ -45,15 +48,37 @@ const Dashboard = () => {
             <div className="container mx-auto p-8 space-y-8">
               <div className="flex flex-col md:flex-row justify-between items-center mb-12">
                 <h1 className="text-2xl font-bold mb-6 md:mb-0 text-gray-100">Dashboard</h1>
-                <div className="relative w-full md:w-80">
-                  <Input
-                    type="text"
-                    placeholder="Search dashboard..."
-                    value={searchTerm}
-                    onChange={(e) => setSearchTerm(e.target.value)}
-                    className="w-full bg-gray-800 text-gray-200 placeholder-gray-400 border-gray-700 focus:border-purple-500 focus:ring-1 focus:ring-purple-500 pr-10"
-                  />
-                  <Search className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
+                <div className="flex space-x-4 items-center">
+                  <Select value={timeFilter} onValueChange={setTimeFilter}>
+                    <SelectTrigger className="w-[180px] bg-gray-800 text-gray-200 border-gray-700">
+                      <SelectValue placeholder="Select time range" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="Last 7 days">Last 7 days</SelectItem>
+                      <SelectItem value="Last 30 days">Last 30 days</SelectItem>
+                      <SelectItem value="Last 90 days">Last 90 days</SelectItem>
+                    </SelectContent>
+                  </Select>
+                  <Select value={modelFilter} onValueChange={setModelFilter}>
+                    <SelectTrigger className="w-[180px] bg-gray-800 text-gray-200 border-gray-700">
+                      <SelectValue placeholder="Select model" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="All Models">All Models</SelectItem>
+                      <SelectItem value="GPT-3.5">GPT-3.5</SelectItem>
+                      <SelectItem value="GPT-4">GPT-4</SelectItem>
+                    </SelectContent>
+                  </Select>
+                  <div className="relative w-full md:w-80">
+                    <Input
+                      type="text"
+                      placeholder="Search dashboard..."
+                      value={searchTerm}
+                      onChange={(e) => setSearchTerm(e.target.value)}
+                      className="w-full bg-gray-800 text-gray-200 placeholder-gray-400 border-gray-700 focus:border-purple-500 focus:ring-1 focus:ring-purple-500 pr-10"
+                    />
+                    <Search className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
+                  </div>
                 </div>
               </div>
 
@@ -64,13 +89,13 @@ const Dashboard = () => {
                   <TabsTrigger value="calls" className="data-[state=active]:bg-purple-600 data-[state=active]:text-white">API Calls</TabsTrigger>
                 </TabsList>
                 <TabsContent value="overview">
-                  <OverviewTab />
+                  <OverviewTab timeFilter={timeFilter} modelFilter={modelFilter} />
                 </TabsContent>
                 <TabsContent value="costs">
-                  <CostsTab />
+                  <CostsTab timeFilter={timeFilter} modelFilter={modelFilter} />
                 </TabsContent>
                 <TabsContent value="calls">
-                  <CallsTab />
+                  <CallsTab timeFilter={timeFilter} modelFilter={modelFilter} />
                 </TabsContent>
               </Tabs>
             </div>
@@ -81,24 +106,7 @@ const Dashboard = () => {
   );
 };
 
-const OverviewTab = () => {
-  const { data, isLoading, error } = useApiData();
-
-  if (isLoading) return <LoadingSpinner />;
-  if (error) return <ErrorFallback error={error} />;
-
-  return (
-    <div className="space-y-8">
-      <SummaryCards data={data?.summary || {}} />
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-        <CostTrendChart data={data?.costTrend || []} />
-        <PerformanceChart data={data?.performance || []} />
-      </div>
-    </div>
-  );
-};
-
-const CostsTab = () => {
+const OverviewTab = ({ timeFilter, modelFilter }) => {
   const { data, isLoading, error } = useApiData();
 
   if (isLoading) return <LoadingSpinner />;
@@ -107,8 +115,40 @@ const CostsTab = () => {
   return (
     <div className="space-y-8">
       <SummaryCards data={{
-        totalCost: data?.summary?.totalCost,
+        totalCost: Math.round(data?.summary?.totalCost || 0),
         costChange: data?.summary?.costChange,
+        totalCalls: Math.round(data?.summary?.totalCalls || 0),
+        callsChange: data?.summary?.callsChange,
+        avgResponseTime: Math.round(data?.summary?.avgResponseTime || 0),
+        responseTimeChange: data?.summary?.responseTimeChange,
+        errorRate: data?.summary?.errorRate,
+        errorRateChange: data?.summary?.errorRateChange,
+      }} />
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+        <CostTrendChart data={data?.costTrend || []} />
+        <PerformanceChart data={data?.performance || []} />
+      </div>
+    </div>
+  );
+};
+
+const CostsTab = ({ timeFilter, modelFilter }) => {
+  const { data, isLoading, error } = useApiData();
+
+  if (isLoading) return <LoadingSpinner />;
+  if (error) return <ErrorFallback error={error} />;
+
+  return (
+    <div className="space-y-8">
+      <SummaryCards data={{
+        totalCost: Math.round(data?.summary?.totalCost || 0),
+        costChange: data?.summary?.costChange,
+        totalCalls: Math.round(data?.summary?.totalCalls || 0),
+        callsChange: data?.summary?.callsChange,
+        avgResponseTime: Math.round(data?.summary?.avgResponseTime || 0),
+        responseTimeChange: data?.summary?.responseTimeChange,
+        errorRate: data?.summary?.errorRate,
+        errorRateChange: data?.summary?.errorRateChange,
       }} />
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
         <CostTrendChart data={data?.costTrend || []} />
@@ -118,7 +158,7 @@ const CostsTab = () => {
   );
 };
 
-const CallsTab = () => {
+const CallsTab = ({ timeFilter, modelFilter }) => {
   const { data, isLoading, error } = useApiData();
 
   if (isLoading) return <LoadingSpinner />;

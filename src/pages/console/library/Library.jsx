@@ -52,7 +52,7 @@ const Library = () => {
 
         <LibraryTabs
           threads={threads}
-          pages={paginatedPages}
+          pages={pages}
           collections={collections}
           dataSources={dataSources}
           handleOpenThreadModal={handleOpenThreadModal}

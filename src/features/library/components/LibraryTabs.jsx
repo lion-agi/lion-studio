@@ -1,4 +1,3 @@
-import React from 'react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/common/components/ui/tabs";
 import { MessageSquare, FolderPlus } from 'lucide-react';
 import ThreadList from './ThreadList';

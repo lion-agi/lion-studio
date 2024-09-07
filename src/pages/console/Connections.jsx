@@ -9,10 +9,10 @@ import { Alert, AlertDescription, AlertTitle } from "@/common/components/ui/aler
 import { Badge } from "@/common/components/ui/badge";
 import { Switch } from "@/common/components/ui/switch";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/common/components/ui/select";
-import { AlertTriangle, CheckCircle2, XCircle, Database, Cloud, FileText, Link as LinkIcon, Brain } from 'lucide-react';
+import { AlertTriangle, CheckCircle2, XCircle, Database, Cloud, FileText, Link as LinkIcon, Brain, Search } from 'lucide-react';
 
 const ConnectionCard = ({ name, type, status, icon: Icon }) => (
-  <Card className="bg-gray-800 hover:bg-gray-700 transition-colors">
+  <Card className="bg-gray-800 hover:bg-gray-700 transition-c`olors">
     <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
       <CardTitle className="text-lg font-semibold text-gray-100">{name}</CardTitle>
       <Icon className="h-5 w-5 text-gray-400" />
@@ -75,6 +75,8 @@ const NewConnectionDialog = ({ isOpen, onClose }) => (
 const Connections = () => {
   const [activeTab, setActiveTab] = useState('all');
   const [isNewConnectionDialogOpen, setIsNewConnectionDialogOpen] = useState(false);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [typeFilter, setTypeFilter] = useState('All Types');
 
   const connections = [
     { name: 'PostgreSQL Database', type: 'database', status: 'Connected', icon: Database },
@@ -84,16 +86,41 @@ const Connections = () => {
     { name: 'OpenAI GPT-3', type: 'ai', status: 'Connected', icon: Brain },
   ];
 
-  const filteredConnections = activeTab === 'all' 
-    ? connections 
-    : connections.filter(conn => conn.type === activeTab);
+  const filteredConnections = connections
+    .filter(conn => activeTab === 'all' || conn.type === activeTab)
+    .filter(conn => conn.name.toLowerCase().includes(searchTerm.toLowerCase()))
+    .filter(conn => typeFilter === 'All Types' || conn.type === typeFilter.toLowerCase());
 
   return (
     <div className="min-h-screen bg-gray-900 text-gray-100">
-      <div className="container mx-auto p-6 space-y-8">
-        <div className="flex justify-between items-center">
-          <h1 className="text-3xl font-bold">Connections</h1>
-          <Button onClick={() => setIsNewConnectionDialogOpen(true)}>Add New Connection</Button>
+      <div className="container mx-auto p-8 space-y-8">
+        <div className="flex flex-col md:flex-row justify-between items-center mb-12">
+          <h1 className="text-2xl font-bold mb-6 md:mb-0 text-gray-100">Connections</h1>
+          <div className="flex space-x-4 items-center">
+            <Select value={typeFilter} onValueChange={setTypeFilter}>
+              <SelectTrigger className="w-[180px] bg-gray-800 text-gray-200 border-gray-700">
+                <SelectValue placeholder="Select type" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="All Types">All Types</SelectItem>
+                <SelectItem value="Database">Database</SelectItem>
+                <SelectItem value="Cloud">Cloud Storage</SelectItem>
+                <SelectItem value="File">File Storage</SelectItem>
+                <SelectItem value="API">APIs</SelectItem>
+                <SelectItem value="AI">AI Models</SelectItem>
+              </SelectContent>
+            </Select>
+            <div className="relative w-full md:w-80">
+              <Input
+                type="text"
+                placeholder="Search connections..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="w-full bg-gray-800 text-gray-200 placeholder-gray-400 border-gray-700 focus:border-purple-500 focus:ring-1 focus:ring-purple-500 pr-10"
+              />
+              <Search className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
+            </div>
+          </div>
         </div>
 
         <Alert variant="warning" className="bg-yellow-900 border-yellow-600">
@@ -106,12 +133,12 @@ const Connections = () => {
 
         <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
           <TabsList className="bg-gray-800">
-            <TabsTrigger value="all" className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">All</TabsTrigger>
-            <TabsTrigger value="database" className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">Databases</TabsTrigger>
-            <TabsTrigger value="cloud" className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">Cloud Storage</TabsTrigger>
-            <TabsTrigger value="file" className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">File Storage</TabsTrigger>
-            <TabsTrigger value="api" className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">APIs</TabsTrigger>
-            <TabsTrigger value="ai" className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">AI Models</TabsTrigger>
+            <TabsTrigger value="all" className="data-[state=active]:bg-purple-600 data-[state=active]:text-white">All</TabsTrigger>
+            <TabsTrigger value="database" className="data-[state=active]:bg-purple-600 data-[state=active]:text-white">Databases</TabsTrigger>
+            <TabsTrigger value="cloud" className="data-[state=active]:bg-purple-600 data-[state=active]:text-white">Cloud Storage</TabsTrigger>
+            <TabsTrigger value="file" className="data-[state=active]:bg-purple-600 data-[state=active]:text-white">File Storage</TabsTrigger>
+            <TabsTrigger value="api" className="data-[state=active]:bg-purple-600 data-[state=active]:text-white">APIs</TabsTrigger>
+            <TabsTrigger value="ai" className="data-[state=active]:bg-purple-600 data-[state=active]:text-white">AI Models</TabsTrigger>
           </TabsList>
 
           <TabsContent value={activeTab}>
@@ -122,6 +149,15 @@ const Connections = () => {
             </div>
           </TabsContent>
         </Tabs>
+
+        <div className="flex justify-end mt-6">
+          <Button 
+            onClick={() => setIsNewConnectionDialogOpen(true)}
+            className="bg-purple-600 hover:bg-purple-700 text-white"
+          >
+            Add New Connection
+          </Button>
+        </div>
 
         <NewConnectionDialog 
           isOpen={isNewConnectionDialogOpen} 
