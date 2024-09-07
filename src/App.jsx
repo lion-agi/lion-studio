@@ -14,7 +14,6 @@ import AuthCallback from './pages/AuthCallback';
 import EmailConfirmation from './pages/EmailConfirmation';
 import WorkflowEditor from '@/features/workflow/components/WorkflowEditor';
 
-import Monitoring from './pages/console/Monitoring';
 import Library from './pages/console/library/Library';
 import Dashboard from './pages/console/Dashboard';
 import Connections from './pages/console/Connections';
@@ -48,7 +47,6 @@ const AppRoutes = () => (
     <Route path="/console" element={<ProtectedRoute><ConsoleLayout><Navigate to="/console/workflow" replace /></ConsoleLayout></ProtectedRoute>} />
     <Route path="/console/workflow" element={<ProtectedRoute><ConsoleLayout><WorkflowEditor /></ConsoleLayout></ProtectedRoute>} />
     <Route path="/console/library" element={<ProtectedRoute><ConsoleLayout><Library /></ConsoleLayout></ProtectedRoute>} />
-    <Route path="/console/monitoring" element={<ProtectedRoute><ConsoleLayout><Monitoring /></ConsoleLayout></ProtectedRoute>} />
     <Route path="/console/dashboard" element={<ProtectedRoute><ConsoleLayout><Dashboard /></ConsoleLayout></ProtectedRoute>} />
     <Route path="/console/connections" element={<ProtectedRoute><ConsoleLayout><Connections /></ConsoleLayout></ProtectedRoute>} />
     <Route path="/console/deployment" element={<ProtectedRoute><ConsoleLayout><Deployment /></ConsoleLayout></ProtectedRoute>} />
