@@ -11,7 +11,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { CheckCircle2, XCircle, Database, Cloud, FileText, Link as LinkIcon, Brain, Search } from 'lucide-react';
 
 const ConnectionCard = ({ connection, onConfigure, onToggle }) => (
-  <Card className="bg-gray-800 hover:bg-gray-700 transition-colors">
+  <Card className={`hover:bg-gray-700 transition-colors ${connection.status === 'Connected' ? 'bg-green-900/10' : 'bg-gray-800'}`}>
     <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
       <CardTitle className="text-lg font-semibold text-gray-100">{connection.name}</CardTitle>
       <connection.icon className="h-5 w-5 text-gray-400" />
@@ -136,7 +136,12 @@ const Connections = () => {
   const filteredConnections = connections
     .filter(conn => activeTab === 'all' || conn.type === activeTab)
     .filter(conn => conn.name.toLowerCase().includes(searchTerm.toLowerCase()))
-    .filter(conn => typeFilter === 'All Types' || conn.type === typeFilter.toLowerCase());
+    .filter(conn => typeFilter === 'All Types' || conn.type === typeFilter.toLowerCase())
+    .sort((a, b) => {
+      if (a.status === 'Connected' && b.status !== 'Connected') return -1;
+      if (a.status !== 'Connected' && b.status === 'Connected') return 1;
+      return 0;
+    });
 
   const handleConfigure = (connection) => {
     setSelectedConnection(connection);
