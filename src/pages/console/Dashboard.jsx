@@ -21,7 +21,9 @@ const queryClient = new QueryClient();
 const ErrorFallback = ({ error }) => (
   <Alert variant="destructive">
     <AlertTitle>Error</AlertTitle>
-    <AlertDescription>{error.message}</AlertDescription>
+    <AlertDescription>
+      An error occurred: {error.message}
+    </AlertDescription>
   </Alert>
 );
 
@@ -38,22 +40,28 @@ const Dashboard = () => {
     <RecoilRoot>
       <QueryClientProvider client={queryClient}>
         <ErrorBoundary FallbackComponent={ErrorFallback}>
-          <div className="min-h-screen bg-gray-900 text-gray-100">
+          <div className="container mx-auto p-6 space-y-8 bg-background text-foreground">
             <DashboardHeader />
-            <div className="container mx-auto p-6 space-y-8">
-              <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-                <TabsList className="bg-gray-800">
-                  <TabsTrigger value="overview">Overview</TabsTrigger>
-                  <TabsTrigger value="costs">Costs</TabsTrigger>
-                  <TabsTrigger value="performance">Performance</TabsTrigger>
-                  <TabsTrigger value="calls">API Calls</TabsTrigger>
-                </TabsList>
-                <TabsContent value="overview"><OverviewTab /></TabsContent>
-                <TabsContent value="costs"><CostsTab /></TabsContent>
-                <TabsContent value="performance"><PerformanceTab /></TabsContent>
-                <TabsContent value="calls"><CallsTab /></TabsContent>
-              </Tabs>
-            </div>
+            <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
+              <TabsList className="bg-muted">
+                <TabsTrigger value="overview" className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">Overview</TabsTrigger>
+                <TabsTrigger value="costs" className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">Costs</TabsTrigger>
+                <TabsTrigger value="performance" className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">Performance</TabsTrigger>
+                <TabsTrigger value="calls" className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">API Calls</TabsTrigger>
+              </TabsList>
+              <TabsContent value="overview">
+                <OverviewTab />
+              </TabsContent>
+              <TabsContent value="costs">
+                <CostsTab />
+              </TabsContent>
+              <TabsContent value="performance">
+                <PerformanceTab />
+              </TabsContent>
+              <TabsContent value="calls">
+                <CallsTab />
+              </TabsContent>
+            </Tabs>
           </div>
         </ErrorBoundary>
       </QueryClientProvider>
@@ -63,8 +71,10 @@ const Dashboard = () => {
 
 const OverviewTab = () => {
   const { data, isLoading, error } = useApiData();
+
   if (isLoading) return <LoadingSpinner />;
   if (error) return <ErrorFallback error={error} />;
+
   return (
     <div className="space-y-8">
       <SummaryCards data={data.summary} />
@@ -78,18 +88,20 @@ const OverviewTab = () => {
 
 const CostsTab = () => {
   const { data, isLoading, error } = useApiData();
+
   if (isLoading) return <LoadingSpinner />;
   if (error) return <ErrorFallback error={error} />;
+
   return (
     <div className="space-y-8">
-      <Card className="bg-gray-800">
+      <Card>
         <CardHeader>
           <CardTitle>Cost Overview</CardTitle>
           <CardDescription>Total cost for the selected period</CardDescription>
         </CardHeader>
         <CardContent>
           <div className="text-4xl font-bold">{formatCurrency(data.summary.totalCost)}</div>
-          <p className="text-sm text-gray-400">
+          <p className="text-sm text-muted-foreground">
             {formatPercentage(data.summary.costChange)} from last period
           </p>
         </CardContent>
@@ -104,47 +116,57 @@ const CostsTab = () => {
 
 const PerformanceTab = () => {
   const { data, isLoading, error } = useApiData();
+
   if (isLoading) return <LoadingSpinner />;
   if (error) return <ErrorFallback error={error} />;
+
   return (
     <div className="space-y-8">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-        <PerformanceCard title="Average Response Time" value={`${data.summary.avgResponseTime} ms`} change={data.summary.responseTimeChange} />
-        <PerformanceCard title="Error Rate" value={formatPercentage(data.summary.errorRate)} change={data.summary.errorRateChange} />
+        <Card>
+          <CardHeader>
+            <CardTitle>Average Response Time</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="text-4xl font-bold">{data.summary.avgResponseTime} ms</div>
+            <p className="text-sm text-muted-foreground">
+              {formatPercentage(data.summary.responseTimeChange)} from last period
+            </p>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardHeader>
+            <CardTitle>Error Rate</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="text-4xl font-bold">{formatPercentage(data.summary.errorRate)}</div>
+            <p className="text-sm text-muted-foreground">
+              {formatPercentage(data.summary.errorRateChange)} from last period
+            </p>
+          </CardContent>
+        </Card>
       </div>
       <PerformanceChart data={data.performance} />
     </div>
   );
 };
 
-const PerformanceCard = ({ title, value, change }) => (
-  <Card className="bg-gray-800">
-    <CardHeader>
-      <CardTitle>{title}</CardTitle>
-    </CardHeader>
-    <CardContent>
-      <div className="text-4xl font-bold">{value}</div>
-      <p className="text-sm text-gray-400">
-        {formatPercentage(change)} from last period
-      </p>
-    </CardContent>
-  </Card>
-);
-
 const CallsTab = () => {
   const { data, isLoading, error } = useApiData();
+
   if (isLoading) return <LoadingSpinner />;
   if (error) return <ErrorFallback error={error} />;
+
   return (
     <div className="space-y-8">
-      <Card className="bg-gray-800">
+      <Card>
         <CardHeader>
           <CardTitle>API Calls Overview</CardTitle>
           <CardDescription>Total calls for the selected period</CardDescription>
         </CardHeader>
         <CardContent>
           <div className="text-4xl font-bold">{formatNumber(data.summary.totalCalls)}</div>
-          <p className="text-sm text-gray-400">
+          <p className="text-sm text-muted-foreground">
             {formatPercentage(data.summary.callsChange)} from last period
           </p>
         </CardContent>
