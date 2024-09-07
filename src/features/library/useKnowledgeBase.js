@@ -1,6 +1,5 @@
 import { useState, useCallback, useEffect } from 'react';
 import { useToast } from "@/common/components/ui/use-toast";
-import { threads as mockThreads, dataSources as mockDataSources } from './mockData';
 import { supabase } from '@/integrations/supabase/supabase';
 
 export const useKnowledgeBase = () => {
@@ -11,9 +10,9 @@ export const useKnowledgeBase = () => {
   const [selectedPage, setSelectedPage] = useState(null);
   const [selectedDataSource, setSelectedDataSource] = useState(null);
   const [collections, setCollections] = useState([]);
-  const [threads, setThreads] = useState(mockThreads);
+  const [threads, setThreads] = useState([]);
   const [pages, setPages] = useState([]);
-  const [dataSources, setDataSources] = useState(mockDataSources);
+  const [dataSources, setDataSources] = useState({});
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
   const { toast } = useToast();
