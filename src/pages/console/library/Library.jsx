@@ -3,7 +3,7 @@ import { useSearchParams } from 'react-router-dom';
 import { Input } from "@/common/components/ui/input";
 import { Search, Info } from 'lucide-react';
 import { Button } from "@/common/components/ui/button";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/common/components/ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/common/components/ui/dialog";
 import LibraryTabs from '../../../features/library/components/LibraryTabs';
 import Pagination from '../../../features/library/components/Pagination';
 import Modals from './Modals';
