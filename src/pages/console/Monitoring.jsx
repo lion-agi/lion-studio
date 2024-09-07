@@ -7,14 +7,14 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Button } from "@/common/components/ui/button";
 import { Alert, AlertDescription, AlertTitle } from "@/common/components/ui/alert";
 import { InfoIcon, DownloadIcon } from 'lucide-react';
-import DashboardHeader from '@/features/monitoring/components/DashboardHeader';
-import SummaryCards from '@/features/monitoring/components/SummaryCards';
-import CostTrendChart from '@/features/monitoring/components/CostTrendChart';
-import CostBreakdownChart from '@/features/monitoring/components/CostBreakdownChart';
-import PerformanceChart from '@/features/monitoring/components/PerformanceChart';
-import RecentCallsTable from '@/features/monitoring/components/RecentCallsTable';
-import { useApiData } from '@/features/monitoring/hooks';
-import { formatCurrency, formatNumber, formatPercentage } from '@/features/monitoring/utils';
+import DashboardHeader from '@/features/dashboard/components/DashboardHeader';
+import SummaryCards from '@/features/dashboard/components/SummaryCards';
+import CostTrendChart from '@/features/dashboard/components/CostTrendChart';
+import CostBreakdownChart from '@/features/dashboard/components/CostBreakdownChart';
+import PerformanceChart from '@/features/dashboard/components/PerformanceChart';
+import RecentCallsTable from '@/features/dashboard/components/RecentCallsTable';
+import { useApiData } from '@/features/dashboard/hooks';
+import { formatCurrency, formatNumber, formatPercentage } from '@/features/dashboard/utils';
 
 const queryClient = new QueryClient();
 

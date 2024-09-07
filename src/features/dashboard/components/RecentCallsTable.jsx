@@ -1,6 +1,6 @@
 import React from 'react';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/common/components/ui/table";
-import { formatCurrency, formatNumber } from '@/features/monitoring/utils';
+import { formatCurrency, formatNumber } from '@/features/dashboard/utils';
 
 // Utility function to safely format cost
 const safeCurrency = (value) => {

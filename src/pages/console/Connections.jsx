@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/common/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle, CardFooter } from "@/common/components/ui/card";
 import { Button } from "@/common/components/ui/button";
 import { Input } from "@/common/components/ui/input";
 import { Label } from "@/common/components/ui/label";
@@ -12,10 +12,10 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { AlertTriangle, CheckCircle2, XCircle, Database, Cloud, FileText, Link as LinkIcon, Brain } from 'lucide-react';
 
 const ConnectionCard = ({ name, type, status, icon: Icon }) => (
-  <Card className="bg-card hover:bg-card/90 transition-colors">
+  <Card className="bg-gray-800 hover:bg-gray-700 transition-colors">
     <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-      <CardTitle className="text-lg font-semibold">{name}</CardTitle>
-      <Icon className="h-5 w-5 text-muted-foreground" />
+      <CardTitle className="text-lg font-semibold text-gray-100">{name}</CardTitle>
+      <Icon className="h-5 w-5 text-gray-400" />
     </CardHeader>
     <CardContent>
       <Badge variant={status === 'Connected' ? 'success' : 'secondary'}>{status}</Badge>
@@ -29,10 +29,10 @@ const ConnectionCard = ({ name, type, status, icon: Icon }) => (
 
 const NewConnectionDialog = ({ isOpen, onClose }) => (
   <Dialog open={isOpen} onOpenChange={onClose}>
-    <DialogContent className="sm:max-w-[425px]">
+    <DialogContent className="sm:max-w-[425px] bg-gray-800 text-gray-100">
       <DialogHeader>
         <DialogTitle>Add New Connection</DialogTitle>
-        <DialogDescription>
+        <DialogDescription className="text-gray-400">
           Enter the details for your new connection.
         </DialogDescription>
       </DialogHeader>
@@ -41,17 +41,17 @@ const NewConnectionDialog = ({ isOpen, onClose }) => (
           <Label htmlFor="name" className="text-right">
             Name
           </Label>
-          <Input id="name" className="col-span-3" />
+          <Input id="name" className="col-span-3 bg-gray-700 text-gray-100" />
         </div>
         <div className="grid grid-cols-4 items-center gap-4">
           <Label htmlFor="type" className="text-right">
             Type
           </Label>
           <Select>
-            <SelectTrigger className="col-span-3">
+            <SelectTrigger className="col-span-3 bg-gray-700 text-gray-100">
               <SelectValue placeholder="Select type" />
             </SelectTrigger>
-            <SelectContent>
+            <SelectContent className="bg-gray-700 text-gray-100">
               <SelectItem value="database">Database</SelectItem>
               <SelectItem value="api">API</SelectItem>
               <SelectItem value="storage">Storage</SelectItem>
@@ -62,7 +62,7 @@ const NewConnectionDialog = ({ isOpen, onClose }) => (
           <Label htmlFor="credentials" className="text-right">
             Credentials
           </Label>
-          <Input id="credentials" type="password" className="col-span-3" />
+          <Input id="credentials" type="password" className="col-span-3 bg-gray-700 text-gray-100" />
         </div>
       </div>
       <DialogFooter>
@@ -89,43 +89,45 @@ const Connections = () => {
     : connections.filter(conn => conn.type === activeTab);
 
   return (
-    <div className="container mx-auto p-6 space-y-8 bg-background text-foreground">
-      <div className="flex justify-between items-center">
-        <h1 className="text-3xl font-bold">Connections</h1>
-        <Button onClick={() => setIsNewConnectionDialogOpen(true)}>Add New Connection</Button>
+    <div className="min-h-screen bg-gray-900 text-gray-100">
+      <div className="container mx-auto p-6 space-y-8">
+        <div className="flex justify-between items-center">
+          <h1 className="text-3xl font-bold">Connections</h1>
+          <Button onClick={() => setIsNewConnectionDialogOpen(true)}>Add New Connection</Button>
+        </div>
+
+        <Alert variant="warning" className="bg-yellow-900 border-yellow-600">
+          <AlertTriangle className="h-4 w-4" />
+          <AlertTitle>Security Notice</AlertTitle>
+          <AlertDescription className="text-gray-300">
+            Ensure all connections use secure protocols and keep credentials confidential. Regularly review and update your connection settings.
+          </AlertDescription>
+        </Alert>
+
+        <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
+          <TabsList className="bg-gray-800">
+            <TabsTrigger value="all" className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">All</TabsTrigger>
+            <TabsTrigger value="database" className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">Databases</TabsTrigger>
+            <TabsTrigger value="cloud" className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">Cloud Storage</TabsTrigger>
+            <TabsTrigger value="file" className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">File Storage</TabsTrigger>
+            <TabsTrigger value="api" className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">APIs</TabsTrigger>
+            <TabsTrigger value="ai" className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">AI Models</TabsTrigger>
+          </TabsList>
+
+          <TabsContent value={activeTab}>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {filteredConnections.map((conn, index) => (
+                <ConnectionCard key={index} {...conn} />
+              ))}
+            </div>
+          </TabsContent>
+        </Tabs>
+
+        <NewConnectionDialog 
+          isOpen={isNewConnectionDialogOpen} 
+          onClose={() => setIsNewConnectionDialogOpen(false)} 
+        />
       </div>
-
-      <Alert variant="warning">
-        <AlertTriangle className="h-4 w-4" />
-        <AlertTitle>Security Notice</AlertTitle>
-        <AlertDescription>
-          Ensure all connections use secure protocols and keep credentials confidential. Regularly review and update your connection settings.
-        </AlertDescription>
-      </Alert>
-
-      <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-        <TabsList className="bg-muted">
-          <TabsTrigger value="all" className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">All</TabsTrigger>
-          <TabsTrigger value="database" className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">Databases</TabsTrigger>
-          <TabsTrigger value="cloud" className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">Cloud Storage</TabsTrigger>
-          <TabsTrigger value="file" className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">File Storage</TabsTrigger>
-          <TabsTrigger value="api" className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">APIs</TabsTrigger>
-          <TabsTrigger value="ai" className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">AI Models</TabsTrigger>
-        </TabsList>
-
-        <TabsContent value={activeTab}>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {filteredConnections.map((conn, index) => (
-              <ConnectionCard key={index} {...conn} />
-            ))}
-          </div>
-        </TabsContent>
-      </Tabs>
-
-      <NewConnectionDialog 
-        isOpen={isNewConnectionDialogOpen} 
-        onClose={() => setIsNewConnectionDialogOpen(false)} 
-      />
     </div>
   );
 };
