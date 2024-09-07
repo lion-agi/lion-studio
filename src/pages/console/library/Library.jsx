@@ -7,6 +7,12 @@ import Modals from './Modals';
 import PageForm from '../../../features/library/components/PageForm';
 import { useKnowledgeBase } from '../../../features/library/useKnowledgeBase';
 
+const LoadingSpinner = () => (
+  <div className="flex justify-center items-center h-64">
+    <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-primary"></div>
+  </div>
+);
+
 const Library = () => {
   const {
     searchTerm,
@@ -40,7 +46,7 @@ const Library = () => {
   const paginatedPages = pages ? pages.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage) : [];
 
   if (isLoading) {
-    return <div className="flex justify-center items-center h-screen">Loading...</div>;
+    return <LoadingSpinner />;
   }
 
   return (

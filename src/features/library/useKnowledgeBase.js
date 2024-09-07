@@ -2,7 +2,6 @@ import { useState, useCallback, useEffect } from 'react';
 import { useToast } from "@/common/components/ui/use-toast";
 import { threads as mockThreads, dataSources as mockDataSources } from './mockData';
 import { supabase } from '@/integrations/supabase/supabase';
-import { usePages, useAddPage, useUpdatePage, useDeletePage } from '@/integrations/supabase/hooks/pages';
 
 export const useKnowledgeBase = () => {
   const [searchTerm, setSearchTerm] = useState('');
@@ -13,16 +12,37 @@ export const useKnowledgeBase = () => {
   const [selectedDataSource, setSelectedDataSource] = useState(null);
   const [collections, setCollections] = useState([]);
   const [threads, setThreads] = useState(mockThreads);
+  const [pages, setPages] = useState([]);
+  const [dataSources, setDataSources] = useState(mockDataSources);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(null);
   const { toast } = useToast();
 
   const [isCreatePageOpen, setIsCreatePageOpen] = useState(false);
   const [selectedThreads, setSelectedThreads] = useState([]);
-  const [dataSources, setDataSources] = useState(mockDataSources);
 
-  const { data: pages, isLoading, error } = usePages();
-  const addPageMutation = useAddPage();
-  const updatePageMutation = useUpdatePage();
-  const deletePageMutation = useDeletePage();
+  useEffect(() => {
+    fetchPages();
+  }, []);
+
+  const fetchPages = async () => {
+    setIsLoading(true);
+    try {
+      const { data, error } = await supabase.from('pages').select('*');
+      if (error) throw error;
+      setPages(data);
+    } catch (error) {
+      console.error('Error fetching pages:', error);
+      setError(error);
+      toast({
+        title: "Error",
+        description: "Failed to fetch pages. Please try again later.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   const handleOpenThreadModal = useCallback((thread) => {
     setSelectedThread(thread);
@@ -45,52 +65,65 @@ export const useKnowledgeBase = () => {
 
   const handleDeletePage = useCallback(async (pageId) => {
     try {
-      await deletePageMutation.mutateAsync(pageId);
+      const { error } = await supabase.from('pages').delete().eq('id', pageId);
+      if (error) throw error;
+      setPages(prevPages => prevPages.filter(page => page.id !== pageId));
       toast({
         title: "Page Deleted",
-        description: `Page with ID ${pageId} has been deleted.`,
+        description: "The page has been successfully deleted.",
       });
     } catch (error) {
+      console.error('Error deleting page:', error);
       toast({
         title: "Error",
-        description: `Failed to delete page: ${error.message}`,
+        description: "Failed to delete page. Please try again.",
         variant: "destructive",
       });
     }
-  }, [deletePageMutation, toast]);
+  }, [toast]);
 
   const handleEditPage = useCallback(async (pageId, updatedPageData) => {
     try {
-      await updatePageMutation.mutateAsync({ id: pageId, ...updatedPageData });
+      const { data, error } = await supabase
+        .from('pages')
+        .update(updatedPageData)
+        .eq('id', pageId)
+        .select();
+      if (error) throw error;
+      setPages(prevPages => prevPages.map(page => page.id === pageId ? data[0] : page));
       toast({
         title: "Page Updated",
-        description: `Page with ID ${pageId} has been updated.`,
+        description: "The page has been successfully updated.",
       });
     } catch (error) {
+      console.error('Error updating page:', error);
       toast({
         title: "Error",
-        description: `Failed to update page: ${error.message}`,
+        description: "Failed to update page. Please try again.",
         variant: "destructive",
       });
     }
-  }, [updatePageMutation, toast]);
+  }, [toast]);
 
   const handleCreatePage = useCallback(async (pageData) => {
     try {
-      await addPageMutation.mutateAsync(pageData);
+      const { data, error } = await supabase.from('pages').insert([pageData]).select();
+      if (error) throw error;
+      setPages(prevPages => [...prevPages, data[0]]);
       setIsCreatePageOpen(false);
       toast({
         title: "Success",
         description: "New page created successfully.",
       });
     } catch (error) {
+      console.error('Error creating page:', error);
       toast({
         title: "Error",
-        description: `Failed to create page: ${error.message}`,
+        description: "Failed to create page. Please try again.",
         variant: "destructive",
       });
     }
-  }, [addPageMutation, toast]);
+  }, [toast]);
 
   const handleCreateNewPage = useCallback(() => {
     setIsCreatePageOpen(true);

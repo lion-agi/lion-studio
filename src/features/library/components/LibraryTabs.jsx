@@ -6,6 +6,8 @@ import PagesContent from './PagesContent';
 import CollectionsContent from './CollectionsContent';
 import DataSourceList from './DataSourceList';
 import EmptyState from './EmptyState';
+import { Alert, AlertDescription, AlertTitle } from "@/common/components/ui/alert";
+import { AlertTriangle } from 'lucide-react';
 
 const LibraryTabs = ({ 
   threads, 
@@ -29,9 +31,11 @@ const LibraryTabs = ({
       <TabsTrigger value="dataSources" className="data-[state=active]:bg-purple-700 text-gray-200">Data Sources</TabsTrigger>
     </TabsList>
     {error ? (
-      <div className="text-red-500 p-4 bg-red-100 rounded">
-        Error: {error.message || 'An unknown error occurred'}
-      </div>
+      <Alert variant="destructive">
+        <AlertTriangle className="h-4 w-4" />
+        <AlertTitle>Error</AlertTitle>
+        <AlertDescription>{error.message || "An unknown error occurred"}</AlertDescription>
+      </Alert>
     ) : (
       <>
         <TabsContent value="threads">
