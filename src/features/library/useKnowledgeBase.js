@@ -47,6 +47,7 @@ export const useKnowledgeBase = () => {
     setSelectedThread(null);
     setSelectedPage(null);
     setSelectedDataSource(null);
+    setIsCreatePageOpen(false);
   }, []);
 
   const handleDeletePage = useCallback((pageId) => {
@@ -68,26 +69,20 @@ export const useKnowledgeBase = () => {
   }, [toast]);
 
   const handleCreatePage = useCallback((pageData) => {
-    // Convert selected threads to page content
-    const content = selectedThreads.map(thread => 
-      `## ${thread.title}\n\n${thread.content}`
-    ).join('\n\n');
-
     const newPage = {
-      id: `page-${Date.now()}`, // Generate a unique ID
+      id: `page-${Date.now()}`,
       ...pageData,
-      content,
       created_at: new Date().toISOString(),
+      views: 0,
     };
 
     setPages(prevPages => [...prevPages, newPage]);
     setIsCreatePageOpen(false);
-    setSelectedThreads([]);
     toast({
       title: "Success",
       description: "New page created successfully.",
     });
-  }, [selectedThreads, toast]);
+  }, [toast]);
 
   const handleCreateNewPage = useCallback(() => {
     setIsCreatePageOpen(true);

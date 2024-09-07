@@ -4,6 +4,7 @@ import { Search } from 'lucide-react';
 import LibraryTabs from '../../../features/library/components/LibraryTabs';
 import Pagination from '../../../features/library/components/Pagination';
 import Modals from './Modals';
+import PageForm from '../../../features/library/components/PageForm';
 import { useKnowledgeBase } from '../../../features/library/useKnowledgeBase';
 
 const Library = () => {
@@ -21,8 +22,10 @@ const Library = () => {
     handleCloseModal,
     handleDeletePage,
     handleEditPage,
-    handleAddPageToCollection,
+    handleCreatePage,
     handleCreateNewPage,
+    isCreatePageOpen,
+    setIsCreatePageOpen,
     threads,
     pages,
     dataSources,
@@ -78,6 +81,13 @@ const Library = () => {
           handleCloseModal={handleCloseModal}
           isCreateCollectionOpen={isCreateCollectionOpen}
           setIsCreateCollectionOpen={setIsCreateCollectionOpen}
+        />
+
+        <PageForm
+          page={null}
+          isOpen={isCreatePageOpen}
+          onClose={() => setIsCreatePageOpen(false)}
+          onSave={handleCreatePage}
         />
       </div>
     </div>

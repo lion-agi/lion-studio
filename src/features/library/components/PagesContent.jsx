@@ -75,7 +75,7 @@ const PagesContent = ({ pages, handleOpenPageModal, handleDeletePage, handleEdit
         ))}
         <Button
           onClick={handleCreateNewPage}
-          className="h-full flex items-center justify-center bg-gray-800 hover:bg-gray-700 text-gray-200"
+          className="h-full flex items-center justify-center bg-gray-800 hover:bg-gray-700 text-gray-200 border-2 border-dashed border-gray-600 hover:border-purple-500 transition-all duration-300"
         >
           <PlusCircle className="h-8 w-8 mr-2" />
           Create New Page
