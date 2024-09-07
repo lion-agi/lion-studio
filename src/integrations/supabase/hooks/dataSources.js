@@ -32,19 +32,14 @@ Foreign key relationships:
 export const useDataSources = (options = {}) => useQuery({
     queryKey: ['dataSources'],
     queryFn: async () => {
-        // Check if the table exists
-        const { data: tableExists, error: tableError } = await supabase
-            .from('information_schema.tables')
-            .select('table_name')
-            .eq('table_name', 'data_sources')
-            .single();
-
-        if (tableError || !tableExists) {
-            throw new Error('The data_sources table does not exist. Please create it first.');
+        try {
+            const { data, error } = await supabase.from('data_sources').select('*');
+            if (error) throw error;
+            return data;
+        } catch (error) {
+            console.error('Error fetching data sources:', error);
+            return [];
         }
-
-        // If the table exists, fetch the data
-        return fromSupabase(supabase.from('data_sources').select('*'));
     },
     ...options,
 });
@@ -147,36 +142,31 @@ export const useConfigurationVersions = (dataSourceId, options = {}) => useQuery
     ...options,
 });
 
-// Function to create the data_sources table and add sample data
-export const createDataSourcesTableWithSampleData = async () => {
-    // Create the data_sources table
-    const { error: createError } = await supabase.rpc('create_data_sources_table');
-    if (createError) throw createError;
-
-    // Add sample data
+// Function to add sample data to the data_sources table
+export const addSampleDataSources = async () => {
     const sampleDataSources = [
         {
             name: 'Customer Database',
-            type_id: 1, // Assuming 1 is the ID for 'database' type
+            type_id: 1,
             description: 'Main customer database for CRM',
             is_active: true,
             health_status: 'Healthy',
             configuration: { host: 'db.example.com', port: 5432 },
-            credentials: { username: 'readonly_user' }, // Note: Never store actual passwords in sample data
+            credentials: { username: 'readonly_user' },
             metadata: { tables: ['customers', 'orders', 'products'] }
         },
         {
             name: 'Sales API',
-            type_id: 2, // Assuming 2 is the ID for 'api' type
+            type_id: 2,
             description: 'External API for sales data',
             is_active: true,
             health_status: 'Degraded',
             configuration: { base_url: 'https://api.sales.example.com/v1' },
-            credentials: { api_key: 'sample_key' }, // Note: Use a dummy key for sample data
+            credentials: { api_key: 'sample_key' },
             metadata: { endpoints: ['/sales', '/products', '/customers'] }
         }
     ];
 
-    const { error: insertError } = await supabase.from('data_sources').insert(sampleDataSources);
-    if (insertError) throw insertError;
+    const { error } = await supabase.from('data_sources').insert(sampleDataSources);
+    if (error) throw error;
 };
