@@ -28,14 +28,23 @@ export const useKnowledgeBase = () => {
     setIsLoading(true);
     try {
       const { data, error } = await supabase.from('pages').select('*');
-      if (error) throw error;
+      if (error) {
+        console.error('Error fetching pages:', error);
+        setError(error);
+        toast({
+          title: "Error",
+          description: "Failed to fetch pages. Please try again later.",
+          variant: "destructive",
+        });
+        return;
+      }
       setPages(data);
     } catch (error) {
-      console.error('Error fetching pages:', error);
+      console.error('Unexpected error fetching pages:', error);
       setError(error);
       toast({
         title: "Error",
-        description: "Failed to fetch pages. Please try again later.",
+        description: "An unexpected error occurred. Please try again later.",
         variant: "destructive",
       });
     } finally {
@@ -65,17 +74,25 @@ export const useKnowledgeBase = () => {
   const handleDeletePage = useCallback(async (pageId) => {
     try {
       const { error } = await supabase.from('pages').delete().eq('id', pageId);
-      if (error) throw error;
+      if (error) {
+        console.error('Error deleting page:', error);
+        toast({
+          title: "Error",
+          description: "Failed to delete page. Please try again.",
+          variant: "destructive",
+        });
+        return;
+      }
       setPages(prevPages => prevPages.filter(page => page.id !== pageId));
       toast({
         title: "Page Deleted",
         description: "The page has been successfully deleted.",
       });
     } catch (error) {
-      console.error('Error deleting page:', error);
+      console.error('Unexpected error deleting page:', error);
       toast({
         title: "Error",
-        description: "Failed to delete page. Please try again.",
+        description: "An unexpected error occurred. Please try again.",
         variant: "destructive",
       });
     }
@@ -88,17 +105,25 @@ export const useKnowledgeBase = () => {
         .update(updatedPageData)
         .eq('id', pageId)
         .select();
-      if (error) throw error;
+      if (error) {
+        console.error('Error updating page:', error);
+        toast({
+          title: "Error",
+          description: "Failed to update page. Please try again.",
+          variant: "destructive",
+        });
+        return;
+      }
       setPages(prevPages => prevPages.map(page => page.id === pageId ? data[0] : page));
       toast({
         title: "Page Updated",
         description: "The page has been successfully updated.",
       });
     } catch (error) {
-      console.error('Error updating page:', error);
+      console.error('Unexpected error updating page:', error);
       toast({
         title: "Error",
-        description: "Failed to update page. Please try again.",
+        description: "An unexpected error occurred. Please try again.",
         variant: "destructive",
       });
     }
@@ -107,7 +132,15 @@ export const useKnowledgeBase = () => {
   const handleCreatePage = useCallback(async (pageData) => {
     try {
       const { data, error } = await supabase.from('pages').insert([pageData]).select();
-      if (error) throw error;
+      if (error) {
+        console.error('Error creating page:', error);
+        toast({
+          title: "Error",
+          description: "Failed to create page. Please try again.",
+          variant: "destructive",
+        });
+        return;
+      }
       setPages(prevPages => [...prevPages, data[0]]);
       setIsCreatePageOpen(false);
       toast({
@@ -115,10 +148,10 @@ export const useKnowledgeBase = () => {
         description: "New page created successfully.",
       });
     } catch (error) {
-      console.error('Error creating page:', error);
+      console.error('Unexpected error creating page:', error);
       toast({
         title: "Error",
-        description: "Failed to create page. Please try again.",
+        description: "An unexpected error occurred. Please try again.",
         variant: "destructive",
       });
     }
