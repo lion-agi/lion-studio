@@ -15,7 +15,7 @@ import EmailConfirmation from './pages/EmailConfirmation';
 import WorkflowEditor from '@/features/workflow/components/WorkflowEditor';
 
 import Monitoring from './pages/console/Monitoring';
-import Library from './pages/console/Library';
+import Library from './pages/console/library/Library';
 import Dashboard from './pages/console/Dashboard';
 import Connections from './pages/console/Connections';
 import Deployment from './pages/console/Deployment';
