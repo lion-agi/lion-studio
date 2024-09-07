@@ -4,7 +4,6 @@ import { MessageSquare, FolderPlus } from 'lucide-react';
 import ThreadList from './ThreadList';
 import PagesContent from './PagesContent';
 import CollectionsContent from './CollectionsContent';
-import DataSourceList from './DataSourceList';
 import EmptyState from './EmptyState';
 import { Alert, AlertDescription, AlertTitle } from "@/common/components/ui/alert";
 import { AlertTriangle } from 'lucide-react';
@@ -15,12 +14,10 @@ const LibraryTabs = ({
   threads, 
   pages, 
   collections, 
-  dataSources, 
   handleOpenThreadModal, 
   handleOpenPageModal, 
   handleDeletePage, 
   handleEditPage, 
-  handleOpenDataSourceModal, 
   setIsCreateCollectionOpen,
   handleCreateNewPage,
   error
@@ -30,7 +27,6 @@ const LibraryTabs = ({
       <TabsTrigger value="threads" className="data-[state=active]:bg-purple-600 data-[state=active]:text-white">Threads</TabsTrigger>
       <TabsTrigger value="pages" className="data-[state=active]:bg-purple-600 data-[state=active]:text-white">Pages</TabsTrigger>
       <TabsTrigger value="collections" className="data-[state=active]:bg-purple-600 data-[state=active]:text-white">Collections</TabsTrigger>
-      <TabsTrigger value="dataSources" className="data-[state=active]:bg-purple-600 data-[state=active]:text-white">Data Sources</TabsTrigger>
     </TabsList>
     {error ? (
       <Alert variant="destructive">
@@ -64,13 +60,6 @@ const LibraryTabs = ({
             handleEditPage={handleEditPage} 
             setIsCreateCollectionOpen={setIsCreateCollectionOpen} 
           />
-        </TabsContent>
-        <TabsContent value="dataSources">
-          {dataSources ? (
-            <DataSourceList dataSources={dataSources} onOpenModal={handleOpenDataSourceModal} />
-          ) : (
-            <EmptyState message="No data sources found. Add your first data source!" icon={FolderPlus} />
-          )}
         </TabsContent>
       </>
     )}
