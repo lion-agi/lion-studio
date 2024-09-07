@@ -13,7 +13,7 @@ import ThreadModal from '../../features/library/components/ThreadModal';
 import PageModal from '../../features/library/components/PageModal';
 import DataSourceModal from '../../features/library/components/DataSourceModal';
 import EmptyState from '../../features/library/components/EmptyState';
-import { useKnowledgeBase } from '../../features/library/hooks/useKnowledgeBase';
+import { useKnowledgeBase } from '../../features/library/useKnowledgeBase';
 
 const Library = () => {
   const {

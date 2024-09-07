@@ -1,6 +1,6 @@
 import { useState, useCallback, useEffect } from 'react';
 import { useToast } from "@/common/components/ui/use-toast";
-import { threads, pages as initialPages, dataSources } from '../components/mockData';
+import { threads, pages as initialPages, dataSources } from './mockData';
 import { debounce } from 'lodash';
 
 export const useKnowledgeBase = () => {

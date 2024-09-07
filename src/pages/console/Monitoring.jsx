@@ -1,118 +1,183 @@
-import React from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from "@/common/components/ui/card";
-import { Progress } from "@/common/components/ui/progress";
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, BarChart, Bar } from 'recharts';
+import React, { useState } from 'react';
+import { RecoilRoot } from 'recoil';
+import { QueryClient, QueryClientProvider } from 'react-query';
+import { ErrorBoundary } from 'react-error-boundary';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/common/components/ui/tabs";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/common/components/ui/card";
+import { Button } from "@/common/components/ui/button";
+import { Alert, AlertDescription, AlertTitle } from "@/common/components/ui/alert";
+import { InfoIcon, DownloadIcon } from 'lucide-react';
+import DashboardHeader from '@/features/monitoring/components/DashboardHeader';
+import SummaryCards from '@/features/monitoring/components/SummaryCards';
+import CostTrendChart from '@/features/monitoring/components/CostTrendChart';
+import CostBreakdownChart from '@/features/monitoring/components/CostBreakdownChart';
+import PerformanceChart from '@/features/monitoring/components/PerformanceChart';
+import RecentCallsTable from '@/features/monitoring/components/RecentCallsTable';
+import { useApiData } from '@/features/monitoring/hooks';
+import { formatCurrency, formatNumber, formatPercentage } from '@/features/monitoring/utils';
+
+const queryClient = new QueryClient();
+
+const ErrorFallback = ({ error }) => (
+  <Alert variant="destructive">
+    <AlertTitle>Error</AlertTitle>
+    <AlertDescription>
+      An error occurred: {error.message}
+    </AlertDescription>
+  </Alert>
+);
+
+const LoadingSpinner = () => (
+  <div className="flex justify-center items-center h-64">
+    <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-gray-900"></div>
+  </div>
+);
 
 const Monitoring = () => {
-  const apiUsageData = {
-    totalRequests: { value: 1245678, change: '+5.2%' },
-    averageResponseTime: { value: 287, change: '-2.1%' },
-    errorRate: { value: 1.8, change: '+0.3%' },
-    uniqueUsers: { value: 52890, change: '+7.9%' },
-  };
-
-  const quotaData = {
-    requestsUsed: 68.1,
-    dataTransfer: 47.5,
-    computeTime: 32.8,
-    storageUsed: 78.3,
-  };
-
-  const endpointUsage = [
-    { name: '/users', requests: 324567, avgResponseTime: 145 },
-    { name: '/products', requests: 256789, avgResponseTime: 210 },
-    { name: '/orders', requests: 198765, avgResponseTime: 320 },
-    { name: '/analytics', requests: 87654, avgResponseTime: 540 },
-    { name: '/auth', requests: 378901, avgResponseTime: 95 },
-  ];
-
-  const timeSeriesData = [
-    { date: '04/16', requests: 98760, errors: 1240 },
-    { date: '04/17', requests: 102345, errors: 1560 },
-    { date: '04/18', requests: 97890, errors: 1100 },
-    { date: '04/19', requests: 110567, errors: 1780 },
-    { date: '04/20', requests: 115678, errors: 1890 },
-  ];
+  const [activeTab, setActiveTab] = useState('overview');
 
   return (
-    <div className="container mx-auto p-4">
-      <h1 className="text-2xl font-bold mb-4">API Monitoring Dashboard</h1>
-      
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
-        {Object.entries(apiUsageData).map(([key, data]) => (
-          <Card key={key}>
-            <CardHeader>
-              <CardTitle className="text-sm font-medium">
-                {key.replace(/([A-Z])/g, ' $1').replace(/^./, str => str.toUpperCase())}
-                <span className={data.change.startsWith('+') ? 'text-green-500' : 'text-red-500'}>
-                  {' '}{data.change}
-                </span>
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold">{data.value.toLocaleString()}</div>
-              <p className="text-xs text-muted-foreground">
-                {key === 'averageResponseTime' ? 'ms' : key === 'errorRate' ? '%' : 'total'}
-              </p>
-            </CardContent>
-          </Card>
-        ))}
-      </div>
-
-      <h2 className="text-xl font-bold mb-4">Quota Usage</h2>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
-        {Object.entries(quotaData).map(([key, value]) => (
-          <Card key={key}>
-            <CardHeader>
-              <CardTitle className="text-sm font-medium">
-                {key.replace(/([A-Z])/g, ' $1').replace(/^./, str => str.toUpperCase())}
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="text-xl font-bold">{value}%</div>
-              <Progress value={value} className="mt-2" />
-            </CardContent>
-          </Card>
-        ))}
-      </div>
-
-      <h2 className="text-xl font-bold mb-4">Endpoint Usage</h2>
-      <Card className="mb-8">
-        <CardContent>
-          <div className="h-[300px]">
-            <ResponsiveContainer width="100%" height="100%">
-              <BarChart data={endpointUsage}>
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="name" />
-                <YAxis yAxisId="left" orientation="left" stroke="#8884d8" />
-                <YAxis yAxisId="right" orientation="right" stroke="#82ca9d" />
-                <Tooltip />
-                <Bar yAxisId="left" dataKey="requests" fill="#8884d8" name="Requests" />
-                <Bar yAxisId="right" dataKey="avgResponseTime" fill="#82ca9d" name="Avg Response Time (ms)" />
-              </BarChart>
-            </ResponsiveContainer>
+    <RecoilRoot>
+      <QueryClientProvider client={queryClient}>
+        <ErrorBoundary FallbackComponent={ErrorFallback}>
+          <div className="container mx-auto p-4 space-y-6">
+            <DashboardHeader />
+            <Tabs value={activeTab} onValueChange={setActiveTab}>
+              <TabsList>
+                <TabsTrigger value="overview">Overview</TabsTrigger>
+                <TabsTrigger value="costs">Costs</TabsTrigger>
+                <TabsTrigger value="performance">Performance</TabsTrigger>
+                <TabsTrigger value="calls">API Calls</TabsTrigger>
+              </TabsList>
+              <TabsContent value="overview">
+                <OverviewTab />
+              </TabsContent>
+              <TabsContent value="costs">
+                <CostsTab />
+              </TabsContent>
+              <TabsContent value="performance">
+                <PerformanceTab />
+              </TabsContent>
+              <TabsContent value="calls">
+                <CallsTab />
+              </TabsContent>
+            </Tabs>
           </div>
-        </CardContent>
-      </Card>
+        </ErrorBoundary>
+      </QueryClientProvider>
+    </RecoilRoot>
+  );
+};
 
-      <h2 className="text-xl font-bold mb-4">Requests Over Time</h2>
+const OverviewTab = () => {
+  const { data, isLoading, error } = useApiData();
+
+  if (isLoading) return <LoadingSpinner />;
+  if (error) return <ErrorFallback error={error} />;
+
+  return (
+    <div className="space-y-6">
+      <SummaryCards data={data.summary} />
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <CostTrendChart data={data.costTrend} />
+        <PerformanceChart data={data.performance} />
+      </div>
+    </div>
+  );
+};
+
+const CostsTab = () => {
+  const { data, isLoading, error } = useApiData();
+
+  if (isLoading) return <LoadingSpinner />;
+  if (error) return <ErrorFallback error={error} />;
+
+  return (
+    <div className="space-y-6">
       <Card>
+        <CardHeader>
+          <CardTitle>Cost Overview</CardTitle>
+          <CardDescription>Total cost for the selected period</CardDescription>
+        </CardHeader>
         <CardContent>
-          <div className="h-[300px]">
-            <ResponsiveContainer width="100%" height="100%">
-              <LineChart data={timeSeriesData}>
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="date" />
-                <YAxis yAxisId="left" orientation="left" stroke="#8884d8" />
-                <YAxis yAxisId="right" orientation="right" stroke="#82ca9d" />
-                <Tooltip />
-                <Line yAxisId="left" type="monotone" dataKey="requests" stroke="#8884d8" name="Requests" />
-                <Line yAxisId="right" type="monotone" dataKey="errors" stroke="#82ca9d" name="Errors" />
-              </LineChart>
-            </ResponsiveContainer>
-          </div>
+          <div className="text-4xl font-bold">{formatCurrency(data.summary.totalCost)}</div>
+          <p className="text-sm text-muted-foreground">
+            {formatPercentage(data.summary.costChange)} from last period
+          </p>
         </CardContent>
       </Card>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <CostTrendChart data={data.costTrend} />
+        <CostBreakdownChart data={data.costBreakdown} />
+      </div>
+    </div>
+  );
+};
+
+const PerformanceTab = () => {
+  const { data, isLoading, error } = useApiData();
+
+  if (isLoading) return <LoadingSpinner />;
+  if (error) return <ErrorFallback error={error} />;
+
+  return (
+    <div className="space-y-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <Card>
+          <CardHeader>
+            <CardTitle>Average Response Time</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="text-4xl font-bold">{data.summary.avgResponseTime} ms</div>
+            <p className="text-sm text-muted-foreground">
+              {formatPercentage(data.summary.responseTimeChange)} from last period
+            </p>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardHeader>
+            <CardTitle>Error Rate</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="text-4xl font-bold">{formatPercentage(data.summary.errorRate)}</div>
+            <p className="text-sm text-muted-foreground">
+              {formatPercentage(data.summary.errorRateChange)} from last period
+            </p>
+          </CardContent>
+        </Card>
+      </div>
+      <PerformanceChart data={data.performance} />
+    </div>
+  );
+};
+
+const CallsTab = () => {
+  const { data, isLoading, error } = useApiData();
+
+  if (isLoading) return <LoadingSpinner />;
+  if (error) return <ErrorFallback error={error} />;
+
+  return (
+    <div className="space-y-6">
+      <Card>
+        <CardHeader>
+          <CardTitle>API Calls Overview</CardTitle>
+          <CardDescription>Total calls for the selected period</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <div className="text-4xl font-bold">{formatNumber(data.summary.totalCalls)}</div>
+          <p className="text-sm text-muted-foreground">
+            {formatPercentage(data.summary.callsChange)} from last period
+          </p>
+        </CardContent>
+      </Card>
+      <RecentCallsTable data={data.recentCalls} />
+      <div className="flex justify-end">
+        <Button>
+          <DownloadIcon className="mr-2 h-4 w-4" />
+          Export API Calls
+        </Button>
+      </div>
     </div>
   );
 };
