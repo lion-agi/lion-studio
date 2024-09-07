@@ -11,7 +11,6 @@ import DashboardHeader from '@/features/dashboard/components/DashboardHeader';
 import SummaryCards from '@/features/dashboard/components/SummaryCards';
 import CostTrendChart from '@/features/dashboard/components/CostTrendChart';
 import CostBreakdownChart from '@/features/dashboard/components/CostBreakdownChart';
-import PerformanceChart from '@/features/dashboard/components/PerformanceChart';
 import RecentCallsTable from '@/features/dashboard/components/RecentCallsTable';
 import { useApiData } from '@/features/dashboard/hooks';
 import { formatCurrency, formatNumber, formatPercentage } from '@/features/dashboard/utils';
@@ -47,7 +46,6 @@ const Dashboard = () => {
                 <TabsList className="bg-gray-800">
                   <TabsTrigger value="overview" className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">Overview</TabsTrigger>
                   <TabsTrigger value="costs" className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">Costs</TabsTrigger>
-                  <TabsTrigger value="performance" className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">Performance</TabsTrigger>
                   <TabsTrigger value="calls" className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">API Calls</TabsTrigger>
                 </TabsList>
                 <TabsContent value="overview">
@@ -55,9 +53,6 @@ const Dashboard = () => {
                 </TabsContent>
                 <TabsContent value="costs">
                   <CostsTab />
-                </TabsContent>
-                <TabsContent value="performance">
-                  <PerformanceTab />
                 </TabsContent>
                 <TabsContent value="calls">
                   <CallsTab />
@@ -82,7 +77,7 @@ const OverviewTab = () => {
       <SummaryCards data={data.summary} />
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
         <CostTrendChart data={data.costTrend} />
-        <PerformanceChart data={data.performance} />
+        <CostBreakdownChart data={data.costBreakdown} />
       </div>
     </div>
   );
@@ -111,43 +106,6 @@ const CostsTab = () => {
         <CostTrendChart data={data.costTrend} />
         <CostBreakdownChart data={data.costBreakdown} />
       </div>
-    </div>
-  );
-};
-
-const PerformanceTab = () => {
-  const { data, isLoading, error } = useApiData();
-
-  if (isLoading) return <LoadingSpinner />;
-  if (error) return <ErrorFallback error={error} />;
-
-  return (
-    <div className="space-y-8">
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-        <Card>
-          <CardHeader>
-            <CardTitle>Average Response Time</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="text-4xl font-bold">{data.summary.avgResponseTime} ms</div>
-            <p className="text-sm text-gray-400">
-              {formatPercentage(data.summary.responseTimeChange)} from last period
-            </p>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardHeader>
-            <CardTitle>Error Rate</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="text-4xl font-bold">{formatPercentage(data.summary.errorRate)}</div>
-            <p className="text-sm text-gray-400">
-              {formatPercentage(data.summary.errorRateChange)} from last period
-            </p>
-          </CardContent>
-        </Card>
-      </div>
-      <PerformanceChart data={data.performance} />
     </div>
   );
 };
