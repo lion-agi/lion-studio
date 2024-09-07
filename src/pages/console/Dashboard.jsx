@@ -1,6 +1,5 @@
 import React from 'react';
-import { RecoilRoot } from 'recoil';
-import { QueryClient, QueryClientProvider } from 'react-query';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ErrorBoundary } from 'react-error-boundary';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/common/components/ui/tabs";
 import { Button } from "@/common/components/ui/button";
@@ -41,68 +40,66 @@ const Dashboard = () => {
   const [modelFilter, setModelFilter] = React.useState('All Models');
 
   return (
-    <RecoilRoot>
-      <QueryClientProvider client={queryClient}>
-        <ErrorBoundary FallbackComponent={ErrorFallback}>
-          <div className="min-h-screen bg-gray-900 text-gray-100">
-            <div className="container mx-auto p-8 space-y-8">
-              <div className="flex flex-col md:flex-row justify-between items-center mb-12">
-                <h1 className="text-2xl font-bold mb-6 md:mb-0 text-gray-100">Dashboard</h1>
-                <div className="flex space-x-4 items-center">
-                  <Select value={timeFilter} onValueChange={setTimeFilter}>
-                    <SelectTrigger className="w-[180px] bg-gray-800 text-gray-200 border-gray-700">
-                      <SelectValue placeholder="Select time range" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="Last 7 days">Last 7 days</SelectItem>
-                      <SelectItem value="Last 30 days">Last 30 days</SelectItem>
-                      <SelectItem value="Last 90 days">Last 90 days</SelectItem>
-                    </SelectContent>
-                  </Select>
-                  <Select value={modelFilter} onValueChange={setModelFilter}>
-                    <SelectTrigger className="w-[180px] bg-gray-800 text-gray-200 border-gray-700">
-                      <SelectValue placeholder="Select model" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="All Models">All Models</SelectItem>
-                      <SelectItem value="GPT-3.5">GPT-3.5</SelectItem>
-                      <SelectItem value="GPT-4">GPT-4</SelectItem>
-                    </SelectContent>
-                  </Select>
-                  <div className="relative w-full md:w-80">
-                    <Input
-                      type="text"
-                      placeholder="Search dashboard..."
-                      value={searchTerm}
-                      onChange={(e) => setSearchTerm(e.target.value)}
-                      className="w-full bg-gray-800 text-gray-200 placeholder-gray-400 border-gray-700 focus:border-purple-500 focus:ring-1 focus:ring-purple-500 pr-10"
-                    />
-                    <Search className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
-                  </div>
+    <QueryClientProvider client={queryClient}>
+      <ErrorBoundary FallbackComponent={ErrorFallback}>
+        <div className="min-h-screen bg-gray-900 text-gray-100">
+          <div className="container mx-auto p-8 space-y-8">
+            <div className="flex flex-col md:flex-row justify-between items-center mb-12">
+              <h1 className="text-2xl font-bold mb-6 md:mb-0 text-gray-100">Dashboard</h1>
+              <div className="flex space-x-4 items-center">
+                <Select value={timeFilter} onValueChange={setTimeFilter}>
+                  <SelectTrigger className="w-[180px] bg-gray-800 text-gray-200 border-gray-700">
+                    <SelectValue placeholder="Select time range" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="Last 7 days">Last 7 days</SelectItem>
+                    <SelectItem value="Last 30 days">Last 30 days</SelectItem>
+                    <SelectItem value="Last 90 days">Last 90 days</SelectItem>
+                  </SelectContent>
+                </Select>
+                <Select value={modelFilter} onValueChange={setModelFilter}>
+                  <SelectTrigger className="w-[180px] bg-gray-800 text-gray-200 border-gray-700">
+                    <SelectValue placeholder="Select model" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="All Models">All Models</SelectItem>
+                    <SelectItem value="GPT-3.5">GPT-3.5</SelectItem>
+                    <SelectItem value="GPT-4">GPT-4</SelectItem>
+                  </SelectContent>
+                </Select>
+                <div className="relative w-full md:w-80">
+                  <Input
+                    type="text"
+                    placeholder="Search dashboard..."
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                    className="w-full bg-gray-800 text-gray-200 placeholder-gray-400 border-gray-700 focus:border-purple-500 focus:ring-1 focus:ring-purple-500 pr-10"
+                  />
+                  <Search className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
                 </div>
               </div>
-
-              <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-                <TabsList className="bg-gray-800">
-                  <TabsTrigger value="overview" className="data-[state=active]:bg-purple-600 data-[state=active]:text-white">Overview</TabsTrigger>
-                  <TabsTrigger value="costs" className="data-[state=active]:bg-purple-600 data-[state=active]:text-white">Costs</TabsTrigger>
-                  <TabsTrigger value="calls" className="data-[state=active]:bg-purple-600 data-[state=active]:text-white">API Calls</TabsTrigger>
-                </TabsList>
-                <TabsContent value="overview">
-                  <OverviewTab timeFilter={timeFilter} modelFilter={modelFilter} />
-                </TabsContent>
-                <TabsContent value="costs">
-                  <CostsTab timeFilter={timeFilter} modelFilter={modelFilter} />
-                </TabsContent>
-                <TabsContent value="calls">
-                  <CallsTab timeFilter={timeFilter} modelFilter={modelFilter} />
-                </TabsContent>
-              </Tabs>
             </div>
+
+            <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
+              <TabsList className="bg-gray-800">
+                <TabsTrigger value="overview" className="data-[state=active]:bg-purple-600 data-[state=active]:text-white">Overview</TabsTrigger>
+                <TabsTrigger value="costs" className="data-[state=active]:bg-purple-600 data-[state=active]:text-white">Costs</TabsTrigger>
+                <TabsTrigger value="calls" className="data-[state=active]:bg-purple-600 data-[state=active]:text-white">API Calls</TabsTrigger>
+              </TabsList>
+              <TabsContent value="overview">
+                <OverviewTab timeFilter={timeFilter} modelFilter={modelFilter} />
+              </TabsContent>
+              <TabsContent value="costs">
+                <CostsTab timeFilter={timeFilter} modelFilter={modelFilter} />
+              </TabsContent>
+              <TabsContent value="calls">
+                <CallsTab timeFilter={timeFilter} modelFilter={modelFilter} />
+              </TabsContent>
+            </Tabs>
           </div>
-        </ErrorBoundary>
-      </QueryClientProvider>
-    </RecoilRoot>
+        </div>
+      </ErrorBoundary>
+    </QueryClientProvider>
   );
 };
 
