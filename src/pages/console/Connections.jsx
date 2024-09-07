@@ -11,14 +11,29 @@ import { Switch } from "@/common/components/ui/switch";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/common/components/ui/select";
 import { AlertTriangle, CheckCircle2, XCircle, Database, Cloud, FileText, Link as LinkIcon, Brain, Search } from 'lucide-react';
 
-const ConnectionCard = ({ name, type, status, icon: Icon }) => (
-  <Card className="bg-gray-800 hover:bg-gray-700 transition-c`olors">
+const mockTypeNames = {
+  1: "SQL Database",
+  2: "NoSQL Database",
+  3: "Cloud Storage",
+  4: "File System",
+  5: "API",
+  6: "AI Model",
+  7: "Message Queue",
+  8: "Cache",
+  9: "Search Engine",
+  10: "Blockchain"
+};
+
+const ConnectionCard = ({ name, type_id, status, last_sync, icon: Icon }) => (
+  <Card className="bg-gray-800 hover:bg-gray-700 transition-colors">
     <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
       <CardTitle className="text-lg font-semibold text-gray-100">{name}</CardTitle>
       <Icon className="h-5 w-5 text-gray-400" />
     </CardHeader>
     <CardContent>
       <Badge variant={status === 'Connected' ? 'success' : 'secondary'}>{status}</Badge>
+      <p className="text-sm text-gray-400 mt-2">Type: {mockTypeNames[type_id]}</p>
+      <p className="text-sm text-gray-400">Last sync: {new Date(last_sync).toLocaleString(undefined, { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', second: '2-digit' })}</p>
     </CardContent>
     <CardFooter className="flex justify-between">
       <Button variant="outline" size="sm">Configure</Button>
@@ -52,9 +67,9 @@ const NewConnectionDialog = ({ isOpen, onClose }) => (
               <SelectValue placeholder="Select type" />
             </SelectTrigger>
             <SelectContent className="bg-gray-700 text-gray-100">
-              <SelectItem value="database">Database</SelectItem>
-              <SelectItem value="api">API</SelectItem>
-              <SelectItem value="storage">Storage</SelectItem>
+              {Object.entries(mockTypeNames).map(([id, name]) => (
+                <SelectItem key={id} value={id}>{name}</SelectItem>
+              ))}
             </SelectContent>
           </Select>
         </div>
@@ -79,17 +94,17 @@ const Connections = () => {
   const [typeFilter, setTypeFilter] = useState('All Types');
 
   const connections = [
-    { name: 'PostgreSQL Database', type: 'database', status: 'Connected', icon: Database },
-    { name: 'AWS S3 Bucket', type: 'cloud', status: 'Connected', icon: Cloud },
-    { name: 'Google Drive', type: 'file', status: 'Disconnected', icon: FileText },
-    { name: 'Stripe API', type: 'api', status: 'Connected', icon: LinkIcon },
-    { name: 'OpenAI GPT-3', type: 'ai', status: 'Connected', icon: Brain },
+    { name: 'PostgreSQL Database', type_id: 1, status: 'Connected', last_sync: '2023-05-15T10:30:00', icon: Database },
+    { name: 'AWS S3 Bucket', type_id: 3, status: 'Connected', last_sync: '2023-05-14T15:45:00', icon: Cloud },
+    { name: 'Google Drive', type_id: 4, status: 'Disconnected', last_sync: '2023-05-13T09:15:00', icon: FileText },
+    { name: 'Stripe API', type_id: 5, status: 'Connected', last_sync: '2023-05-15T11:00:00', icon: LinkIcon },
+    { name: 'OpenAI GPT-3', type_id: 6, status: 'Connected', last_sync: '2023-05-15T08:30:00', icon: Brain },
   ];
 
   const filteredConnections = connections
-    .filter(conn => activeTab === 'all' || conn.type === activeTab)
+    .filter(conn => activeTab === 'all' || mockTypeNames[conn.type_id].toLowerCase().includes(activeTab.toLowerCase()))
     .filter(conn => conn.name.toLowerCase().includes(searchTerm.toLowerCase()))
-    .filter(conn => typeFilter === 'All Types' || conn.type === typeFilter.toLowerCase());
+    .filter(conn => typeFilter === 'All Types' || mockTypeNames[conn.type_id] === typeFilter);
 
   return (
     <div className="min-h-screen bg-gray-900 text-gray-100">
@@ -103,11 +118,9 @@ const Connections = () => {
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="All Types">All Types</SelectItem>
-                <SelectItem value="Database">Database</SelectItem>
-                <SelectItem value="Cloud">Cloud Storage</SelectItem>
-                <SelectItem value="File">File Storage</SelectItem>
-                <SelectItem value="API">APIs</SelectItem>
-                <SelectItem value="AI">AI Models</SelectItem>
+                {Object.values(mockTypeNames).map((name) => (
+                  <SelectItem key={name} value={name}>{name}</SelectItem>
+                ))}
               </SelectContent>
             </Select>
             <div className="relative w-full md:w-80">
@@ -134,11 +147,9 @@ const Connections = () => {
         <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
           <TabsList className="bg-gray-800">
             <TabsTrigger value="all" className="data-[state=active]:bg-purple-600 data-[state=active]:text-white">All</TabsTrigger>
-            <TabsTrigger value="database" className="data-[state=active]:bg-purple-600 data-[state=active]:text-white">Databases</TabsTrigger>
-            <TabsTrigger value="cloud" className="data-[state=active]:bg-purple-600 data-[state=active]:text-white">Cloud Storage</TabsTrigger>
-            <TabsTrigger value="file" className="data-[state=active]:bg-purple-600 data-[state=active]:text-white">File Storage</TabsTrigger>
-            <TabsTrigger value="api" className="data-[state=active]:bg-purple-600 data-[state=active]:text-white">APIs</TabsTrigger>
-            <TabsTrigger value="ai" className="data-[state=active]:bg-purple-600 data-[state=active]:text-white">AI Models</TabsTrigger>
+            {Object.values(mockTypeNames).map((name) => (
+              <TabsTrigger key={name} value={name.toLowerCase()} className="data-[state=active]:bg-purple-600 data-[state=active]:text-white">{name}</TabsTrigger>
+            ))}
           </TabsList>
 
           <TabsContent value={activeTab}>
