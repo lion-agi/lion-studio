@@ -4,6 +4,7 @@ import { Button } from "@/common/components/ui/button";
 import { Input } from "@/common/components/ui/input";
 import { Textarea } from "@/common/components/ui/textarea";
 import { Label } from "@/common/components/ui/label";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/common/components/ui/select";
 import { X } from 'lucide-react';
 
 const PageForm = ({ page, isOpen, onClose, onSave }) => {
@@ -12,6 +13,8 @@ const PageForm = ({ page, isOpen, onClose, onSave }) => {
     content: '',
     category: '',
     tags: '',
+    status: 'draft',
+    author: '',
   });
 
   useEffect(() => {
@@ -21,6 +24,8 @@ const PageForm = ({ page, isOpen, onClose, onSave }) => {
         content: page.content || '',
         category: page.category || '',
         tags: page.tags ? page.tags.join(', ') : '',
+        status: page.status || 'draft',
+        author: page.author || '',
       });
     } else {
       setFormData({
@@ -28,6 +33,8 @@ const PageForm = ({ page, isOpen, onClose, onSave }) => {
         content: '',
         category: '',
         tags: '',
+        status: 'draft',
+        author: '',
       });
     }
   }, [page]);
@@ -98,6 +105,29 @@ const PageForm = ({ page, isOpen, onClose, onSave }) => {
               id="tags"
               name="tags"
               value={formData.tags}
+              onChange={handleChange}
+              className="bg-gray-700 text-white border-gray-600 focus:border-purple-500"
+            />
+          </div>
+          <div className="space-y-2">
+            <Label htmlFor="status" className="text-sm font-medium text-gray-300">Status</Label>
+            <Select name="status" value={formData.status} onValueChange={(value) => handleChange({ target: { name: 'status', value } })}>
+              <SelectTrigger className="bg-gray-700 text-white border-gray-600">
+                <SelectValue placeholder="Select status" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="draft">Draft</SelectItem>
+                <SelectItem value="published">Published</SelectItem>
+                <SelectItem value="archived">Archived</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+          <div className="space-y-2">
+            <Label htmlFor="author" className="text-sm font-medium text-gray-300">Author</Label>
+            <Input
+              id="author"
+              name="author"
+              value={formData.author}
               onChange={handleChange}
               className="bg-gray-700 text-white border-gray-600 focus:border-purple-500"
             />

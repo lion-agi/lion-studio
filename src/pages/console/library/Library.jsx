@@ -30,12 +30,22 @@ const Library = () => {
     pages,
     dataSources,
     collections,
+    isLoading,
+    error,
   } = useKnowledgeBase();
 
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 12;
 
   const paginatedPages = pages ? pages.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage) : [];
+
+  if (isLoading) {
+    return <div className="flex justify-center items-center h-screen">Loading...</div>;
+  }
+
+  if (error) {
+    return <div className="text-red-500 text-center">{error}</div>;
+  }
 
   return (
     <div className="min-h-screen bg-gray-900 text-gray-100 p-8">
