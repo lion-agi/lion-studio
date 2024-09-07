@@ -2,18 +2,13 @@ import React from 'react';
 import DataSourceItem from './DataSourceItem';
 
 const DataSourceList = ({ dataSources, onOpenModal }) => {
-  // Check if dataSources is an object and convert it to an array of entries
-  const dataSourceEntries = dataSources && typeof dataSources === 'object' 
-    ? Object.entries(dataSources) 
-    : [];
-
-  if (dataSourceEntries.length === 0) {
+  if (!dataSources || Object.keys(dataSources).length === 0) {
     return <div>No data sources available.</div>;
   }
 
   return (
     <div className="space-y-12">
-      {dataSourceEntries.map(([category, sources]) => (
+      {Object.entries(dataSources).map(([category, sources]) => (
         <div key={category} className="space-y-6">
           <h3 className="text-lg font-semibold mb-6 capitalize group-name">{category}</h3>
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">

@@ -11,11 +11,9 @@ const DataSourceItem = ({ dataSource, onOpenModal, onDelete, onEdit }) => {
         <h3 className="text-lg font-semibold mb-2 text-purple-300">{dataSource.name}</h3>
         <p className="text-sm text-gray-300 mb-4 bg-navy-700 bg-opacity-50 p-2 rounded-md">{dataSource.type}</p>
         <div className="space-y-1 text-xs text-gray-400">
-          <p><strong>Last Sync:</strong> {dataSource.lastSync}</p>
-          {dataSource.totalTables && <p><strong>Total Tables:</strong> {dataSource.totalTables}</p>}
-          {dataSource.totalCollections && <p><strong>Total Collections:</strong> {dataSource.totalCollections}</p>}
-          {dataSource.totalFiles && <p><strong>Total Files:</strong> {dataSource.totalFiles.toLocaleString()}</p>}
-          {dataSource.usedSpace && <p><strong>Used Space:</strong> {dataSource.usedSpace}</p>}
+          <p><strong>Last Sync:</strong> {dataSource.last_health_check || 'N/A'}</p>
+          <p><strong>Health Status:</strong> {dataSource.health_status || 'N/A'}</p>
+          <p><strong>Description:</strong> {dataSource.description || 'N/A'}</p>
         </div>
         <div className="flex justify-end space-x-2 mt-4">
           <TooltipProvider>

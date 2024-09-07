@@ -7,30 +7,24 @@ const fromSupabase = async (query) => {
     return data;
 };
 
-/*
-### data_sources
-
-| name              | type                     | format | required |
-|-------------------|--------------------------|--------|----------|
-| id                | int8                     | bigint | true     |
-| name              | text                     | string | false    |
-| type_id           | int8                     | bigint | false    |
-| description       | text                     | string | false    |
-| created_at        | timestamp with time zone | string | false    |
-| updated_at        | timestamp with time zone | string | false    |
-| is_active         | boolean                  | boolean| false    |
-| health_status     | text                     | string | false    |
-| last_health_check | timestamp with time zone | string | false    |
-| configuration     | jsonb                    | object | false    |
-| credentials       | jsonb                    | object | false    |
-| metadata          | jsonb                    | object | false    |
-
-No foreign key relationships identified.
-*/
-
 export const useDataSources = () => useQuery({
     queryKey: ['data_sources'],
-    queryFn: () => fromSupabase(supabase.from('data_sources').select('*')),
+    queryFn: async () => {
+        try {
+            const data = await fromSupabase(supabase.from('data_sources').select('*'));
+            // Group data sources by type
+            return data.reduce((acc, source) => {
+                if (!acc[source.type]) {
+                    acc[source.type] = [];
+                }
+                acc[source.type].push(source);
+                return acc;
+            }, {});
+        } catch (error) {
+            console.error('Error fetching data sources:', error);
+            throw error;
+        }
+    },
 });
 
 export const useDataSource = (id) => useQuery({
