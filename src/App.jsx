@@ -44,10 +44,10 @@ const AppRoutes = () => (
     <Route path="/email-confirmation" element={<EmailConfirmation />} />
 
     {/* Console routes */}
-    <Route path="/console" element={<ProtectedRoute><ConsoleLayout><Navigate to="/console/workflow" replace /></ConsoleLayout></ProtectedRoute>} />
+    <Route path="/console" element={<ProtectedRoute><ConsoleLayout><Navigate to="/console/dashboard" replace /></ConsoleLayout></ProtectedRoute>} />
+    <Route path="/console/dashboard" element={<ProtectedRoute><ConsoleLayout><Dashboard /></ConsoleLayout></ProtectedRoute>} />
     <Route path="/console/workflow" element={<ProtectedRoute><ConsoleLayout><WorkflowEditor /></ConsoleLayout></ProtectedRoute>} />
     <Route path="/console/library" element={<ProtectedRoute><ConsoleLayout><Library /></ConsoleLayout></ProtectedRoute>} />
-    <Route path="/console/dashboard" element={<ProtectedRoute><ConsoleLayout><Dashboard /></ConsoleLayout></ProtectedRoute>} />
     <Route path="/console/connections" element={<ProtectedRoute><ConsoleLayout><Connections /></ConsoleLayout></ProtectedRoute>} />
     <Route path="/console/deployment" element={<ProtectedRoute><ConsoleLayout><Deployment /></ConsoleLayout></ProtectedRoute>} />
 
