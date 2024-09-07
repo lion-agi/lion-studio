@@ -1,7 +1,6 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '../supabase';
 
-// Helper function to handle Supabase queries
 const fromSupabase = async (query) => {
     const { data, error } = await query;
     if (error) {
@@ -11,23 +10,6 @@ const fromSupabase = async (query) => {
     return data;
 };
 
-// SQL Schema for connections table:
-// CREATE TABLE connections (
-//   id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-//   user_id UUID REFERENCES auth.users(id),
-//   name TEXT NOT NULL,
-//   type TEXT NOT NULL,
-//   host TEXT,
-//   port INTEGER,
-//   database TEXT,
-//   username TEXT,
-//   password TEXT,
-//   is_active BOOLEAN DEFAULT true,
-//   created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
-//   updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
-// );
-
-// Fetch all connections
 export const useConnections = (options = {}) => useQuery({
     queryKey: ['connections'],
     queryFn: async () => {
@@ -41,7 +23,6 @@ export const useConnections = (options = {}) => useQuery({
     ...options,
 });
 
-// Fetch a single connection by ID
 export const useConnection = (id, options = {}) => useQuery({
     queryKey: ['connections', id],
     queryFn: async () => {
@@ -55,7 +36,6 @@ export const useConnection = (id, options = {}) => useQuery({
     ...options,
 });
 
-// Add a new connection
 export const useAddConnection = () => {
     const queryClient = useQueryClient();
     return useMutation({
@@ -82,7 +62,6 @@ export const useAddConnection = () => {
     });
 };
 
-// Update an existing connection
 export const useUpdateConnection = () => {
     const queryClient = useQueryClient();
     return useMutation({
@@ -106,7 +85,6 @@ export const useUpdateConnection = () => {
     });
 };
 
-// Delete a connection
 export const useDeleteConnection = () => {
     const queryClient = useQueryClient();
     return useMutation({

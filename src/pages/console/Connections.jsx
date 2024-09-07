@@ -51,9 +51,10 @@ const Connections = () => {
   };
 
   const filteredConnections = connections?.filter(conn =>
-    conn &&
-    (conn.name?.toLowerCase().includes(searchTerm.toLowerCase()) || conn.type?.toLowerCase().includes(searchTerm.toLowerCase())) &&
-    (typeFilter === 'All Types' || conn.type === typeFilter)
+    conn && conn.name && conn.type && (
+      conn.name.toLowerCase().includes(searchTerm.toLowerCase()) &&
+      (typeFilter === 'All Types' || conn.type === typeFilter.toLowerCase())
+    )
   ) || [];
 
   if (isLoading) return <div>Loading...</div>;
@@ -71,9 +72,9 @@ const Connections = () => {
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="All Types">All Types</SelectItem>
-                <SelectItem value="postgres">PostgreSQL</SelectItem>
-                <SelectItem value="mysql">MySQL</SelectItem>
-                <SelectItem value="mongodb">MongoDB</SelectItem>
+                <SelectItem value="Database">Database</SelectItem>
+                <SelectItem value="API">API</SelectItem>
+                <SelectItem value="File Storage">File Storage</SelectItem>
               </SelectContent>
             </Select>
             <div className="relative w-full md:w-80">

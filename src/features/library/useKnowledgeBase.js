@@ -4,11 +4,15 @@ import { supabase } from '@/integrations/supabase/supabase';
 
 export const useKnowledgeBase = () => {
   const [searchTerm, setSearchTerm] = useState('');
-  const [searchResults, setSearchResults] = useState({ threads: [], pages: [] });
+  const [searchResults, setSearchResults] = useState({ threads: [], pages: [], dataSources: [] });
+  const [isCreateCollectionOpen, setIsCreateCollectionOpen] = useState(false);
   const [selectedThread, setSelectedThread] = useState(null);
   const [selectedPage, setSelectedPage] = useState(null);
+  const [selectedDataSource, setSelectedDataSource] = useState(null);
+  const [collections, setCollections] = useState([]);
   const [threads, setThreads] = useState([]);
   const [pages, setPages] = useState([]);
+  const [dataSources, setDataSources] = useState({});
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
   const { toast } = useToast();
@@ -56,9 +60,14 @@ export const useKnowledgeBase = () => {
     setSelectedPage(page);
   }, []);
 
+  const handleOpenDataSourceModal = useCallback((dataSource) => {
+    setSelectedDataSource(dataSource);
+  }, []);
+
   const handleCloseModal = useCallback(() => {
     setSelectedThread(null);
     setSelectedPage(null);
+    setSelectedDataSource(null);
     setIsCreatePageOpen(false);
   }, []);
 
@@ -164,14 +173,19 @@ export const useKnowledgeBase = () => {
     searchTerm,
     setSearchTerm,
     searchResults,
+    isCreateCollectionOpen,
+    setIsCreateCollectionOpen,
     selectedThread,
     selectedPage,
+    selectedDataSource,
     isLoading,
     error,
+    collections,
     pages,
     threads,
     handleOpenThreadModal,
     handleOpenPageModal,
+    handleOpenDataSourceModal,
     handleCloseModal,
     handleDeletePage,
     handleEditPage,
@@ -181,5 +195,6 @@ export const useKnowledgeBase = () => {
     toggleThreadSelection,
     handleCreatePage,
     handleCreateNewPage,
+    dataSources,
   };
 };
