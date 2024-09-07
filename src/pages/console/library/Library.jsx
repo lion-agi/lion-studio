@@ -37,7 +37,7 @@ const Library = () => {
     <div className="min-h-screen bg-gray-900 text-gray-100 p-8">
       <div className="container mx-auto">
         <div className="flex flex-col md:flex-row justify-between items-center mb-12">
-          <h1 className="text-2xl font-bold mb-6 md:mb-0 text-gray-100"></h1>
+          <h1 className="text-2xl font-bold mb-6 md:mb-0 text-gray-100">Library</h1>
           <div className="relative w-full md:w-80">
             <Input
               type="text"

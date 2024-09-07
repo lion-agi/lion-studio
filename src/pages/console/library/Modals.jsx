@@ -2,33 +2,58 @@ import React from 'react';
 import { Button } from "@/common/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/common/components/ui/dialog";
 import { MessageSquare, FileText, FolderPlus } from 'lucide-react';
-import CreateCollectionForm from '../../common/components/CreateCollectionForm';
+import CreateCollectionForm from '../../../common/components/CreateCollectionForm';
 
-const ActionButtons = ({ setIsCreateCollectionOpen }) => (
-  <div className="flex flex-col md:flex-row space-y-4 md:space-y-0 md:space-x-4 mb-8">
-    <Button variant="secondary" className="text-gray-200 bg-gray-800 hover:bg-gray-700 flex items-center">
-      <MessageSquare className="h-4 w-4 mr-2" />
-      Thread
-    </Button>
-    <Button variant="secondary" className="text-gray-200 bg-gray-800 hover:bg-gray-700 flex items-center">
-      <FileText className="h-4 w-4 mr-2" />
-      Page
-    </Button>
-    <Dialog>
-      <DialogTrigger asChild>
-        <Button variant="secondary" className="text-gray-200 bg-gray-800 hover:bg-gray-700 flex items-center">
-          <FolderPlus className="h-4 w-4 mr-2" />
-          Collection
-        </Button>
-      </DialogTrigger>
-      <DialogContent className="sm:max-w-[425px] bg-gray-800 text-gray-200">
-        <DialogHeader>
-          <DialogTitle>Create Collection</DialogTitle>
-        </DialogHeader>
-        <CreateCollectionForm onClose={() => setIsCreateCollectionOpen(false)} />
-      </DialogContent>
-    </Dialog>
-  </div>
-);
+const Modals = ({ selectedThread, selectedPage, selectedDataSource, handleCloseModal, isCreateCollectionOpen, setIsCreateCollectionOpen }) => {
+  return (
+    <>
+      {/* Thread Modal */}
+      {selectedThread && (
+        <Dialog open={!!selectedThread} onOpenChange={handleCloseModal}>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>{selectedThread.title}</DialogTitle>
+            </DialogHeader>
+            <p>{selectedThread.content}</p>
+          </DialogContent>
+        </Dialog>
+      )}
 
-export default ActionButtons;
+      {/* Page Modal */}
+      {selectedPage && (
+        <Dialog open={!!selectedPage} onOpenChange={handleCloseModal}>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>{selectedPage.title}</DialogTitle>
+            </DialogHeader>
+            <p>{selectedPage.content}</p>
+          </DialogContent>
+        </Dialog>
+      )}
+
+      {/* Data Source Modal */}
+      {selectedDataSource && (
+        <Dialog open={!!selectedDataSource} onOpenChange={handleCloseModal}>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>{selectedDataSource.name}</DialogTitle>
+            </DialogHeader>
+            <p>{selectedDataSource.description}</p>
+          </DialogContent>
+        </Dialog>
+      )}
+
+      {/* Create Collection Modal */}
+      <Dialog open={isCreateCollectionOpen} onOpenChange={setIsCreateCollectionOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Create New Collection</DialogTitle>
+          </DialogHeader>
+          <CreateCollectionForm onClose={() => setIsCreateCollectionOpen(false)} />
+        </DialogContent>
+      </Dialog>
+    </>
+  );
+};
+
+export default Modals;

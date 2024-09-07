@@ -1,11 +1,11 @@
 import React from 'react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/common/components/ui/tabs";
 import { MessageSquare, FolderPlus } from 'lucide-react';
-import ThreadList from '../../features/library/components/ThreadList';
+import ThreadList from './ThreadList';
 import PagesContent from './PagesContent';
 import CollectionsContent from './CollectionsContent';
-import DataSourceList from '../../features/library/components/DataSourceList';
-import EmptyState from '../../features/library/components/EmptyState';
+import DataSourceList from './DataSourceList';
+import EmptyState from './EmptyState';
 
 const LibraryTabs = ({ threads, pages, collections, dataSources, handleOpenThreadModal, handleOpenPageModal, handleDeletePage, handleEditPage, handleOpenDataSourceModal, setIsCreateCollectionOpen }) => (
   <Tabs defaultValue="threads" className="mt-8">
