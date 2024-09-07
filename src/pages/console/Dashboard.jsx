@@ -6,7 +6,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/common/components/ui
 import { Card, CardContent, CardHeader, CardTitle } from "@/common/components/ui/card";
 import { Button } from "@/common/components/ui/button";
 import { Alert, AlertDescription, AlertTitle } from "@/common/components/ui/alert";
-import { InfoIcon, DownloadIcon } from 'lucide-react';
+import { InfoIcon, DownloadIcon, Activity, Clock, AlertTriangle } from 'lucide-react';
 import DashboardHeader from '@/features/dashboard/components/DashboardHeader';
 import SummaryCards from '@/features/dashboard/components/SummaryCards';
 import CostTrendChart from '@/features/dashboard/components/CostTrendChart';
@@ -54,9 +54,6 @@ const Dashboard = () => {
                 </TabsContent>
                 <TabsContent value="costs">
                   <CostsTab />
-                </TabsContent>
-                <TabsContent value="performance">
-                  <PerformanceTab />
                 </TabsContent>
                 <TabsContent value="calls">
                   <CallsTab />
@@ -114,43 +111,6 @@ const CostsTab = () => {
   );
 };
 
-const PerformanceTab = () => {
-  const { data, isLoading, error } = useApiData();
-
-  if (isLoading) return <LoadingSpinner />;
-  if (error) return <ErrorFallback error={error} />;
-
-  return (
-    <div className="space-y-8">
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-        <Card>
-          <CardHeader>
-            <CardTitle>Average Response Time</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="text-4xl font-bold">{data.summary.avgResponseTime} ms</div>
-            <p className="text-sm text-gray-400">
-              {formatPercentage(data.summary.responseTimeChange)} from last period
-            </p>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardHeader>
-            <CardTitle>Error Rate</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="text-4xl font-bold">{formatPercentage(data.summary.errorRate)}</div>
-            <p className="text-sm text-gray-400">
-              {formatPercentage(data.summary.errorRateChange)} from last period
-            </p>
-          </CardContent>
-        </Card>
-      </div>
-      <PerformanceChart data={data.performance} />
-    </div>
-  );
-};
-
 const CallsTab = () => {
   const { data, isLoading, error } = useApiData();
 
@@ -159,17 +119,44 @@ const CallsTab = () => {
 
   return (
     <div className="space-y-8">
-      <Card>
-        <CardHeader>
-          <CardTitle>API Calls Overview</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="text-4xl font-bold">{formatNumber(data.summary.totalCalls)}</div>
-          <p className="text-sm text-gray-400">
-            {formatPercentage(data.summary.callsChange)} from last period
-          </p>
-        </CardContent>
-      </Card>
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Total API Calls</CardTitle>
+            <Activity className="h-4 w-4 text-muted-foreground" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">{formatNumber(data.summary.totalCalls)}</div>
+            <p className="text-xs text-muted-foreground">
+              {formatPercentage(data.summary.callsChange)} from last period
+            </p>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Avg Response Time</CardTitle>
+            <Clock className="h-4 w-4 text-muted-foreground" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">{data.summary.avgResponseTime} ms</div>
+            <p className="text-xs text-muted-foreground">
+              {formatPercentage(data.summary.responseTimeChange)} from last period
+            </p>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Error Rate</CardTitle>
+            <AlertTriangle className="h-4 w-4 text-muted-foreground" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">{formatPercentage(data.summary.errorRate)}</div>
+            <p className="text-xs text-muted-foreground">
+              {formatPercentage(data.summary.errorRateChange)} from last period
+            </p>
+          </CardContent>
+        </Card>
+      </div>
       <RecentCallsTable data={data.recentCalls} />
       <div className="flex justify-end">
         <Button>
