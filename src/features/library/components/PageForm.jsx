@@ -5,16 +5,17 @@ import { Input } from "@/common/components/ui/input";
 import { Textarea } from "@/common/components/ui/textarea";
 import { Label } from "@/common/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/common/components/ui/select";
+import { Switch } from "@/common/components/ui/switch";
 import { X } from 'lucide-react';
 
 const PageForm = ({ page, isOpen, onClose, onSave }) => {
   const [formData, setFormData] = useState({
     title: '',
     content: '',
-    category: '',
-    tags: '',
-    status: 'draft',
-    author: '',
+    topic: '',
+    summary: '',
+    is_active: true,
+    metadata: {},
   });
 
   useEffect(() => {
@@ -22,32 +23,44 @@ const PageForm = ({ page, isOpen, onClose, onSave }) => {
       setFormData({
         title: page.title || '',
         content: page.content || '',
-        category: page.category || '',
-        tags: page.tags ? page.tags.join(', ') : '',
-        status: page.status || 'draft',
-        author: page.author || '',
+        topic: page.topic || '',
+        summary: page.summary || '',
+        is_active: page.is_active !== undefined ? page.is_active : true,
+        metadata: page.metadata || {},
       });
     } else {
       setFormData({
         title: '',
         content: '',
-        category: '',
-        tags: '',
-        status: 'draft',
-        author: '',
+        topic: '',
+        summary: '',
+        is_active: true,
+        metadata: {},
       });
     }
   }, [page]);
 
   const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
+    const { name, value, type, checked } = e.target;
+    setFormData(prev => ({
+      ...prev,
+      [name]: type === 'checkbox' ? checked : value
+    }));
+  };
+
+  const handleMetadataChange = (key, value) => {
+    setFormData(prev => ({
+      ...prev,
+      metadata: {
+        ...prev.metadata,
+        [key]: value
+      }
+    }));
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    const tags = formData.tags.split(',').map(tag => tag.trim()).filter(Boolean);
-    onSave({ ...formData, tags });
+    onSave(formData);
   };
 
   return (
@@ -90,47 +103,37 @@ const PageForm = ({ page, isOpen, onClose, onSave }) => {
             />
           </div>
           <div className="space-y-2">
-            <Label htmlFor="category" className="text-sm font-medium text-gray-300">Category</Label>
+            <Label htmlFor="topic" className="text-sm font-medium text-gray-300">Topic</Label>
             <Input
-              id="category"
-              name="category"
-              value={formData.category}
+              id="topic"
+              name="topic"
+              value={formData.topic}
               onChange={handleChange}
               className="bg-gray-700 text-white border-gray-600 focus:border-purple-500"
             />
           </div>
           <div className="space-y-2">
-            <Label htmlFor="tags" className="text-sm font-medium text-gray-300">Tags (comma-separated)</Label>
-            <Input
-              id="tags"
-              name="tags"
-              value={formData.tags}
+            <Label htmlFor="summary" className="text-sm font-medium text-gray-300">Summary</Label>
+            <Textarea
+              id="summary"
+              name="summary"
+              value={formData.summary}
               onChange={handleChange}
-              className="bg-gray-700 text-white border-gray-600 focus:border-purple-500"
+              className="h-20 bg-gray-700 text-white border-gray-600 focus:border-purple-500"
             />
           </div>
-          <div className="space-y-2">
-            <Label htmlFor="status" className="text-sm font-medium text-gray-300">Status</Label>
-            <Select name="status" value={formData.status} onValueChange={(value) => handleChange({ target: { name: 'status', value } })}>
-              <SelectTrigger className="bg-gray-700 text-white border-gray-600">
-                <SelectValue placeholder="Select status" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="draft">Draft</SelectItem>
-                <SelectItem value="published">Published</SelectItem>
-                <SelectItem value="archived">Archived</SelectItem>
-              </SelectContent>
-            </Select>
+          <div className="flex items-center space-x-2">
+            <Switch
+              id="is_active"
+              name="is_active"
+              checked={formData.is_active}
+              onCheckedChange={(checked) => setFormData(prev => ({ ...prev, is_active: checked }))}
+            />
+            <Label htmlFor="is_active" className="text-sm font-medium text-gray-300">Active</Label>
           </div>
           <div className="space-y-2">
-            <Label htmlFor="author" className="text-sm font-medium text-gray-300">Author</Label>
-            <Input
-              id="author"
-              name="author"
-              value={formData.author}
-              onChange={handleChange}
-              className="bg-gray-700 text-white border-gray-600 focus:border-purple-500"
-            />
+            <Label className="text-sm font-medium text-gray-300">Metadata</Label>
+            {/* Add inputs for metadata fields here */}
           </div>
           <div className="flex justify-end space-x-3 pt-4">
             <Button type="button" onClick={onClose} variant="secondary" className="bg-gray-700 text-white hover:bg-gray-600">Cancel</Button>

@@ -23,28 +23,19 @@ const PageItem = ({ page, onOpenModal, onDelete, onEdit }) => {
       <CardHeader className="pb-2">
         <CardTitle className="text-lg font-semibold text-purple-300">{page.title}</CardTitle>
         <div className="flex items-center text-xs text-gray-400 space-x-2">
-          <User className="h-3 w-3" />
-          <span>{page.author}</span>
-          <Clock className="h-3 w-3 ml-2" />
-          <span>{formatDate(page.created_at)}</span>
+          <Clock className="h-3 w-3" />
+          <span>Last activity: {formatDate(page.last_activity_at)}</span>
         </div>
       </CardHeader>
       <CardContent>
         <p className="text-sm text-gray-300 mb-4">{truncate(page.content, 100)}</p>
-        <div className="flex flex-wrap gap-2 mb-2">
-          {page.tags && page.tags.map((tag, index) => (
-            <Badge key={index} variant="secondary" className="bg-purple-900 text-purple-100">
-              {tag}
-            </Badge>
-          ))}
-        </div>
         <Badge variant="outline" className="text-xs">
-          {page.category}
+          {page.topic}
         </Badge>
       </CardContent>
       <CardFooter className="flex justify-between items-center pt-2">
-        <Badge variant={page.status === 'published' ? 'success' : 'secondary'}>
-          {page.status}
+        <Badge variant={page.is_active ? 'success' : 'secondary'}>
+          {page.is_active ? 'Active' : 'Inactive'}
         </Badge>
         <div className="flex space-x-2">
           <TooltipProvider>
@@ -62,7 +53,7 @@ const PageItem = ({ page, onOpenModal, onDelete, onEdit }) => {
           <TooltipProvider>
             <Tooltip>
               <TooltipTrigger asChild>
-                <Button variant="ghost" size="sm" onClick={() => onEdit(page.id)}>
+                <Button variant="ghost" size="sm" onClick={() => onEdit(page)}>
                   <Edit className="h-4 w-4" />
                 </Button>
               </TooltipTrigger>

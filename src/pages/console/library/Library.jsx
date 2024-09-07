@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { Input } from "@/common/components/ui/input";
 import { Search } from 'lucide-react';
@@ -6,10 +6,9 @@ import LibraryTabs from '../../../features/library/components/LibraryTabs';
 import Pagination from '../../../features/library/components/Pagination';
 import Modals from './Modals';
 import PageForm from '../../../features/library/components/PageForm';
-import { useKnowledgeBase } from '../../../features/library/useKnowledgeBase';
-import { addSamplePages } from '../../../integrations/supabase/hooks/pages';
-import { createThreadsTableWithSampleData } from '../../../integrations/supabase/hooks/threads';
-import { createDataSourcesTableWithSampleData } from '../../../integrations/supabase/hooks/dataSources';
+import { usePages, useAddPage, useUpdatePage, useDeletePage } from '../../../integrations/supabase/hooks/pages';
+import { useThreads } from '../../../integrations/supabase/hooks/threads';
+import { useDataSources } from '../../../integrations/supabase/hooks/dataSources';
 
 const LoadingSpinner = () => (
   <div className="flex justify-center items-center h-64">
@@ -21,59 +20,80 @@ const Library = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const activeTab = searchParams.get('tab') || 'threads';
 
-  const {
-    searchTerm,
-    setSearchTerm,
-    isCreateCollectionOpen,
-    setIsCreateCollectionOpen,
-    selectedThread,
-    selectedPage,
-    selectedDataSource,
-    handleOpenThreadModal,
-    handleOpenPageModal,
-    handleOpenDataSourceModal,
-    handleCloseModal,
-    handleDeletePage,
-    handleEditPage,
-    handleCreatePage,
-    handleCreateNewPage,
-    isCreatePageOpen,
-    setIsCreatePageOpen,
-    threads,
-    pages,
-    dataSources,
-    collections,
-    isLoading,
-    error,
-    refetchAll,
-  } = useKnowledgeBase();
+  const { data: pages, isLoading: pagesLoading, error: pagesError } = usePages();
+  const { data: threads, isLoading: threadsLoading, error: threadsError } = useThreads();
+  const { data: dataSources, isLoading: dataSourcesLoading, error: dataSourcesError } = useDataSources();
+  
+  const addPage = useAddPage();
+  const updatePage = useUpdatePage();
+  const deletePage = useDeletePage();
 
+  const [searchTerm, setSearchTerm] = useState('');
+  const [isCreateCollectionOpen, setIsCreateCollectionOpen] = useState(false);
+  const [selectedThread, setSelectedThread] = useState(null);
+  const [selectedPage, setSelectedPage] = useState(null);
+  const [selectedDataSource, setSelectedDataSource] = useState(null);
+  const [isCreatePageOpen, setIsCreatePageOpen] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 12;
 
-  const paginatedPages = pages ? pages.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage) : [];
-
-  useEffect(() => {
-    const initializeTables = async () => {
-      try {
-        await addSamplePages();
-        await createThreadsTableWithSampleData();
-        await createDataSourcesTableWithSampleData();
-        refetchAll();
-      } catch (error) {
-        console.error('Error initializing tables:', error);
-      }
-    };
-
-    initializeTables();
-  }, [refetchAll]);
-
-  const handleTabChange = (newTab) => {
-    setSearchParams({ tab: newTab });
+  const handleOpenThreadModal = (thread) => setSelectedThread(thread);
+  const handleOpenPageModal = (page) => setSelectedPage(page);
+  const handleOpenDataSourceModal = (dataSource) => setSelectedDataSource(dataSource);
+  const handleCloseModal = () => {
+    setSelectedThread(null);
+    setSelectedPage(null);
+    setSelectedDataSource(null);
   };
+
+  const handleDeletePage = async (id) => {
+    try {
+      await deletePage.mutateAsync(id);
+    } catch (error) {
+      console.error('Error deleting page:', error);
+    }
+  };
+
+  const handleEditPage = (page) => {
+    setSelectedPage(page);
+    setIsCreatePageOpen(true);
+  };
+
+  const handleCreatePage = async (pageData) => {
+    try {
+      if (selectedPage) {
+        await updatePage.mutateAsync({ id: selectedPage.id, ...pageData });
+      } else {
+        await addPage.mutateAsync(pageData);
+      }
+      setIsCreatePageOpen(false);
+      setSelectedPage(null);
+    } catch (error) {
+      console.error('Error saving page:', error);
+    }
+  };
+
+  const handleCreateNewPage = () => {
+    setSelectedPage(null);
+    setIsCreatePageOpen(true);
+  };
+
+  const filteredPages = pages?.filter(page => 
+    page.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    page.content.toLowerCase().includes(searchTerm.toLowerCase())
+  ) || [];
+
+  const paginatedPages = filteredPages.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
+
+  const isLoading = pagesLoading || threadsLoading || dataSourcesLoading;
+  const error = pagesError || threadsError || dataSourcesError;
 
   if (isLoading) {
     return <LoadingSpinner />;
+  }
+
+  if (error) {
+    return <div>Error: {error.message}</div>;
   }
 
   return (
@@ -95,10 +115,10 @@ const Library = () => {
 
         <LibraryTabs
           activeTab={activeTab}
-          onTabChange={handleTabChange}
+          onTabChange={(newTab) => setSearchParams({ tab: newTab })}
           threads={threads}
           pages={paginatedPages}
-          collections={collections}
+          collections={[]} // You might want to add a hook for collections
           dataSources={dataSources}
           handleOpenThreadModal={handleOpenThreadModal}
           handleOpenPageModal={handleOpenPageModal}
@@ -113,7 +133,7 @@ const Library = () => {
         <Pagination
           currentPage={currentPage}
           setCurrentPage={setCurrentPage}
-          totalPages={Math.ceil((pages?.length || 0) / itemsPerPage)}
+          totalPages={Math.ceil(filteredPages.length / itemsPerPage)}
         />
 
         <Modals
@@ -126,7 +146,7 @@ const Library = () => {
         />
 
         <PageForm
-          page={null}
+          page={selectedPage}
           isOpen={isCreatePageOpen}
           onClose={() => setIsCreatePageOpen(false)}
           onSave={handleCreatePage}
