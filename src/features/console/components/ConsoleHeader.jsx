@@ -21,7 +21,6 @@ const ConsoleHeader = () => {
     { name: 'Connections', path: '/console/connections', icon: LinkIcon },
     { name: 'Deployment', path: '/console/deployment', icon: Rocket },
     { name: 'Library', path: '/console/library', icon: Library },
-    { name: 'Monitoring', path: '/console/monitoring', icon: Activity },
     { name: 'Workflow', path: '/console/workflow', icon: GitBranch },
   ];
 
