@@ -1,6 +1,6 @@
 import React from 'react';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/common/components/ui/table";
-import { formatNumber, formatCurrency } from '@/features/dashboard/utils';
+import { formatNumber } from '@/features/dashboard/utils';
 
 const RecentCallsTable = ({ data }) => {
   return (
@@ -38,8 +38,8 @@ const RecentCallsTable = ({ data }) => {
               <TableCell className="whitespace-nowrap">{call.endpoint}</TableCell>
               <TableCell className="whitespace-nowrap">{call.method}</TableCell>
               <TableCell className="whitespace-nowrap">{call.baseUrl}</TableCell>
-              <TableCell className="text-right">{formatNumber(call.tokens)}</TableCell>
-              <TableCell className="text-right">{call.cost.toFixed(5)}</TableCell>
+              <TableCell className="text-right">{formatNumber(Math.round(call.tokens))}</TableCell>
+              <TableCell className="text-right">{typeof call.cost === 'number' ? call.cost.toFixed(5) : 'N/A'}</TableCell>
               <TableCell className="text-right">{call.responseTime} ms</TableCell>
             </TableRow>
           ))}
