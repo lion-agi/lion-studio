@@ -51,8 +51,10 @@ const Connections = () => {
   };
 
   const filteredConnections = connections?.filter(conn =>
-    conn.name.toLowerCase().includes(searchTerm.toLowerCase()) &&
-    (typeFilter === 'All Types' || conn.type === typeFilter.toLowerCase())
+    conn && conn.name && conn.type && (
+      conn.name.toLowerCase().includes(searchTerm.toLowerCase()) &&
+      (typeFilter === 'All Types' || conn.type === typeFilter.toLowerCase())
+    )
   ) || [];
 
   if (isLoading) return <div>Loading...</div>;
