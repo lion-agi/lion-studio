@@ -13,6 +13,7 @@ const RecentCallsTable = ({ data }) => {
             <TableHead className="whitespace-nowrap">Model</TableHead>
             <TableHead className="whitespace-nowrap">Endpoint</TableHead>
             <TableHead className="whitespace-nowrap">Method</TableHead>
+            <TableHead className="whitespace-nowrap">Base URL</TableHead>
             <TableHead className="whitespace-nowrap text-right">Tokens</TableHead>
             <TableHead className="whitespace-nowrap text-right">Cost</TableHead>
             <TableHead className="whitespace-nowrap text-right">Response Time</TableHead>
@@ -36,8 +37,9 @@ const RecentCallsTable = ({ data }) => {
               <TableCell className="whitespace-nowrap">{call.model}</TableCell>
               <TableCell className="whitespace-nowrap">{call.endpoint}</TableCell>
               <TableCell className="whitespace-nowrap">{call.method}</TableCell>
+              <TableCell className="whitespace-nowrap">{call.baseUrl}</TableCell>
               <TableCell className="text-right">{formatNumber(call.tokens)}</TableCell>
-              <TableCell className="text-right">{formatCurrency(call.cost)}</TableCell>
+              <TableCell className="text-right">{call.cost.toFixed(5)}</TableCell>
               <TableCell className="text-right">{call.responseTime} ms</TableCell>
             </TableRow>
           ))}

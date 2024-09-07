@@ -31,14 +31,41 @@ const generatePerformanceData = (days) => {
 };
 
 const generateRecentCalls = (count) => {
+  const providers = ['OpenAI', 'Anthropic', 'Cohere', 'AI21 Labs'];
+  const models = {
+    'OpenAI': ['gpt-4', 'gpt-4-turbo', 'gpt-3.5-turbo'],
+    'Anthropic': ['claude-3-opus', 'claude-3-sonnet', 'claude-3-haiku'],
+    'Cohere': ['command', 'command-light', 'command-nightly'],
+    'AI21 Labs': ['j2-ultra', 'j2-mid', 'j2-light']
+  };
+  const endpoints = {
+    'OpenAI': 'chat/completions',
+    'Anthropic': 'messages',
+    'Cohere': 'generate',
+    'AI21 Labs': 'complete'
+  };
+  const methods = ['POST', 'GET'];
+  const baseUrls = {
+    'OpenAI': 'https://api.openai.com/v1/',
+    'Anthropic': 'https://api.anthropic.com/v1/',
+    'Cohere': 'https://api.cohere.ai/v1/',
+    'AI21 Labs': 'https://api.ai21.com/studio/v1/'
+  };
+
   const calls = [];
   for (let i = 0; i < count; i++) {
+    const provider = providers[Math.floor(Math.random() * providers.length)];
+    const model = models[provider][Math.floor(Math.random() * models[provider].length)];
     calls.push({
       id: `call-${i}`,
       timestamp: new Date(Date.now() - i * 60000).toISOString(), // Each call 1 minute apart
-      endpoint: ['gpt-3.5-turbo', 'gpt-4', 'dall-e'][Math.floor(Math.random() * 3)],
+      provider: provider,
+      model: model,
+      endpoint: endpoints[provider],
+      method: methods[Math.floor(Math.random() * methods.length)],
+      baseUrl: baseUrls[provider],
       tokens: Math.floor(Math.random() * 1000) + 100,
-      cost: (Math.random() * 0.1 + 0.01).toFixed(4),
+      cost: (Math.random() * 0.1 + 0.01),
       responseTime: Math.floor(Math.random() * 1000) + 100,
     });
   }
@@ -74,7 +101,7 @@ export const fetchApiData = async (timeRange, selectedModel) => {
     costBreakdown: [
       { model: 'gpt-3.5-turbo', cost: totalCost * 0.4 },
       { model: 'gpt-4', cost: totalCost * 0.5 },
-      { model: 'dall-e', cost: totalCost * 0.1 },
+      { model: 'claude-3-opus', cost: totalCost * 0.1 },
     ],
     performance,
     recentCalls,
