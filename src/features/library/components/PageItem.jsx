@@ -5,7 +5,7 @@ import { Input } from "@/common/components/ui/input";
 import { Label } from "@/common/components/ui/label";
 import { Checkbox } from "@/common/components/ui/checkbox";
 
-const CreatePageModal = ({ isOpen, onClose, threads, selectedThreads, toggleThreadSelection, onCreatePage }) => {
+const CreatePageModal = ({ isOpen, onClose, threads = [], selectedThreads, toggleThreadSelection, onCreatePage }) => {
   const [title, setTitle] = useState('');
 
   const handleSubmit = (e) => {
