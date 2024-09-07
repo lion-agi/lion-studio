@@ -40,7 +40,7 @@ export const usePage = (id, options = {}) => useQuery({
 export const useAddPage = () => {
     const queryClient = useQueryClient();
     return useMutation({
-        mutationFn: (newPage) => fromSupabase(supabase.from('pages').insert([newPage])),
+        mutationFn: (newPage) => fromSupabase(supabase.from('pages').insert([newPage]).select()),
         onSuccess: () => {
             queryClient.invalidateQueries('pages');
         },
@@ -50,7 +50,7 @@ export const useAddPage = () => {
 export const useUpdatePage = () => {
     const queryClient = useQueryClient();
     return useMutation({
-        mutationFn: ({ id, ...updateData }) => fromSupabase(supabase.from('pages').update(updateData).eq('id', id)),
+        mutationFn: ({ id, ...updateData }) => fromSupabase(supabase.from('pages').update(updateData).eq('id', id).select()),
         onSuccess: () => {
             queryClient.invalidateQueries('pages');
         },
