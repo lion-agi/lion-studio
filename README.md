@@ -13,7 +13,8 @@
 <img width="1394" alt="Screenshot 2024-09-06 at 10 34 03 AM" src="https://github.com/user-attachments/assets/0a5a4108-b637-49a0-acc9-3e05ae62e36c">
 
 
-<img width="1394" alt="Screenshot 2024-09-06 at 10 34 33 AM" src="https://github.com/user-attachments/assets/76d1976e-98d5-4d48-b2f8-e6c8fd0f9d5a">
+<img width="1553" alt="image" src="https://github.com/user-attachments/assets/56fbc4b9-5b06-4db0-9c11-e7ebe8432d78">
+
 
 
 
@@ -22,7 +23,7 @@
 There are several ways of editing your application.
 
 
-
+s8ic01247+
 
 **Use GPT Engineer**
 
