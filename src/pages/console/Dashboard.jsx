@@ -126,7 +126,7 @@ const CallsTab = () => {
             <Activity className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{formatNumber(data.summary.totalCalls)}</div>
+            <div className="text-2xl font-bold">{Math.round(data.summary.totalCalls)}</div>
             <p className="text-xs text-muted-foreground">
               {formatPercentage(data.summary.callsChange)} from last period
             </p>
@@ -138,7 +138,7 @@ const CallsTab = () => {
             <Clock className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{data.summary.avgResponseTime} ms</div>
+            <div className="text-2xl font-bold">{Math.round(data.summary.avgResponseTime)} ms</div>
             <p className="text-xs text-muted-foreground">
               {formatPercentage(data.summary.responseTimeChange)} from last period
             </p>
