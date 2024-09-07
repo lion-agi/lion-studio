@@ -5,11 +5,10 @@ import { Input } from "@/common/components/ui/input";
 import { Label } from "@/common/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/common/components/ui/tabs";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/common/components/ui/dialog";
-import { Alert, AlertDescription, AlertTitle } from "@/common/components/ui/alert";
 import { Badge } from "@/common/components/ui/badge";
 import { Switch } from "@/common/components/ui/switch";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/common/components/ui/select";
-import { AlertTriangle, CheckCircle2, XCircle, Database, Cloud, FileText, Link as LinkIcon, Brain, Search } from 'lucide-react';
+import { CheckCircle2, XCircle, Database, Cloud, FileText, Link as LinkIcon, Brain, Search } from 'lucide-react';
 
 const ConnectionCard = ({ name, type, status, icon: Icon }) => (
   <Card className="bg-gray-800 hover:bg-gray-700 transition-colors">
@@ -122,14 +121,6 @@ const Connections = () => {
             </div>
           </div>
         </div>
-
-        <Alert variant="warning" className="bg-yellow-900 border-yellow-600">
-          <AlertTriangle className="h-4 w-4" />
-          <AlertTitle>Security Notice</AlertTitle>
-          <AlertDescription className="text-gray-300">
-            Ensure all connections use secure protocols and keep credentials confidential. Regularly review and update your connection settings.
-          </AlertDescription>
-        </Alert>
 
         <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
           <TabsList className="bg-gray-800">
