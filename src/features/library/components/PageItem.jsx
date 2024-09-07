@@ -7,21 +7,21 @@ import { Eye, Trash2, Edit, Clock } from 'lucide-react';
 
 const PageItem = ({ page, onOpenModal, onDelete, onEdit }) => {
   return (
-    <Card className="bg-gray-800 text-gray-100 hover:shadow-lg transition-all duration-300 ease-in-out animate-fade-in">
-      <CardHeader>
-        <div className="flex justify-between items-center">
-          <CardTitle className="text-lg font-semibold text-purple-300">{page.title}</CardTitle>
-          <Badge variant="outline">{page.topic || 'Uncategorized'}</Badge>
+    <Card className="bg-gray-800 text-gray-100 hover:shadow-lg transition-all duration-300 ease-in-out">
+      <CardHeader className="pb-2">
+        <div className="flex justify-between items-start">
+          <CardTitle className="text-lg font-semibold text-purple-300 truncate">{page.title}</CardTitle>
+          <Badge variant="outline" className="ml-2 text-xs">{page.topic || 'Uncategorized'}</Badge>
         </div>
       </CardHeader>
-      <CardContent>
-        <p className="text-sm text-gray-300 mb-4">{page.summary || 'No summary available'}</p>
-        <div className="flex items-center space-x-2 mb-2">
-          <Clock className="h-4 w-4 text-gray-400" />
-          <span className="text-sm text-gray-400">Last updated: {new Date(page.updated_at).toLocaleDateString()}</span>
+      <CardContent className="pb-2">
+        <p className="text-sm text-gray-300 line-clamp-3">{page.summary || 'No summary available'}</p>
+        <div className="flex items-center mt-2 text-xs text-gray-400">
+          <Clock className="h-3 w-3 mr-1" />
+          <span>Last updated: {new Date(page.updated_at).toLocaleDateString()}</span>
         </div>
       </CardContent>
-      <CardFooter className="flex justify-end space-x-2">
+      <CardFooter className="pt-2 flex justify-end space-x-2">
         <TooltipProvider>
           <Tooltip>
             <TooltipTrigger asChild>
