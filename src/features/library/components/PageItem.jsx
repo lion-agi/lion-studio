@@ -1,57 +1,60 @@
-import React, { useState } from 'react';
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/common/components/ui/dialog";
+import React from 'react';
+import { Card, CardContent } from "@/common/components/ui/card";
 import { Button } from "@/common/components/ui/button";
-import { Input } from "@/common/components/ui/input";
-import { Label } from "@/common/components/ui/label";
-import { Checkbox } from "@/common/components/ui/checkbox";
+import { Eye, Trash2, Edit } from 'lucide-react';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/common/components/ui/tooltip";
 
-const CreatePageModal = ({ isOpen, onClose, threads = [], selectedThreads, toggleThreadSelection, onCreatePage }) => {
-  const [title, setTitle] = useState('');
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    onCreatePage({ title });
-    setTitle('');
-  };
-
+const PageItem = ({ page, onOpenModal, onDelete, onEdit }) => {
   return (
-    <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-[425px]">
-        <DialogHeader>
-          <DialogTitle>Create New Page</DialogTitle>
-        </DialogHeader>
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div>
-            <Label htmlFor="title">Page Title</Label>
-            <Input 
-              id="title" 
-              value={title} 
-              onChange={(e) => setTitle(e.target.value)} 
-              required 
-            />
-          </div>
-          <div>
-            <Label>Select Threads</Label>
-            <div className="max-h-60 overflow-y-auto">
-              {threads.map(thread => (
-                <div key={thread.id} className="flex items-center space-x-2 mb-2">
-                  <Checkbox 
-                    id={`thread-${thread.id}`} 
-                    checked={selectedThreads.some(t => t.id === thread.id)}
-                    onCheckedChange={() => toggleThreadSelection(thread)}
-                  />
-                  <Label htmlFor={`thread-${thread.id}`} className="text-sm">
-                    {thread.title}
-                  </Label>
-                </div>
-              ))}
-            </div>
-          </div>
-          <Button type="submit">Create Page</Button>
-        </form>
-      </DialogContent>
-    </Dialog>
+    <Card className="bg-gray-800 text-gray-100 hover:shadow-lg transition-all duration-300 ease-in-out animate-fade-in">
+      <CardContent className="p-4">
+        <h3 className="text-lg font-semibold mb-2">{page.title}</h3>
+        <p className="text-sm text-gray-300 mb-4">{page.content.substring(0, 100)}...</p>
+        <div className="flex justify-between items-center text-xs text-gray-400">
+          <span>Created: {new Date(page.created_at).toLocaleDateString()}</span>
+          <span>{page.views} views</span>
+        </div>
+        <div className="flex justify-end space-x-2 mt-4">
+          <TooltipProvider>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button variant="ghost" size="sm" onClick={() => onOpenModal(page)}>
+                  <Eye className="h-4 w-4" />
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent>
+                <p>View Page</p>
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
+          <TooltipProvider>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button variant="ghost" size="sm" onClick={() => onEdit(page.id)}>
+                  <Edit className="h-4 w-4" />
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent>
+                <p>Edit Page</p>
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
+          <TooltipProvider>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button variant="ghost" size="sm" onClick={() => onDelete(page.id)}>
+                  <Trash2 className="h-4 w-4" />
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent>
+                <p>Delete Page</p>
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
+        </div>
+      </CardContent>
+    </Card>
   );
 };
 
-export default CreatePageModal;
+export default PageItem;
