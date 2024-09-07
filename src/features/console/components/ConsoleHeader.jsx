@@ -7,7 +7,6 @@ import {
   Link as LinkIcon,
   Rocket,
   Library,
-  Activity,
   GitBranch,
   LogOut
 } from 'lucide-react';
@@ -26,9 +25,9 @@ const ConsoleHeader = () => {
 
   return (
     <header className="bg-gray-900 text-white shadow-md">
-      <div className="container mx-auto px-4 py-4">
-        <div className="flex justify-between items-center mb-6">
-          <Link to="/console" className="text-2xl font-bold">
+      <div className="container mx-auto px-6 py-8">
+        <div className="flex justify-between items-center mb-5">
+          <Link to="/console" className="text-[1.75rem] font-bold">
             <span className="bg-gradient-to-r from-purple-400 to-pink-600 text-transparent bg-clip-text">
               Lion Studio
             </span>
@@ -38,12 +37,12 @@ const ConsoleHeader = () => {
             Log Out
           </Button>
         </div>
-        <nav className="flex space-x-2">
+        <nav className="flex flex-wrap space-x-2 -mb-2">
           {navItems.map((item) => (
             <Link
               key={item.name}
               to={item.path}
-              className={`px-3 py-2 rounded-md text-sm font-medium flex items-center transition-colors duration-200 ${
+              className={`px-3 py-2 rounded-md text-sm font-medium flex items-center transition-colors duration-200 mb-2 ${
                 location.pathname.startsWith(item.path)
                   ? 'bg-gray-700 text-white'
                   : 'text-gray-300 hover:bg-gray-700 hover:text-white'

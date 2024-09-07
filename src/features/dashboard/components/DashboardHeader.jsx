@@ -9,7 +9,7 @@ const DashboardHeader = () => {
 
   return (
     <div className="flex justify-between items-center">
-      <h1 className="text-3xl font-bold">LLM API Monitoring Dashboard</h1>
+      <h1 className="text-3xl font-bold">Dashboard</h1>
       <div className="flex space-x-4">
         <Select value={timeRange} onValueChange={setTimeRange}>
           <SelectTrigger className="w-[180px]">
