@@ -1,37 +1,49 @@
 import React from 'react';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/common/components/ui/table";
-import { formatCurrency, formatNumber } from '@/features/dashboard/utils';
-
-// Utility function to safely format cost
-const safeCurrency = (value) => {
-  const num = typeof value === 'string' ? parseFloat(value) : value;
-  return isNaN(num) ? 'N/A' : formatCurrency(num);
-};
+import { formatNumber, formatCurrency } from '@/features/dashboard/utils';
 
 const RecentCallsTable = ({ data }) => {
   return (
-    <Table>
-      <TableHeader>
-        <TableRow>
-          <TableHead>Timestamp</TableHead>
-          <TableHead>Endpoint</TableHead>
-          <TableHead className="text-right">Tokens</TableHead>
-          <TableHead className="text-right">Cost</TableHead>
-          <TableHead className="text-right">Response Time</TableHead>
-        </TableRow>
-      </TableHeader>
-      <TableBody>
-        {data.map((call) => (
-          <TableRow key={call.id}>
-            <TableCell>{call.timestamp}</TableCell>
-            <TableCell>{call.endpoint}</TableCell>
-            <TableCell className="text-right">{formatNumber(call.tokens)}</TableCell>
-            <TableCell className="text-right">{safeCurrency(call.cost)}</TableCell>
-            <TableCell className="text-right">{call.responseTime} ms</TableCell>
+    <div className="overflow-x-auto">
+      <Table className="w-full">
+        <TableHeader>
+          <TableRow>
+            <TableHead className="whitespace-nowrap">Timestamp</TableHead>
+            <TableHead className="whitespace-nowrap">Provider</TableHead>
+            <TableHead className="whitespace-nowrap">Model</TableHead>
+            <TableHead className="whitespace-nowrap">Endpoint</TableHead>
+            <TableHead className="whitespace-nowrap">Method</TableHead>
+            <TableHead className="whitespace-nowrap text-right">Tokens</TableHead>
+            <TableHead className="whitespace-nowrap text-right">Cost</TableHead>
+            <TableHead className="whitespace-nowrap text-right">Response Time</TableHead>
           </TableRow>
-        ))}
-      </TableBody>
-    </Table>
+        </TableHeader>
+        <TableBody>
+          {data.map((call) => (
+            <TableRow key={call.id}>
+              <TableCell className="whitespace-nowrap">
+                {new Date(call.timestamp).toLocaleString(undefined, {
+                  year: 'numeric',
+                  month: '2-digit',
+                  day: '2-digit',
+                  hour: '2-digit',
+                  minute: '2-digit',
+                  second: '2-digit',
+                  hour12: false,
+                })}
+              </TableCell>
+              <TableCell className="whitespace-nowrap">{call.provider}</TableCell>
+              <TableCell className="whitespace-nowrap">{call.model}</TableCell>
+              <TableCell className="whitespace-nowrap">{call.endpoint}</TableCell>
+              <TableCell className="whitespace-nowrap">{call.method}</TableCell>
+              <TableCell className="text-right">{formatNumber(call.tokens)}</TableCell>
+              <TableCell className="text-right">{formatCurrency(call.cost)}</TableCell>
+              <TableCell className="text-right">{call.responseTime} ms</TableCell>
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table>
+    </div>
   );
 };
 
