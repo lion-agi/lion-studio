@@ -43,10 +43,6 @@ const Library = () => {
     return <div className="flex justify-center items-center h-screen">Loading...</div>;
   }
 
-  if (error) {
-    return <div className="text-red-500 text-center">{error}</div>;
-  }
-
   return (
     <div className="min-h-screen bg-gray-900 text-gray-100 p-8">
       <div className="container mx-auto">
@@ -76,6 +72,7 @@ const Library = () => {
           handleOpenDataSourceModal={handleOpenDataSourceModal}
           setIsCreateCollectionOpen={setIsCreateCollectionOpen}
           handleCreateNewPage={handleCreateNewPage}
+          error={error}
         />
 
         <Pagination
