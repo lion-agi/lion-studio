@@ -7,23 +7,6 @@ const fromSupabase = async (query) => {
     return data;
 };
 
-/*
-### threads
-
-| name             | type                     | format | required |
-|------------------|--------------------------|--------|----------|
-| id               | bigint                   | number | true     |
-| title            | varchar(255)             | string | false    |
-| created_at       | timestamp with time zone | string | true     |
-| last_activity_at | timestamp with time zone | string | true     |
-| is_active        | boolean                  | boolean| true     |
-| topic            | varchar(100)             | string | false    |
-| summary          | text                     | string | false    |
-| metadata         | jsonb                    | object | false    |
-
-No foreign key relationships identified.
-*/
-
 export const useThreads = (options = {}) => useQuery({
     queryKey: ['threads'],
     queryFn: async () => {
@@ -35,10 +18,11 @@ export const useThreads = (options = {}) => useQuery({
             .single();
 
         if (tableError || !tableExists) {
-            throw new Error('The threads table does not exist. Please create it first.');
+            console.warn('The threads table does not exist. Creating it now...');
+            await createThreadsTable();
         }
 
-        // If the table exists, fetch the data
+        // If the table exists or was just created, fetch the data
         return fromSupabase(supabase.from('threads').select('*'));
     },
     ...options,
@@ -53,7 +37,12 @@ export const useThread = (id, options = {}) => useQuery({
 export const useAddThread = () => {
     const queryClient = useQueryClient();
     return useMutation({
-        mutationFn: (newThread) => fromSupabase(supabase.from('threads').insert([newThread])),
+        mutationFn: async (newThread) => {
+            const { data: { user } } = await supabase.auth.getUser();
+            if (!user) throw new Error('User not authenticated');
+            const threadWithUser = { ...newThread, user_id: user.id };
+            return fromSupabase(supabase.from('threads').insert([threadWithUser]).select());
+        },
         onSuccess: () => {
             queryClient.invalidateQueries('threads');
         },
@@ -63,7 +52,11 @@ export const useAddThread = () => {
 export const useUpdateThread = () => {
     const queryClient = useQueryClient();
     return useMutation({
-        mutationFn: ({ id, ...updateData }) => fromSupabase(supabase.from('threads').update(updateData).eq('id', id)),
+        mutationFn: async ({ id, ...updates }) => {
+            const { data: { user } } = await supabase.auth.getUser();
+            if (!user) throw new Error('User not authenticated');
+            return fromSupabase(supabase.from('threads').update(updates).eq('id', id).eq('user_id', user.id).select());
+        },
         onSuccess: () => {
             queryClient.invalidateQueries('threads');
         },
@@ -73,7 +66,11 @@ export const useUpdateThread = () => {
 export const useDeleteThread = () => {
     const queryClient = useQueryClient();
     return useMutation({
-        mutationFn: (id) => fromSupabase(supabase.from('threads').delete().eq('id', id)),
+        mutationFn: async (id) => {
+            const { data: { user } } = await supabase.auth.getUser();
+            if (!user) throw new Error('User not authenticated');
+            return fromSupabase(supabase.from('threads').delete().eq('id', id).eq('user_id', user.id));
+        },
         onSuccess: () => {
             queryClient.invalidateQueries('threads');
         },
@@ -134,11 +131,14 @@ export const useThreadSummary = (threadId, options = {}) => useQuery({
     ...options,
 });
 
+const createThreadsTable = async () => {
+    const { error } = await supabase.rpc('create_threads_table');
+    if (error) throw error;
+};
+
 // Function to create the threads table and add sample data
 export const createThreadsTableWithSampleData = async () => {
-    // Create the threads table
-    const { error: createError } = await supabase.rpc('create_threads_table');
-    if (createError) throw createError;
+    await createThreadsTable();
 
     // Add sample data
     const sampleThreads = [
