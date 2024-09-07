@@ -5,7 +5,8 @@ import { ErrorBoundary } from 'react-error-boundary';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/common/components/ui/tabs";
 import { Button } from "@/common/components/ui/button";
 import { Alert, AlertDescription, AlertTitle } from "@/common/components/ui/alert";
-import { InfoIcon, DownloadIcon, Activity, Clock, AlertTriangle } from 'lucide-react';
+import { Input } from "@/common/components/ui/input";
+import { InfoIcon, DownloadIcon, Activity, Clock, AlertTriangle, Search } from 'lucide-react';
 import DashboardHeader from '@/features/dashboard/components/DashboardHeader';
 import SummaryCards from '@/features/dashboard/components/SummaryCards';
 import CostTrendChart from '@/features/dashboard/components/CostTrendChart';
@@ -13,7 +14,7 @@ import CostBreakdownChart from '@/features/dashboard/components/CostBreakdownCha
 import PerformanceChart from '@/features/dashboard/components/PerformanceChart';
 import RecentCallsTable from '@/features/dashboard/components/RecentCallsTable';
 import { useApiData } from '@/features/dashboard/hooks';
-import { formatCurrency, formatNumber, formatPercentage } from '@/features/dashboard/utils';
+import { formatCurrency, formatNumber } from '@/features/dashboard/utils';
 
 const queryClient = new QueryClient();
 
@@ -34,19 +35,33 @@ const LoadingSpinner = () => (
 
 const Dashboard = () => {
   const [activeTab, setActiveTab] = React.useState('overview');
+  const [searchTerm, setSearchTerm] = React.useState('');
 
   return (
     <RecoilRoot>
       <QueryClientProvider client={queryClient}>
         <ErrorBoundary FallbackComponent={ErrorFallback}>
           <div className="min-h-screen bg-gray-900 text-gray-100">
-            <div className="container mx-auto p-6 space-y-8">
-              <DashboardHeader />
+            <div className="container mx-auto p-8 space-y-8">
+              <div className="flex flex-col md:flex-row justify-between items-center mb-12">
+                <h1 className="text-2xl font-bold mb-6 md:mb-0 text-gray-100">Dashboard</h1>
+                <div className="relative w-full md:w-80">
+                  <Input
+                    type="text"
+                    placeholder="Search dashboard..."
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                    className="w-full bg-gray-800 text-gray-200 placeholder-gray-400 border-gray-700 focus:border-purple-500 focus:ring-1 focus:ring-purple-500 pr-10"
+                  />
+                  <Search className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
+                </div>
+              </div>
+
               <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
                 <TabsList className="bg-gray-800">
-                  <TabsTrigger value="overview" className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">Overview</TabsTrigger>
-                  <TabsTrigger value="costs" className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">Costs</TabsTrigger>
-                  <TabsTrigger value="calls" className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">API Calls</TabsTrigger>
+                  <TabsTrigger value="overview" className="data-[state=active]:bg-purple-600 data-[state=active]:text-white">Overview</TabsTrigger>
+                  <TabsTrigger value="costs" className="data-[state=active]:bg-purple-600 data-[state=active]:text-white">Costs</TabsTrigger>
+                  <TabsTrigger value="calls" className="data-[state=active]:bg-purple-600 data-[state=active]:text-white">API Calls</TabsTrigger>
                 </TabsList>
                 <TabsContent value="overview">
                   <OverviewTab />
@@ -112,16 +127,16 @@ const CallsTab = () => {
   return (
     <div className="space-y-8">
       <SummaryCards data={{
-        totalCalls: data?.summary?.totalCalls,
+        totalCalls: Math.round(data?.summary?.totalCalls || 0),
         callsChange: data?.summary?.callsChange,
-        avgResponseTime: data?.summary?.avgResponseTime,
+        avgResponseTime: Math.round(data?.summary?.avgResponseTime || 0),
         responseTimeChange: data?.summary?.responseTimeChange,
         errorRate: data?.summary?.errorRate,
         errorRateChange: data?.summary?.errorRateChange,
       }} />
       <RecentCallsTable data={data?.recentCalls || []} />
       <div className="flex justify-end">
-        <Button>
+        <Button className="bg-purple-600 hover:bg-purple-700 text-white">
           <DownloadIcon className="mr-2 h-4 w-4" />
           Export API Calls
         </Button>
