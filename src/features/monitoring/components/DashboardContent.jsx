@@ -3,7 +3,6 @@ import { useApiData } from '../hooks';
 import SummaryCards from './SummaryCards';
 import CostTrendChart from './CostTrendChart';
 import CostBreakdownChart from './CostBreakdownChart';
-import PerformanceChart from './PerformanceChart';
 import RecentCallsTable from './RecentCallsTable';
 
 const LoadingSpinner = () => <div>Loading...</div>;
@@ -20,7 +19,6 @@ const DashboardContent = () => {
       <SummaryCards data={data.summary} />
       <CostTrendChart data={data.costTrend} />
       <CostBreakdownChart data={data.costBreakdown} />
-      <PerformanceChart data={data.performance} />
       <RecentCallsTable data={data.recentCalls} />
     </div>
   );
