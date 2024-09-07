@@ -2,27 +2,27 @@ import React from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/common/components/ui/dialog";
 import { Button } from "@/common/components/ui/button";
 
-const DataSourceModal = ({ dataSource, isOpen, onClose }) => {
+const ConnectionModal = ({ connection, isOpen, onClose }) => {
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="sm:max-w-[700px] h-[80vh] flex flex-col">
         <DialogHeader>
-          <DialogTitle>{dataSource.name}</DialogTitle>
+          <DialogTitle>{connection.name}</DialogTitle>
         </DialogHeader>
         <div className="grid gap-4 py-4 flex-grow overflow-auto">
-          <p className="text-sm text-gray-600">Data source details and statistics</p>
+          <p className="text-sm text-gray-600">Connection details and statistics</p>
           <div className="grid grid-cols-2 gap-4 text-sm text-gray-500">
             <div>
-              <strong>Type:</strong> {dataSource.type}
+              <strong>Type:</strong> {connection.type}
             </div>
             <div>
-              <strong>Last Sync:</strong> {dataSource.lastSync}
+              <strong>Last Sync:</strong> {connection.lastSync}
             </div>
             <div>
-              <strong>Total Tables/Collections:</strong> {dataSource.totalTables || dataSource.totalCollections}
+              <strong>Total Tables/Collections:</strong> {connection.totalTables || connection.totalCollections}
             </div>
             <div>
-              <strong>Used Space:</strong> {dataSource.usedSpace}
+              <strong>Used Space:</strong> {connection.usedSpace}
             </div>
             <div>
               <strong>Connection Status:</strong> Active
@@ -50,4 +50,4 @@ const DataSourceModal = ({ dataSource, isOpen, onClose }) => {
   );
 };
 
-export default DataSourceModal;
+export default ConnectionModal;
