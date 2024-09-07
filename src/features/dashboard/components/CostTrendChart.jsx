@@ -24,8 +24,18 @@ const CostTrendChart = ({ data }) => (
       <ResponsiveContainer width="100%" height="100%">
         <LineChart data={data}>
           <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
-          <XAxis dataKey="date" stroke="#9CA3AF" />
-          <YAxis stroke="#9CA3AF" tickFormatter={(value) => formatCurrency(value)} />
+          <XAxis 
+            dataKey="date" 
+            stroke="#9CA3AF" 
+            tick={{ fill: '#9CA3AF' }}
+            tickLine={{ stroke: '#9CA3AF' }}
+          />
+          <YAxis 
+            stroke="#9CA3AF" 
+            tickFormatter={(value) => formatCurrency(value)}
+            tick={{ fill: '#9CA3AF' }}
+            tickLine={{ stroke: '#9CA3AF' }}
+          />
           <Tooltip content={<CustomTooltip />} />
           <Line 
             type="monotone" 

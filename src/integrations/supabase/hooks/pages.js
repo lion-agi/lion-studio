@@ -23,7 +23,7 @@ export const useAddPage = () => {
     const queryClient = useQueryClient();
     return useMutation({
         mutationFn: async (newPage) => {
-            const { data: user } = await supabase.auth.getUser();
+            const { data: { user } } = await supabase.auth.getUser();
             if (!user) throw new Error('User not authenticated');
             const pageWithUser = { ...newPage, user_id: user.id };
             return fromSupabase(supabase.from('pages').insert([pageWithUser]).select());
@@ -38,7 +38,7 @@ export const useUpdatePage = () => {
     const queryClient = useQueryClient();
     return useMutation({
         mutationFn: async ({ id, ...updates }) => {
-            const { data: user } = await supabase.auth.getUser();
+            const { data: { user } } = await supabase.auth.getUser();
             if (!user) throw new Error('User not authenticated');
             return fromSupabase(supabase.from('pages').update(updates).eq('id', id).eq('user_id', user.id).select());
         },
@@ -52,7 +52,7 @@ export const useDeletePage = () => {
     const queryClient = useQueryClient();
     return useMutation({
         mutationFn: async (id) => {
-            const { data: user } = await supabase.auth.getUser();
+            const { data: { user } } = await supabase.auth.getUser();
             if (!user) throw new Error('User not authenticated');
             return fromSupabase(supabase.from('pages').delete().eq('id', id).eq('user_id', user.id));
         },
@@ -69,7 +69,7 @@ export const useSearchPages = () => {
 };
 
 export const addSamplePages = async () => {
-    const { data: user } = await supabase.auth.getUser();
+    const { data: { user } } = await supabase.auth.getUser();
     if (!user) throw new Error('User not authenticated');
 
     const samplePages = [
