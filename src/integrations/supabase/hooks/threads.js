@@ -7,22 +7,35 @@ const fromSupabase = async (query) => {
     return data;
 };
 
+const createThreadsTable = async () => {
+    const { error } = await supabase.from('threads').select('*').limit(1);
+    if (error && error.code === '42P01') {
+        console.log('The threads table does not exist. Creating it now...');
+        const { error: createError } = await supabase.rpc('exec', {
+            query: `
+                CREATE TABLE IF NOT EXISTS threads (
+                    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+                    title TEXT NOT NULL,
+                    topic TEXT,
+                    summary TEXT,
+                    is_active BOOLEAN DEFAULT true,
+                    metadata JSONB,
+                    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+                    updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+                );
+            `
+        });
+        if (createError) throw createError;
+        console.log('Threads table created successfully.');
+    } else if (error) {
+        throw error;
+    }
+};
+
 export const useThreads = (options = {}) => useQuery({
     queryKey: ['threads'],
     queryFn: async () => {
-        // Check if the table exists
-        const { data: tableExists, error: tableError } = await supabase
-            .from('information_schema.tables')
-            .select('table_name')
-            .eq('table_name', 'threads')
-            .single();
-
-        if (tableError || !tableExists) {
-            console.warn('The threads table does not exist. Creating it now...');
-            await createThreadsTable();
-        }
-
-        // If the table exists or was just created, fetch the data
+        await createThreadsTable();
         return fromSupabase(supabase.from('threads').select('*'));
     },
     ...options,
@@ -130,11 +143,6 @@ export const useThreadSummary = (threadId, options = {}) => useQuery({
     queryFn: () => fromSupabase(supabase.rpc('get_thread_summary', { thread_id: threadId })),
     ...options,
 });
-
-const createThreadsTable = async () => {
-    const { error } = await supabase.rpc('create_threads_table');
-    if (error) throw error;
-};
 
 // Function to create the threads table and add sample data
 export const createThreadsTableWithSampleData = async () => {
