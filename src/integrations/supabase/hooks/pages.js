@@ -7,24 +7,6 @@ const fromSupabase = async (query) => {
     return data;
 };
 
-/*
-### pages
-
-| name           | type                     | format | required |
-|----------------|--------------------------|--------|----------|
-| id             | uuid                     | string | true     |
-| title          | varchar(255)             | string | true     |
-| content        | text                     | string | true     |
-| category       | varchar(100)             | string | false    |
-| tags           | text[]                   | array  | false    |
-| status         | varchar(20)              | string | true     |
-| author         | varchar(100)             | string | true     |
-| created_at     | timestamp with time zone | string | true     |
-| updated_at     | timestamp with time zone | string | true     |
-
-No foreign key relationships identified.
-*/
-
 export const usePages = (options = {}) => useQuery({
     queryKey: ['pages'],
     queryFn: () => fromSupabase(supabase.from('pages').select('*')),
@@ -40,7 +22,12 @@ export const usePage = (id, options = {}) => useQuery({
 export const useAddPage = () => {
     const queryClient = useQueryClient();
     return useMutation({
-        mutationFn: (newPage) => fromSupabase(supabase.from('pages').insert([newPage]).select()),
+        mutationFn: async (newPage) => {
+            const { data: user } = await supabase.auth.getUser();
+            if (!user) throw new Error('User not authenticated');
+            const pageWithUser = { ...newPage, user_id: user.id };
+            return fromSupabase(supabase.from('pages').insert([pageWithUser]).select());
+        },
         onSuccess: () => {
             queryClient.invalidateQueries('pages');
         },
@@ -50,7 +37,11 @@ export const useAddPage = () => {
 export const useUpdatePage = () => {
     const queryClient = useQueryClient();
     return useMutation({
-        mutationFn: ({ id, ...updateData }) => fromSupabase(supabase.from('pages').update(updateData).eq('id', id).select()),
+        mutationFn: async ({ id, ...updates }) => {
+            const { data: user } = await supabase.auth.getUser();
+            if (!user) throw new Error('User not authenticated');
+            return fromSupabase(supabase.from('pages').update(updates).eq('id', id).eq('user_id', user.id).select());
+        },
         onSuccess: () => {
             queryClient.invalidateQueries('pages');
         },
@@ -60,7 +51,11 @@ export const useUpdatePage = () => {
 export const useDeletePage = () => {
     const queryClient = useQueryClient();
     return useMutation({
-        mutationFn: (id) => fromSupabase(supabase.from('pages').delete().eq('id', id)),
+        mutationFn: async (id) => {
+            const { data: user } = await supabase.auth.getUser();
+            if (!user) throw new Error('User not authenticated');
+            return fromSupabase(supabase.from('pages').delete().eq('id', id).eq('user_id', user.id));
+        },
         onSuccess: () => {
             queryClient.invalidateQueries('pages');
         },
@@ -73,8 +68,10 @@ export const useSearchPages = () => {
     });
 };
 
-// Function to add sample data to the pages table
 export const addSamplePages = async () => {
+    const { data: user } = await supabase.auth.getUser();
+    if (!user) throw new Error('User not authenticated');
+
     const samplePages = [
         {
             title: 'Getting Started with Lion Studio',
@@ -82,7 +79,8 @@ export const addSamplePages = async () => {
             category: 'Tutorial',
             tags: ['beginner', 'introduction'],
             status: 'published',
-            author: 'Lion Team'
+            author: 'Lion Team',
+            user_id: user.id
         },
         {
             title: 'Advanced Workflow Techniques',
@@ -90,7 +88,8 @@ export const addSamplePages = async () => {
             category: 'Advanced',
             tags: ['workflow', 'optimization'],
             status: 'published',
-            author: 'Jane Doe'
+            author: 'Jane Doe',
+            user_id: user.id
         },
         {
             title: 'Integrating External APIs',
@@ -98,7 +97,8 @@ export const addSamplePages = async () => {
             category: 'Integration',
             tags: ['api', 'integration'],
             status: 'draft',
-            author: 'John Smith'
+            author: 'John Smith',
+            user_id: user.id
         }
     ];
 
