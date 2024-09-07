@@ -1,8 +1,8 @@
 import React from 'react';
 import { Button } from "@/common/components/ui/button";
 import { PlusCircle, FolderPlus } from 'lucide-react';
-import CollectionItem from '../../features/library/components/CollectionItem';
-import EmptyState from '../../features/library/components/EmptyState';
+import CollectionItem from './CollectionItem';
+import EmptyState from './EmptyState';
 
 const CollectionsContent = ({ collections, handleOpenPageModal, handleDeletePage, handleEditPage, setIsCreateCollectionOpen }) => (
   <>

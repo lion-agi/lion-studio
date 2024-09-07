@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { Input } from "@/common/components/ui/input";
 import { Search } from 'lucide-react';
-import LibraryTabs from './LibraryTabs';
-import Pagination from './Pagination';
+import LibraryTabs from '../../../features/library/components/LibraryTabs';
+import Pagination from '../../../features/library/components/Pagination';
 import Modals from './Modals';
 import { useKnowledgeBase } from '../../../features/library/useKnowledgeBase';
 
