@@ -3,78 +3,61 @@ import { Card, CardContent, CardHeader, CardTitle, CardFooter } from "@/common/c
 import { Button } from "@/common/components/ui/button";
 import { Badge } from "@/common/components/ui/badge";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/common/components/ui/tooltip";
-import { Eye, Trash2, Edit, Clock, User } from 'lucide-react';
+import { Eye, Trash2, Edit, Clock } from 'lucide-react';
 
 const PageItem = ({ page, onOpenModal, onDelete, onEdit }) => {
-  const truncate = (str, num) => {
-    if (str.length <= num) {
-      return str;
-    }
-    return str.slice(0, num) + '...';
-  };
-
-  const formatDate = (dateString) => {
-    const options = { year: 'numeric', month: 'short', day: 'numeric' };
-    return new Date(dateString).toLocaleDateString(undefined, options);
-  };
-
   return (
     <Card className="bg-gray-800 text-gray-100 hover:shadow-lg transition-all duration-300 ease-in-out animate-fade-in">
-      <CardHeader className="pb-2">
-        <CardTitle className="text-lg font-semibold text-purple-300">{page.title}</CardTitle>
-        <div className="flex items-center text-xs text-gray-400 space-x-2">
-          <Clock className="h-3 w-3" />
-          <span>Last activity: {formatDate(page.last_activity_at)}</span>
+      <CardHeader>
+        <div className="flex justify-between items-center">
+          <CardTitle className="text-lg font-semibold text-purple-300">{page.title}</CardTitle>
+          <Badge variant="outline">{page.topic || 'Uncategorized'}</Badge>
         </div>
       </CardHeader>
       <CardContent>
-        <p className="text-sm text-gray-300 mb-4">{truncate(page.content, 100)}</p>
-        <Badge variant="outline" className="text-xs">
-          {page.topic}
-        </Badge>
-      </CardContent>
-      <CardFooter className="flex justify-between items-center pt-2">
-        <Badge variant={page.is_active ? 'success' : 'secondary'}>
-          {page.is_active ? 'Active' : 'Inactive'}
-        </Badge>
-        <div className="flex space-x-2">
-          <TooltipProvider>
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <Button variant="ghost" size="sm" onClick={() => onOpenModal(page)}>
-                  <Eye className="h-4 w-4" />
-                </Button>
-              </TooltipTrigger>
-              <TooltipContent>
-                <p>View Page</p>
-              </TooltipContent>
-            </Tooltip>
-          </TooltipProvider>
-          <TooltipProvider>
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <Button variant="ghost" size="sm" onClick={() => onEdit(page)}>
-                  <Edit className="h-4 w-4" />
-                </Button>
-              </TooltipTrigger>
-              <TooltipContent>
-                <p>Edit Page</p>
-              </TooltipContent>
-            </Tooltip>
-          </TooltipProvider>
-          <TooltipProvider>
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <Button variant="ghost" size="sm" onClick={() => onDelete(page.id)}>
-                  <Trash2 className="h-4 w-4" />
-                </Button>
-              </TooltipTrigger>
-              <TooltipContent>
-                <p>Delete Page</p>
-              </TooltipContent>
-            </Tooltip>
-          </TooltipProvider>
+        <p className="text-sm text-gray-300 mb-4">{page.summary || 'No summary available'}</p>
+        <div className="flex items-center space-x-2 mb-2">
+          <Clock className="h-4 w-4 text-gray-400" />
+          <span className="text-sm text-gray-400">Last updated: {new Date(page.updated_at).toLocaleDateString()}</span>
         </div>
+      </CardContent>
+      <CardFooter className="flex justify-end space-x-2">
+        <TooltipProvider>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button variant="ghost" size="sm" onClick={() => onOpenModal(page)} className="text-purple-300 hover:text-purple-100 hover:bg-purple-800">
+                <Eye className="h-4 w-4" />
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent>
+              <p>View Page</p>
+            </TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
+        <TooltipProvider>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button variant="ghost" size="sm" onClick={() => onEdit(page)} className="text-blue-300 hover:text-blue-100 hover:bg-blue-800">
+                <Edit className="h-4 w-4" />
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent>
+              <p>Edit Page</p>
+            </TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
+        <TooltipProvider>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button variant="ghost" size="sm" onClick={() => onDelete(page.id)} className="text-red-300 hover:text-red-100 hover:bg-red-800">
+                <Trash2 className="h-4 w-4" />
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent>
+              <p>Delete Page</p>
+            </TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
       </CardFooter>
     </Card>
   );
