@@ -1,6 +1,6 @@
 import { useState, useCallback, useEffect } from 'react';
 import { useToast } from "@/common/components/ui/use-toast";
-import { threads as mockThreads, pages as initialPages } from './mockData';
+import { threads as mockThreads, pages as initialPages, dataSources as mockDataSources } from './mockData';
 
 export const useKnowledgeBase = () => {
   const [searchTerm, setSearchTerm] = useState('');
