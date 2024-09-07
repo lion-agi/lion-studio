@@ -89,6 +89,10 @@ export const useKnowledgeBase = () => {
     });
   }, [selectedThreads, toast]);
 
+  const handleCreateNewPage = useCallback(() => {
+    setIsCreatePageOpen(true);
+  }, []);
+
   const toggleThreadSelection = useCallback((thread) => {
     setSelectedThreads(prev => 
       prev.some(t => t.id === thread.id)
@@ -122,6 +126,7 @@ export const useKnowledgeBase = () => {
     selectedThreads,
     toggleThreadSelection,
     handleCreatePage,
+    handleCreateNewPage,
     dataSources,
   };
 };

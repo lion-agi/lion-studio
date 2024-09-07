@@ -22,6 +22,7 @@ const Library = () => {
     handleDeletePage,
     handleEditPage,
     handleAddPageToCollection,
+    handleCreateNewPage,
     threads,
     pages,
     dataSources,
@@ -52,7 +53,7 @@ const Library = () => {
 
         <LibraryTabs
           threads={threads}
-          pages={pages}
+          pages={paginatedPages}
           collections={collections}
           dataSources={dataSources}
           handleOpenThreadModal={handleOpenThreadModal}
@@ -61,6 +62,7 @@ const Library = () => {
           handleEditPage={handleEditPage}
           handleOpenDataSourceModal={handleOpenDataSourceModal}
           setIsCreateCollectionOpen={setIsCreateCollectionOpen}
+          handleCreateNewPage={handleCreateNewPage}
         />
 
         <Pagination

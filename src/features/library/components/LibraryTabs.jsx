@@ -6,7 +6,19 @@ import CollectionsContent from './CollectionsContent';
 import DataSourceList from './DataSourceList';
 import EmptyState from './EmptyState';
 
-const LibraryTabs = ({ threads, pages, collections, dataSources, handleOpenThreadModal, handleOpenPageModal, handleDeletePage, handleEditPage, handleOpenDataSourceModal, setIsCreateCollectionOpen }) => (
+const LibraryTabs = ({ 
+  threads, 
+  pages, 
+  collections, 
+  dataSources, 
+  handleOpenThreadModal, 
+  handleOpenPageModal, 
+  handleDeletePage, 
+  handleEditPage, 
+  handleOpenDataSourceModal, 
+  setIsCreateCollectionOpen,
+  handleCreateNewPage
+}) => (
   <Tabs defaultValue="threads" className="mt-8">
     <TabsList className="bg-gray-800 p-1 rounded-lg mb-6">
       <TabsTrigger value="threads" className="data-[state=active]:bg-purple-700 text-gray-200">Threads</TabsTrigger>
@@ -22,10 +34,22 @@ const LibraryTabs = ({ threads, pages, collections, dataSources, handleOpenThrea
       )}
     </TabsContent>
     <TabsContent value="pages">
-      <PagesContent pages={pages} handleOpenPageModal={handleOpenPageModal} handleDeletePage={handleDeletePage} handleEditPage={handleEditPage} />
+      <PagesContent 
+        pages={pages} 
+        handleOpenPageModal={handleOpenPageModal} 
+        handleDeletePage={handleDeletePage} 
+        handleEditPage={handleEditPage}
+        handleCreateNewPage={handleCreateNewPage}
+      />
     </TabsContent>
     <TabsContent value="collections">
-      <CollectionsContent collections={collections} handleOpenPageModal={handleOpenPageModal} handleDeletePage={handleDeletePage} handleEditPage={handleEditPage} setIsCreateCollectionOpen={setIsCreateCollectionOpen} />
+      <CollectionsContent 
+        collections={collections} 
+        handleOpenPageModal={handleOpenPageModal} 
+        handleDeletePage={handleDeletePage} 
+        handleEditPage={handleEditPage} 
+        setIsCreateCollectionOpen={setIsCreateCollectionOpen} 
+      />
     </TabsContent>
     <TabsContent value="dataSources">
       {dataSources ? (
