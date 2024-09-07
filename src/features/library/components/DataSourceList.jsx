@@ -19,11 +19,6 @@ const DataSourceList = ({ dataSources, onOpenModal, onDelete, onEdit }) => {
     return <div className="text-gray-400">No data sources available.</div>;
   }
 
-  if (!Array.isArray(dataSources)) {
-    console.error('dataSources is not an array:', dataSources);
-    return <div className="text-gray-400">Error: Invalid data sources format.</div>;
-  }
-
   const groupedDataSources = dataSources.reduce((acc, dataSource) => {
     const typeName = mockTypeNames[dataSource.type_id] || 'Other';
     if (!acc[typeName]) {
