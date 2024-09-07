@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { Input } from "@/common/components/ui/input";
 import { Search } from 'lucide-react';
 import LibraryTabs from '../../../features/library/components/LibraryTabs';
@@ -17,6 +18,9 @@ const LoadingSpinner = () => (
 );
 
 const Library = () => {
+  const [searchParams, setSearchParams] = useSearchParams();
+  const activeTab = searchParams.get('tab') || 'threads';
+
   const {
     searchTerm,
     setSearchTerm,
@@ -64,6 +68,10 @@ const Library = () => {
     initializeTables();
   }, [refetchAll]);
 
+  const handleTabChange = (newTab) => {
+    setSearchParams({ tab: newTab });
+  };
+
   if (isLoading) {
     return <LoadingSpinner />;
   }
@@ -86,6 +94,8 @@ const Library = () => {
         </div>
 
         <LibraryTabs
+          activeTab={activeTab}
+          onTabChange={handleTabChange}
           threads={threads}
           pages={paginatedPages}
           collections={collections}

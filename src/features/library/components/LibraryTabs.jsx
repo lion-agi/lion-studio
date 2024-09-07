@@ -10,6 +10,8 @@ import { Alert, AlertDescription, AlertTitle } from "@/common/components/ui/aler
 import { AlertTriangle } from 'lucide-react';
 
 const LibraryTabs = ({ 
+  activeTab,
+  onTabChange,
   threads, 
   pages, 
   collections, 
@@ -23,7 +25,7 @@ const LibraryTabs = ({
   handleCreateNewPage,
   error
 }) => (
-  <Tabs defaultValue="threads" className="mt-8">
+  <Tabs value={activeTab} onValueChange={onTabChange} className="mt-8">
     <TabsList className="bg-gray-800 p-1 rounded-lg mb-6">
       <TabsTrigger value="threads" className="data-[state=active]:bg-purple-700 text-gray-200">Threads</TabsTrigger>
       <TabsTrigger value="pages" className="data-[state=active]:bg-purple-700 text-gray-200">Pages</TabsTrigger>
