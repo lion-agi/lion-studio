@@ -10,28 +10,30 @@ const safeCurrency = (value) => {
 
 const RecentCallsTable = ({ data }) => {
   return (
-    <Table>
-      <TableHeader>
-        <TableRow>
-          <TableHead>Timestamp</TableHead>
-          <TableHead>Endpoint</TableHead>
-          <TableHead className="text-right">Tokens</TableHead>
-          <TableHead className="text-right">Cost</TableHead>
-          <TableHead className="text-right">Response Time</TableHead>
-        </TableRow>
-      </TableHeader>
-      <TableBody>
-        {data.map((call) => (
-          <TableRow key={call.id}>
-            <TableCell>{call.timestamp}</TableCell>
-            <TableCell>{call.endpoint}</TableCell>
-            <TableCell className="text-right">{formatNumber(call.tokens)}</TableCell>
-            <TableCell className="text-right">{safeCurrency(call.cost)}</TableCell>
-            <TableCell className="text-right">{call.responseTime} ms</TableCell>
+    <div className="overflow-x-auto">
+      <Table className="w-full">
+        <TableHeader>
+          <TableRow className="bg-gray-800">
+            <TableHead className="text-xs font-medium text-gray-300 py-2">Timestamp</TableHead>
+            <TableHead className="text-xs font-medium text-gray-300 py-2">Endpoint</TableHead>
+            <TableHead className="text-xs font-medium text-gray-300 py-2 text-right">Tokens</TableHead>
+            <TableHead className="text-xs font-medium text-gray-300 py-2 text-right">Cost</TableHead>
+            <TableHead className="text-xs font-medium text-gray-300 py-2 text-right">Response Time</TableHead>
           </TableRow>
-        ))}
-      </TableBody>
-    </Table>
+        </TableHeader>
+        <TableBody>
+          {data.map((call) => (
+            <TableRow key={call.id} className="border-b border-gray-700">
+              <TableCell className="text-xs py-2 text-gray-300">{new Date(call.timestamp).toLocaleString()}</TableCell>
+              <TableCell className="text-xs py-2 text-gray-300">{call.endpoint}</TableCell>
+              <TableCell className="text-xs py-2 text-gray-300 text-right">{formatNumber(call.tokens)}</TableCell>
+              <TableCell className="text-xs py-2 text-gray-300 text-right">{safeCurrency(call.cost)}</TableCell>
+              <TableCell className="text-xs py-2 text-gray-300 text-right">{call.responseTime} ms</TableCell>
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table>
+    </div>
   );
 };
 
