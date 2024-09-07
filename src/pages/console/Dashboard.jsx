@@ -1,179 +1,183 @@
-import React, { useState, useEffect } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from "@/common/components/ui/card";
-import { Button } from "@/common/components/ui/button";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/common/components/ui/select";
-import { Progress } from "@/common/components/ui/progress";
+import React, { useState } from 'react';
+import { RecoilRoot } from 'recoil';
+import { QueryClient, QueryClientProvider } from 'react-query';
+import { ErrorBoundary } from 'react-error-boundary';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/common/components/ui/tabs";
-import { LineChart, Line, BarChart, Bar, PieChart, Pie, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell } from 'recharts';
-import { Activity, Users, Database, Zap, Clock, HardDrive } from 'lucide-react';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/common/components/ui/card";
+import { Button } from "@/common/components/ui/button";
+import { Alert, AlertDescription, AlertTitle } from "@/common/components/ui/alert";
+import { InfoIcon, DownloadIcon } from 'lucide-react';
+import DashboardHeader from '@/features/monitoring/components/DashboardHeader';
+import SummaryCards from '@/features/monitoring/components/SummaryCards';
+import CostTrendChart from '@/features/monitoring/components/CostTrendChart';
+import CostBreakdownChart from '@/features/monitoring/components/CostBreakdownChart';
+import PerformanceChart from '@/features/monitoring/components/PerformanceChart';
+import RecentCallsTable from '@/features/monitoring/components/RecentCallsTable';
+import { useApiData } from '@/features/monitoring/hooks';
+import { formatCurrency, formatNumber, formatPercentage } from '@/features/monitoring/utils';
+
+const queryClient = new QueryClient();
+
+const ErrorFallback = ({ error }) => (
+  <Alert variant="destructive">
+    <AlertTitle>Error</AlertTitle>
+    <AlertDescription>
+      An error occurred: {error.message}
+    </AlertDescription>
+  </Alert>
+);
+
+const LoadingSpinner = () => (
+  <div className="flex justify-center items-center h-64">
+    <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-primary"></div>
+  </div>
+);
 
 const Dashboard = () => {
-  const [timeRange, setTimeRange] = useState('7d');
   const [activeTab, setActiveTab] = useState('overview');
 
-  // Simulated data - in a real application, this would be fetched from an API
-  const overviewData = {
-    totalRequests: 1245678,
-    activeUsers: 52890,
-    dataProcessed: 1.8,
-    averageResponseTime: 287
-  };
-
-  const quotaData = {
-    apiCalls: 68,
-    dataTransfer: 47,
-    computeTime: 33,
-    storage: 78
-  };
-
-  const timeSeriesData = [
-    { date: '04/15', requests: 95000, errors: 1150 },
-    { date: '04/16', requests: 98760, errors: 1240 },
-    { date: '04/17', requests: 102345, errors: 1560 },
-    { date: '04/18', requests: 97890, errors: 1100 },
-    { date: '04/19', requests: 110567, errors: 1780 },
-    { date: '04/20', requests: 115678, errors: 1890 },
-    { date: '04/21', requests: 108900, errors: 1450 },
-  ];
-
-  const endpointData = [
-    { name: '/users', requests: 324567, avgResponseTime: 145 },
-    { name: '/products', requests: 256789, avgResponseTime: 210 },
-    { name: '/orders', requests: 198765, avgResponseTime: 320 },
-    { name: '/analytics', requests: 87654, avgResponseTime: 540 },
-    { name: '/auth', requests: 378901, avgResponseTime: 95 },
-  ];
-
-  const pieColors = ['#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', '#9966FF'];
-
-  useEffect(() => {
-    // Fetch data based on selected time range
-    // This is where you'd make API calls in a real application
-  }, [timeRange]);
-
-  const MetricCard = ({ title, value, icon: Icon }) => (
-    <Card>
-      <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-        <CardTitle className="text-sm font-medium">{title}</CardTitle>
-        <Icon className="h-4 w-4 text-muted-foreground" />
-      </CardHeader>
-      <CardContent>
-        <div className="text-2xl font-bold">{value.toLocaleString()}</div>
-      </CardContent>
-    </Card>
+  return (
+    <RecoilRoot>
+      <QueryClientProvider client={queryClient}>
+        <ErrorBoundary FallbackComponent={ErrorFallback}>
+          <div className="container mx-auto p-6 space-y-8 bg-background text-foreground">
+            <DashboardHeader />
+            <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
+              <TabsList className="bg-muted">
+                <TabsTrigger value="overview" className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">Overview</TabsTrigger>
+                <TabsTrigger value="costs" className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">Costs</TabsTrigger>
+                <TabsTrigger value="performance" className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">Performance</TabsTrigger>
+                <TabsTrigger value="calls" className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">API Calls</TabsTrigger>
+              </TabsList>
+              <TabsContent value="overview">
+                <OverviewTab />
+              </TabsContent>
+              <TabsContent value="costs">
+                <CostsTab />
+              </TabsContent>
+              <TabsContent value="performance">
+                <PerformanceTab />
+              </TabsContent>
+              <TabsContent value="calls">
+                <CallsTab />
+              </TabsContent>
+            </Tabs>
+          </div>
+        </ErrorBoundary>
+      </QueryClientProvider>
+    </RecoilRoot>
   );
+};
+
+const OverviewTab = () => {
+  const { data, isLoading, error } = useApiData();
+
+  if (isLoading) return <LoadingSpinner />;
+  if (error) return <ErrorFallback error={error} />;
 
   return (
-    <div className="container mx-auto p-4 space-y-6">
-      <div className="flex justify-between items-center">
-        <h1 className="text-3xl font-bold">Dashboard</h1>
-        <Select value={timeRange} onValueChange={setTimeRange}>
-          <SelectTrigger className="w-[180px]">
-            <SelectValue placeholder="Select time range" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="24h">Last 24 hours</SelectItem>
-            <SelectItem value="7d">Last 7 days</SelectItem>
-            <SelectItem value="30d">Last 30 days</SelectItem>
-            <SelectItem value="90d">Last 90 days</SelectItem>
-          </SelectContent>
-        </Select>
+    <div className="space-y-8">
+      <SummaryCards data={data.summary} />
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+        <CostTrendChart data={data.costTrend} />
+        <PerformanceChart data={data.performance} />
       </div>
+    </div>
+  );
+};
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-        <MetricCard title="Total Requests" value={overviewData.totalRequests} icon={Activity} />
-        <MetricCard title="Active Users" value={overviewData.activeUsers} icon={Users} />
-        <MetricCard title="Data Processed (TB)" value={overviewData.dataProcessed} icon={Database} />
-        <MetricCard title="Avg Response Time (ms)" value={overviewData.averageResponseTime} icon={Zap} />
+const CostsTab = () => {
+  const { data, isLoading, error } = useApiData();
+
+  if (isLoading) return <LoadingSpinner />;
+  if (error) return <ErrorFallback error={error} />;
+
+  return (
+    <div className="space-y-8">
+      <Card>
+        <CardHeader>
+          <CardTitle>Cost Overview</CardTitle>
+          <CardDescription>Total cost for the selected period</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <div className="text-4xl font-bold">{formatCurrency(data.summary.totalCost)}</div>
+          <p className="text-sm text-muted-foreground">
+            {formatPercentage(data.summary.costChange)} from last period
+          </p>
+        </CardContent>
+      </Card>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+        <CostTrendChart data={data.costTrend} />
+        <CostBreakdownChart data={data.costBreakdown} />
       </div>
+    </div>
+  );
+};
 
-      <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-4">
-        <TabsList>
-          <TabsTrigger value="overview">Overview</TabsTrigger>
-          <TabsTrigger value="endpoints">Endpoints</TabsTrigger>
-          <TabsTrigger value="quota">Quota Usage</TabsTrigger>
-        </TabsList>
-        <TabsContent value="overview" className="space-y-4">
-          <Card>
-            <CardHeader>
-              <CardTitle>Requests Over Time</CardTitle>
-            </CardHeader>
-            <CardContent className="h-[300px]">
-              <ResponsiveContainer width="100%" height="100%">
-                <LineChart data={timeSeriesData}>
-                  <CartesianGrid strokeDasharray="3 3" />
-                  <XAxis dataKey="date" />
-                  <YAxis yAxisId="left" />
-                  <YAxis yAxisId="right" orientation="right" />
-                  <Tooltip />
-                  <Line yAxisId="left" type="monotone" dataKey="requests" stroke="#8884d8" />
-                  <Line yAxisId="right" type="monotone" dataKey="errors" stroke="#82ca9d" />
-                </LineChart>
-              </ResponsiveContainer>
-            </CardContent>
-          </Card>
-        </TabsContent>
-        <TabsContent value="endpoints" className="space-y-4">
-          <Card>
-            <CardHeader>
-              <CardTitle>Endpoint Usage</CardTitle>
-            </CardHeader>
-            <CardContent className="h-[300px]">
-              <ResponsiveContainer width="100%" height="100%">
-                <BarChart data={endpointData}>
-                  <CartesianGrid strokeDasharray="3 3" />
-                  <XAxis dataKey="name" />
-                  <YAxis />
-                  <Tooltip />
-                  <Bar dataKey="requests" fill="#8884d8" />
-                </BarChart>
-              </ResponsiveContainer>
-            </CardContent>
-          </Card>
-        </TabsContent>
-        <TabsContent value="quota" className="space-y-4">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {Object.entries(quotaData).map(([key, value]) => (
-              <Card key={key}>
-                <CardHeader>
-                  <CardTitle className="text-sm font-medium">
-                    {key.replace(/([A-Z])/g, ' $1').replace(/^./, str => str.toUpperCase())}
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="text-xl font-bold">{value}%</div>
-                  <Progress value={value} className="mt-2" />
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-          <Card>
-            <CardHeader>
-              <CardTitle>Quota Distribution</CardTitle>
-            </CardHeader>
-            <CardContent className="h-[300px]">
-              <ResponsiveContainer width="100%" height="100%">
-                <PieChart>
-                  <Pie
-                    data={Object.entries(quotaData).map(([key, value]) => ({ name: key, value }))}
-                    cx="50%"
-                    cy="50%"
-                    labelLine={false}
-                    outerRadius={80}
-                    fill="#8884d8"
-                    dataKey="value"
-                  >
-                    {Object.entries(quotaData).map((entry, index) => (
-                      <Cell key={`cell-${index}`} fill={pieColors[index % pieColors.length]} />
-                    ))}
-                  </Pie>
-                  <Tooltip />
-                </PieChart>
-              </ResponsiveContainer>
-            </CardContent>
-          </Card>
-        </TabsContent>
-      </Tabs>
+const PerformanceTab = () => {
+  const { data, isLoading, error } = useApiData();
+
+  if (isLoading) return <LoadingSpinner />;
+  if (error) return <ErrorFallback error={error} />;
+
+  return (
+    <div className="space-y-8">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+        <Card>
+          <CardHeader>
+            <CardTitle>Average Response Time</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="text-4xl font-bold">{data.summary.avgResponseTime} ms</div>
+            <p className="text-sm text-muted-foreground">
+              {formatPercentage(data.summary.responseTimeChange)} from last period
+            </p>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardHeader>
+            <CardTitle>Error Rate</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="text-4xl font-bold">{formatPercentage(data.summary.errorRate)}</div>
+            <p className="text-sm text-muted-foreground">
+              {formatPercentage(data.summary.errorRateChange)} from last period
+            </p>
+          </CardContent>
+        </Card>
+      </div>
+      <PerformanceChart data={data.performance} />
+    </div>
+  );
+};
+
+const CallsTab = () => {
+  const { data, isLoading, error } = useApiData();
+
+  if (isLoading) return <LoadingSpinner />;
+  if (error) return <ErrorFallback error={error} />;
+
+  return (
+    <div className="space-y-8">
+      <Card>
+        <CardHeader>
+          <CardTitle>API Calls Overview</CardTitle>
+          <CardDescription>Total calls for the selected period</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <div className="text-4xl font-bold">{formatNumber(data.summary.totalCalls)}</div>
+          <p className="text-sm text-muted-foreground">
+            {formatPercentage(data.summary.callsChange)} from last period
+          </p>
+        </CardContent>
+      </Card>
+      <RecentCallsTable data={data.recentCalls} />
+      <div className="flex justify-end">
+        <Button>
+          <DownloadIcon className="mr-2 h-4 w-4" />
+          Export API Calls
+        </Button>
+      </div>
     </div>
   );
 };

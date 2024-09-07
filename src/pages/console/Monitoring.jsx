@@ -29,7 +29,7 @@ const ErrorFallback = ({ error }) => (
 
 const LoadingSpinner = () => (
   <div className="flex justify-center items-center h-64">
-    <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-gray-900"></div>
+    <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-primary"></div>
   </div>
 );
 
@@ -40,14 +40,14 @@ const Monitoring = () => {
     <RecoilRoot>
       <QueryClientProvider client={queryClient}>
         <ErrorBoundary FallbackComponent={ErrorFallback}>
-          <div className="container mx-auto p-4 space-y-6">
+          <div className="container mx-auto p-6 space-y-8 bg-background text-foreground">
             <DashboardHeader />
-            <Tabs value={activeTab} onValueChange={setActiveTab}>
-              <TabsList>
-                <TabsTrigger value="overview">Overview</TabsTrigger>
-                <TabsTrigger value="costs">Costs</TabsTrigger>
-                <TabsTrigger value="performance">Performance</TabsTrigger>
-                <TabsTrigger value="calls">API Calls</TabsTrigger>
+            <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
+              <TabsList className="bg-muted">
+                <TabsTrigger value="overview" className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">Overview</TabsTrigger>
+                <TabsTrigger value="costs" className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">Costs</TabsTrigger>
+                <TabsTrigger value="performance" className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">Performance</TabsTrigger>
+                <TabsTrigger value="calls" className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">API Calls</TabsTrigger>
               </TabsList>
               <TabsContent value="overview">
                 <OverviewTab />
@@ -76,9 +76,9 @@ const OverviewTab = () => {
   if (error) return <ErrorFallback error={error} />;
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-8">
       <SummaryCards data={data.summary} />
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
         <CostTrendChart data={data.costTrend} />
         <PerformanceChart data={data.performance} />
       </div>
@@ -93,7 +93,7 @@ const CostsTab = () => {
   if (error) return <ErrorFallback error={error} />;
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-8">
       <Card>
         <CardHeader>
           <CardTitle>Cost Overview</CardTitle>
@@ -106,7 +106,7 @@ const CostsTab = () => {
           </p>
         </CardContent>
       </Card>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
         <CostTrendChart data={data.costTrend} />
         <CostBreakdownChart data={data.costBreakdown} />
       </div>
@@ -121,8 +121,8 @@ const PerformanceTab = () => {
   if (error) return <ErrorFallback error={error} />;
 
   return (
-    <div className="space-y-6">
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+    <div className="space-y-8">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
         <Card>
           <CardHeader>
             <CardTitle>Average Response Time</CardTitle>
@@ -158,7 +158,7 @@ const CallsTab = () => {
   if (error) return <ErrorFallback error={error} />;
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-8">
       <Card>
         <CardHeader>
           <CardTitle>API Calls Overview</CardTitle>

@@ -8,16 +8,17 @@ import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, D
 import { Alert, AlertDescription, AlertTitle } from "@/common/components/ui/alert";
 import { Badge } from "@/common/components/ui/badge";
 import { Switch } from "@/common/components/ui/switch";
-import { Database, Cloud, FileText, Link, Brain, AlertTriangle } from 'lucide-react';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/common/components/ui/select";
+import { AlertTriangle, CheckCircle2, XCircle, Database, Cloud, FileText, Link as LinkIcon, Brain } from 'lucide-react';
 
 const ConnectionCard = ({ name, type, status, icon: Icon }) => (
-  <Card>
+  <Card className="bg-card hover:bg-card/90 transition-colors">
     <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-      <CardTitle className="text-sm font-medium">{name}</CardTitle>
-      <Icon className="h-4 w-4 text-muted-foreground" />
+      <CardTitle className="text-lg font-semibold">{name}</CardTitle>
+      <Icon className="h-5 w-5 text-muted-foreground" />
     </CardHeader>
     <CardContent>
-      <Badge variant={status === 'Connected' ? 'default' : 'secondary'}>{status}</Badge>
+      <Badge variant={status === 'Connected' ? 'success' : 'secondary'}>{status}</Badge>
     </CardContent>
     <CardFooter className="flex justify-between">
       <Button variant="outline" size="sm">Configure</Button>
@@ -28,7 +29,7 @@ const ConnectionCard = ({ name, type, status, icon: Icon }) => (
 
 const NewConnectionDialog = ({ isOpen, onClose }) => (
   <Dialog open={isOpen} onOpenChange={onClose}>
-    <DialogContent>
+    <DialogContent className="sm:max-w-[425px]">
       <DialogHeader>
         <DialogTitle>Add New Connection</DialogTitle>
         <DialogDescription>
@@ -46,7 +47,16 @@ const NewConnectionDialog = ({ isOpen, onClose }) => (
           <Label htmlFor="type" className="text-right">
             Type
           </Label>
-          <Input id="type" className="col-span-3" />
+          <Select>
+            <SelectTrigger className="col-span-3">
+              <SelectValue placeholder="Select type" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="database">Database</SelectItem>
+              <SelectItem value="api">API</SelectItem>
+              <SelectItem value="storage">Storage</SelectItem>
+            </SelectContent>
+          </Select>
         </div>
         <div className="grid grid-cols-4 items-center gap-4">
           <Label htmlFor="credentials" className="text-right">
@@ -70,7 +80,7 @@ const Connections = () => {
     { name: 'PostgreSQL Database', type: 'database', status: 'Connected', icon: Database },
     { name: 'AWS S3 Bucket', type: 'cloud', status: 'Connected', icon: Cloud },
     { name: 'Google Drive', type: 'file', status: 'Disconnected', icon: FileText },
-    { name: 'Stripe API', type: 'api', status: 'Connected', icon: Link },
+    { name: 'Stripe API', type: 'api', status: 'Connected', icon: LinkIcon },
     { name: 'OpenAI GPT-3', type: 'ai', status: 'Connected', icon: Brain },
   ];
 
@@ -79,13 +89,13 @@ const Connections = () => {
     : connections.filter(conn => conn.type === activeTab);
 
   return (
-    <div className="container mx-auto p-4 space-y-6">
+    <div className="container mx-auto p-6 space-y-8 bg-background text-foreground">
       <div className="flex justify-between items-center">
         <h1 className="text-3xl font-bold">Connections</h1>
         <Button onClick={() => setIsNewConnectionDialogOpen(true)}>Add New Connection</Button>
       </div>
 
-      <Alert>
+      <Alert variant="warning">
         <AlertTriangle className="h-4 w-4" />
         <AlertTitle>Security Notice</AlertTitle>
         <AlertDescription>
@@ -93,18 +103,18 @@ const Connections = () => {
         </AlertDescription>
       </Alert>
 
-      <Tabs value={activeTab} onValueChange={setActiveTab}>
-        <TabsList>
-          <TabsTrigger value="all">All</TabsTrigger>
-          <TabsTrigger value="database">Databases</TabsTrigger>
-          <TabsTrigger value="cloud">Cloud Storage</TabsTrigger>
-          <TabsTrigger value="file">File Storage</TabsTrigger>
-          <TabsTrigger value="api">APIs</TabsTrigger>
-          <TabsTrigger value="ai">AI Models</TabsTrigger>
+      <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
+        <TabsList className="bg-muted">
+          <TabsTrigger value="all" className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">All</TabsTrigger>
+          <TabsTrigger value="database" className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">Databases</TabsTrigger>
+          <TabsTrigger value="cloud" className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">Cloud Storage</TabsTrigger>
+          <TabsTrigger value="file" className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">File Storage</TabsTrigger>
+          <TabsTrigger value="api" className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">APIs</TabsTrigger>
+          <TabsTrigger value="ai" className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">AI Models</TabsTrigger>
         </TabsList>
 
-        <TabsContent value={activeTab} className="mt-6">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <TabsContent value={activeTab}>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {filteredConnections.map((conn, index) => (
               <ConnectionCard key={index} {...conn} />
             ))}

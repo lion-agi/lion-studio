@@ -4,7 +4,7 @@ import { WorkflowSettingsProvider } from '../../features/workflow/WorkflowSettin
 
 const Workflow = () => {
   return (
-    <div className="h-screen">
+    <div className="h-screen bg-background text-foreground">
       <WorkflowSettingsProvider>
         <WorkflowEditor />
       </WorkflowSettingsProvider>

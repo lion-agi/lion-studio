@@ -21,7 +21,7 @@ const DeploymentCard = ({ name, environment, status, lastDeployed, version }) =>
   };
 
   return (
-    <Card>
+    <Card className="bg-card hover:bg-card/90 transition-colors">
       <CardHeader>
         <div className="flex justify-between items-center">
           <CardTitle className="text-lg font-semibold">{name}</CardTitle>
@@ -34,7 +34,7 @@ const DeploymentCard = ({ name, environment, status, lastDeployed, version }) =>
           <div className={`w-3 h-3 rounded-full ${statusColors[status]}`}></div>
           <span>{status}</span>
         </div>
-        <p className="text-sm text-gray-500">Last deployed: {lastDeployed}</p>
+        <p className="text-sm text-muted-foreground">Last deployed: {lastDeployed}</p>
       </CardContent>
       <CardFooter className="flex justify-between">
         <Button variant="outline" size="sm">View Logs</Button>
@@ -96,17 +96,17 @@ const DeploymentTimeline = () => (
       <div className="flex items-center space-x-2">
         <CheckCircle2 className="text-green-500" />
         <span>Build completed</span>
-        <span className="text-sm text-gray-500">2 minutes ago</span>
+        <span className="text-sm text-muted-foreground">2 minutes ago</span>
       </div>
       <div className="flex items-center space-x-2">
         <Clock className="text-yellow-500" />
         <span>Tests running</span>
-        <span className="text-sm text-gray-500">1 minute ago</span>
+        <span className="text-sm text-muted-foreground">1 minute ago</span>
       </div>
       <div className="flex items-center space-x-2">
         <RefreshCw className="text-blue-500 animate-spin" />
         <span>Deploying to staging</span>
-        <span className="text-sm text-gray-500">In progress</span>
+        <span className="text-sm text-muted-foreground">In progress</span>
       </div>
     </div>
   </div>
@@ -123,13 +123,13 @@ const Deployment = () => {
   ];
 
   return (
-    <div className="container mx-auto p-4 space-y-6">
+    <div className="container mx-auto p-6 space-y-8 bg-background text-foreground">
       <div className="flex justify-between items-center">
         <h1 className="text-3xl font-bold">Deployments</h1>
         <Button onClick={() => setIsNewDeploymentDialogOpen(true)}>New Deployment</Button>
       </div>
 
-      <Alert>
+      <Alert variant="warning">
         <AlertTriangle className="h-4 w-4" />
         <AlertTitle>Deployment Notice</AlertTitle>
         <AlertDescription>
@@ -137,15 +137,16 @@ const Deployment = () => {
         </AlertDescription>
       </Alert>
 
-      <Tabs value={activeTab} onValueChange={setActiveTab}>
-        <TabsList>
-          <TabsTrigger value="overview">Overview</TabsTrigger>
-          <TabsTrigger value="history">History</TabsTrigger>
-          <TabsTrigger value="settings">Settings</TabsTrigger>
+      <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
+        <TabsList className="bg-muted">
+          <TabsTrigger value="overview" className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">Overview</TabsTrigger>
+          <TabsTrigger value="history" className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">History</TabsTrigger>
+          <TabsTrigger value="settings" className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">Settings</TabsT
+rigger>
         </TabsList>
 
-        <TabsContent value="overview" className="space-y-4">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <TabsContent value="overview" className="space-y-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {deployments.map((deployment, index) => (
               <DeploymentCard key={index} {...deployment} />
             ))}
@@ -163,7 +164,7 @@ const Deployment = () => {
         </TabsContent>
 
         <TabsContent value="history">
-          <Accordion type="single" collapsible>
+          <Accordion type="single" collapsible className="w-full">
             <AccordionItem value="item-1">
               <AccordionTrigger>Frontend App v1.2.3 (Production)</AccordionTrigger>
               <AccordionContent>
@@ -189,11 +190,11 @@ const Deployment = () => {
             <CardContent className="space-y-2">
               <div className="flex justify-between items-center">
                 <Label htmlFor="auto-deploy">Auto-deploy on merge to main</Label>
-                <input type="checkbox" id="auto-deploy" />
+                <input type="checkbox" id="auto-deploy" className="toggle" />
               </div>
               <div className="flex justify-between items-center">
                 <Label htmlFor="approval-required">Require approval for production deploys</Label>
-                <input type="checkbox" id="approval-required" checked />
+                <input type="checkbox" id="approval-required" className="toggle" checked />
               </div>
             </CardContent>
           </Card>
