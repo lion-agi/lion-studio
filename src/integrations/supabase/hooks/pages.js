@@ -27,21 +27,7 @@ No foreign key relationships identified.
 
 export const usePages = (options = {}) => useQuery({
     queryKey: ['pages'],
-    queryFn: async () => {
-        // Check if the table exists
-        const { data: tableExists, error: tableError } = await supabase
-            .from('information_schema.tables')
-            .select('table_name')
-            .eq('table_name', 'pages')
-            .single();
-
-        if (tableError || !tableExists) {
-            throw new Error('The pages table does not exist. Please create it first.');
-        }
-
-        // If the table exists, fetch the data
-        return fromSupabase(supabase.from('pages').select('*'));
-    },
+    queryFn: () => fromSupabase(supabase.from('pages').select('*')),
     ...options,
 });
 
@@ -87,13 +73,8 @@ export const useSearchPages = () => {
     });
 };
 
-// Function to create the pages table and add sample data
-export const createPagesTableWithSampleData = async () => {
-    // Create the pages table
-    const { error: createError } = await supabase.rpc('create_pages_table');
-    if (createError) throw createError;
-
-    // Add sample data
+// Function to add sample data to the pages table
+export const addSamplePages = async () => {
     const samplePages = [
         {
             title: 'Getting Started with Lion Studio',
@@ -110,9 +91,17 @@ export const createPagesTableWithSampleData = async () => {
             tags: ['workflow', 'optimization'],
             status: 'published',
             author: 'Jane Doe'
+        },
+        {
+            title: 'Integrating External APIs',
+            content: 'Discover how to seamlessly integrate external APIs into your Lion Studio workflows for enhanced functionality.',
+            category: 'Integration',
+            tags: ['api', 'integration'],
+            status: 'draft',
+            author: 'John Smith'
         }
     ];
 
-    const { error: insertError } = await supabase.from('pages').insert(samplePages);
-    if (insertError) throw insertError;
+    const { error } = await supabase.from('pages').insert(samplePages);
+    if (error) throw error;
 };

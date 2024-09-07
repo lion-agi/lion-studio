@@ -6,7 +6,7 @@ import Pagination from '../../../features/library/components/Pagination';
 import Modals from './Modals';
 import PageForm from '../../../features/library/components/PageForm';
 import { useKnowledgeBase } from '../../../features/library/useKnowledgeBase';
-import { createPagesTableWithSampleData } from '../../../integrations/supabase/hooks/pages';
+import { addSamplePages } from '../../../integrations/supabase/hooks/pages';
 import { createThreadsTableWithSampleData } from '../../../integrations/supabase/hooks/threads';
 import { createDataSourcesTableWithSampleData } from '../../../integrations/supabase/hooks/dataSources';
 
@@ -52,7 +52,7 @@ const Library = () => {
   useEffect(() => {
     const initializeTables = async () => {
       try {
-        await createPagesTableWithSampleData();
+        await addSamplePages();
         await createThreadsTableWithSampleData();
         await createDataSourcesTableWithSampleData();
         refetchAll();
