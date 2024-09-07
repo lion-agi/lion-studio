@@ -3,7 +3,6 @@ import { RecoilRoot } from 'recoil';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import { ErrorBoundary } from 'react-error-boundary';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/common/components/ui/tabs";
-import { Card, CardContent, CardHeader, CardTitle } from "@/common/components/ui/card";
 import { Button } from "@/common/components/ui/button";
 import { Alert, AlertDescription, AlertTitle } from "@/common/components/ui/alert";
 import { InfoIcon, DownloadIcon, Activity, Clock, AlertTriangle } from 'lucide-react';
@@ -75,10 +74,10 @@ const OverviewTab = () => {
 
   return (
     <div className="space-y-8">
-      <SummaryCards data={data.summary} />
+      <SummaryCards data={data?.summary || {}} />
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-        <CostTrendChart data={data.costTrend} />
-        <PerformanceChart data={data.performance} />
+        <CostTrendChart data={data?.costTrend || []} />
+        <PerformanceChart data={data?.performance || []} />
       </div>
     </div>
   );
@@ -92,20 +91,13 @@ const CostsTab = () => {
 
   return (
     <div className="space-y-8">
-      <Card>
-        <CardHeader>
-          <CardTitle>Cost Overview</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="text-4xl font-bold">{formatCurrency(data.summary.totalCost)}</div>
-          <p className="text-sm text-gray-400">
-            {formatPercentage(data.summary.costChange)} from last period
-          </p>
-        </CardContent>
-      </Card>
+      <SummaryCards data={{
+        totalCost: data?.summary?.totalCost,
+        costChange: data?.summary?.costChange,
+      }} />
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-        <CostTrendChart data={data.costTrend} />
-        <CostBreakdownChart data={data.costBreakdown} />
+        <CostTrendChart data={data?.costTrend || []} />
+        <CostBreakdownChart data={data?.costBreakdown || []} />
       </div>
     </div>
   );
@@ -119,45 +111,15 @@ const CallsTab = () => {
 
   return (
     <div className="space-y-8">
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Total API Calls</CardTitle>
-            <Activity className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{Math.round(data.summary.totalCalls).toLocaleString()}</div>
-            <p className="text-xs text-muted-foreground">
-              {formatPercentage(data.summary.callsChange)} from last period
-            </p>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Avg Response Time</CardTitle>
-            <Clock className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{Math.round(data.summary.avgResponseTime)} ms</div>
-            <p className="text-xs text-muted-foreground">
-              {formatPercentage(data.summary.responseTimeChange)} from last period
-            </p>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Error Rate</CardTitle>
-            <AlertTriangle className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{formatPercentage(data.summary.errorRate)}</div>
-            <p className="text-xs text-muted-foreground">
-              {formatPercentage(data.summary.errorRateChange)} from last period
-            </p>
-          </CardContent>
-        </Card>
-      </div>
-      <RecentCallsTable data={data.recentCalls} />
+      <SummaryCards data={{
+        totalCalls: data?.summary?.totalCalls,
+        callsChange: data?.summary?.callsChange,
+        avgResponseTime: data?.summary?.avgResponseTime,
+        responseTimeChange: data?.summary?.responseTimeChange,
+        errorRate: data?.summary?.errorRate,
+        errorRateChange: data?.summary?.errorRateChange,
+      }} />
+      <RecentCallsTable data={data?.recentCalls || []} />
       <div className="flex justify-end">
         <Button>
           <DownloadIcon className="mr-2 h-4 w-4" />

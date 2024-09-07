@@ -19,7 +19,7 @@ const SummaryCards = ({ data }) => (
     />
     <DashboardCard
       title="Avg Response Time"
-      value={`${data.avgResponseTime} ms`}
+      value={data.avgResponseTime != null ? `${formatNumber(data.avgResponseTime)} ms` : 'N/A'}
       change={formatPercentage(data.responseTimeChange)}
       icon={Clock}
     />

@@ -1,17 +1,23 @@
-// Format large numbers with commas
-export const formatNumber = (num) => {
-  num = num.toFixed(2)
-    return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-  };
-  
-  // Format currency values
 export const formatCurrency = (value) => {
-  return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(value);
+  if (value == null) return 'N/A';
+  return new Intl.NumberFormat('en-US', {
+    style: 'currency',
+    currency: 'USD',
+  }).format(value);
 };
-  
-  // Format percentage values
+
+export const formatNumber = (value) => {
+  if (value == null) return 'N/A';
+  return new Intl.NumberFormat('en-US').format(value);
+};
+
 export const formatPercentage = (value) => {
-  return `${(value * 100).toFixed(2)}%`;
+  if (value == null) return 'N/A';
+  return new Intl.NumberFormat('en-US', {
+    style: 'percent',
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  }).format(value / 100);
 };
   
   // Format date to a readable string
@@ -55,7 +61,9 @@ export const stringToColor = (str) => {
 export const calculateAverage = (arr) => {
   if (arr.length === 0) return 0;
   const sum = arr.reduce((a, b) => a + b, 0);
-  return sum / arr.length;
+  num = sum / arr.length;
+  num = num.toFixed(2);
+  return num;
 };
   
   // Group an array of objects by a key
