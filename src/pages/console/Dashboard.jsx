@@ -1,6 +1,6 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import { RecoilRoot } from 'recoil';
-import { QueryClient, QueryClientProvider } from 'react-query';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ErrorBoundary } from 'react-error-boundary';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/common/components/ui/tabs";
 import { Button } from "@/common/components/ui/button";
@@ -39,8 +39,19 @@ const Dashboard = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [timeFilter, setTimeFilter] = useState('7d');
   const [modelFilter, setModelFilter] = useState('all');
+  const [isTimeout, setIsTimeout] = useState(false);
 
   const { data, isLoading, error, refetch } = useApiData(timeFilter, modelFilter);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      if (isLoading) {
+        setIsTimeout(true);
+      }
+    }, 10000); // 10 seconds timeout
+
+    return () => clearTimeout(timer);
+  }, [isLoading]);
 
   const handleTimeFilterChange = useCallback((value) => {
     setTimeFilter(value);
@@ -52,7 +63,8 @@ const Dashboard = () => {
     refetch();
   }, [refetch]);
 
-  if (isLoading) return <LoadingSpinner />;
+  if (isLoading && !isTimeout) return <LoadingSpinner />;
+  if (isTimeout) return <ErrorFallback error={{ message: "Loading timed out. Please try again." }} />;
   if (error) return <ErrorFallback error={error} />;
 
   const filteredData = {
@@ -69,42 +81,14 @@ const Dashboard = () => {
         <ErrorBoundary FallbackComponent={ErrorFallback}>
           <div className="min-h-screen bg-gray-900 text-gray-100">
             <div className="container mx-auto p-8 space-y-8">
-              <div className="flex flex-col md:flex-row justify-between items-center mb-12">
-                <h1 className="text-2xl font-bold mb-6 md:mb-0 text-gray-100">Dashboard</h1>
-                <div className="flex space-x-4 items-center">
-                  <Select value={timeFilter} onValueChange={handleTimeFilterChange}>
-                    <SelectTrigger className="w-[180px] bg-gray-800 text-gray-200 border-gray-700">
-                      <SelectValue placeholder="Select time range" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="24h">Last 24 hours</SelectItem>
-                      <SelectItem value="7d">Last 7 days</SelectItem>
-                      <SelectItem value="30d">Last 30 days</SelectItem>
-                      <SelectItem value="90d">Last 90 days</SelectItem>
-                    </SelectContent>
-                  </Select>
-                  <Select value={modelFilter} onValueChange={handleModelFilterChange}>
-                    <SelectTrigger className="w-[180px] bg-gray-800 text-gray-200 border-gray-700">
-                      <SelectValue placeholder="Select model" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="all">All Models</SelectItem>
-                      <SelectItem value="gpt-3.5">GPT-3.5</SelectItem>
-                      <SelectItem value="gpt-4">GPT-4</SelectItem>
-                    </SelectContent>
-                  </Select>
-                  <div className="relative w-full md:w-80">
-                    <Input
-                      type="text"
-                      placeholder="Search dashboard..."
-                      value={searchTerm}
-                      onChange={(e) => setSearchTerm(e.target.value)}
-                      className="w-full bg-gray-800 text-gray-200 placeholder-gray-400 border-gray-700 focus:border-purple-500 focus:ring-1 focus:ring-purple-500 pr-10"
-                    />
-                    <Search className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
-                  </div>
-                </div>
-              </div>
+              <DashboardHeader 
+                timeFilter={timeFilter}
+                modelFilter={modelFilter}
+                onTimeFilterChange={handleTimeFilterChange}
+                onModelFilterChange={handleModelFilterChange}
+                searchTerm={searchTerm}
+                onSearchTermChange={setSearchTerm}
+              />
 
               <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
                 <TabsList className="bg-gray-800">

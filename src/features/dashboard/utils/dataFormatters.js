@@ -28,33 +28,35 @@ export const formatApiCallData = (apiCalls, apiStats, selectedModel) => {
 };
 
 const calculateCostTrend = (apiCalls) => {
-  // Implementation for cost trend calculation
-  // This is a placeholder and should be implemented based on your specific requirements
-  return apiCalls.map(call => ({
-    date: call.timestamp,
-    cost: call.cost
-  }));
+  return apiCalls.reduce((acc, call) => {
+    const date = call.timestamp.split('T')[0];
+    if (!acc[date]) {
+      acc[date] = { date, cost: 0 };
+    }
+    acc[date].cost += call.cost;
+    return acc;
+  }, {});
 };
 
 const calculateCostBreakdown = (apiCalls) => {
-  // Implementation for cost breakdown calculation
-  // This is a placeholder and should be implemented based on your specific requirements
-  const breakdown = {};
-  apiCalls.forEach(call => {
-    if (!breakdown[call.model]) {
-      breakdown[call.model] = 0;
+  return apiCalls.reduce((acc, call) => {
+    if (!acc[call.model]) {
+      acc[call.model] = 0;
     }
-    breakdown[call.model] += call.cost;
-  });
-  return Object.entries(breakdown).map(([model, cost]) => ({ model, cost }));
+    acc[call.model] += call.cost;
+    return acc;
+  }, {});
 };
 
 const calculatePerformance = (apiCalls) => {
-  // Implementation for performance calculation
-  // This is a placeholder and should be implemented based on your specific requirements
-  return apiCalls.map(call => ({
-    date: call.timestamp,
-    responseTime: call.response_time,
-    errorRate: call.error ? 1 : 0
-  }));
+  return apiCalls.reduce((acc, call) => {
+    const date = call.timestamp.split('T')[0];
+    if (!acc[date]) {
+      acc[date] = { date, responseTime: 0, errorRate: 0, count: 0 };
+    }
+    acc[date].responseTime += call.response_time;
+    acc[date].errorRate += call.error ? 1 : 0;
+    acc[date].count += 1;
+    return acc;
+  }, {});
 };
