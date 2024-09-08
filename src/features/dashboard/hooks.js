@@ -60,16 +60,39 @@ const processApiData = (apiCalls, apiStats, selectedModel, timeRange) => {
 };
 
 const generateCostTrend = (apiCalls, timeRange) => {
-  // Implement cost trend generation logic
-  // Group calls by day and calculate daily costs
+  const costByDate = apiCalls.reduce((acc, call) => {
+    const date = formatDate(new Date(call.created_at));
+    acc[date] = (acc[date] || 0) + call.cost;
+    return acc;
+  }, {});
+
+  return Object.entries(costByDate).map(([date, cost]) => ({ date, cost }));
 };
 
 const generateCostBreakdown = (apiCalls) => {
-  // Implement cost breakdown logic
-  // Group costs by model or other relevant categories
+  const costByModel = apiCalls.reduce((acc, call) => {
+    acc[call.model] = (acc[call.model] || 0) + call.cost;
+    return acc;
+  }, {});
+
+  return Object.entries(costByModel).map(([model, cost]) => ({ model, cost }));
 };
 
 const generatePerformanceData = (apiCalls) => {
-  // Implement performance data generation logic
-  // Calculate average response times, error rates, etc.
+  const perfByDate = apiCalls.reduce((acc, call) => {
+    const date = formatDate(new Date(call.created_at));
+    if (!acc[date]) {
+      acc[date] = { responseTime: 0, errorCount: 0, totalCalls: 0 };
+    }
+    acc[date].responseTime += call.response_time;
+    acc[date].errorCount += call.error ? 1 : 0;
+    acc[date].totalCalls += 1;
+    return acc;
+  }, {});
+
+  return Object.entries(perfByDate).map(([date, data]) => ({
+    date,
+    responseTime: data.responseTime / data.totalCalls,
+    errorRate: data.errorCount / data.totalCalls,
+  }));
 };

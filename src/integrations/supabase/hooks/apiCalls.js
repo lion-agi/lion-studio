@@ -57,8 +57,8 @@ export const useApiCallsByDateRange = (startTimestamp, endTimestamp, options = {
             try {
                 const query = supabase.from('api_calls')
                     .select('*')
-                    .gte('created_at', start)
-                    .lte('created_at', end)
+                    .gte('created_at', new Date(start * 1000).toISOString())
+                    .lte('created_at', new Date(end * 1000).toISOString())
                     .order('created_at', { ascending: false });
 
                 return await fromSupabase(query);
