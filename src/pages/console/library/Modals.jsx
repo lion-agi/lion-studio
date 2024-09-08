@@ -10,11 +10,35 @@ const Modals = ({ selectedThread, selectedPage, selectedDataSource, handleCloseM
       {/* Thread Modal */}
       {selectedThread && (
         <Dialog open={!!selectedThread} onOpenChange={handleCloseModal}>
-          <DialogContent>
+          <DialogContent className="sm:max-w-[700px] max-h-[80vh] overflow-y-auto">
             <DialogHeader>
               <DialogTitle>{selectedThread.title}</DialogTitle>
             </DialogHeader>
-            <p>{selectedThread.content}</p>
+            <div className="mt-4">
+              {selectedThread.summary && (
+                <p className="text-sm text-gray-600 mb-4">{selectedThread.summary}</p>
+              )}
+              <p className="whitespace-pre-wrap">{selectedThread.content}</p>
+              {selectedThread.topic && (
+                <p className="mt-4 text-sm text-gray-600">Topic: {selectedThread.topic}</p>
+              )}
+              <p className="mt-2 text-sm text-gray-600">
+                Created: {new Date(selectedThread.created_at).toLocaleString()}
+              </p>
+              {selectedThread.updated_at && (
+                <p className="mt-1 text-sm text-gray-600">
+                  Updated: {new Date(selectedThread.updated_at).toLocaleString()}
+                </p>
+              )}
+              {selectedThread.metadata && (
+                <div className="mt-4">
+                  <h4 className="text-sm font-semibold">Metadata:</h4>
+                  <pre className="mt-2 text-xs bg-gray-100 p-2 rounded">
+                    {JSON.stringify(selectedThread.metadata, null, 2)}
+                  </pre>
+                </div>
+              )}
+            </div>
           </DialogContent>
         </Dialog>
       )}
