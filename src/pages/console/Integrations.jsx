@@ -114,17 +114,20 @@ const Integrations = () => {
             >
               <Info className="h-5 w-5" />
             </Button>
+
+            <IntegrationFilters
+              activeTab={activeTab}
+              setActiveTab={setActiveTab}
+              searchTerm={searchTerm}
+              setSearchTerm={setSearchTerm}
+              typeFilter={typeFilter}
+              setTypeFilter={setTypeFilter}
+            />
+
           </div>
         </div>
 
-        <IntegrationFilters
-          activeTab={activeTab}
-          setActiveTab={setActiveTab}
-          searchTerm={searchTerm}
-          setSearchTerm={setSearchTerm}
-          typeFilter={typeFilter}
-          setTypeFilter={setTypeFilter}
-        />
+
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {filteredIntegrations.map((integration) => (
