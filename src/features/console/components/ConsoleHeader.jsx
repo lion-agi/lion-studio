@@ -17,7 +17,7 @@ const ConsoleHeader = () => {
 
   const navItems = [
     { name: 'Dashboard', path: '/console/dashboard', icon: LayoutDashboard },
-    { name: 'Integrations', path: '/console/integrations', icon: LinkIcon },
+    { name: 'Integrations', path: '/console/Integrations', icon: LinkIcon },
     { name: 'Deployment', path: '/console/deployment', icon: Rocket },
     { name: 'Library', path: '/console/library', icon: Library },
     { name: 'Workflow', path: '/console/workflow', icon: GitBranch },
