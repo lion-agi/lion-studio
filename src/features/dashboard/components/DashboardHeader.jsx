@@ -28,13 +28,12 @@ const InfoModal = ({ isOpen, onClose }) => (
 const DashboardHeader = () => {
   const [timeRange, setTimeRange] = useRecoilState(timeRangeState);
   const [selectedModel, setSelectedModel] = useRecoilState(selectedModelState);
-  const [searchTerm, setSearchTerm] = useState('');
   const [isInfoModalOpen, setIsInfoModalOpen] = useState(false);
 
   return (
     <div className="flex justify-between items-center mb-12">
       <div className="flex items-center">
-        <h1 className="text-2xl font-bold text-gray-100 mr-4">Dashboard</h1>
+        <h1 className="text-2xl font-bold mb-6 md:mb-0 text-gray-100 mr-4">Dashboard</h1>
         <Button
           variant="ghost"
           size="sm"
@@ -44,7 +43,7 @@ const DashboardHeader = () => {
           <Info className="h-5 w-5" />
         </Button>
       </div>
-      <div className="relative w-full md:w-80 space-x-4">
+      <div className="flex items-center space-x-4">
         <Select value={timeRange} onValueChange={setTimeRange}>
           <SelectTrigger className="w-[180px] bg-gray-800 text-gray-200 border-gray-700">
             <SelectValue placeholder="Select time range" />
