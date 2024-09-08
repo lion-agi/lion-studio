@@ -47,11 +47,13 @@ const Integrations = () => {
   };
 
   const handleToggle = (id) => {
+    const newStatus = !activeIntegrations[id];
     toggleIntegrationStatus(id);
     const integration = integrations.find(i => i.id === id);
-    const status = activeIntegrations[id] ? 'Activated' : 'Deactivated';
+    const status = newStatus ? 'Deactivated' : 'Activated';
     toast({
-      title: `${integration.name} ${status}!`,
+      title: "Connection Status Update",
+      description: `${integration.name} ${status}!`,
       duration: 3000,
     });
   };
@@ -66,7 +68,7 @@ const Integrations = () => {
           )
         );
         toast({
-          title: "Integration Updated",
+          title: "Connection Status Update",
           description: "The integration has been successfully updated.",
           duration: 3000,
         });
@@ -74,7 +76,7 @@ const Integrations = () => {
         const newIntegration = await addIntegration.mutateAsync(updatedIntegration);
         setIntegrations(prevIntegrations => [...prevIntegrations, newIntegration]);
         toast({
-          title: "Integration Added",
+          title: "Connection Status Update",
           description: "A new integration has been successfully added.",
           duration: 3000,
         });
