@@ -75,13 +75,13 @@ const Dashboard = () => {
 
       <Tabs defaultValue="overview" className="space-y-4">
         <TabsList>
-          <TabsTrigger value="overview">Overview</TabsTrigger>
-          <TabsTrigger value="costs">Costs</TabsTrigger>
-          <TabsTrigger value="calls">API Calls</TabsTrigger>
+          <TabsTrigger value="overview" className="data-[state=active]:bg-purple-600 data-[state=active]:text-white px-6 py-3">Overview</TabsTrigger>
+          <TabsTrigger value="costs" className="data-[state=active]:bg-purple-600 data-[state=active]:text-white px-6 py-3">Costs</TabsTrigger>
+          <TabsTrigger value="calls" className="data-[state=active]:bg-purple-600 data-[state=active]:text-white px-6 py-3">API Calls</TabsTrigger>
         </TabsList>
 
         <TabsContent value="overview">
-          <div className="space-y-4">
+          <div className="mt-6">
             <SummaryCards data={data.summary} />
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <CostTrendChart data={data.costTrend} />
@@ -91,7 +91,7 @@ const Dashboard = () => {
         </TabsContent>
 
         <TabsContent value="costs">
-          <div className="space-y-4">
+          <div className="mt-6">
             <SummaryCards data={data.summary} />
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <CostTrendChart data={data.costTrend} />
@@ -101,7 +101,7 @@ const Dashboard = () => {
         </TabsContent>
 
         <TabsContent value="calls">
-          <div className="space-y-4">
+          <div className="mt-6">
             <SummaryCards data={data.summary} />
             {data.recentCalls && data.recentCalls.length > 0 ? (
               <>
