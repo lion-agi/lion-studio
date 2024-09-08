@@ -2,13 +2,24 @@ import React from 'react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/common/components/ui/tabs";
 import { Input } from "@/common/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/common/components/ui/select";
-import { Search } from 'lucide-react';
+import { Search, Info } from 'lucide-react';
+import { Button } from "@/common/components/ui/button";
 
-const IntegrationFilters = ({ activeTab, setActiveTab, searchTerm, setSearchTerm, typeFilter, setTypeFilter }) => {
+const IntegrationFilters = ({ activeTab, setActiveTab, searchTerm, setSearchTerm, typeFilter, setTypeFilter, setIsInfoModalOpen }) => {
   return (
     <div className="space-y-6">
       <div className="flex flex-col md:flex-row justify-between items-center mb-12">
-        <h1 className="text-2xl font-bold mb-6 md:mb-0 text-gray-100">Integrations</h1>
+        <div className="flex items-center">
+          <h1 className="text-2xl font-bold mb-6 md:mb-0 text-gray-100 mr-4">Integrations</h1>
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={() => setIsInfoModalOpen(true)}
+            className="text-gray-400 hover:text-gray-100"
+          >
+            <Info className="h-5 w-5" />
+          </Button>
+        </div>
         <div className="flex space-x-4 items-center">
           <Select value={typeFilter} onValueChange={setTypeFilter}>
             <SelectTrigger className="w-[180px] bg-gray-800 text-gray-200 border-gray-700">

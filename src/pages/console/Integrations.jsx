@@ -103,20 +103,6 @@ const Integrations = () => {
   return (
     <div className="min-h-screen bg-gray-900 text-gray-100">
       <div className="container mx-auto p-8 space-y-8">
-        <div className="flex items-center justify-between mb-6">
-          <div className="flex items-center">
-            <h1 className="text-2xl font-bold text-gray-100 mr-4">Integrations</h1>
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={() => setIsInfoModalOpen(true)}
-              className="text-gray-400 hover:text-gray-100"
-            >
-              <Info className="h-5 w-5" />
-            </Button>
-          </div>
-        </div>
-
         <IntegrationFilters
           activeTab={activeTab}
           setActiveTab={setActiveTab}
@@ -124,6 +110,7 @@ const Integrations = () => {
           setSearchTerm={setSearchTerm}
           typeFilter={typeFilter}
           setTypeFilter={setTypeFilter}
+          setIsInfoModalOpen={setIsInfoModalOpen}
         />
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
