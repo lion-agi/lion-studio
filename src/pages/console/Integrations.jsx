@@ -10,7 +10,7 @@ import { Switch } from "@/common/components/ui/switch";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/common/components/ui/select";
 import { Textarea } from "@/common/components/ui/textarea";
 import { CheckCircle2, XCircle, Database, Cloud, FileText, Link as LinkIcon, Brain, Search } from 'lucide-react';
-import { useIntegrations, useAddIntegration, useUpdateIntegration, useDeleteIntegration, useToggleIntegrationStatus } from '@/integrations/supabase/hooks/integrations';
+import { useIntegrations, useAddIntegration, useUpdateIntegration, useDeleteIntegration } from '@/integrations/supabase/hooks/integrations';
 import { useToast } from "@/common/components/ui/use-toast";
 
 const IntegrationCard = ({ integration, onConfigure, onToggle }) => (
@@ -35,7 +35,7 @@ const IntegrationCard = ({ integration, onConfigure, onToggle }) => (
       <Button variant="outline" size="sm" onClick={() => onConfigure(integration)}>Configure</Button>
       <Switch 
         checked={integration.status === 'Connected'} 
-        onCheckedChange={() => onToggle(integration)}
+        onCheckedChange={() => onToggle(integration.id)}
         className={integration.status === 'Connected' ? 'bg-green-500' : 'bg-gray-500'}
       />
     </CardFooter>
@@ -122,15 +122,21 @@ const Integrations = () => {
   const [typeFilter, setTypeFilter] = useState('All Types');
   const [selectedIntegration, setSelectedIntegration] = useState(null);
   const [isConfigureModalOpen, setIsConfigureModalOpen] = useState(false);
+  const [localIntegrations, setLocalIntegrations] = useState([]);
 
-  const { data: integrations, isLoading, error } = useIntegrations();
+  const { data: fetchedIntegrations, isLoading, error } = useIntegrations();
   const addIntegration = useAddIntegration();
   const updateIntegration = useUpdateIntegration();
   const deleteIntegration = useDeleteIntegration();
-  const toggleIntegrationStatus = useToggleIntegrationStatus();
   const { toast } = useToast();
 
-  const filteredIntegrations = integrations
+  React.useEffect(() => {
+    if (fetchedIntegrations) {
+      setLocalIntegrations(fetchedIntegrations);
+    }
+  }, [fetchedIntegrations]);
+
+  const filteredIntegrations = localIntegrations
     ?.filter(conn => activeTab === 'all' || conn.type === activeTab)
     .filter(conn => conn.name.toLowerCase().includes(searchTerm.toLowerCase()))
     .filter(conn => typeFilter === 'All Types' || conn.type === typeFilter.toLowerCase())
@@ -145,37 +151,36 @@ const Integrations = () => {
     setIsConfigureModalOpen(true);
   };
 
-  const handleToggle = async (integration) => {
-    try {
-      const newStatus = integration.status === 'Connected' ? 'Disconnected' : 'Connected';
-      await toggleIntegrationStatus.mutateAsync({
-        id: integration.id,
-        status: newStatus
-      });
-      toast({
-        title: "Status Updated",
-        description: `Integration ${integration.name} is now ${newStatus}`,
-      });
-    } catch (error) {
-      console.error('Error toggling integration status:', error);
-      toast({
-        title: "Error",
-        description: "Failed to update integration status",
-        variant: "destructive",
-      });
-    }
+  const handleToggle = (id) => {
+    setLocalIntegrations(prevIntegrations =>
+      prevIntegrations.map(integration =>
+        integration.id === id
+          ? { ...integration, status: integration.status === 'Connected' ? 'Disconnected' : 'Connected' }
+          : integration
+      )
+    );
+    toast({
+      title: "Status Updated",
+      description: `Integration status toggled. Changes will be saved when you update the integration.`,
+    });
   };
 
   const handleSaveIntegration = async (updatedIntegration) => {
     try {
       if (updatedIntegration.id) {
         await updateIntegration.mutateAsync(updatedIntegration);
+        setLocalIntegrations(prevIntegrations =>
+          prevIntegrations.map(integration =>
+            integration.id === updatedIntegration.id ? updatedIntegration : integration
+          )
+        );
         toast({
           title: "Integration Updated",
           description: "The integration has been successfully updated.",
         });
       } else {
-        await addIntegration.mutateAsync(updatedIntegration);
+        const newIntegration = await addIntegration.mutateAsync(updatedIntegration);
+        setLocalIntegrations(prevIntegrations => [...prevIntegrations, newIntegration]);
         toast({
           title: "Integration Added",
           description: "A new integration has been successfully added.",
