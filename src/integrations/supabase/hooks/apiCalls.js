@@ -81,7 +81,7 @@ export const useApiCallsByDateRange = (startDate, endDate, options = {}) => useQ
     ...options,
 });
 
-export const useApiCallStats = (startDate, endDate = new Date().toISOString(), options = {}) => useQuery({
+export const useApiCallStats = (startDate, endDate = new Date(), options = {}) => useQuery({
     queryKey: ['apiCallStats', startDate, endDate],
     queryFn: async () => {
         try {
