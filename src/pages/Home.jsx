@@ -42,7 +42,7 @@ const Home = () => {
         <p className="text-xl max-w-2xl text-gray-300 mb-8">
           Streamline your business processes with AI-powered automation solutions
         </p>
-        <Card className="w-full max-w-2xl overflow-hidden transform rotate-1 shadow-xl">
+        <Card className="w-full max-w-2xl overflow-hidden transform shadow-xl">
           <CardContent className="p-0">
             <img src="/demo1.jpg" alt="Demo 1" className="w-full h-auto" />
           </CardContent>
