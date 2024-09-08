@@ -81,7 +81,7 @@ export const useApiCallsByDateRange = (startDate, endDate, options = {}) => useQ
     ...options,
 });
 
-export const useApiCallStats = (startDate, endDate, options = {}) => useQuery({
+export const useApiCallStats = (startDate, endDate = new Date().toISOString(), options = {}) => useQuery({
     queryKey: ['apiCallStats', startDate, endDate],
     queryFn: async () => {
         try {
@@ -97,7 +97,7 @@ export const useApiCallStats = (startDate, endDate, options = {}) => useQuery({
             const totalCalls = data.length;
             const totalCost = data.reduce((sum, call) => sum + parseFloat(call.cost), 0);
             const totalTokens = data.reduce((sum, call) => sum + call.tokens, 0);
-            const avgResponseTime = data.reduce((sum, call) => sum + call.response_time, 0) / totalCalls;
+            const avgResponseTime = data.reduce((sum, call) => sum + call.response_time, 0) / totalCalls || 0;
 
             return {
                 totalCalls,
