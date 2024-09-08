@@ -1,6 +1,6 @@
 import React, { useState, useCallback, useMemo } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from "@/common/components/ui/card";
-import { ResponsiveContainer, PieChart, Pie, Cell, Tooltip, Legend } from 'recharts';
+import { ResponsiveContainer, PieChart, Pie, Cell, Tooltip } from 'recharts';
 import { formatCurrency } from '@/features/dashboard/utils';
 
 const COLORS = ['#8B5CF6', '#EC4899', '#F59E0B', '#10B981', '#3B82F6', '#EF4444', '#14B8A6', '#6366F1', '#D946EF', '#F97316'];
@@ -38,20 +38,6 @@ const CostBreakdownChart = ({ data }) => {
       percentage: (item.cost / totalCost) * 100
     })).sort((a, b) => b.cost - a.cost);
   }, [data]);
-
-  const renderLegend = (props) => {
-    const { payload } = props;
-    return (
-      <ul className="flex flex-wrap justify-center gap-2 mt-4">
-        {payload.map((entry, index) => (
-          <li key={`legend-${index}`} className="flex items-center">
-            <span className="w-3 h-3 mr-2" style={{ backgroundColor: entry.color }}></span>
-            <span className="text-xs text-gray-300">{entry.value}</span>
-          </li>
-        ))}
-      </ul>
-    );
-  };
 
   if (processedData.length === 0) {
     return (
@@ -96,7 +82,6 @@ const CostBreakdownChart = ({ data }) => {
               ))}
             </Pie>
             <Tooltip content={<CustomTooltip />} />
-            <Legend content={renderLegend} />
           </PieChart>
         </ResponsiveContainer>
       </CardContent>
