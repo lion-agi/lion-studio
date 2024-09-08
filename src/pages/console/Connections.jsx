@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle, CardFooter } from "@/common/components/ui/card";
 import { Button } from "@/common/components/ui/button";
 import { Input } from "@/common/components/ui/input";
@@ -9,7 +9,8 @@ import { Badge } from "@/common/components/ui/badge";
 import { Switch } from "@/common/components/ui/switch";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/common/components/ui/select";
 import { Textarea } from "@/common/components/ui/textarea";
-import { CheckCircle2, XCircle, Database, Cloud, FileText, Link as LinkIcon, Brain, Search } from 'lucide-react';
+import { CheckCircle2, XCircle, Database, Cloud, FileText, Link as LinkIcon, Brain, Search, Plus } from 'lucide-react';
+import { supabase } from '@/integrations/supabase/supabase';
 
 const ConnectionCard = ({ connection, onConfigure, onToggle }) => (
   <Card className="bg-gray-800 hover:bg-gray-700 transition-colors">
@@ -38,14 +39,35 @@ const ConnectionCard = ({ connection, onConfigure, onToggle }) => (
 
 const ConfigureConnectionModal = ({ isOpen, onClose, connection, onSave }) => {
   const [formData, setFormData] = useState(connection || {});
+  const [extraParams, setExtraParams] = useState(connection?.extra || {});
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
   };
 
+  const handleExtraParamChange = (key, value) => {
+    setExtraParams(prev => ({ ...prev, [key]: value }));
+  };
+
+  const handleAddExtraParam = () => {
+    setExtraParams(prev => ({ ...prev, '': '' }));
+  };
+
+  const handleRemoveExtraParam = (key) => {
+    setExtraParams(prev => {
+      const newParams = { ...prev };
+      delete newParams[key];
+      return newParams;
+    });
+  };
+
   const handleSave = () => {
-    onSave(formData);
+    const updatedConnection = {
+      ...formData,
+      extra: extraParams
+    };
+    onSave(updatedConnection);
     onClose();
   };
 
@@ -77,52 +99,7 @@ const ConfigureConnectionModal = ({ isOpen, onClose, connection, onSave }) => {
               </SelectContent>
             </Select>
           </div>
-          <div className="grid grid-cols-4 items-center gap-4">
-            <Label htmlFor="username" className="text-right">Username</Label>
-            <Input id="username" name="username" value={formData.username || ''} onChange={handleInputChange} className="col-span-3 bg-gray-700 text-gray-100" />
-          </div>
-          <div className="grid grid-cols-4 items-center gap-4">
-            <Label htmlFor="password" className="text-right">Password</Label>
-            <Input id="password" name="password" type="password" value={formData.password || ''} onChange={handleInputChange} className="col-span-3 bg-gray-700 text-gray-100" />
-          </div>
-          <div className="grid grid-cols-4 items-center gap-4">
-            <Label htmlFor="accessToken" className="text-right">Access Token</Label>
-            <Input id="accessToken" name="accessToken" value={formData.accessToken || ''} onChange={handleInputChange} className="col-span-3 bg-gray-700 text-gray-100" />
-          </div>
-          {formData.type === 'database' && (
-            <>
-              <div className="grid grid-cols-4 items-center gap-4">
-                <Label htmlFor="host" className="text-right">Host</Label>
-                <Input id="host" name="host" value={formData.host || ''} onChange={handleInputChange} className="col-span-3 bg-gray-700 text-gray-100" />
-              </div>
-              <div className="grid grid-cols-4 items-center gap-4">
-                <Label htmlFor="port" className="text-right">Port</Label>
-                <Input id="port" name="port" value={formData.port || ''} onChange={handleInputChange} className="col-span-3 bg-gray-700 text-gray-100" />
-              </div>
-              <div className="grid grid-cols-4 items-center gap-4">
-                <Label htmlFor="database" className="text-right">Database</Label>
-                <Input id="database" name="database" value={formData.database || ''} onChange={handleInputChange} className="col-span-3 bg-gray-700 text-gray-100" />
-              </div>
-            </>
-          )}
-          {formData.type === 'api' && (
-            <div className="grid grid-cols-4 items-center gap-4">
-              <Label htmlFor="endpoint" className="text-right">Endpoint URL</Label>
-              <Input id="endpoint" name="endpoint" value={formData.endpoint || ''} onChange={handleInputChange} className="col-span-3 bg-gray-700 text-gray-100" />
-            </div>
-          )}
-          {formData.type === 'cloud' && (
-            <div className="grid grid-cols-4 items-center gap-4">
-              <Label htmlFor="region" className="text-right">Region</Label>
-              <Input id="region" name="region" value={formData.region || ''} onChange={handleInputChange} className="col-span-3 bg-gray-700 text-gray-100" />
-            </div>
-          )}
-          {formData.type === 'ai' && (
-            <div className="grid grid-cols-4 items-center gap-4">
-              <Label htmlFor="modelName" className="text-right">Model Name</Label>
-              <Input id="modelName" name="modelName" value={formData.modelName || ''} onChange={handleInputChange} className="col-span-3 bg-gray-700 text-gray-100" />
-            </div>
-          )}
+          {/* Add other fields based on the connection type */}
           <div className="grid grid-cols-4 items-center gap-4">
             <Label htmlFor="description" className="text-right">Description</Label>
             <Textarea
@@ -133,6 +110,36 @@ const ConfigureConnectionModal = ({ isOpen, onClose, connection, onSave }) => {
               className="col-span-3 bg-gray-700 text-gray-100"
               rows={3}
             />
+          </div>
+          <div className="space-y-4">
+            <Label>Extra Parameters</Label>
+            {Object.entries(extraParams).map(([key, value], index) => (
+              <div key={index} className="flex items-center space-x-2">
+                <Input
+                  placeholder="Key"
+                  value={key}
+                  onChange={(e) => {
+                    const newKey = e.target.value;
+                    handleExtraParamChange(newKey, value);
+                    handleRemoveExtraParam(key);
+                  }}
+                  className="flex-1 bg-gray-700 text-gray-100"
+                />
+                <Input
+                  placeholder="Value"
+                  value={value}
+                  onChange={(e) => handleExtraParamChange(key, e.target.value)}
+                  className="flex-1 bg-gray-700 text-gray-100"
+                />
+                <Button variant="ghost" size="sm" onClick={() => handleRemoveExtraParam(key)}>
+                  <XCircle className="h-4 w-4" />
+                </Button>
+              </div>
+            ))}
+            <Button variant="outline" size="sm" onClick={handleAddExtraParam}>
+              <Plus className="h-4 w-4 mr-2" />
+              Add Extra Parameter
+            </Button>
           </div>
         </div>
         <DialogFooter>
@@ -149,15 +156,23 @@ const Connections = () => {
   const [isNewConnectionDialogOpen, setIsNewConnectionDialogOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
   const [typeFilter, setTypeFilter] = useState('All Types');
-  const [connections, setConnections] = useState([
-    { id: 1, name: 'PostgreSQL Database', type: 'database', status: 'Connected', icon: Database },
-    { id: 2, name: 'AWS S3 Bucket', type: 'cloud', status: 'Connected', icon: Cloud },
-    { id: 3, name: 'Google Drive', type: 'cloud', status: 'Disconnected', icon: FileText },
-    { id: 4, name: 'Stripe API', type: 'api', status: 'Connected', icon: LinkIcon },
-    { id: 5, name: 'OpenAI GPT-3', type: 'ai', status: 'Connected', icon: Brain },
-  ]);
+  const [connections, setConnections] = useState([]);
   const [selectedConnection, setSelectedConnection] = useState(null);
   const [isConfigureModalOpen, setIsConfigureModalOpen] = useState(false);
+
+  useEffect(() => {
+    fetchConnections();
+  }, []);
+
+  const fetchConnections = async () => {
+    try {
+      const { data, error } = await supabase.from('connections').select('*');
+      if (error) throw error;
+      setConnections(data);
+    } catch (error) {
+      console.error('Error fetching connections:', error);
+    }
+  };
 
   const filteredConnections = connections
     .filter(conn => activeTab === 'all' || conn.type === activeTab)
@@ -174,18 +189,34 @@ const Connections = () => {
     setIsConfigureModalOpen(true);
   };
 
-  const handleToggle = (connection) => {
-    setConnections(connections.map(conn =>
-      conn.id === connection.id
-        ? { ...conn, status: conn.status === 'Connected' ? 'Disconnected' : 'Connected' }
-        : conn
-    ));
+  const handleToggle = async (connection) => {
+    const newStatus = connection.status === 'Connected' ? 'Disconnected' : 'Connected';
+    try {
+      const { data, error } = await supabase
+        .from('connections')
+        .update({ status: newStatus })
+        .eq('id', connection.id);
+      if (error) throw error;
+      setConnections(connections.map(conn =>
+        conn.id === connection.id ? { ...conn, status: newStatus } : conn
+      ));
+    } catch (error) {
+      console.error('Error updating connection status:', error);
+    }
   };
 
-  const handleSaveConnection = (updatedConnection) => {
-    setConnections(connections.map(conn =>
-      conn.id === updatedConnection.id ? updatedConnection : conn
-    ));
+  const handleSaveConnection = async (updatedConnection) => {
+    try {
+      const { data, error } = await supabase
+        .from('connections')
+        .upsert(updatedConnection, { onConflict: 'id' });
+      if (error) throw error;
+      setConnections(connections.map(conn =>
+        conn.id === updatedConnection.id ? updatedConnection : conn
+      ));
+    } catch (error) {
+      console.error('Error saving connection:', error);
+    }
   };
 
   return (
