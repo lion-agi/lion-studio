@@ -43,19 +43,9 @@ const Dashboard = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [timeFilter, setTimeFilter] = useState('7d');
   const [modelFilter, setModelFilter] = useState('all');
-  const [isTimeout, setIsTimeout] = useState(false);
+  const [timeoutReached, setTimeoutReached] = useState(false);
 
   const { data, isLoading, error, refetch } = useApiData(timeFilter, modelFilter);
-
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      if (isLoading) {
-        setIsTimeout(true);
-      }
-    }, 15000); // 15 seconds timeout
-
-    return () => clearTimeout(timer);
-  }, [isLoading]);
 
   const handleTimeFilterChange = useCallback((value) => {
     setTimeFilter(value);
@@ -67,9 +57,17 @@ const Dashboard = () => {
     refetch();
   }, [refetch]);
 
-  if (isLoading && !isTimeout) return <LoadingSpinner />;
-  if (isTimeout) return <ErrorFallback error={{ message: "Loading timed out. The server might be experiencing high load. Please try again later." }} />;
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setTimeoutReached(true);
+    }, 10000); // 10 seconds timeout
+
+    return () => clearTimeout(timer);
+  }, []);
+
+  if (isLoading && !timeoutReached) return <LoadingSpinner />;
   if (error) return <ErrorFallback error={error} />;
+  if (timeoutReached) return <ErrorFallback error={new Error('Timeout: Data fetching took too long.')} />;
 
   const filteredData = {
     ...data,
