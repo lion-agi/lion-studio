@@ -9,9 +9,7 @@ const CollectionItem = ({ collection, onOpenModal, onDelete, onEdit }) => {
   return (
     <Card className="bg-gray-800 hover:bg-gray-700 transition-colors">
       <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-        <CardTitle className="text-lg font-semibold text-gray-100">
-          {collection.emoji} {collection.title}
-        </CardTitle>
+        <CardTitle className="text-lg font-semibold text-gray-100">{collection.title}</CardTitle>
         <Badge variant="outline" className="text-xs">
           {new Date(collection.created_at).toLocaleDateString()}
         </Badge>

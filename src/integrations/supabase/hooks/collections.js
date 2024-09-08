@@ -17,7 +17,6 @@ CREATE TABLE collections (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     title TEXT NOT NULL,
     description TEXT,
-    emoji TEXT,
     is_active BOOLEAN DEFAULT true,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
@@ -29,7 +28,6 @@ COMMENT ON TABLE collections IS 'Stores information about user-created collectio
 COMMENT ON COLUMN collections.id IS 'Unique identifier for the collection';
 COMMENT ON COLUMN collections.title IS 'Title of the collection';
 COMMENT ON COLUMN collections.description IS 'Description of the collection';
-COMMENT ON COLUMN collections.emoji IS 'Emoji representation for the collection';
 COMMENT ON COLUMN collections.is_active IS 'Whether the collection is active or not';
 COMMENT ON COLUMN collections.created_at IS 'Timestamp when the collection was created';
 COMMENT ON COLUMN collections.updated_at IS 'Timestamp when the collection was last updated';

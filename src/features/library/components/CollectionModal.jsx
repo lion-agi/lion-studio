@@ -11,7 +11,7 @@ const CollectionModal = ({ collection, isOpen, onClose }) => {
       <DialogContent className="sm:max-w-[700px] max-h-[80vh] overflow-y-auto bg-gray-800 text-gray-100">
         <DialogHeader>
           <DialogTitle className="text-2xl font-bold flex items-center">
-            {collection.emoji} {collection.title}
+            {collection.title}
           </DialogTitle>
         </DialogHeader>
         <div className="mt-4 space-y-4">

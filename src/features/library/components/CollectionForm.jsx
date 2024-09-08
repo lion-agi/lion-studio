@@ -10,7 +10,6 @@ const CollectionForm = ({ collection, isOpen, onClose, onSave }) => {
   const [formData, setFormData] = useState({
     title: '',
     description: '',
-    emoji: '',
     is_active: true,
     metadata: {},
   });
@@ -20,7 +19,6 @@ const CollectionForm = ({ collection, isOpen, onClose, onSave }) => {
       setFormData({
         title: collection.title || '',
         description: collection.description || '',
-        emoji: collection.emoji || '',
         is_active: collection.is_active !== undefined ? collection.is_active : true,
         metadata: collection.metadata || {},
       });
@@ -28,7 +26,6 @@ const CollectionForm = ({ collection, isOpen, onClose, onSave }) => {
       setFormData({
         title: '',
         description: '',
-        emoji: '',
         is_active: true,
         metadata: {},
       });
@@ -77,17 +74,6 @@ const CollectionForm = ({ collection, isOpen, onClose, onSave }) => {
               onChange={handleInputChange}
               className="bg-gray-700 text-white border-gray-600 focus:border-purple-500"
               rows={3}
-            />
-          </div>
-          <div className="space-y-2">
-            <Label htmlFor="emoji">Emoji</Label>
-            <Input
-              id="emoji"
-              name="emoji"
-              value={formData.emoji}
-              onChange={handleInputChange}
-              className="bg-gray-700 text-white border-gray-600 focus:border-purple-500"
-              placeholder="Enter an emoji"
             />
           </div>
           <div className="flex items-center space-x-2">
