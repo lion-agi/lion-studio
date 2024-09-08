@@ -5,6 +5,7 @@ import { ThemeProvider } from "@/common/components/theme-provider";
 import { Toaster } from "@/common/components/ui/toaster";
 import { SupabaseAuthProvider, useSupabaseAuth } from './integrations/supabase';
 import { RecoilRoot } from 'recoil';
+import commonStyles from '@/common/components/ui/style-guide';
 
 // Import components
 import ConsoleHeader from '@/features/console/components/ConsoleHeader';
@@ -27,7 +28,7 @@ import Deployment from './pages/console/Deployment';
 const queryClient = new QueryClient();
 
 const ConsoleLayout = ({ children }) => (
-  <div className="min-h-screen bg-background font-sans antialiased">
+  <div className="min-h-screen bg-background font-sans antialiased" style={commonStyles}>
     <ConsoleHeader />
     {children}
   </div>

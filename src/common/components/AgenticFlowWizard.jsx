@@ -6,6 +6,7 @@ import { Label } from "@/common/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/common/components/ui/select";
 import { Textarea } from "@/common/components/ui/textarea";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/common/components/ui/alert-dialog";
+import commonStyles from '@/common/components/ui/style-guide';
 
 const flowTypes = [
   "Data Preprocessing",
@@ -62,7 +63,7 @@ const AgenticFlowWizard = ({ onCreateFlow, onClearDiagram, onSaveFlow }) => {
         <DialogTrigger asChild>
           <Button onClick={() => setIsOpen(true)}>New Agentic Flow</Button>
         </DialogTrigger>
-        <DialogContent className="sm:max-w-[425px]">
+        <DialogContent className="sm:max-w-[425px]" style={commonStyles}>
           <DialogHeader>
             <DialogTitle>Create New Agentic Flow - Step {step}</DialogTitle>
           </DialogHeader>

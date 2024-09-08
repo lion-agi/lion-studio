@@ -2,12 +2,13 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { Button } from "@/common/components/ui/button";
 import { useSupabaseAuth } from '@/integrations/supabase';
+import commonStyles from '@/common/components/ui/style-guide';
 
 const MainWebsiteHeader = () => {
   const { session, logout } = useSupabaseAuth();
 
   return (
-    <header className="bg-gray-900 text-white py-4">
+    <header className="bg-gray-900 text-white py-4" style={commonStyles}>
       <div className="container mx-auto flex justify-between items-center">
         <Link to="/" className="flex items-center">
           <img src="/lion-studio-logo.jpeg" alt="Lion Studio Logo" className="w-16 h-16 mr-3" />
