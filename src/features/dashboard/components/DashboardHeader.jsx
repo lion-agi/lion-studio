@@ -7,18 +7,32 @@ import { Button } from "@/common/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/common/components/ui/dialog";
 
 const InfoModal = ({ isOpen, onClose }) => (
-  // ... (InfoModal code remains unchanged)
+  <Dialog open={isOpen} onOpenChange={onClose}>
+    <DialogContent className="sm:max-w-[425px] bg-gray-800 text-gray-100">
+      <DialogHeader>
+        <DialogTitle>Dashboard Information</DialogTitle>
+      </DialogHeader>
+      <div className="mt-4">
+        <p>The Library is your central hub for monitoring and managing your project:</p>
+        <ul className="list-disc list-inside mt-2 space-y-1">
+          <li>Overview: Overall stats of the project</li>
+          <li>Costs: costs related stats for the project</li>
+          <li>API Calls: provide detailed logs of recent API calls</li>
+        </ul>
+      </div>
+    </DialogContent>
+  </Dialog>
 );
+
 
 const DashboardHeader = () => {
   const [timeRange, setTimeRange] = useRecoilState(timeRangeState);
   const [selectedModel, setSelectedModel] = useRecoilState(selectedModelState);
   const [isInfoModalOpen, setIsInfoModalOpen] = useState(false);
-  const [activeTab, setActiveTab] = useState('overview');
 
   return (
-    <div className="space-y-6 mb-8">
-      <div className="flex items-center justify-between">
+    <div className="mb-8">
+      <div className="flex justify-between items-center mb-6">
         <div className="flex items-center">
           <h1 className="text-2xl font-bold text-gray-100 mr-4">Dashboard</h1>
           <Button
@@ -54,21 +68,10 @@ const DashboardHeader = () => {
           </Select>
         </div>
       </div>
-      <div className="flex space-x-4 border-b border-gray-700">
-        {['Overview', 'Costs', 'API Calls'].map((tab) => (
-          <Button
-            key={tab.toLowerCase()}
-            variant="ghost"
-            className={`pb-2 px-1 ${
-              activeTab === tab.toLowerCase()
-                ? 'text-purple-500 border-b-2 border-purple-500'
-                : 'text-gray-400'
-            }`}
-            onClick={() => setActiveTab(tab.toLowerCase())}
-          >
-            {tab}
-          </Button>
-        ))}
+      <div className="flex space-x-4">
+        <Button variant="ghost" className="text-gray-300 hover:text-white hover:bg-gray-700">Overview</Button>
+        <Button variant="ghost" className="text-gray-300 hover:text-white hover:bg-gray-700">Costs</Button>
+        <Button variant="ghost" className="text-gray-300 hover:text-white hover:bg-gray-700">API Calls</Button>
       </div>
       <InfoModal isOpen={isInfoModalOpen} onClose={() => setIsInfoModalOpen(false)} />
     </div>
