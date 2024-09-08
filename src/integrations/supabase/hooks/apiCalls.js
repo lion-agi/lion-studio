@@ -1,4 +1,4 @@
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { useQuery } from '@tanstack/react-query';
 import { supabase } from '../supabase';
 
 const fromSupabase = async (query) => {
@@ -61,39 +61,24 @@ export const useApiCallsByDateRange = (startTimestamp, endTimestamp, options = {
     ...options,
 });
 
-export const useApiCallStats = (options = {}) => {
-    const sevenDaysAgoTimestamp = Math.floor(Date.now() / 1000) - (7 * 24 * 60 * 60);
-    const currentTimestamp = Math.floor(Date.now() / 1000);
+export const useApiCallStats = (startTimestamp, endTimestamp, options = {}) => {
+    const { data: apiCalls, isLoading, error } = useApiCallsByDateRange(startTimestamp, endTimestamp, options);
 
-    return useQuery({
-        queryKey: ['apiCallStats', sevenDaysAgoTimestamp, currentTimestamp],
-        queryFn: async () => {
-            try {
-                const { data, error } = await supabase
-                    .from('api_calls')
-                    .select('cost, response_time, tokens')
-                    .gte('created_at', new Date(sevenDaysAgoTimestamp * 1000).toISOString())
-                    .lte('created_at', new Date(currentTimestamp * 1000).toISOString());
+    const stats = React.useMemo(() => {
+        if (!apiCalls) return null;
 
-                if (error) throw error;
+        const totalCalls = apiCalls.length;
+        const totalCost = apiCalls.reduce((sum, call) => sum + parseFloat(call.cost), 0);
+        const totalTokens = apiCalls.reduce((sum, call) => sum + call.tokens, 0);
+        const avgResponseTime = apiCalls.reduce((sum, call) => sum + call.response_time, 0) / totalCalls || 0;
 
-                // Calculate stats on the client side
-                const totalCalls = data.length;
-                const totalCost = data.reduce((sum, call) => sum + parseFloat(call.cost), 0);
-                const totalTokens = data.reduce((sum, call) => sum + call.tokens, 0);
-                const avgResponseTime = data.reduce((sum, call) => sum + call.response_time, 0) / totalCalls || 0;
+        return {
+            totalCalls,
+            totalCost,
+            totalTokens,
+            avgResponseTime,
+        };
+    }, [apiCalls]);
 
-                return {
-                    totalCalls,
-                    totalCost,
-                    totalTokens,
-                    avgResponseTime,
-                };
-            } catch (error) {
-                console.error('Error fetching API call stats:', error);
-                throw error;
-            }
-        },
-        ...options,
-    });
+    return { stats, isLoading, error };
 };
