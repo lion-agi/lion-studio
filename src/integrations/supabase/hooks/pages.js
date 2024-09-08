@@ -1,6 +1,24 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '../supabase';
 
+
+/*
+Pages Table Structure:
+
+- id: UUID (Primary Key)
+- title: VARCHAR(255)
+- content: TEXT
+- summary: text
+- topic: text
+- tags: text[]
+- user_id: UUID
+- created_at: TIMESTAMP WITH TIME ZONE
+- updated_at: TIMESTAMP WITH TIME ZONE
+
+Indexes on: user_id, created_at
+Full-text search on: title, content
+*/
+
 const fromSupabase = async (query) => {
     const { data, error } = await query;
     if (error) {
