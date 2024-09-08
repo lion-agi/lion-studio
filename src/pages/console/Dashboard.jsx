@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useRecoilState } from 'recoil';
 import { useApiData } from '@/features/dashboard/hooks';
-import { timeRangeState, selectedModelState } from '../atoms';
+import { timeRangeState, selectedModelState } from '@/features/dashboard/atoms';
 import SummaryCards from '@/features/dashboard/components/SummaryCards';
 import CostTrendChart from '@/features/dashboard/components/CostTrendChart';
 import CostBreakdownChart from '@/features/dashboard/components/CostBreakdownChart';
