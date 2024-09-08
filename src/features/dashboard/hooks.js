@@ -1,90 +1,97 @@
 import { useQuery } from '@tanstack/react-query';
-import { useApiCallsByDateRange, useApiCallStats } from '../../integrations/supabase/hooks/apiCalls';
+import { supabase } from '@/integrations/supabase/supabase';
 
-export const useApiData = (timeRange, selectedModel) => {
-  const endTimestamp = Math.floor(Date.now() / 1000); // Current timestamp in seconds
-  const startTimestamp = endTimestamp - getTimeRangeInSeconds(timeRange);
+const fetchApiData = async (timeRange, selectedModel) => {
+  const now = new Date();
+  let startDate;
 
-  const apiCallsQuery = useApiCallsByDateRange(startTimestamp, endTimestamp, {
-    staleTime: 5 * 60 * 1000, // 5 minutes
-    refetchInterval: 5 * 60 * 1000, // 5 minutes
-  });
-
-  const apiStatsQuery = useApiCallStats(startTimestamp, endTimestamp, {
-    staleTime: 5 * 60 * 1000, // 5 minutes
-    refetchInterval: 5 * 60 * 1000, // 5 minutes
-  });
-
-  const isLoading = apiCallsQuery.isLoading || apiStatsQuery.isLoading;
-  const error = apiCallsQuery.error || apiStatsQuery.error;
-
-  const processedDataQuery = useQuery({
-    queryKey: ['processedApiData', apiCallsQuery.data, apiStatsQuery.data, selectedModel, timeRange],
-    queryFn: () => processApiData(apiCallsQuery.data, apiStatsQuery.data, selectedModel, timeRange),
-    enabled: !!apiCallsQuery.data && !!apiStatsQuery.data,
-    staleTime: 5 * 60 * 1000, // 5 minutes
-  });
-
-  return {
-    data: processedDataQuery.data,
-    isLoading: isLoading || processedDataQuery.isLoading,
-    error: error || processedDataQuery.error,
-  };
-};
-
-const getTimeRangeInSeconds = (timeRange) => {
   switch (timeRange) {
-    case '24h': return 24 * 60 * 60;
-    case '7d': return 7 * 24 * 60 * 60;
-    case '30d': return 30 * 24 * 60 * 60;
-    case '90d': return 90 * 24 * 60 * 60;
-    default: return 7 * 24 * 60 * 60; // Default to 7 days
+    case '24h':
+      startDate = new Date(now.getTime() - 24 * 60 * 60 * 1000);
+      break;
+    case '7d':
+      startDate = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
+      break;
+    case '30d':
+      startDate = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000);
+      break;
+    default:
+      startDate = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
   }
-};
 
-const processApiData = (apiCalls, apiStats, selectedModel, timeRange) => {
-  // Filter apiCalls based on selectedModel if needed
-  const filteredCalls = selectedModel === 'all' 
-    ? apiCalls 
-    : apiCalls.filter(call => call.model === selectedModel);
+  let query = supabase
+    .from('api_calls')
+    .select('*')
+    .gte('created_at', startDate.toISOString())
+    .lte('created_at', now.toISOString())
+    .order('created_at', { ascending: false });
 
-  // Process the data as needed for your dashboard components
-  // This is just an example, adjust according to your specific needs
+  if (selectedModel !== 'all') {
+    query = query.eq('model', selectedModel);
+  }
+
+  const { data: apiCalls, error } = await query;
+
+  if (error) {
+    console.error('Error fetching API calls:', error);
+    throw new Error('Failed to fetch API calls');
+  }
+
+  // Process the data
+  const summary = calculateSummary(apiCalls);
+  const costTrend = calculateCostTrend(apiCalls);
+  const costBreakdown = calculateCostBreakdown(apiCalls);
+  const performance = calculatePerformance(apiCalls);
+
   return {
-    summary: apiStats.stats,
-    costTrend: generateCostTrend(filteredCalls, timeRange),
-    costBreakdown: generateCostBreakdown(filteredCalls),
-    performance: generatePerformanceData(filteredCalls),
-    recentCalls: filteredCalls.slice(0, 100), // Get the 100 most recent calls
+    summary,
+    costTrend,
+    costBreakdown,
+    performance,
+    recentCalls: apiCalls.slice(0, 100), // Get the 100 most recent calls
   };
 };
 
-const generateCostTrend = (apiCalls, timeRange) => {
+const calculateSummary = (apiCalls) => {
+  const totalCost = apiCalls.reduce((sum, call) => sum + (call.cost || 0), 0);
+  const totalCalls = apiCalls.length;
+  const avgResponseTime = apiCalls.reduce((sum, call) => sum + (call.response_time || 0), 0) / totalCalls;
+  const errorRate = apiCalls.filter(call => call.error).length / totalCalls;
+
+  return {
+    totalCost,
+    totalCalls,
+    avgResponseTime,
+    errorRate,
+  };
+};
+
+const calculateCostTrend = (apiCalls) => {
   const costByDate = apiCalls.reduce((acc, call) => {
-    const date = formatDate(new Date(call.created_at));
-    acc[date] = (acc[date] || 0) + call.cost;
+    const date = new Date(call.created_at).toISOString().split('T')[0];
+    acc[date] = (acc[date] || 0) + (call.cost || 0);
     return acc;
   }, {});
 
   return Object.entries(costByDate).map(([date, cost]) => ({ date, cost }));
 };
 
-const generateCostBreakdown = (apiCalls) => {
+const calculateCostBreakdown = (apiCalls) => {
   const costByModel = apiCalls.reduce((acc, call) => {
-    acc[call.model] = (acc[call.model] || 0) + call.cost;
+    acc[call.model] = (acc[call.model] || 0) + (call.cost || 0);
     return acc;
   }, {});
 
   return Object.entries(costByModel).map(([model, cost]) => ({ model, cost }));
 };
 
-const generatePerformanceData = (apiCalls) => {
+const calculatePerformance = (apiCalls) => {
   const perfByDate = apiCalls.reduce((acc, call) => {
-    const date = formatDate(new Date(call.created_at));
+    const date = new Date(call.created_at).toISOString().split('T')[0];
     if (!acc[date]) {
-      acc[date] = { responseTime: 0, errorCount: 0, totalCalls: 0 };
+      acc[date] = { totalResponseTime: 0, errorCount: 0, totalCalls: 0 };
     }
-    acc[date].responseTime += call.response_time;
+    acc[date].totalResponseTime += call.response_time || 0;
     acc[date].errorCount += call.error ? 1 : 0;
     acc[date].totalCalls += 1;
     return acc;
@@ -92,7 +99,16 @@ const generatePerformanceData = (apiCalls) => {
 
   return Object.entries(perfByDate).map(([date, data]) => ({
     date,
-    responseTime: data.responseTime / data.totalCalls,
+    responseTime: data.totalResponseTime / data.totalCalls,
     errorRate: data.errorCount / data.totalCalls,
   }));
+};
+
+export const useApiData = (timeRange, selectedModel) => {
+  return useQuery({
+    queryKey: ['apiData', timeRange, selectedModel],
+    queryFn: () => fetchApiData(timeRange, selectedModel),
+    staleTime: 5 * 60 * 1000, // 5 minutes
+    refetchInterval: 5 * 60 * 1000, // 5 minutes
+  });
 };
