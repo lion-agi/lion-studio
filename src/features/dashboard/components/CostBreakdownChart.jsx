@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useMemo } from 'react';
+import React, { useMemo } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from "@/common/components/ui/card";
 import { ResponsiveContainer, PieChart, Pie, Cell, Tooltip, Legend } from 'recharts';
 import { formatCurrency } from '@/features/dashboard/utils';
@@ -20,16 +20,6 @@ const CustomTooltip = ({ active, payload }) => {
 };
 
 const CostBreakdownChart = ({ data }) => {
-  const [activeIndex, setActiveIndex] = useState(null);
-
-  const onPieEnter = useCallback((_, index) => {
-    setActiveIndex(index);
-  }, []);
-
-  const onPieLeave = useCallback(() => {
-    setActiveIndex(null);
-  }, []);
-
   const processedData = useMemo(() => {
     if (!data || !Array.isArray(data) || data.length === 0) return [];
     const totalCost = data.reduce((sum, item) => sum + item.cost, 0);
@@ -39,19 +29,18 @@ const CostBreakdownChart = ({ data }) => {
     })).sort((a, b) => b.cost - a.cost);
   }, [data]);
 
-  const renderLegend = (props) => {
-    const { payload } = props;
+  const renderCustomizedLabel = ({ cx, cy, midAngle, innerRadius, outerRadius, percent, index }) => {
+    const RADIAN = Math.PI / 180;
+    const radius = innerRadius + (outerRadius - innerRadius) * 0.5;
+    const x = cx + radius * Math.cos(-midAngle * RADIAN);
+    const y = cy + radius * Math.sin(-midAngle * RADIAN);
+    const model = processedData[index].model;
+    const displayName = model.length > 10 ? `${model.slice(0, 8)}...` : model;
+
     return (
-      <div className="grid grid-cols-2 gap-2 mt-4 max-h-40 overflow-y-auto">
-        {payload.map((entry, index) => (
-          <div key={`legend-${index}`} className="flex items-center">
-            <span className="w-3 h-3 mr-2 rounded-full" style={{ backgroundColor: entry.color }}></span>
-            <span className="text-xs text-gray-300 truncate" title={entry.value}>
-              {entry.value}
-            </span>
-          </div>
-        ))}
-      </div>
+      <text x={x} y={y} fill="white" textAnchor={x > cx ? 'start' : 'end'} dominantBaseline="central">
+        {`${displayName} ${(percent * 100).toFixed(0)}%`}
+      </text>
     );
   };
 
@@ -80,44 +69,17 @@ const CostBreakdownChart = ({ data }) => {
               data={processedData}
               cx="50%"
               cy="50%"
-              innerRadius="60%"
-              outerRadius="80%"
+              labelLine={false}
+              label={renderCustomizedLabel}
+              outerRadius={150}
               fill="#8884d8"
-              paddingAngle={2}
               dataKey="cost"
-              onMouseEnter={onPieEnter}
-              onMouseLeave={onPieLeave}
-              label={({ cx, cy, midAngle, innerRadius, outerRadius, percent, index }) => {
-                const RADIAN = Math.PI / 180;
-                const radius = innerRadius + (outerRadius - innerRadius) * 0.5;
-                const x = cx + radius * Math.cos(-midAngle * RADIAN);
-                const y = cy + radius * Math.sin(-midAngle * RADIAN);
-
-                return (
-                  <text
-                    x={x}
-                    y={y}
-                    fill="white"
-                    textAnchor={x > cx ? 'start' : 'end'}
-                    dominantBaseline="central"
-                    className="text-xs"
-                  >
-                    {`${(percent * 100).toFixed(0)}%`}
-                  </text>
-                );
-              }}
             >
               {processedData.map((entry, index) => (
-                <Cell 
-                  key={`cell-${index}`} 
-                  fill={COLORS[index % COLORS.length]}
-                  stroke={activeIndex === index ? '#fff' : 'none'}
-                  strokeWidth={2}
-                />
+                <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
               ))}
             </Pie>
             <Tooltip content={<CustomTooltip />} />
-            <Legend content={renderLegend} />
           </PieChart>
         </ResponsiveContainer>
       </CardContent>
