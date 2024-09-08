@@ -5,25 +5,47 @@ import { Button } from "@/common/components/ui/button";
 const ThreadModal = ({ thread, isOpen, onClose }) => {
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-[425px]">
-        <DialogHeader>
-          <DialogTitle>{thread.title}</DialogTitle>
+      <DialogContent className="sm:max-w-[700px] max-h-[90vh] overflow-y-auto bg-[#1a1b26] text-gray-200 border-gray-700 p-0">
+        <DialogHeader className="p-6">
+          <DialogTitle className="text-2xl font-bold text-white">{thread.title}</DialogTitle>
+          <Button
+            variant="ghost"
+            size="icon"
+            className="absolute right-4 top-4 text-gray-400 hover:text-white"
+            onClick={onClose}
+          >
+            <X className="h-5 w-5" />
+          </Button>
         </DialogHeader>
-        <div className="grid gap-4 py-4">
-          <p className="text-sm text-gray-600">{thread.content}</p>
-          <div className="flex justify-between text-sm text-gray-500">
-            <span>Date: {thread.createdAt}</span>
-            <span>Category: {thread.collection}</span>
+        <div className="px-6 py-4 space-y-6">
+          <div className="prose prose-invert prose-lg max-w-none">
+            <ReactMarkdown>{thread.content}</ReactMarkdown>
           </div>
-          <div className="flex justify-between text-sm text-gray-500">
-            <span>Word Count: {thread.content.split(' ').length}</span>
-            <span>Views: {thread.views}</span>
+          <div className="grid grid-cols-2 gap-x-6 gap-y-3 text-sm text-gray-300">
+            <InfoItem label="Date" value={new Date(thread.createdAt).toLocaleDateString()} />
+            <InfoItem label="Category" value={thread.collection} />
+            <InfoItem label="Word Count" value={thread.content.split(' ').length} />
+            <InfoItem label="Views" value={thread.views} />
+            <InfoItem label="Author" value={thread.author} />
+            <InfoItem label="Comments" value={thread.comments.length} />
           </div>
         </div>
-        <Button onClick={onClose}>Close</Button>
+        <div className="px-6 py-4 border-t border-gray-700 mt-4">
+          <div className="flex justify-between">
+            <Button onClick={onClose} className="bg-gray-600 hover:bg-gray-700 text-white">
+              Close
+            </Button>
+          </div>
+        </div>
       </DialogContent>
     </Dialog>
   );
 };
+
+const InfoItem = ({ label, value }) => (
+  <div>
+    <span className="font-semibold text-gray-200">{label}:</span> {value}
+  </div>
+);
 
 export default ThreadModal;
