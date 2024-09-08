@@ -147,13 +147,14 @@ const Integrations = () => {
 
   const handleToggle = async (integration) => {
     try {
+      const newStatus = integration.status === 'Connected' ? 'Disconnected' : 'Connected';
       await toggleIntegrationStatus.mutateAsync({
         id: integration.id,
-        status: integration.status === 'Connected' ? 'Disconnected' : 'Connected'
+        status: newStatus
       });
       toast({
         title: "Status Updated",
-        description: `Integration ${integration.name} is now ${integration.status === 'Connected' ? 'Disconnected' : 'Connected'}`,
+        description: `Integration ${integration.name} is now ${newStatus}`,
       });
     } catch (error) {
       console.error('Error toggling integration status:', error);
