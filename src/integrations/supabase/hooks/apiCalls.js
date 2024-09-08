@@ -10,26 +10,6 @@ const fromSupabase = async (query) => {
     return data;
 };
 
-/*
-SQL Table Schema for api_calls:
-
-CREATE TABLE api_calls (
-    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-    provider VARCHAR(255) NOT NULL,
-    model VARCHAR(255) NOT NULL,
-    endpoint VARCHAR(255) NOT NULL,
-    method VARCHAR(10) NOT NULL,
-    base_url TEXT NOT NULL,
-    tokens INTEGER NOT NULL,
-    cost DECIMAL(10, 5) NOT NULL,
-    response_time INTEGER NOT NULL,
-    metadata JSONB,
-    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
-);
-
-CREATE INDEX idx_api_calls_created_at ON api_calls(created_at);
-*/
-
 export const useApiCalls = (options = {}) => useQuery({
     queryKey: ['apiCalls'],
     queryFn: async () => {
@@ -62,20 +42,15 @@ export const useAddApiCall = () => {
     });
 };
 
-export const useApiCallsByDateRange = (startDate, endDate, options = {}) => useQuery({
-    queryKey: ['apiCalls', startDate, endDate],
+export const useApiCallsByDateRange = (startTimestamp, endTimestamp, options = {}) => useQuery({
+    queryKey: ['apiCalls', startTimestamp, endTimestamp],
     queryFn: async () => {
         try {
-            const query = supabase.from('api_calls').select('*').order('created_at', { ascending: false });
-            
-            if (startDate) {
-                const start = new Date(startDate);
-                query.gte('created_at', start.toISOString());
-            }
-            if (endDate) {
-                const end = new Date(endDate);
-                query.lte('created_at', end.toISOString());
-            }
+            const query = supabase.from('api_calls')
+                .select('*')
+                .gte('created_at', new Date(startTimestamp * 1000).toISOString())
+                .lte('created_at', new Date(endTimestamp * 1000).toISOString())
+                .order('created_at', { ascending: false });
 
             return await fromSupabase(query);
         } catch (error) {
@@ -87,20 +62,18 @@ export const useApiCallsByDateRange = (startDate, endDate, options = {}) => useQ
 });
 
 export const useApiCallStats = (options = {}) => {
-    const sevenDaysAgo = new Date();
-    sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
-    const defaultStartDate = sevenDaysAgo.toISOString();
-    const defaultEndDate = new Date().toISOString();
+    const sevenDaysAgoTimestamp = Math.floor(Date.now() / 1000) - (7 * 24 * 60 * 60);
+    const currentTimestamp = Math.floor(Date.now() / 1000);
 
     return useQuery({
-        queryKey: ['apiCallStats', defaultStartDate, defaultEndDate],
+        queryKey: ['apiCallStats', sevenDaysAgoTimestamp, currentTimestamp],
         queryFn: async () => {
             try {
                 const { data, error } = await supabase
                     .from('api_calls')
                     .select('cost, response_time, tokens')
-                    .gte('created_at', defaultStartDate)
-                    .lte('created_at', defaultEndDate);
+                    .gte('created_at', new Date(sevenDaysAgoTimestamp * 1000).toISOString())
+                    .lte('created_at', new Date(currentTimestamp * 1000).toISOString());
 
                 if (error) throw error;
 

@@ -3,10 +3,10 @@ import { useApiCallsByDateRange, useApiCallStats } from '../../integrations/supa
 import { fetchApiData } from './api';
 
 export const useApiData = (timeRange, selectedModel) => {
-  const endDate = new Date();
-  const startDate = new Date(endDate.getTime() - getTimeRangeInMilliseconds(timeRange));
+  const endTimestamp = Math.floor(Date.now() / 1000); // Current timestamp in seconds
+  const startTimestamp = endTimestamp - getTimeRangeInSeconds(timeRange);
 
-  const apiCallsQuery = useApiCallsByDateRange(startDate.toISOString(), endDate.toISOString());
+  const apiCallsQuery = useApiCallsByDateRange(startTimestamp, endTimestamp);
 
   const apiStatsQuery = useApiCallStats();
 
@@ -26,12 +26,12 @@ export const useApiData = (timeRange, selectedModel) => {
   };
 };
 
-const getTimeRangeInMilliseconds = (timeRange) => {
+const getTimeRangeInSeconds = (timeRange) => {
   switch (timeRange) {
-    case '24h': return 24 * 60 * 60 * 1000;
-    case '7d': return 7 * 24 * 60 * 60 * 1000;
-    case '30d': return 30 * 24 * 60 * 60 * 1000;
-    case '90d': return 90 * 24 * 60 * 60 * 1000;
-    default: return 7 * 24 * 60 * 60 * 1000; // Default to 7 days
+    case '24h': return 24 * 60 * 60;
+    case '7d': return 7 * 24 * 60 * 60;
+    case '30d': return 30 * 24 * 60 * 60;
+    case '90d': return 90 * 24 * 60 * 60;
+    default: return 7 * 24 * 60 * 60; // Default to 7 days
   }
 };
