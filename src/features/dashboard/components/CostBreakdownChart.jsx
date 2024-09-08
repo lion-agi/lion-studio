@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useMemo } from 'react';
+import React, { useState, useCallback } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from "@/common/components/ui/card";
 import { ResponsiveContainer, PieChart, Pie, Cell, Tooltip } from 'recharts';
 import { formatCurrency } from '@/features/dashboard/utils';
@@ -27,12 +27,12 @@ const InfoTable = ({ data }) => (
           <td className="text-right text-gray-200">{formatCurrency(data.cost)}</td>
         </tr>
         <tr>
-          <td className="text-gray-400">Usage:</td>
-          <td className="text-right text-gray-200">{data.percentage.toFixed(2)}%</td>
+          <td className="text-gray-400">Number of Calls:</td>
+          <td className="text-right text-gray-200">{data.calls}</td>
         </tr>
         <tr>
-          <td className="text-gray-400">Calls:</td>
-          <td className="text-right text-gray-200">{data.calls}</td>
+          <td className="text-gray-400">Last Call:</td>
+          <td className="text-right text-gray-200">{data.lastCall}</td>
         </tr>
       </tbody>
     </table>
@@ -58,21 +58,14 @@ const CostBreakdownChart = ({ data }) => {
   }, []);
 
   const totalCost = data.reduce((sum, item) => sum + item.cost, 0);
-
-  const processedData = useMemo(() => {
-    return data.map(item => ({
-      ...item,
-      percentage: (item.cost / totalCost) * 100
-    }));
-  }, [data, totalCost]);
-
-  const modelWithHighestUsage = useMemo(() => {
-    return processedData.reduce((prev, current) => 
-      (prev.percentage > current.percentage) ? prev : current
-    );
-  }, [processedData]);
-
-  const displayedInfo = hoveredIndex !== null ? processedData[hoveredIndex] : modelWithHighestUsage;
+  const generalInfo = {
+    model: 'All Models',
+    cost: totalCost,
+    calls: data.reduce((sum, item) => sum + item.calls, 0),
+    lastCall: data.reduce((latest, item) => 
+      latest > item.lastCall ? latest : item.lastCall, ''
+    )
+  };
 
   return (
     <Card className="bg-gray-900 border-gray-800">
@@ -83,7 +76,7 @@ const CostBreakdownChart = ({ data }) => {
         <ResponsiveContainer width="100%" height="100%">
           <PieChart>
             <Pie
-              data={processedData}
+              data={data}
               cx="55%"
               cy="50%"
               labelLine={false}
@@ -93,16 +86,16 @@ const CostBreakdownChart = ({ data }) => {
               onMouseEnter={onPieEnter}
               onMouseLeave={onPieLeave}
             >
-              {processedData.map((entry, index) => (
+              {data.map((entry, index) => (
                 <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
               ))}
             </Pie>
             <Tooltip content={<CustomTooltip />} />
           </PieChart>
         </ResponsiveContainer>
-        <InfoTable data={displayedInfo} />
+        <InfoTable data={hoveredIndex !== null ? data[hoveredIndex] : generalInfo} />
         <div className="absolute bottom-4 right-4 bg-gray-800/80 backdrop-blur-sm border border-gray-700 p-4 rounded shadow-lg">
-          {processedData.map((item, index) => (
+          {data.map((item, index) => (
             <LegendItem key={item.model} color={COLORS[index % COLORS.length]} model={item.model} />
           ))}
         </div>
