@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle, CardFooter } from "@/common/components/ui/card";
 import { Button } from "@/common/components/ui/button";
 import { Input } from "@/common/components/ui/input";
@@ -10,7 +10,8 @@ import { Switch } from "@/common/components/ui/switch";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/common/components/ui/select";
 import { Textarea } from "@/common/components/ui/textarea";
 import { CheckCircle2, XCircle, Database, Cloud, FileText, Link as LinkIcon, Brain, Search } from 'lucide-react';
-import { useIntegrations, useAddIntegration, useUpdateIntegration, useDeleteIntegration } from '@/integrations/supabase/hooks/integrations';
+import { useIntegrations, useAddIntegration, useUpdateIntegration, useDeleteIntegration, useToggleIntegrationStatus } from '@/integrations/supabase/hooks/integrations';
+import { useToast } from "@/common/components/ui/use-toast";
 
 const IntegrationCard = ({ integration, onConfigure, onToggle }) => (
   <Card className="bg-gray-800 hover:bg-gray-700 transition-colors">
@@ -93,6 +94,17 @@ const ConfigureIntegrationModal = ({ isOpen, onClose, integration, onSave }) => 
               rows={3}
             />
           </div>
+          <div className="grid grid-cols-4 items-center gap-4">
+            <Label htmlFor="config" className="text-right">Configuration</Label>
+            <Textarea
+              id="config"
+              name="config"
+              value={JSON.stringify(formData.config || {}, null, 2)}
+              onChange={(e) => handleInputChange({ target: { name: 'config', value: JSON.parse(e.target.value) } })}
+              className="col-span-3 bg-gray-700 text-gray-100"
+              rows={5}
+            />
+          </div>
         </div>
         <DialogFooter>
           <Button variant="outline" onClick={onClose}>Cancel</Button>
@@ -115,6 +127,8 @@ const Integrations = () => {
   const addIntegration = useAddIntegration();
   const updateIntegration = useUpdateIntegration();
   const deleteIntegration = useDeleteIntegration();
+  const toggleIntegrationStatus = useToggleIntegrationStatus();
+  const { toast } = useToast();
 
   const filteredIntegrations = integrations
     ?.filter(conn => activeTab === 'all' || conn.type === activeTab)
@@ -133,12 +147,21 @@ const Integrations = () => {
 
   const handleToggle = async (integration) => {
     try {
-      await updateIntegration.mutateAsync({
+      await toggleIntegrationStatus.mutateAsync({
         id: integration.id,
         status: integration.status === 'Connected' ? 'Disconnected' : 'Connected'
       });
+      toast({
+        title: "Status Updated",
+        description: `Integration ${integration.name} is now ${integration.status === 'Connected' ? 'Disconnected' : 'Connected'}`,
+      });
     } catch (error) {
       console.error('Error toggling integration status:', error);
+      toast({
+        title: "Error",
+        description: "Failed to update integration status",
+        variant: "destructive",
+      });
     }
   };
 
@@ -146,18 +169,31 @@ const Integrations = () => {
     try {
       if (updatedIntegration.id) {
         await updateIntegration.mutateAsync(updatedIntegration);
+        toast({
+          title: "Integration Updated",
+          description: "The integration has been successfully updated.",
+        });
       } else {
         await addIntegration.mutateAsync(updatedIntegration);
+        toast({
+          title: "Integration Added",
+          description: "A new integration has been successfully added.",
+        });
       }
       setIsConfigureModalOpen(false);
       setSelectedIntegration(null);
     } catch (error) {
       console.error('Error saving integration:', error);
+      toast({
+        title: "Error",
+        description: "Failed to save integration. Please try again.",
+        variant: "destructive",
+      });
     }
   };
 
-  if (isLoading) return <div>Loading integrations...</div>;
-  if (error) return <div>Error loading integrations: {error.message}</div>;
+  if (isLoading) return <div className="flex justify-center items-center h-screen">Loading integrations...</div>;
+  if (error) return <div className="text-red-500">Error loading integrations: {error.message}</div>;
 
   return (
     <div className="min-h-screen bg-gray-900 text-gray-100">
@@ -215,7 +251,10 @@ const Integrations = () => {
 
         <div className="flex justify-end mt-6">
           <Button 
-            onClick={() => setIsNewIntegrationDialogOpen(true)}
+            onClick={() => {
+              setSelectedIntegration(null);
+              setIsConfigureModalOpen(true);
+            }}
             className="bg-purple-600 hover:bg-purple-700 text-white"
           >
             Add New Integration
@@ -223,10 +262,9 @@ const Integrations = () => {
         </div>
 
         <ConfigureIntegrationModal 
-          isOpen={isConfigureModalOpen || isNewIntegrationDialogOpen}
+          isOpen={isConfigureModalOpen}
           onClose={() => {
             setIsConfigureModalOpen(false);
-            setIsNewIntegrationDialogOpen(false);
             setSelectedIntegration(null);
           }}
           integration={selectedIntegration}
