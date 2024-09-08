@@ -1,11 +1,33 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useRecoilState } from 'recoil';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/common/components/ui/select";
 import { timeRangeState, selectedModelState } from '../atoms';
+import { Info } from 'lucide-react';
+import { Button } from "@/common/components/ui/button";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/common/components/ui/dialog";
+
+const InfoModal = ({ isOpen, onClose }) => (
+  <Dialog open={isOpen} onOpenChange={onClose}>
+    <DialogContent className="sm:max-w-[425px] bg-gray-800 text-gray-100">
+      <DialogHeader>
+        <DialogTitle>Dashboard Information</DialogTitle>
+      </DialogHeader>
+      <div className="mt-4">
+        <p>The Library is your central hub for monitoring and managing your project:</p>
+        <ul className="list-disc list-inside mt-2 space-y-1">
+          <li>Overview: Overall stats of the project</li>
+          <li>Costs: costs related stats for the project</li>
+          <li>API Calls: provide detailed logs of recent API calls</li>
+        </ul>
+      </div>
+    </DialogContent>
+  </Dialog>
+);
 
 const DashboardHeader = () => {
   const [timeRange, setTimeRange] = useRecoilState(timeRangeState);
   const [selectedModel, setSelectedModel] = useRecoilState(selectedModelState);
+  const [isInfoModalOpen, setIsInfoModalOpen] = useState(false);
 
   return (
     <div className="flex items-center">
@@ -18,6 +40,7 @@ const DashboardHeader = () => {
       >
         <Info className="h-5 w-5" />
       </Button>
+      <InfoModal isOpen={isInfoModalOpen} onClose={() => setIsInfoModalOpen(false)} />
 
       <div className="flex space-x-4">
         <Select value={timeRange} onValueChange={setTimeRange}>
