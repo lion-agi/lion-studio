@@ -2,6 +2,7 @@ import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from "@/common/components/ui/card";
 import { ResponsiveContainer, LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip } from 'recharts';
 import { formatCurrency } from '@/features/dashboard/utils';
+import commonStyles from '@/common/components/ui/style-guide';
 
 const CustomTooltip = ({ active, payload, label }) => {
   if (active && payload && payload.length) {
@@ -19,7 +20,7 @@ const CostTrendChart = ({ data }) => {
   // Check if data is undefined or not an array
   if (!data || !Array.isArray(data) || data.length === 0) {
     return (
-      <Card className="bg-gray-900 border-gray-800">
+      <Card className="bg-gray-900 border-gray-800" style={commonStyles}>
         <CardHeader>
           <CardTitle className="text-gray-100">Cost Trend</CardTitle>
         </CardHeader>
@@ -33,7 +34,7 @@ const CostTrendChart = ({ data }) => {
   const sortedData = [...data].sort((a, b) => new Date(a.date) - new Date(b.date));
 
   return (
-    <Card className="bg-gray-900 border-gray-800">
+    <Card className="bg-gray-900 border-gray-800" style={commonStyles}>
       <CardHeader>
         <CardTitle className="text-gray-100">Cost Trend</CardTitle>
       </CardHeader>

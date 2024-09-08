@@ -10,6 +10,7 @@ import {
   GitBranch,
   LogOut
 } from 'lucide-react';
+import commonStyles from '@/common/components/ui/style-guide';
 
 const ConsoleHeader = () => {
   const { logout } = useSupabaseAuth();
@@ -24,7 +25,7 @@ const ConsoleHeader = () => {
   ];
 
   return (
-    <header className="bg-gray-900 text-white shadow-md">
+    <header className="bg-gray-900 text-white shadow-md" style={commonStyles}>
       <div className="container mx-auto px-4 py-4">
         <div className="flex justify-between items-center mb-6">
           <Link to="/console" className="text-2xl font-bold">
