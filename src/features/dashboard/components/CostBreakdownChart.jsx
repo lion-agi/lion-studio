@@ -77,7 +77,7 @@ const CostBreakdownChart = ({ data }) => {
           <PieChart>
             <Pie
               data={data}
-              cx="40%"
+              cx="55%"
               cy="50%"
               labelLine={false}
               outerRadius={150}
