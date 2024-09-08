@@ -104,8 +104,8 @@ const Integrations = () => {
     <div className="min-h-screen bg-gray-900 text-gray-100">
       <div className="container mx-auto p-8 space-y-8">
         <div className="flex items-center justify-between mb-6">
-          <div className="flex items-center">
-            <h1 className="text-2xl font-bold text-gray-100 mr-4">Integrations</h1>
+          <div className="flex items-center space-x-4">
+            <h1 className="text-2xl font-bold text-gray-100">Integrations</h1>
             <Button
               variant="ghost"
               size="sm"
@@ -114,20 +114,16 @@ const Integrations = () => {
             >
               <Info className="h-5 w-5" />
             </Button>
-
-            <IntegrationFilters
-              activeTab={activeTab}
-              setActiveTab={setActiveTab}
-              searchTerm={searchTerm}
-              setSearchTerm={setSearchTerm}
-              typeFilter={typeFilter}
-              setTypeFilter={setTypeFilter}
-            />
-
           </div>
+          <IntegrationFilters
+            activeTab={activeTab}
+            setActiveTab={setActiveTab}
+            searchTerm={searchTerm}
+            setSearchTerm={setSearchTerm}
+            typeFilter={typeFilter}
+            setTypeFilter={setTypeFilter}
+          />
         </div>
-
-
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {filteredIntegrations.map((integration) => (
