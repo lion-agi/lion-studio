@@ -6,24 +6,29 @@ export const useApiData = (timeRange, selectedModel) => {
   const endDate = new Date();
   const startDate = new Date(endDate.getTime() - getTimeRangeInMilliseconds(timeRange));
 
-  const { data: apiCalls, isLoading: apiCallsLoading, error: apiCallsError } = useApiCallsByDateRange(startDate.toISOString(), endDate.toISOString());
-  const { data: apiStats, isLoading: apiStatsLoading, error: apiStatsError } = useApiCallStats();
+  const apiCallsQuery = useQuery({
+    queryKey: ['apiCalls', startDate.toISOString(), endDate.toISOString()],
+    queryFn: () => useApiCallsByDateRange(startDate.toISOString(), endDate.toISOString()),
+  });
 
-  const isLoading = apiCallsLoading || apiStatsLoading;
-  const error = apiCallsError || apiStatsError;
+  const apiStatsQuery = useQuery({
+    queryKey: ['apiStats'],
+    queryFn: useApiCallStats,
+  });
 
-  const { data, isLoading: dataProcessingLoading, error: dataProcessingError } = useQuery(
-    ['processedApiData', apiCalls, apiStats, selectedModel],
-    () => fetchApiData(apiCalls, apiStats),
-    {
-      enabled: !!apiCalls && !!apiStats,
-    }
-  );
+  const isLoading = apiCallsQuery.isLoading || apiStatsQuery.isLoading;
+  const error = apiCallsQuery.error || apiStatsQuery.error;
+
+  const processedDataQuery = useQuery({
+    queryKey: ['processedApiData', apiCallsQuery.data, apiStatsQuery.data, selectedModel],
+    queryFn: () => fetchApiData(apiCallsQuery.data, apiStatsQuery.data),
+    enabled: !!apiCallsQuery.data && !!apiStatsQuery.data,
+  });
 
   return {
-    data,
-    isLoading: isLoading || dataProcessingLoading,
-    error: error || dataProcessingError,
+    data: processedDataQuery.data,
+    isLoading: isLoading || processedDataQuery.isLoading,
+    error: error || processedDataQuery.error,
   };
 };
 
