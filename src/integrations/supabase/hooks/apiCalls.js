@@ -81,13 +81,15 @@ export const useApiCallsByDateRange = (startDate, endDate, options = {}) => useQ
     ...options,
 });
 
-export const useApiCallStats = (options = {}) => useQuery({
-    queryKey: ['apiCallStats'],
+export const useApiCallStats = (startDate, endDate, options = {}) => useQuery({
+    queryKey: ['apiCallStats', startDate, endDate],
     queryFn: async () => {
         try {
             const { data, error } = await supabase
                 .from('api_calls')
-                .select('cost, response_time, tokens');
+                .select('cost, response_time, tokens')
+                .gte('created_at', startDate)
+                .lte('created_at', endDate);
 
             if (error) throw error;
 
@@ -108,7 +110,5 @@ export const useApiCallStats = (options = {}) => useQuery({
             throw error;
         }
     },
-    retry: 3,
-    retryDelay: 10000, // 10 seconds
     ...options,
 });
