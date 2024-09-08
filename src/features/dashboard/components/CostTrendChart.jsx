@@ -16,6 +16,20 @@ const CustomTooltip = ({ active, payload, label }) => {
 };
 
 const CostTrendChart = ({ data }) => {
+  // Check if data is undefined or not an array
+  if (!data || !Array.isArray(data) || data.length === 0) {
+    return (
+      <Card className="bg-gray-900 border-gray-800">
+        <CardHeader>
+          <CardTitle className="text-gray-100">Cost Trend</CardTitle>
+        </CardHeader>
+        <CardContent className="pt-0 flex justify-center items-center h-[300px]">
+          <p className="text-gray-400">No cost trend data available</p>
+        </CardContent>
+      </Card>
+    );
+  }
+
   const sortedData = [...data].sort((a, b) => new Date(a.date) - new Date(b.date));
 
   return (
