@@ -4,6 +4,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ThemeProvider } from "@/common/components/theme-provider";
 import { Toaster } from "@/common/components/ui/toaster";
 import { SupabaseAuthProvider, useSupabaseAuth } from './integrations/supabase';
+import { RecoilRoot } from 'recoil';
 
 // Import components
 import ConsoleHeader from '@/features/console/components/ConsoleHeader';
@@ -57,16 +58,18 @@ const AppRoutes = () => (
 
 const App = () => {
   return (
-    <QueryClientProvider client={queryClient}>
-      <SupabaseAuthProvider>
-        <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
-          <Router>
-            <AppRoutes />
-            <Toaster />
-          </Router>
-        </ThemeProvider>
-      </SupabaseAuthProvider>
-    </QueryClientProvider>
+    <RecoilRoot>
+      <QueryClientProvider client={queryClient}>
+        <SupabaseAuthProvider>
+          <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
+            <Router>
+              <AppRoutes />
+              <Toaster />
+            </Router>
+          </ThemeProvider>
+        </SupabaseAuthProvider>
+      </QueryClientProvider>
+    </RecoilRoot>
   );
 };
 
