@@ -69,10 +69,12 @@ export const useApiCallsByDateRange = (startDate, endDate, options = {}) => useQ
             const query = supabase.from('api_calls').select('*').order('created_at', { ascending: false });
             
             if (startDate) {
-                query.gte('created_at', startDate.toISOString());
+                const start = new Date(startDate);
+                query.gte('created_at', start.toISOString());
             }
             if (endDate) {
-                query.lte('created_at', endDate.toISOString());
+                const end = new Date(endDate);
+                query.lte('created_at', end.toISOString());
             }
 
             return await fromSupabase(query);
