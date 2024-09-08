@@ -101,7 +101,7 @@ export const useDeleteCollection = () => {
     const queryClient = useQueryClient();
     return useMutation({
         mutationFn: async (id) => {
-            const { data: { user } } } = await supabase.auth.getUser();
+            const { data: { user } } = await supabase.auth.getUser();
             if (!user) throw new Error('User not authenticated');
             try {
                 return await fromSupabase(supabase.from('collections').delete().eq('id', id).eq('user_id', user.id));
