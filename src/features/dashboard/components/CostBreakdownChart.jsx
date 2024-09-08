@@ -39,6 +39,13 @@ const InfoTable = ({ data }) => (
   </div>
 );
 
+const LegendItem = ({ color, model }) => (
+  <div className="flex items-center mb-1">
+    <div className="w-3 h-3 mr-2" style={{ backgroundColor: color }}></div>
+    <span className="text-xs text-gray-300">{model}</span>
+  </div>
+);
+
 const CostBreakdownChart = ({ data }) => {
   const [hoveredIndex, setHoveredIndex] = useState(null);
 
@@ -49,6 +56,16 @@ const CostBreakdownChart = ({ data }) => {
   const onPieLeave = useCallback(() => {
     setHoveredIndex(null);
   }, []);
+
+  const totalCost = data.reduce((sum, item) => sum + item.cost, 0);
+  const generalInfo = {
+    model: 'All Models',
+    cost: totalCost,
+    calls: data.reduce((sum, item) => sum + item.calls, 0),
+    lastCall: data.reduce((latest, item) => 
+      latest > item.lastCall ? latest : item.lastCall, ''
+    )
+  };
 
   return (
     <Card className="bg-gray-900 border-gray-800">
@@ -76,7 +93,12 @@ const CostBreakdownChart = ({ data }) => {
             <Tooltip content={<CustomTooltip />} />
           </PieChart>
         </ResponsiveContainer>
-        {hoveredIndex !== null && <InfoTable data={data[hoveredIndex]} />}
+        <InfoTable data={hoveredIndex !== null ? data[hoveredIndex] : generalInfo} />
+        <div className="absolute bottom-4 right-4 bg-gray-800/80 backdrop-blur-sm border border-gray-700 p-4 rounded shadow-lg">
+          {data.map((item, index) => (
+            <LegendItem key={item.model} color={COLORS[index % COLORS.length]} model={item.model} />
+          ))}
+        </div>
       </CardContent>
     </Card>
   );
