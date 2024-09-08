@@ -6,6 +6,8 @@ import IntegrationCard from './components/IntegrationCard';
 import IntegrationFilters from './components/IntegrationFilters';
 import ConfigureIntegrationModal from './components/ConfigureIntegrationModal';
 import { Button } from "@/common/components/ui/button";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/common/components/ui/dialog";
+import { Info } from 'lucide-react';
 
 const Integrations = () => {
   const [activeTab, setActiveTab] = useState('all');
@@ -13,6 +15,7 @@ const Integrations = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [typeFilter, setTypeFilter] = useState('All Types');
   const [selectedIntegration, setSelectedIntegration] = useState(null);
+  const [isInfoModalOpen, setIsInfoModalOpen] = useState(false);
 
   const { data: fetchedIntegrations, isLoading, error } = useIntegrations();
   const addIntegration = useAddIntegration();
@@ -50,7 +53,7 @@ const Integrations = () => {
     const newStatus = !activeIntegrations[id];
     toggleIntegrationStatus(id);
     const integration = integrations.find(i => i.id === id);
-    const status = newStatus ? 'Deactivated' : 'Activated';
+    const status = newStatus ? 'Activated' : 'Deactivated';
     toast({
       title: "Connection Status Update",
       description: `${integration.name} ${status}!`,
@@ -100,6 +103,20 @@ const Integrations = () => {
   return (
     <div className="min-h-screen bg-gray-900 text-gray-100">
       <div className="container mx-auto p-8 space-y-8">
+        <div className="flex flex-col md:flex-row justify-between items-center mb-12">
+          <div className="flex items-center">
+            <h1 className="text-2xl font-bold mb-6 md:mb-0 text-gray-100 mr-4">Integrations</h1>
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => setIsInfoModalOpen(true)}
+              className="text-gray-400 hover:text-gray-100"
+            >
+              <Info className="h-5 w-5" />
+            </Button>
+          </div>
+        </div>
+
         <IntegrationFilters
           activeTab={activeTab}
           setActiveTab={setActiveTab}
@@ -142,6 +159,24 @@ const Integrations = () => {
           integration={selectedIntegration}
           onSave={handleSaveIntegration}
         />
+
+        <Dialog open={isInfoModalOpen} onOpenChange={setIsInfoModalOpen}>
+          <DialogContent className="sm:max-w-[425px] bg-gray-800 text-gray-100">
+            <DialogHeader>
+              <DialogTitle>Integrations Information</DialogTitle>
+            </DialogHeader>
+            <div className="mt-4">
+              <p>Integrations allow you to connect Lion Studio with various external services and data sources. Here you can manage your integrations, including:</p>
+              <ul className="list-disc list-inside mt-2 space-y-1">
+                <li>Database connections</li>
+                <li>API integrations</li>
+                <li>Cloud storage services</li>
+                <li>AI model connections</li>
+              </ul>
+              <p className="mt-4">Use the filters and search bar to quickly find specific integrations.</p>
+            </div>
+          </DialogContent>
+        </Dialog>
       </div>
     </div>
   );
