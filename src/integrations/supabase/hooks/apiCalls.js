@@ -106,7 +106,7 @@ export const useApiCallStats = (options = {}) => useQuery({
                     count(*),
                     sum(cost),
                     avg(response_time),
-                    sum(case when response_time > 1000 then 1 else 0 end)::float / count(*)
+                    sum(case when response_time > 1000 then 1 else 0 end)::float / nullif(count(*), 0) as error_rate
                 `)
                 .single();
 
@@ -116,7 +116,7 @@ export const useApiCallStats = (options = {}) => useQuery({
                 totalCalls: data.count,
                 totalCost: data.sum,
                 avgResponseTime: data.avg,
-                errorRate: data.sum_case_when_response_time_1000_then_1_else_0_end_float_count,
+                errorRate: data.error_rate,
             };
         } catch (error) {
             console.error('Error fetching API call stats:', error);
