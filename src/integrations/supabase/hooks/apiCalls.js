@@ -82,9 +82,9 @@ export const useApiCallsByDateRange = (startDate, endDate, options = {}) => useQ
 });
 
 export const useApiCallStats = (options = {}) => {
-    const sevenDaysAgo = new Date().getUTCDate() - 7;
+    const sevenDaysAgo = new Date().getDate() - 7;
     const defaultStartDate = sevenDaysAgo;
-    const defaultEndDate = new Date().getUTCDay();
+    const defaultEndDate = new Date().getDate();
 
     return useQuery({
         queryKey: ['apiCallStats', defaultStartDate, defaultEndDate],
