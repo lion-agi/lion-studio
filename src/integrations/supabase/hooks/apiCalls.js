@@ -55,10 +55,13 @@ export const useApiCallsByDateRange = (startTimestamp, endTimestamp, options = {
         queryKey: ['apiCalls', start, end],
         queryFn: async () => {
             try {
+                const startDate = new Date(start * 1000).toISOString();
+                const endDate = new Date(end * 1000).toISOString();
+                
                 const query = supabase.from('api_calls')
                     .select('*')
-                    .gte('created_at', start)
-                    .lte('created_at', end)
+                    .gte('created_at', startDate)
+                    .lte('created_at', endDate)
                     .order('created_at', { ascending: false });
 
                 return await fromSupabase(query);
