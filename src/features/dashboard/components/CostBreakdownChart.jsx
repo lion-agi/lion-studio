@@ -30,10 +30,6 @@ const InfoTable = ({ data }) => (
           <td className="text-gray-400">Usage:</td>
           <td className="text-right text-gray-200">{data.percentage.toFixed(2)}%</td>
         </tr>
-        <tr>
-          <td className="text-gray-400">Calls:</td>
-          <td className="text-right text-gray-200">{data.calls}</td>
-        </tr>
       </tbody>
     </table>
   </div>
@@ -85,7 +81,7 @@ const CostBreakdownChart = ({ data }) => {
             <Pie
               data={processedData}
               cx="55%"
-              cy="50%"
+              cy="45%"
               labelLine={false}
               outerRadius={150}
               fill="#8884d8"
