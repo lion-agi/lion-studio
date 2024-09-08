@@ -43,16 +43,15 @@ const getTimeRangeInSeconds = (timeRange) => {
 };
 
 const processApiData = (apiCalls, apiStats, selectedModel, timeRange) => {
-  if (!apiCalls || !apiStats) return null;
-
   // Filter apiCalls based on selectedModel if needed
   const filteredCalls = selectedModel === 'all' 
     ? apiCalls 
     : apiCalls.filter(call => call.model === selectedModel);
 
   // Process the data as needed for your dashboard components
+  // This is just an example, adjust according to your specific needs
   return {
-    summary: apiStats,
+    summary: apiStats.stats,
     costTrend: generateCostTrend(filteredCalls, timeRange),
     costBreakdown: generateCostBreakdown(filteredCalls),
     performance: generatePerformanceData(filteredCalls),
@@ -62,7 +61,7 @@ const processApiData = (apiCalls, apiStats, selectedModel, timeRange) => {
 
 const generateCostTrend = (apiCalls, timeRange) => {
   const costByDate = apiCalls.reduce((acc, call) => {
-    const date = new Date(call.created_at).toISOString().split('T')[0];
+    const date = formatDate(new Date(call.created_at));
     acc[date] = (acc[date] || 0) + call.cost;
     return acc;
   }, {});
@@ -81,7 +80,7 @@ const generateCostBreakdown = (apiCalls) => {
 
 const generatePerformanceData = (apiCalls) => {
   const perfByDate = apiCalls.reduce((acc, call) => {
-    const date = new Date(call.created_at).toISOString().split('T')[0];
+    const date = formatDate(new Date(call.created_at));
     if (!acc[date]) {
       acc[date] = { responseTime: 0, errorCount: 0, totalCalls: 0 };
     }

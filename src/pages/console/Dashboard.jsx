@@ -5,7 +5,9 @@ import { ErrorBoundary } from 'react-error-boundary';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/common/components/ui/tabs";
 import { Button } from "@/common/components/ui/button";
 import { Alert, AlertDescription, AlertTitle } from "@/common/components/ui/alert";
-import { InfoIcon, DownloadIcon, AlertTriangle } from 'lucide-react';
+import { Input } from "@/common/components/ui/input";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/common/components/ui/select";
+import { InfoIcon, DownloadIcon, Activity, Clock, AlertTriangle, Search } from 'lucide-react';
 import DashboardHeader from '@/features/dashboard/components/DashboardHeader';
 import SummaryCards from '@/features/dashboard/components/SummaryCards';
 import CostTrendChart from '@/features/dashboard/components/CostTrendChart';
@@ -44,6 +46,7 @@ const LoadingSpinner = () => (
 
 const Dashboard = () => {
   const [activeTab, setActiveTab] = useState('overview');
+  const [searchTerm, setSearchTerm] = useState('');
   const [timeFilter, setTimeFilter] = useState('7d');
   const [modelFilter, setModelFilter] = useState('all');
 
@@ -60,6 +63,14 @@ const Dashboard = () => {
   if (isLoading) return <LoadingSpinner />;
   if (error) return <ErrorFallback error={error} resetErrorBoundary={() => queryClient.invalidateQueries()} />;
 
+  const filteredData = {
+    ...data,
+    recentCalls: data?.recentCalls?.filter(call => 
+      call.provider.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      call.model.toLowerCase().includes(searchTerm.toLowerCase())
+    ) || []
+  };
+
   return (
     <RecoilRoot>
       <QueryClientProvider client={queryClient}>
@@ -71,6 +82,8 @@ const Dashboard = () => {
                 modelFilter={modelFilter}
                 onTimeFilterChange={handleTimeFilterChange}
                 onModelFilterChange={handleModelFilterChange}
+                searchTerm={searchTerm}
+                onSearchTermChange={setSearchTerm}
               />
 
               <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
@@ -80,13 +93,13 @@ const Dashboard = () => {
                   <TabsTrigger value="calls" className="data-[state=active]:bg-purple-600 data-[state=active]:text-white">API Calls</TabsTrigger>
                 </TabsList>
                 <TabsContent value="overview">
-                  <OverviewTab data={data} />
+                  <OverviewTab data={filteredData} />
                 </TabsContent>
                 <TabsContent value="costs">
-                  <CostsTab data={data} />
+                  <CostsTab data={filteredData} />
                 </TabsContent>
                 <TabsContent value="calls">
-                  <CallsTab data={data} />
+                  <CallsTab data={filteredData} />
                 </TabsContent>
               </Tabs>
             </div>
@@ -99,20 +112,20 @@ const Dashboard = () => {
 
 const OverviewTab = ({ data }) => (
   <div className="space-y-8">
-    <SummaryCards data={data?.summary} />
+    <SummaryCards data={data.summary} />
     <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-      <CostTrendChart data={data?.costTrend} />
-      <PerformanceChart data={data?.performance} />
+      <CostTrendChart data={data.costTrend} />
+      <PerformanceChart data={data.performance} />
     </div>
   </div>
 );
 
 const CostsTab = ({ data }) => (
   <div className="space-y-8">
-    <SummaryCards data={data?.summary} />
+    <SummaryCards data={data.summary} />
     <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-      <CostTrendChart data={data?.costTrend} />
-      <CostBreakdownChart data={data?.costBreakdown} />
+      <CostTrendChart data={data.costTrend} />
+      <CostBreakdownChart data={data.costBreakdown} />
     </div>
   </div>
 );
@@ -154,8 +167,8 @@ const CallsTab = ({ data }) => {
 
   return (
     <div className="space-y-8">
-      <SummaryCards data={data?.summary} />
-      {data?.recentCalls && data.recentCalls.length > 0 ? (
+      <SummaryCards data={data.summary} />
+      {data.recentCalls && data.recentCalls.length > 0 ? (
         <>
           <RecentCallsTable data={data.recentCalls} />
           <div className="flex justify-end">
