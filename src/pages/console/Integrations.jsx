@@ -165,6 +165,7 @@ const Integrations = () => {
     toast({
       title: "Status Updated",
       description: `Integration status toggled.`,
+      duration: 3000, // Set duration to 3 seconds
     });
   };
 
@@ -180,6 +181,7 @@ const Integrations = () => {
         toast({
           title: "Integration Updated",
           description: "The integration has been successfully updated.",
+          duration: 3000, // Set duration to 3 seconds
         });
       } else {
         const newIntegration = await addIntegration.mutateAsync(updatedIntegration);
@@ -187,6 +189,7 @@ const Integrations = () => {
         toast({
           title: "Integration Added",
           description: "A new integration has been successfully added.",
+          duration: 3000, // Set duration to 3 seconds
         });
       }
       setIsConfigureModalOpen(false);
@@ -197,6 +200,7 @@ const Integrations = () => {
         title: "Error",
         description: "Failed to save integration. Please try again.",
         variant: "destructive",
+        duration: 3000, // Set duration to 3 seconds
       });
     }
   };
