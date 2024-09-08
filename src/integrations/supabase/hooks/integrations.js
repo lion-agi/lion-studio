@@ -10,6 +10,35 @@ const fromSupabase = async (query) => {
     return data;
 };
 
+/*
+SQL Table Schema for integrations:
+
+CREATE TABLE integrations (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    name VARCHAR(255) NOT NULL,
+    type VARCHAR(50) NOT NULL,
+    description TEXT,
+    status VARCHAR(20) NOT NULL DEFAULT 'Disconnected',
+    config JSONB NOT NULL DEFAULT '{}',
+    extra JSONB,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    user_id UUID REFERENCES auth.users(id) ON DELETE CASCADE
+);
+
+COMMENT ON TABLE integrations IS 'Stores information about user integrations';
+COMMENT ON COLUMN integrations.id IS 'Unique identifier for the integration';
+COMMENT ON COLUMN integrations.name IS 'Name of the integration';
+COMMENT ON COLUMN integrations.type IS 'Type of integration (e.g., database, api, cloud)';
+COMMENT ON COLUMN integrations.description IS 'Description of the integration';
+COMMENT ON COLUMN integrations.status IS 'Current status of the integration';
+COMMENT ON COLUMN integrations.config IS 'Configuration details for the integration';
+COMMENT ON COLUMN integrations.extra IS 'Additional customizable parameters for the integration';
+COMMENT ON COLUMN integrations.created_at IS 'Timestamp when the integration was created';
+COMMENT ON COLUMN integrations.updated_at IS 'Timestamp when the integration was last updated';
+COMMENT ON COLUMN integrations.user_id IS 'Foreign key referencing the user who owns this integration';
+*/
+
 export const useIntegrations = (options = {}) => useQuery({
     queryKey: ['integrations'],
     queryFn: async () => {
@@ -47,7 +76,6 @@ export const useAddIntegration = () => {
                 user_id: user.id,
                 created_at: new Date().toISOString(),
                 updated_at: new Date().toISOString(),
-                is_active: true,
             };
             try {
                 return await fromSupabase(supabase.from('integrations').insert([integrationWithUser]).select());
@@ -107,11 +135,11 @@ export const useDeleteIntegration = () => {
 export const useToggleIntegrationStatus = () => {
     const queryClient = useQueryClient();
     return useMutation({
-        mutationFn: async ({ id, is_active }) => {
+        mutationFn: async ({ id, status }) => {
             const { data: { user } } = await supabase.auth.getUser();
             if (!user) throw new Error('User not authenticated');
             try {
-                return await fromSupabase(supabase.from('integrations').update({ is_active, updated_at: new Date().toISOString() }).eq('id', id).eq('user_id', user.id).select());
+                return await fromSupabase(supabase.from('integrations').update({ status, updated_at: new Date().toISOString() }).eq('id', id).eq('user_id', user.id).select());
             } catch (error) {
                 console.error('Error toggling integration status:', error);
                 throw error;
