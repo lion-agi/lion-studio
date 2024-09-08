@@ -1,4 +1,3 @@
-// Common fields for all integration types
 const commonFields = {
   id: {
     type: 'string',
@@ -37,7 +36,6 @@ const commonFields = {
   },
 };
 
-// Specific fields for different integration types
 const specificFields = {
   database: {
     host: {
@@ -82,7 +80,6 @@ const specificFields = {
   },
 };
 
-// Function to create an integration schema
 const createIntegrationSchema = (type, additionalFields = {}) => {
   const baseSchema = { ...commonFields };
   const typeSpecificFields = specificFields[type] || {};

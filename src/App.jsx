@@ -48,7 +48,7 @@ const AppRoutes = () => (
     <Route path="/console/dashboard" element={<ProtectedRoute><ConsoleLayout><Dashboard /></ConsoleLayout></ProtectedRoute>} />
     <Route path="/console/workflow" element={<ProtectedRoute><ConsoleLayout><WorkflowEditor /></ConsoleLayout></ProtectedRoute>} />
     <Route path="/console/library" element={<ProtectedRoute><ConsoleLayout><Library /></ConsoleLayout></ProtectedRoute>} />
-    <Route path="/console/connections" element={<ProtectedRoute><ConsoleLayout><Integrations /></ConsoleLayout></ProtectedRoute>} />
+    <Route path="/console/integrations" element={<ProtectedRoute><ConsoleLayout><Integrations /></ConsoleLayout></ProtectedRoute>} />
     <Route path="/console/deployment" element={<ProtectedRoute><ConsoleLayout><Deployment /></ConsoleLayout></ProtectedRoute>} />
 
     {/* Add more console routes as needed */}
