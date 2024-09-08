@@ -7,10 +7,13 @@ const MainWebsiteHeader = () => {
   const { session, logout } = useSupabaseAuth();
 
   return (
-    <header className="bg-gray-800 text-white p-4">
+    <header className="bg-gray-900 text-white py-4">
       <div className="container mx-auto flex justify-between items-center">
-        <Link to="/" className="text-2xl font-bold">Lion Studio</Link>
-        <nav className="flex items-center space-x-4">
+        <Link to="/" className="flex items-center">
+          <img src="/lion-studio-logo.jpeg" alt="Lion Studio Logo" className="w-16 h-16 mr-3" />
+          <span className="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-purple-400 to-pink-600">Lion Studio</span>
+        </Link>
+        <nav className="flex items-center space-x-6">
           <Link to="/" className="hover:text-gray-300">Home</Link>
           <Link to="/about" className="hover:text-gray-300">About</Link>
           <Link to="/pricing" className="hover:text-gray-300">Pricing</Link>

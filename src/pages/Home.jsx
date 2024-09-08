@@ -1,53 +1,30 @@
 import React from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { Button } from "@/common/components/ui/button";
 import { Card, CardContent } from "@/common/components/ui/card";
 import { useSupabaseAuth } from '@/integrations/supabase';
+import MainWebsiteHeader from '@/common/components/header/MainWebsiteHeader';
 
 const Home = () => {
-  const navigate = useNavigate();
-  const { user, signOut } = useSupabaseAuth();
-
-  const handleLoginClick = () => navigate('/login');
-  const handleLogoutClick = async () => {
-    try {
-      await signOut();
-      navigate('/');
-    } catch (error) {
-      console.error("Error during logout:", error);
-    }
-  };
-  const handleEditorClick = () => navigate('/console');
+  const { session } = useSupabaseAuth();
   
   return (
     <div className="min-h-screen bg-background text-foreground flex flex-col">
-      <header className="p-6 flex justify-between items-center mb-16">
-        <img src="/lion-studio-logo.jpeg" alt="Lion Studio Logo" className="w-20 h-20" />
-        <nav className="space-x-2">
-          {user ? (
-            <>
-              <Button variant="ghost" onClick={handleEditorClick}>Go to Console</Button>
-              <Button variant="ghost" onClick={handleLogoutClick}>Log out</Button>
-            </>
-          ) : (
-            <Button variant="ghost" onClick={handleLoginClick}>Log in</Button>
-          )}
-        </nav>
-      </header>
+      <MainWebsiteHeader />
       
-      <main className="flex-grow flex flex-col items-center justify-center text-center px-4 space-y-16">
+      <main className="flex-grow flex flex-col items-center justify-center text-center px-4 space-y-16 mt-16">
         <h1 className="text-5xl md:text-7xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-purple-400 to-pink-600 max-w-4xl">
           Intelligent Workflow Automation
         </h1>
         <p className="text-xl max-w-2xl text-gray-300 mb-8">
           Streamline your business processes with AI-powered automation solutions
         </p>
-        <Card className="w-full max-w-2xl overflow-hidden transform shadow-xl">
+        <Card className="w-full max-w-2xl overflow-hidden transform rotate-1 shadow-xl">
           <CardContent className="p-0">
             <img src="/demo1.jpg" alt="Demo 1" className="w-full h-auto" />
           </CardContent>
         </Card>
-        {!user && (
+        {!session && (
           <Link to="/register" className="mt-12">
             <Button size="lg" className="bg-purple-600 hover:bg-purple-700 text-white px-8 py-3 text-lg">
               Get Started
@@ -60,7 +37,7 @@ const Home = () => {
         <div className="max-w-4xl mx-auto text-center">
           <h2 className="text-2xl font-semibold mb-4">Ready to Transform Your Business?</h2>
           <p className="mb-6">Join thousands of companies already using Lion Studio for their workflow automation</p>
-          {!user && (
+          {!session && (
             <Link to="/register">
               <Button size="lg" className="bg-purple-600 hover:bg-purple-700 text-white px-8 py-3 text-lg">
                 Sign Up Now
