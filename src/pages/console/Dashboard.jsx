@@ -132,7 +132,7 @@ const CostsTab = ({ data }) => (
 
 const CallsTab = ({ data }) => {
   const handleExportApiCalls = () => {
-    if (!data || !data.recentCalls) {
+    if (!data || !data.recentCalls || data.recentCalls.length === 0) {
       console.error('No data available for export');
       return;
     }
@@ -168,13 +168,23 @@ const CallsTab = ({ data }) => {
   return (
     <div className="space-y-8">
       <SummaryCards data={data.summary} />
-      <RecentCallsTable data={data.recentCalls} />
-      <div className="flex justify-end">
-        <Button className="bg-purple-600 hover:bg-purple-700 text-white" onClick={handleExportApiCalls}>
-          <DownloadIcon className="mr-2 h-4 w-4" />
-          Export API Calls
-        </Button>
-      </div>
+      {data.recentCalls && data.recentCalls.length > 0 ? (
+        <>
+          <RecentCallsTable data={data.recentCalls} />
+          <div className="flex justify-end">
+            <Button className="bg-purple-600 hover:bg-purple-700 text-white" onClick={handleExportApiCalls}>
+              <DownloadIcon className="mr-2 h-4 w-4" />
+              Export API Calls
+            </Button>
+          </div>
+        </>
+      ) : (
+        <div className="text-center py-8">
+          <AlertTriangle className="mx-auto h-12 w-12 text-yellow-400" />
+          <h3 className="mt-2 text-sm font-semibold text-gray-100">No API Calls</h3>
+          <p className="mt-1 text-sm text-gray-400">There are no recent API calls to display.</p>
+        </div>
+      )}
     </div>
   );
 };
