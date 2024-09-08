@@ -9,7 +9,7 @@ const DashboardHeader = () => {
 
   return (
     <div className="flex items-center">
-      <h1 className="text-2xl font-bold mb-6 md:mb-0 text-gray-100 mr-4">Dashboard</h1>
+      <h1 className="text-lg font-semibold mb-4 md:mb-0 text-purple-300 truncate mr-4">Dashboard</h1>
       <Button
         variant="ghost"
         size="sm"
