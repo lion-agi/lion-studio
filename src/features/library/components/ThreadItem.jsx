@@ -1,6 +1,7 @@
 import React from 'react';
 import { Button } from "@/common/components/ui/button";
 import { MoreHorizontal, Plus } from 'lucide-react';
+import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem } from "@/common/components/ui/dropdown-menu";
 
 const ThreadItem = ({ thread, onOpenModal }) => {
   return (
@@ -17,15 +18,28 @@ const ThreadItem = ({ thread, onOpenModal }) => {
             <span>{thread.views} views</span>
             <span className="mx-2">•</span>
             <span>{thread.timeToRead}</span>
+            <span className="mx-2">•</span>
+            <span>Author: {thread.author}</span>
+            <span className="mx-2">•</span>
+            <span>Comments: {thread.comments.length}</span>
           </div>
         </div>
         <div className="flex items-center space-x-2">
           <Button variant="ghost" size="sm">
             <Plus className="h-4 w-4" />
           </Button>
-          <Button variant="ghost" size="sm">
-            <MoreHorizontal className="h-4 w-4" />
-          </Button>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="ghost" size="sm">
+                <MoreHorizontal className="h-4 w-4" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent>
+              <DropdownMenuItem onSelect={() => console.log('Edit thread')}>Edit</DropdownMenuItem>
+              <DropdownMenuItem onSelect={() => console.log('Delete thread')}>Delete</DropdownMenuItem>
+              <DropdownMenuItem onSelect={() => console.log('Share thread')}>Share</DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
         </div>
       </div>
     </div>

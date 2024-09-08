@@ -40,7 +40,11 @@ export const useThreads = (options = {}) => useQuery({
     queryFn: async () => {
         try {
             await createThreadsTable();
-            return fromSupabase(supabase.from('threads').select('*'));
+            return fromSupabase(supabase.from('threads').select(`
+                *,
+                author:users(username),
+                comments:thread_comments(*)
+            `));
         } catch (error) {
             if (error.status === 404) {
                 console.error('404 error fetching threads:', error);
@@ -56,7 +60,11 @@ export const useThread = (id, options = {}) => useQuery({
     queryKey: ['threads', id],
     queryFn: async () => {
         try {
-            return fromSupabase(supabase.from('threads').select('*').eq('id', id).single());
+            return fromSupabase(supabase.from('threads').select(`
+                *,
+                author:users(username),
+                comments:thread_comments(*)
+            `).eq('id', id).single());
         } catch (error) {
             if (error.status === 404) {
                 console.error('404 error fetching thread:', error);
