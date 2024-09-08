@@ -20,19 +20,13 @@ const MainWebsiteHeader = () => {
           <Link to="/contact" className="hover:text-gray-300">Contact</Link>
           {session ? (
             <>
-              <Link to="/console">
-                <Button variant="outline">Console</Button>
-              </Link>
-              <Button variant="ghost" onClick={logout}>Log out</Button>
+              <Link to="/console" className="hover:text-gray-300">Console</Link>
+              <Link to="/" className="hover:text-gray-300" onClick={logout}>Log out</Link>
             </>
           ) : (
             <>
-              <Link to="/login">
-                <Button variant="outline">Log in</Button>
-              </Link>
-              <Link to="/register">
-                <Button variant="default">Sign up</Button>
-              </Link>
+              <Link to="/login" className="hover:text-gray-300">Log in</Link>
+              <Link to="/register" className="hover:text-gray-300">Sign up</Link>
             </>
           )}
         </nav>
