@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from "@/common/components/ui/card";
 import { ResponsiveContainer, PieChart, Pie, Cell, Tooltip, Legend } from 'recharts';
 import { formatCurrency } from '@/features/dashboard/utils';
@@ -17,7 +17,31 @@ const CustomTooltip = ({ active, payload }) => {
   return null;
 };
 
+const InfoTable = ({ data }) => (
+  <div className="absolute left-full ml-4 bg-gray-800 border border-gray-700 p-4 rounded shadow-lg">
+    <h3 className="text-lg font-semibold mb-2 text-gray-200">{data.model}</h3>
+    <table className="w-full text-sm">
+      <tbody>
+        <tr>
+          <td className="text-gray-400">Total Cost:</td>
+          <td className="text-right text-gray-200">{formatCurrency(data.cost)}</td>
+        </tr>
+        <tr>
+          <td className="text-gray-400">Number of Calls:</td>
+          <td className="text-right text-gray-200">{data.calls}</td>
+        </tr>
+        <tr>
+          <td className="text-gray-400">Last Call:</td>
+          <td className="text-right text-gray-200">{data.lastCall}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+);
+
 const CostBreakdownChart = ({ data }) => {
+  const [hoveredIndex, setHoveredIndex] = useState(null);
+
   return (
     <Card className="bg-gray-900 border-gray-800">
       <CardHeader>
@@ -36,6 +60,8 @@ const CostBreakdownChart = ({ data }) => {
               dataKey="cost"
               nameKey="model"
               label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
+              onMouseEnter={(_, index) => setHoveredIndex(index)}
+              onMouseLeave={() => setHoveredIndex(null)}
             >
               {data.map((entry, index) => (
                 <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
@@ -45,6 +71,7 @@ const CostBreakdownChart = ({ data }) => {
             <Legend formatter={(value) => <span className="text-gray-300">{value}</span>} />
           </PieChart>
         </ResponsiveContainer>
+        {hoveredIndex !== null && <InfoTable data={data[hoveredIndex]} />}
       </CardContent>
     </Card>
   );
