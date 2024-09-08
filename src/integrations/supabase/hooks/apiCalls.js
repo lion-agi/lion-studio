@@ -100,9 +100,24 @@ export const useApiCallStats = (options = {}) => useQuery({
     queryKey: ['apiCallStats'],
     queryFn: async () => {
         try {
-            const { data, error } = await supabase.rpc('get_api_call_stats');
+            const { data, error } = await supabase
+                .from('api_calls')
+                .select(`
+                    count(*),
+                    sum(cost),
+                    avg(response_time),
+                    sum(case when response_time > 1000 then 1 else 0 end)::float / count(*)
+                `)
+                .single();
+
             if (error) throw error;
-            return data;
+
+            return {
+                totalCalls: data.count,
+                totalCost: data.sum,
+                avgResponseTime: data.avg,
+                errorRate: data.sum_case_when_response_time_1000_then_1_else_0_end_float_count,
+            };
         } catch (error) {
             console.error('Error fetching API call stats:', error);
             throw error;
