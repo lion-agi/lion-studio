@@ -1,18 +1,19 @@
 import React from 'react';
 import { Route, Routes } from 'react-router-dom';
-import Home from '../pages/Home';
-import Login from '../pages/Login';
-import Registration from '../pages/Registration';
-import AuthCallback from '../pages/AuthCallback';
-import EmailConfirmation from '../pages/EmailConfirmation';
+import Home from '../pages/website/Home';
+import Login from '../pages/auth/Login';
+import Registration from '../pages/auth/Registration';
+import AuthCallback from '../pages/auth/AuthCallback';
+import EmailConfirmation from '../pages/auth/EmailConfirmation';
 import Dashboard from '@/features/dashboard/pages/Dashboard';
 import Integrations from '../pages/console/Integrations';
 import Deployment from '@/features/deployment/pages/Deployment';
 import Library from '../pages/console/library/Library';
 import WorkflowEditor from '../features/workflow/components/WorkflowEditor';
-import About from '../pages/About';
-import Pricing from '../pages/Pricing';
-import Contact from '../pages/Contact';
+import About from '../pages/website/About';
+import Pricing from '../pages/website/Pricing';
+import Contact from '../pages/website/Contact';
+import UserProfile from '../pages/console/UserProfile';
 
 const AppRoutes = () => (
   <Routes>
@@ -29,6 +30,7 @@ const AppRoutes = () => (
     <Route path="/about" element={<About />} />
     <Route path="/pricing" element={<Pricing />} />
     <Route path="/contact" element={<Contact />} />
+    <Route path="/console/user-profile" element={<UserProfile />} />
   </Routes>
 );
 
