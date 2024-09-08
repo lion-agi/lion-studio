@@ -17,18 +17,25 @@ import RecentCallsTable from '@/features/dashboard/components/RecentCallsTable';
 import { useApiData } from '@/features/dashboard/hooks';
 import { formatCurrency, formatNumber } from '@/features/dashboard/utils';
 
-const queryClient = new QueryClient();
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      retry: 3,
+      retryDelay: (attemptIndex) => Math.min(1000 * 2 ** attemptIndex, 30000),
+      staleTime: 5 * 60 * 1000, // 5 minutes
+    },
+  },
+});
 
-const ErrorFallback = ({ error }) => (
+const ErrorFallback = ({ error, resetErrorBoundary }) => (
   <Alert variant="destructive">
     <AlertTitle>Error</AlertTitle>
     <AlertDescription>
       An error occurred while fetching data: {error.message}
       <br />
       Please check your network connection and try again. If the problem persists, contact support.
-      <br />
-      Additional details: {error.stack}
     </AlertDescription>
+    <Button onClick={resetErrorBoundary} className="mt-4">Try again</Button>
   </Alert>
 );
 
@@ -43,7 +50,6 @@ const Dashboard = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [timeFilter, setTimeFilter] = useState('7d');
   const [modelFilter, setModelFilter] = useState('all');
-  const [timeoutReached, setTimeoutReached] = useState(false);
 
   const { data, isLoading, error, refetch } = useApiData(timeFilter, modelFilter);
 
@@ -57,17 +63,8 @@ const Dashboard = () => {
     refetch();
   }, [refetch]);
 
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setTimeoutReached(true);
-    }, 10000); // 10 seconds timeout
-
-    return () => clearTimeout(timer);
-  }, []);
-
-  if (isLoading && !timeoutReached) return <LoadingSpinner />;
-  if (error) return <ErrorFallback error={error} />;
-  if (timeoutReached) return <ErrorFallback error={new Error('Timeout: Data fetching took too long.')} />;
+  if (isLoading) return <LoadingSpinner />;
+  if (error) return <ErrorFallback error={error} resetErrorBoundary={refetch} />;
 
   const filteredData = {
     ...data,
@@ -80,7 +77,7 @@ const Dashboard = () => {
   return (
     <RecoilRoot>
       <QueryClientProvider client={queryClient}>
-        <ErrorBoundary FallbackComponent={ErrorFallback}>
+        <ErrorBoundary FallbackComponent={ErrorFallback} onReset={refetch}>
           <div className="min-h-screen bg-gray-900 text-gray-100">
             <div className="container mx-auto p-8 space-y-8">
               <DashboardHeader 
