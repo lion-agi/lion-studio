@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useIntegrations, useAddIntegration, useUpdateIntegration, useDeleteIntegration } from '@/integrations/supabase/hooks/integrations';
-import { useToast } from "@/common/components/ui/toast";
+import { useToast } from "@/common/components/ui/use-toast";
 import { useStore } from '@/store';
 import IntegrationCard from './components/IntegrationCard';
 import IntegrationFilters from './components/IntegrationFilters';
@@ -101,32 +101,8 @@ const Integrations = () => {
   if (error) return <div className="text-red-500">Error loading integrations: {error.message}</div>;
 
   return (
-    <div className="min-h-screen bg-gray-900 text-gray-100 p-8">
-      <div className="container mx-auto">
-        <div className="flex flex-col md:flex-row justify-between items-center mb-12">
-          <div className="flex items-center">
-            <h1 className="text-2xl font-bold mb-6 md:mb-0 text-gray-100 mr-4">Integrations</h1>
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={() => setIsInfoModalOpen(true)}
-              className="text-gray-400 hover:text-gray-100"
-            >
-              <Info className="h-5 w-5" />
-            </Button>
-          </div>
-          <div className="relative w-full md:w-80">
-            <Input
-              type="text"
-              placeholder="Search integrations..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full bg-gray-800 text-gray-200 placeholder-gray-400 border-gray-700 focus:border-purple-500 focus:ring-1 focus:ring-purple-500 pr-10"
-            />
-            <Search className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
-          </div>
-        </div>
-
+    <div className="min-h-screen bg-gray-900 text-gray-100">
+      <div className="container mx-auto p-8 space-y-8">
         <IntegrationFilters
           activeTab={activeTab}
           setActiveTab={setActiveTab}
