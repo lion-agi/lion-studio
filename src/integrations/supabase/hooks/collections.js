@@ -20,7 +20,6 @@ CREATE TABLE collections (
     is_active BOOLEAN DEFAULT true,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
-    user_id UUID REFERENCES auth.users(id) ON DELETE CASCADE,
     metadata JSONB
 );
 
@@ -31,7 +30,6 @@ COMMENT ON COLUMN collections.description IS 'Description of the collection';
 COMMENT ON COLUMN collections.is_active IS 'Whether the collection is active or not';
 COMMENT ON COLUMN collections.created_at IS 'Timestamp when the collection was created';
 COMMENT ON COLUMN collections.updated_at IS 'Timestamp when the collection was last updated';
-COMMENT ON COLUMN collections.user_id IS 'Foreign key referencing the user who owns this collection';
 COMMENT ON COLUMN collections.metadata IS 'Additional customizable metadata for the collection';
 */
 
@@ -65,16 +63,13 @@ export const useAddCollection = () => {
     const queryClient = useQueryClient();
     return useMutation({
         mutationFn: async (newCollection) => {
-            const { data: { user } } = await supabase.auth.getUser();
-            if (!user) throw new Error('User not authenticated');
-            const collectionWithUser = { 
+            const collectionWithTimestamp = { 
                 ...newCollection, 
-                user_id: user.id,
                 created_at: new Date().toISOString(),
                 updated_at: new Date().toISOString(),
             };
             try {
-                return await fromSupabase(supabase.from('collections').insert([collectionWithUser]).select());
+                return await fromSupabase(supabase.from('collections').insert([collectionWithTimestamp]).select());
             } catch (error) {
                 console.error('Error adding collection:', error);
                 throw error;
@@ -90,14 +85,12 @@ export const useUpdateCollection = () => {
     const queryClient = useQueryClient();
     return useMutation({
         mutationFn: async ({ id, ...updates }) => {
-            const { data: { user } } = await supabase.auth.getUser();
-            if (!user) throw new Error('User not authenticated');
             const updatedCollection = {
                 ...updates,
                 updated_at: new Date().toISOString(),
             };
             try {
-                return await fromSupabase(supabase.from('collections').update(updatedCollection).eq('id', id).eq('user_id', user.id).select());
+                return await fromSupabase(supabase.from('collections').update(updatedCollection).eq('id', id).select());
             } catch (error) {
                 console.error('Error updating collection:', error);
                 throw error;
@@ -113,10 +106,8 @@ export const useDeleteCollection = () => {
     const queryClient = useQueryClient();
     return useMutation({
         mutationFn: async (id) => {
-            const { data: { user } } = await supabase.auth.getUser();
-            if (!user) throw new Error('User not authenticated');
             try {
-                return await fromSupabase(supabase.from('collections').delete().eq('id', id).eq('user_id', user.id));
+                return await fromSupabase(supabase.from('collections').delete().eq('id', id));
             } catch (error) {
                 console.error('Error deleting collection:', error);
                 throw error;
