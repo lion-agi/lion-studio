@@ -11,7 +11,6 @@ import { Progress } from "@/common/components/ui/progress";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/common/components/ui/select";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/common/components/ui/accordion";
 import { AlertTriangle, CheckCircle2, Clock, XCircle, RefreshCw, Rocket, GitBranch, Server, Search } from 'lucide-react';
-import InfoModal from '@/common/components/InfoModal'; // Pfbeb
 
 
 const DeploymentCard = ({ name, environment, status, lastDeployed, version }) => {
@@ -112,7 +111,6 @@ const Deployment = () => {
   const [isNewDeploymentDialogOpen, setIsNewDeploymentDialogOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
   const [environmentFilter, setEnvironmentFilter] = useState('All Environments');
-  const [isInfoModalOpen, setIsInfoModalOpen] = useState(false); // P408c
 
   const deployments = [
     { name: 'Frontend App', environment: 'Production', status: 'Success', lastDeployed: '2 hours ago', version: 'v1.2.3' },
@@ -128,17 +126,7 @@ const Deployment = () => {
     <div className="min-h-screen bg-gray-900 text-gray-100">
       <div className="container mx-auto p-8 space-y-8">
         <div className="flex flex-col md:flex-row justify-between items-center mb-12">
-          <div className="flex items-center"> // P408c
-            <h1 className="text-2xl font-bold mb-6 md:mb-0 text-gray-100">Deployments</h1>
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={() => setIsInfoModalOpen(true)}
-              className="text-gray-400 hover:text-gray-100"
-            >
-              <Info className="h-5 w-5" />
-            </Button>
-          </div>
+          <h1 className="text-2xl font-bold mb-6 md:mb-0 text-gray-100">Deployments</h1>
           <div className="flex space-x-4 items-center">
             <Select value={environmentFilter} onValueChange={setEnvironmentFilter}>
               <SelectTrigger className="w-[180px] bg-gray-800 text-gray-200 border-gray-700">
@@ -240,8 +228,6 @@ const Deployment = () => {
           isOpen={isNewDeploymentDialogOpen} 
           onClose={() => setIsNewDeploymentDialogOpen(false)} 
         />
-
-        <InfoModal isOpen={isInfoModalOpen} onClose={() => setIsInfoModalOpen(false)} /> // P408c
       </div>
     </div>
   );

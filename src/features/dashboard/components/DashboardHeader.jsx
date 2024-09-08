@@ -6,7 +6,6 @@ import { Button } from "@/common/components/ui/button";
 import { timeRangeState, selectedModelState } from '../atoms';
 import { Search, Info } from 'lucide-react';
 import InfoModal from '@/common/components/InfoModal';
-import TabSwitchBar from '@/common/components/TabSwitchBar';
 
 const DashboardHeader = () => {
   const [timeRange, setTimeRange] = useRecoilState(timeRangeState);
@@ -52,8 +51,6 @@ const DashboardHeader = () => {
           </Select>
         </div>
       </div>
-
-      <TabSwitchBar />
 
       <InfoModal isOpen={isInfoModalOpen} onClose={() => setIsInfoModalOpen(false)} />
     </div>
