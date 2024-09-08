@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { Button } from "@/common/components/ui/button";
 import { useSupabaseAuth } from '@/integrations/supabase';
 import {
@@ -14,6 +14,7 @@ import {
 const ConsoleHeader = () => {
   const { logout } = useSupabaseAuth();
   const location = useLocation();
+  const navigate = useNavigate();
 
   const navItems = [
     { name: 'Dashboard', path: '/console/dashboard', icon: LayoutDashboard },
@@ -23,15 +24,22 @@ const ConsoleHeader = () => {
     { name: 'Workflow', path: '/console/workflow', icon: GitBranch },
   ];
 
+  const handleLogoClick = () => {
+    navigate('/');
+  };
+
   return (
     <header className="bg-gray-900 text-white shadow-md">
       <div className="container mx-auto px-4 py-4">
         <div className="flex justify-between items-center mb-6">
-          <Link to="/console" className="text-2xl font-bold">
+          <div 
+            onClick={handleLogoClick} 
+            className="text-2xl font-bold cursor-pointer"
+          >
             <span className="bg-gradient-to-r from-purple-400 to-pink-600 text-transparent bg-clip-text">
               Lion Studio
             </span>
-          </Link>
+          </div>
           <Button onClick={logout} variant="outline" size="sm" className="hover:bg-gray-800 transition-colors duration-200">
             <LogOut className="mr-2 h-4 w-4" />
             Log Out
