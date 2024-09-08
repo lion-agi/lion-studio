@@ -21,7 +21,7 @@ const CostTrendChart = ({ data }) => (
       <CardTitle className="text-gray-100">Cost Trend</CardTitle>
     </CardHeader>
     <CardContent className="pt-0">
-      <div className="h-[300px] w-full">
+      <div className="w-full h-[300px]">
         <ResponsiveContainer width="100%" height="100%">
           <LineChart data={data} margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
             <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
