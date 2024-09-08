@@ -44,7 +44,7 @@ const DashboardHeader = () => {
           <Info className="h-5 w-5" />
         </Button>
       </div>
-      <div className="flex items-center space-x-4">
+      <div className="relative w-full md:w-80">
         <Select value={timeRange} onValueChange={setTimeRange}>
           <SelectTrigger className="w-[180px] bg-gray-800 text-gray-200 border-gray-700">
             <SelectValue placeholder="Select time range" />
@@ -66,16 +66,6 @@ const DashboardHeader = () => {
             <SelectItem value="gpt-4">GPT-4</SelectItem>
           </SelectContent>
         </Select>
-        <div className="relative w-80">
-          <Input
-            type="text"
-            placeholder="Search dashboard..."
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full bg-gray-800 text-gray-200 placeholder-gray-400 border-gray-700 focus:border-purple-500 focus:ring-1 focus:ring-purple-500 pr-10"
-          />
-          <Search className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
-        </div>
       </div>
       <InfoModal isOpen={isInfoModalOpen} onClose={() => setIsInfoModalOpen(false)} />
     </div>
