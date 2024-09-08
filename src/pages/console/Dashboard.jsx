@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useCallback } from 'react';
 import { RecoilRoot } from 'recoil';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import { ErrorBoundary } from 'react-error-boundary';
@@ -35,10 +35,33 @@ const LoadingSpinner = () => (
 );
 
 const Dashboard = () => {
-  const [activeTab, setActiveTab] = React.useState('overview');
-  const [searchTerm, setSearchTerm] = React.useState('');
-  const [timeFilter, setTimeFilter] = React.useState('Last 7 days');
-  const [modelFilter, setModelFilter] = React.useState('All Models');
+  const [activeTab, setActiveTab] = useState('overview');
+  const [searchTerm, setSearchTerm] = useState('');
+  const [timeFilter, setTimeFilter] = useState('7d');
+  const [modelFilter, setModelFilter] = useState('all');
+
+  const { data, isLoading, error, refetch } = useApiData(timeFilter, modelFilter);
+
+  const handleTimeFilterChange = useCallback((value) => {
+    setTimeFilter(value);
+    refetch();
+  }, [refetch]);
+
+  const handleModelFilterChange = useCallback((value) => {
+    setModelFilter(value);
+    refetch();
+  }, [refetch]);
+
+  if (isLoading) return <LoadingSpinner />;
+  if (error) return <ErrorFallback error={error} />;
+
+  const filteredData = {
+    ...data,
+    recentCalls: data?.recentCalls?.filter(call => 
+      call.provider.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      call.model.toLowerCase().includes(searchTerm.toLowerCase())
+    ) || []
+  };
 
   return (
     <RecoilRoot>
@@ -49,24 +72,25 @@ const Dashboard = () => {
               <div className="flex flex-col md:flex-row justify-between items-center mb-12">
                 <h1 className="text-2xl font-bold mb-6 md:mb-0 text-gray-100">Dashboard</h1>
                 <div className="flex space-x-4 items-center">
-                  <Select value={timeFilter} onValueChange={setTimeFilter}>
+                  <Select value={timeFilter} onValueChange={handleTimeFilterChange}>
                     <SelectTrigger className="w-[180px] bg-gray-800 text-gray-200 border-gray-700">
                       <SelectValue placeholder="Select time range" />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="Last 7 days">Last 7 days</SelectItem>
-                      <SelectItem value="Last 30 days">Last 30 days</SelectItem>
-                      <SelectItem value="Last 90 days">Last 90 days</SelectItem>
+                      <SelectItem value="24h">Last 24 hours</SelectItem>
+                      <SelectItem value="7d">Last 7 days</SelectItem>
+                      <SelectItem value="30d">Last 30 days</SelectItem>
+                      <SelectItem value="90d">Last 90 days</SelectItem>
                     </SelectContent>
                   </Select>
-                  <Select value={modelFilter} onValueChange={setModelFilter}>
+                  <Select value={modelFilter} onValueChange={handleModelFilterChange}>
                     <SelectTrigger className="w-[180px] bg-gray-800 text-gray-200 border-gray-700">
                       <SelectValue placeholder="Select model" />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="All Models">All Models</SelectItem>
-                      <SelectItem value="GPT-3.5">GPT-3.5</SelectItem>
-                      <SelectItem value="GPT-4">GPT-4</SelectItem>
+                      <SelectItem value="all">All Models</SelectItem>
+                      <SelectItem value="gpt-3.5">GPT-3.5</SelectItem>
+                      <SelectItem value="gpt-4">GPT-4</SelectItem>
                     </SelectContent>
                   </Select>
                   <div className="relative w-full md:w-80">
@@ -89,13 +113,13 @@ const Dashboard = () => {
                   <TabsTrigger value="calls" className="data-[state=active]:bg-purple-600 data-[state=active]:text-white">API Calls</TabsTrigger>
                 </TabsList>
                 <TabsContent value="overview">
-                  <OverviewTab timeFilter={timeFilter} modelFilter={modelFilter} />
+                  <OverviewTab data={filteredData} />
                 </TabsContent>
                 <TabsContent value="costs">
-                  <CostsTab timeFilter={timeFilter} modelFilter={modelFilter} />
+                  <CostsTab data={filteredData} />
                 </TabsContent>
                 <TabsContent value="calls">
-                  <CallsTab timeFilter={timeFilter} modelFilter={modelFilter} />
+                  <CallsTab data={filteredData} />
                 </TabsContent>
               </Tabs>
             </div>
@@ -106,61 +130,27 @@ const Dashboard = () => {
   );
 };
 
-const OverviewTab = ({ timeFilter, modelFilter }) => {
-  const { data, isLoading, error } = useApiData();
-
-  if (isLoading) return <LoadingSpinner />;
-  if (error) return <ErrorFallback error={error} />;
-
-  return (
-    <div className="space-y-8">
-      <SummaryCards data={{
-        totalCost: Math.round(data?.summary?.totalCost || 0),
-        costChange: data?.summary?.costChange,
-        totalCalls: Math.round(data?.summary?.totalCalls || 0),
-        callsChange: data?.summary?.callsChange,
-        avgResponseTime: Math.round(data?.summary?.avgResponseTime || 0),
-        responseTimeChange: data?.summary?.responseTimeChange,
-        errorRate: data?.summary?.errorRate,
-        errorRateChange: data?.summary?.errorRateChange,
-      }} />
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-        <CostTrendChart data={data?.costTrend || []} />
-        <PerformanceChart data={data?.performance || []} />
-      </div>
+const OverviewTab = ({ data }) => (
+  <div className="space-y-8">
+    <SummaryCards data={data.summary} />
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+      <CostTrendChart data={data.costTrend} />
+      <PerformanceChart data={data.performance} />
     </div>
-  );
-};
+  </div>
+);
 
-const CostsTab = ({ timeFilter, modelFilter }) => {
-  const { data, isLoading, error } = useApiData();
-
-  if (isLoading) return <LoadingSpinner />;
-  if (error) return <ErrorFallback error={error} />;
-
-  return (
-    <div className="space-y-8">
-      <SummaryCards data={{
-        totalCost: Math.round(data?.summary?.totalCost || 0),
-        costChange: data?.summary?.costChange,
-        totalCalls: Math.round(data?.summary?.totalCalls || 0),
-        callsChange: data?.summary?.callsChange,
-        avgResponseTime: Math.round(data?.summary?.avgResponseTime || 0),
-        responseTimeChange: data?.summary?.responseTimeChange,
-        errorRate: data?.summary?.errorRate,
-        errorRateChange: data?.summary?.errorRateChange,
-      }} />
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-        <CostTrendChart data={data?.costTrend || []} />
-        <CostBreakdownChart data={data?.costBreakdown || []} />
-      </div>
+const CostsTab = ({ data }) => (
+  <div className="space-y-8">
+    <SummaryCards data={data.summary} />
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+      <CostTrendChart data={data.costTrend} />
+      <CostBreakdownChart data={data.costBreakdown} />
     </div>
-  );
-};
+  </div>
+);
 
-const CallsTab = ({ timeFilter, modelFilter }) => {
-  const { data, isLoading, error } = useApiData();
-
+const CallsTab = ({ data }) => {
   const handleExportApiCalls = () => {
     if (!data || !data.recentCalls) {
       console.error('No data available for export');
@@ -195,20 +185,10 @@ const CallsTab = ({ timeFilter, modelFilter }) => {
     }
   };
 
-  if (isLoading) return <LoadingSpinner />;
-  if (error) return <ErrorFallback error={error} />;
-
   return (
     <div className="space-y-8">
-      <SummaryCards data={{
-        totalCalls: Math.round(data?.summary?.totalCalls || 0),
-        callsChange: data?.summary?.callsChange,
-        avgResponseTime: Math.round(data?.summary?.avgResponseTime || 0),
-        responseTimeChange: data?.summary?.responseTimeChange,
-        errorRate: data?.summary?.errorRate,
-        errorRateChange: data?.summary?.errorRateChange,
-      }} />
-      <RecentCallsTable data={data?.recentCalls || []} />
+      <SummaryCards data={data.summary} />
+      <RecentCallsTable data={data.recentCalls} />
       <div className="flex justify-end">
         <Button className="bg-purple-600 hover:bg-purple-700 text-white" onClick={handleExportApiCalls}>
           <DownloadIcon className="mr-2 h-4 w-4" />
