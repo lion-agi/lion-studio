@@ -32,7 +32,7 @@ const CostTrendChart = ({ data }) => (
           />
           <YAxis 
             stroke="#9CA3AF" 
-            tickFormatter={(value) => formatCurrency(value)}
+            tickFormatter={(value) => formatCurrency(value).replace(/\.00$/, '')}
             tick={{ fill: '#9CA3AF' }}
             tickLine={{ stroke: '#9CA3AF' }}
             width={80}
