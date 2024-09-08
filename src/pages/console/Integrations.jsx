@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle, CardFooter } from "@/common/components/ui/card";
 import { Button } from "@/common/components/ui/button";
 import { Input } from "@/common/components/ui/input";
@@ -24,19 +24,19 @@ const IntegrationCard = ({ integration, onConfigure, onToggle }) => (
     </CardHeader>
     <CardContent>
       <Badge 
-        variant={integration.status === 'Connected' ? 'success' : 'secondary'}
-        className={integration.status === 'Connected' ? 'bg-green-500/10 text-green-500' : 'bg-gray-500/10 text-gray-400'}
+        variant={integration.isActive ? 'success' : 'secondary'}
+        className={integration.isActive ? 'bg-green-500/10 text-green-500' : 'bg-gray-500/10 text-gray-400'}
       >
-        {integration.status}
+        {integration.isActive ? 'Active' : 'Inactive'}
       </Badge>
       <p className="text-sm text-gray-400 mt-2">{integration.description}</p>
     </CardContent>
     <CardFooter className="flex justify-between">
       <Button variant="outline" size="sm" onClick={() => onConfigure(integration)}>Configure</Button>
       <Switch 
-        checked={integration.status === 'Connected'} 
+        checked={integration.isActive}
         onCheckedChange={() => onToggle(integration.id)}
-        className={integration.status === 'Connected' ? 'bg-green-500' : 'bg-gray-500'}
+        className={integration.isActive ? 'bg-green-500' : 'bg-gray-500'}
       />
     </CardFooter>
   </Card>
@@ -130,9 +130,12 @@ const Integrations = () => {
   const deleteIntegration = useDeleteIntegration();
   const { toast } = useToast();
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (fetchedIntegrations) {
-      setLocalIntegrations(fetchedIntegrations);
+      setLocalIntegrations(fetchedIntegrations.map(integration => ({
+        ...integration,
+        isActive: false // Set initial state to inactive
+      })));
     }
   }, [fetchedIntegrations]);
 
@@ -141,8 +144,8 @@ const Integrations = () => {
     .filter(conn => conn.name.toLowerCase().includes(searchTerm.toLowerCase()))
     .filter(conn => typeFilter === 'All Types' || conn.type === typeFilter.toLowerCase())
     .sort((a, b) => {
-      if (a.status === 'Connected' && b.status !== 'Connected') return -1;
-      if (a.status !== 'Connected' && b.status === 'Connected') return 1;
+      if (a.isActive && !b.isActive) return -1;
+      if (!a.isActive && b.isActive) return 1;
       return 0;
     }) || [];
 
@@ -155,13 +158,13 @@ const Integrations = () => {
     setLocalIntegrations(prevIntegrations =>
       prevIntegrations.map(integration =>
         integration.id === id
-          ? { ...integration, status: integration.status === 'Connected' ? 'Disconnected' : 'Connected' }
+          ? { ...integration, isActive: !integration.isActive }
           : integration
       )
     );
     toast({
       title: "Status Updated",
-      description: `Integration status toggled. Changes will be saved when you update the integration.`,
+      description: `Integration status toggled.`,
     });
   };
 
@@ -171,7 +174,7 @@ const Integrations = () => {
         await updateIntegration.mutateAsync(updatedIntegration);
         setLocalIntegrations(prevIntegrations =>
           prevIntegrations.map(integration =>
-            integration.id === updatedIntegration.id ? updatedIntegration : integration
+            integration.id === updatedIntegration.id ? { ...updatedIntegration, isActive: integration.isActive } : integration
           )
         );
         toast({
@@ -180,7 +183,7 @@ const Integrations = () => {
         });
       } else {
         const newIntegration = await addIntegration.mutateAsync(updatedIntegration);
-        setLocalIntegrations(prevIntegrations => [...prevIntegrations, newIntegration]);
+        setLocalIntegrations(prevIntegrations => [...prevIntegrations, { ...newIntegration, isActive: false }]);
         toast({
           title: "Integration Added",
           description: "A new integration has been successfully added.",
