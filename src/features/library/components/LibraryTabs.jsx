@@ -23,10 +23,10 @@ const LibraryTabs = ({
   error
 }) => (
   <Tabs value={activeTab} onValueChange={onTabChange} className="mt-8">
-    <TabsList className="bg-gray-800">
-      <TabsTrigger value="threads" className="data-[state=active]:bg-purple-600 data-[state=active]:text-white">Threads</TabsTrigger>
-      <TabsTrigger value="pages" className="data-[state=active]:bg-purple-600 data-[state=active]:text-white">Pages</TabsTrigger>
-      <TabsTrigger value="collections" className="data-[state=active]:bg-purple-600 data-[state=active]:text-white">Collections</TabsTrigger>
+    <TabsList className="bg-gray-800 mb-6">
+      <TabsTrigger value="threads" className="data-[state=active]:bg-purple-600 data-[state=active]:text-white px-6 py-3">Threads</TabsTrigger>
+      <TabsTrigger value="pages" className="data-[state=active]:bg-purple-600 data-[state=active]:text-white px-6 py-3">Pages</TabsTrigger>
+      <TabsTrigger value="collections" className="data-[state=active]:bg-purple-600 data-[state=active]:text-white px-6 py-3">Collections</TabsTrigger>
     </TabsList>
     {error ? (
       <Alert variant="destructive">
@@ -36,14 +36,14 @@ const LibraryTabs = ({
       </Alert>
     ) : (
       <>
-        <TabsContent value="threads">
+        <TabsContent value="threads" className="mt-6">
           {threads && threads.length > 0 ? (
             <ThreadList threads={threads} onOpenModal={handleOpenThreadModal} />
           ) : (
             <EmptyState message="No threads found. Create your first thread!" icon={MessageSquare} />
           )}
         </TabsContent>
-        <TabsContent value="pages">
+        <TabsContent value="pages" className="mt-6">
           <PagesContent 
             pages={pages} 
             handleOpenPageModal={handleOpenPageModal} 
@@ -52,7 +52,7 @@ const LibraryTabs = ({
             handleCreateNewPage={handleCreateNewPage}
           />
         </TabsContent>
-        <TabsContent value="collections">
+        <TabsContent value="collections" className="mt-6">
           <CollectionsContent 
             collections={collections} 
             handleOpenPageModal={handleOpenPageModal} 
