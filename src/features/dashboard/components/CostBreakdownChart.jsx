@@ -18,7 +18,7 @@ const CustomTooltip = ({ active, payload }) => {
 };
 
 const InfoTable = ({ data }) => (
-  <div className="absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-gray-800 border border-gray-700 p-4 rounded shadow-lg">
+  <div className="absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-gray-800/80 border border-gray-700 p-4 rounded shadow-lg">
     <h3 className="text-lg font-semibold mb-2 text-gray-200">{data.model}</h3>
     <table className="w-full text-sm">
       <tbody>
@@ -67,7 +67,6 @@ const CostBreakdownChart = ({ data }) => {
               ))}
             </Pie>
             <Tooltip content={<CustomTooltip />} />
-            <Legend />
           </PieChart>
         </ResponsiveContainer>
         {hoveredIndex !== null && <InfoTable data={data[hoveredIndex]} />}
