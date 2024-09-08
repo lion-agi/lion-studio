@@ -31,7 +31,7 @@ const DashboardHeader = () => {
   const [isInfoModalOpen, setIsInfoModalOpen] = useState(false);
 
   return (
-    <div className="flex justify-between items-center mb-12">
+    <div className="flex flex-col md:flex-row justify-between items-center mb-12">
       <div className="flex items-center">
         <h1 className="text-2xl font-bold mb-6 md:mb-0 text-gray-100 mr-4">Dashboard</h1>
         <Button
