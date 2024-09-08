@@ -44,6 +44,22 @@ export const useRegistration = () => {
     }
     setLoading(true);
     try {
+      const { data: existingUser } = await supabase
+        .from('profiles')
+        .select('id')
+        .eq('email', formData.email)
+        .single();
+
+      if (existingUser) {
+        toast({
+          title: "Error",
+          description: "Email already exists. Please log in instead.",
+          variant: "destructive",
+        });
+        navigate('/login');
+        return;
+      }
+
       const { data, error } = await supabase.auth.signUp({
         email: formData.email,
         password: formData.password,
@@ -74,6 +90,7 @@ export const useRegistration = () => {
         title: "Success",
         description: "Registration successful. Please check your email to verify your account.",
       });
+      navigate('/email-confirmation');
     } catch (error) {
       toast({
         title: "Error",
