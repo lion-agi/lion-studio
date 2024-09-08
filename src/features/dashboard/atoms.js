@@ -16,6 +16,7 @@ export const apiDataState = selector({
   get: async ({ get }) => {
     const timeRange = get(timeRangeState);
     const selectedModel = get(selectedModelState);
-    return fetchApiData(timeRange, selectedModel);
+    const data = await fetchApiData(timeRange, selectedModel);
+    return data;
   },
 });
