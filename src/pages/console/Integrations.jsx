@@ -103,9 +103,9 @@ const Integrations = () => {
   return (
     <div className="min-h-screen bg-gray-900 text-gray-100">
       <div className="container mx-auto p-8 space-y-8">
-        <div className="flex flex-col md:flex-row justify-between items-center mb-12">
+        <div className="flex items-center justify-between mb-6">
           <div className="flex items-center">
-            <h1 className="text-2xl font-bold mb-6 md:mb-0 text-gray-100 mr-4">Integrations</h1>
+            <h1 className="text-2xl font-bold text-gray-100 mr-4">Integrations</h1>
             <Button
               variant="ghost"
               size="sm"
