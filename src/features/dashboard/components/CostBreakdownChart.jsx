@@ -18,7 +18,7 @@ const CustomTooltip = ({ active, payload }) => {
 };
 
 const RADIAN = Math.PI / 180;
-const renderCustomizedLabel = ({ cx, cy, midAngle, innerRadius, outerRadius, percent, index, model }) => {
+const renderCustomizedLabel = ({ cx, cy, midAngle, innerRadius, outerRadius, percent, index }) => {
   const radius = innerRadius + (outerRadius - innerRadius) * 0.5;
   const x = cx + radius * Math.cos(-midAngle * RADIAN);
   const y = cy + radius * Math.sin(-midAngle * RADIAN);
@@ -35,6 +35,8 @@ const CostBreakdownChart = ({ data }) => {
     ...item,
     model: `${index}`
   }));
+
+  const modelNames = ['0', '1', '2', 'gpt-4o-mini', 'gpt-4o', 'claude-sonnet-3.5'];
 
   return (
     <Card className="bg-gray-900 border-gray-800">
@@ -62,7 +64,7 @@ const CostBreakdownChart = ({ data }) => {
               <Tooltip content={<CustomTooltip />} />
               <Legend 
                 formatter={(value, entry, index) => [
-                  `${index}: ${['0', '1', '2', 'gpt-4o-mini', 'gpt-4o', 'claude-sonnet-3.5'][index] || value}`,
+                  `${index}: ${modelNames[index] || value}`,
                   entry.payload
                 ]}
               />
