@@ -8,6 +8,7 @@ import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, D
 import { Badge } from "@/common/components/ui/badge";
 import { Switch } from "@/common/components/ui/switch";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/common/components/ui/select";
+import { Textarea } from "@/common/components/ui/textarea";
 import { CheckCircle2, XCircle, Database, Cloud, FileText, Link as LinkIcon, Brain, Search } from 'lucide-react';
 
 const ConnectionCard = ({ connection, onConfigure, onToggle }) => (
@@ -50,14 +51,14 @@ const ConfigureConnectionModal = ({ isOpen, onClose, connection, onSave }) => {
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-[425px] bg-gray-800 text-gray-100">
+      <DialogContent className="sm:max-w-[600px] bg-gray-800 text-gray-100">
         <DialogHeader>
-          <DialogTitle>Configure Connection</DialogTitle>
+          <DialogTitle className="text-2xl">Configure Connection</DialogTitle>
           <DialogDescription className="text-gray-400">
-            Update the details for your connection.
+            Update the details for your connection. Ensure all required fields are filled.
           </DialogDescription>
         </DialogHeader>
-        <div className="grid gap-4 py-4">
+        <div className="grid gap-6 py-4">
           <div className="grid grid-cols-4 items-center gap-4">
             <Label htmlFor="name" className="text-right">Name</Label>
             <Input id="name" name="name" value={formData.name || ''} onChange={handleInputChange} className="col-span-3 bg-gray-700 text-gray-100" />
@@ -93,33 +94,59 @@ const ConfigureConnectionModal = ({ isOpen, onClose, connection, onSave }) => {
             </>
           )}
           {formData.type === 'api' && (
-            <div className="grid grid-cols-4 items-center gap-4">
-              <Label htmlFor="apiKey" className="text-right">API Key</Label>
-              <Input id="apiKey" name="apiKey" value={formData.apiKey || ''} onChange={handleInputChange} className="col-span-3 bg-gray-700 text-gray-100" />
-            </div>
+            <>
+              <div className="grid grid-cols-4 items-center gap-4">
+                <Label htmlFor="apiKey" className="text-right">API Key</Label>
+                <Input id="apiKey" name="apiKey" value={formData.apiKey || ''} onChange={handleInputChange} className="col-span-3 bg-gray-700 text-gray-100" />
+              </div>
+              <div className="grid grid-cols-4 items-center gap-4">
+                <Label htmlFor="endpoint" className="text-right">Endpoint URL</Label>
+                <Input id="endpoint" name="endpoint" value={formData.endpoint || ''} onChange={handleInputChange} className="col-span-3 bg-gray-700 text-gray-100" />
+              </div>
+            </>
           )}
           {formData.type === 'cloud' && (
-            <div className="grid grid-cols-4 items-center gap-4">
-              <Label htmlFor="accessKey" className="text-right">Access Key</Label>
-              <Input id="accessKey" name="accessKey" value={formData.accessKey || ''} onChange={handleInputChange} className="col-span-3 bg-gray-700 text-gray-100" />
-            </div>
+            <>
+              <div className="grid grid-cols-4 items-center gap-4">
+                <Label htmlFor="accessKey" className="text-right">Access Key</Label>
+                <Input id="accessKey" name="accessKey" value={formData.accessKey || ''} onChange={handleInputChange} className="col-span-3 bg-gray-700 text-gray-100" />
+              </div>
+              <div className="grid grid-cols-4 items-center gap-4">
+                <Label htmlFor="secretKey" className="text-right">Secret Key</Label>
+                <Input id="secretKey" name="secretKey" type="password" value={formData.secretKey || ''} onChange={handleInputChange} className="col-span-3 bg-gray-700 text-gray-100" />
+              </div>
+              <div className="grid grid-cols-4 items-center gap-4">
+                <Label htmlFor="region" className="text-right">Region</Label>
+                <Input id="region" name="region" value={formData.region || ''} onChange={handleInputChange} className="col-span-3 bg-gray-700 text-gray-100" />
+              </div>
+            </>
           )}
           {formData.type === 'ai' && (
-            <div className="grid grid-cols-4 items-center gap-4">
-              <Label htmlFor="modelName" className="text-right">Model Name</Label>
-              <Input id="modelName" name="modelName" value={formData.modelName || ''} onChange={handleInputChange} className="col-span-3 bg-gray-700 text-gray-100" />
-            </div>
+            <>
+              <div className="grid grid-cols-4 items-center gap-4">
+                <Label htmlFor="modelName" className="text-right">Model Name</Label>
+                <Input id="modelName" name="modelName" value={formData.modelName || ''} onChange={handleInputChange} className="col-span-3 bg-gray-700 text-gray-100" />
+              </div>
+              <div className="grid grid-cols-4 items-center gap-4">
+                <Label htmlFor="apiKey" className="text-right">API Key</Label>
+                <Input id="apiKey" name="apiKey" type="password" value={formData.apiKey || ''} onChange={handleInputChange} className="col-span-3 bg-gray-700 text-gray-100" />
+              </div>
+            </>
           )}
           <div className="grid grid-cols-4 items-center gap-4">
-            <Label htmlFor="username" className="text-right">Username</Label>
-            <Input id="username" name="username" value={formData.username || ''} onChange={handleInputChange} className="col-span-3 bg-gray-700 text-gray-100" />
-          </div>
-          <div className="grid grid-cols-4 items-center gap-4">
-            <Label htmlFor="password" className="text-right">Password</Label>
-            <Input id="password" name="password" type="password" value={formData.password || ''} onChange={handleInputChange} className="col-span-3 bg-gray-700 text-gray-100" />
+            <Label htmlFor="description" className="text-right">Description</Label>
+            <Textarea
+              id="description"
+              name="description"
+              value={formData.description || ''}
+              onChange={handleInputChange}
+              className="col-span-3 bg-gray-700 text-gray-100"
+              rows={3}
+            />
           </div>
         </div>
         <DialogFooter>
+          <Button variant="outline" onClick={onClose}>Cancel</Button>
           <Button type="submit" onClick={handleSave}>Save Changes</Button>
         </DialogFooter>
       </DialogContent>
