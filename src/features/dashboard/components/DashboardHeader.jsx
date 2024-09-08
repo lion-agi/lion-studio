@@ -5,25 +5,7 @@ import { Input } from "@/common/components/ui/input";
 import { Button } from "@/common/components/ui/button";
 import { timeRangeState, selectedModelState } from '../atoms';
 import { Search, Info } from 'lucide-react';
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/common/components/ui/dialog";
-
-const InfoModal = ({ isOpen, onClose }) => (
-  <Dialog open={isOpen} onOpenChange={onClose}>
-    <DialogContent className="sm:max-w-[425px] bg-gray-800 text-gray-100">
-      <DialogHeader>
-        <DialogTitle>Dashboard Information</DialogTitle>
-      </DialogHeader>
-      <div className="mt-4">
-        <p>The Dashboard is your central hub for monitoring and managing your project:</p>
-        <ul className="list-disc list-inside mt-2 space-y-1">
-          <li>Overview: Overall stats of the project</li>
-          <li>Costs: Costs related stats for the project</li>
-          <li>API Calls: Provide detailed logs of recent API calls</li>
-        </ul>
-      </div>
-    </DialogContent>
-  </Dialog>
-);
+import InfoModal from '@/common/components/InfoModal';
 
 const DashboardHeader = () => {
   const [timeRange, setTimeRange] = useRecoilState(timeRangeState);
@@ -70,22 +52,7 @@ const DashboardHeader = () => {
         </div>
       </div>
 
-      <Dialog open={isInfoModalOpen} onOpenChange={setIsInfoModalOpen}>
-        <DialogContent className="sm:max-w-[425px] bg-gray-800 text-gray-100">
-          <DialogHeader>
-            <DialogTitle>Dashboard Information</DialogTitle>
-          </DialogHeader>
-          <div className="mt-4">
-            <p>The Dashboard provides an overview of your project's performance and usage:</p>
-            <ul className="list-disc list-inside mt-2 space-y-1">
-              <li>View total costs and API calls</li>
-              <li>Monitor response times and error rates</li>
-              <li>Analyze trends and performance metrics</li>
-            </ul>
-            <p className="mt-4">Use the filters to adjust the time range and model selection, and use the search bar to find specific information.</p>
-          </div>
-        </DialogContent>
-      </Dialog>
+      <InfoModal isOpen={isInfoModalOpen} onClose={() => setIsInfoModalOpen(false)} />
     </div>
   );
 };
