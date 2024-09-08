@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
+import { useRecoilState } from 'recoil';
 import { useApiData } from '@/features/dashboard/hooks';
-import DashboardHeader from '@/features/dashboard/components/DashboardHeader';
+import { timeRangeState, selectedModelState } from '../atoms';
 import SummaryCards from '@/features/dashboard/components/SummaryCards';
 import CostTrendChart from '@/features/dashboard/components/CostTrendChart';
 import CostBreakdownChart from '@/features/dashboard/components/CostBreakdownChart';
@@ -9,7 +10,9 @@ import RecentCallsTable from '@/features/dashboard/components/RecentCallsTable';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/common/components/ui/tabs";
 import { Button } from "@/common/components/ui/button";
 import { Alert, AlertDescription, AlertTitle } from "@/common/components/ui/alert";
-import { DownloadIcon, AlertTriangle } from 'lucide-react';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/common/components/ui/select";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/common/components/ui/dialog";
+import { DownloadIcon, AlertTriangle, Info, Search } from 'lucide-react';
 
 const LoadingSpinner = () => (
   <div className="flex justify-center items-center h-64">
@@ -17,11 +20,30 @@ const LoadingSpinner = () => (
   </div>
 );
 
+const InfoModal = ({ isOpen, onClose }) => (
+  <Dialog open={isOpen} onOpenChange={onClose}>
+    <DialogContent className="sm:max-w-[425px] bg-gray-800 text-gray-100">
+      <DialogHeader>
+        <DialogTitle>Dashboard Information</DialogTitle>
+      </DialogHeader>
+      <div className="mt-4">
+        <p>The Dashboard provides an overview of your project's performance and usage:</p>
+        <ul className="list-disc list-inside mt-2 space-y-1">
+          <li>View total costs and API calls</li>
+          <li>Monitor response times and error rates</li>
+          <li>Analyze trends and performance metrics</li>
+        </ul>
+        <p className="mt-4">Use the filters to adjust the time range and model selection, and use the search bar to find specific information.</p>
+      </div>
+    </DialogContent>
+  </Dialog>
+);
 
 const Dashboard = () => {
-  const [timeFilter, setTimeFilter] = useState('7d');
-  const [modelFilter, setModelFilter] = useState('all');
-  const { data, isLoading, error } = useApiData(timeFilter, modelFilter);
+  const [timeRange, setTimeRange] = useRecoilState(timeRangeState);
+  const [selectedModel, setSelectedModel] = useRecoilState(selectedModelState);
+  const [isInfoModalOpen, setIsInfoModalOpen] = useState(false);
+  const { data, isLoading, error } = useApiData(timeRange, selectedModel);
 
   if (isLoading) {
     return <div className="flex justify-center items-center h-screen">Loading dashboard data...</div>;
@@ -71,69 +93,99 @@ const Dashboard = () => {
     }
   };
 
+
   return (
     <div className="min-h-screen bg-gray-900 text-gray-100">
-      <div className="container mx-auto">
-        <DashboardHeader 
-          timeFilter={timeFilter}
-          modelFilter={modelFilter}
-          onTimeFilterChange={setTimeFilter}
-          onModelFilterChange={setModelFilter}
-        />
-        
-        <div className="mt-8">
-          <Tabs defaultValue="overview" className="space-y-4">
-            <TabsList>
-              <TabsTrigger value="overview" className="data-[state=active]:bg-purple-600 data-[state=active]:text-white px-6 py-3">Overview</TabsTrigger>
-              <TabsTrigger value="costs" className="data-[state=active]:bg-purple-600 data-[state=active]:text-white px-6 py-3">Costs</TabsTrigger>
-              <TabsTrigger value="calls" className="data-[state=active]:bg-purple-600 data-[state=active]:text-white px-6 py-3">API Calls</TabsTrigger>
-            </TabsList>
-
-            <TabsContent value="overview">
-              <div className="space-y-6">
-                <SummaryCards data={data.summary} />
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                  <CostTrendChart data={data.costTrend} />
-                  <PerformanceChart data={data.performance} />
-                </div>
-              </div>
-            </TabsContent>
-
-            <TabsContent value="costs">
-              <div className="space-y-6">
-                <SummaryCards data={data.summary} />
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                  <CostTrendChart data={data.costTrend} />
-                  <CostBreakdownChart data={data.costBreakdown} />
-                </div>
-              </div>
-            </TabsContent>
-
-            <TabsContent value="calls">
-              <div className="space-y-6">
-                <SummaryCards data={data.summary} />
-                {data.recentCalls && data.recentCalls.length > 0 ? (
-                  <>
-                    <RecentCallsTable data={data.recentCalls} />
-                    <div className="flex justify-end">
-                      <Button onClick={handleExportApiCalls} className="bg-purple-600 hover:bg-purple-700 text-white">
-                        <DownloadIcon className="mr-2 h-4 w-4" />
-                        Export API Calls
-                      </Button>
-                    </div>
-                  </>
-                ) : (
-                  <div className="text-center py-8">
-                    <AlertTriangle className="mx-auto h-12 w-12 text-yellow-400" />
-                    <h3 className="mt-2 text-sm font-semibold text-gray-100">No API Calls</h3>
-                    <p className="mt-1 text-sm text-gray-400">There are no recent API calls to display.</p>
-                  </div>
-                )}
-              </div>
-            </TabsContent>
-          </Tabs>
+      <div className="container mx-auto p-8">
+        <div className="flex justify-between items-center mb-8">
+          <div className="flex items-center">
+            <h1 className="text-2xl font-bold text-gray-100 mr-4">Dashboard</h1>
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => setIsInfoModalOpen(true)}
+              className="text-gray-400 hover:text-gray-100"
+            >
+              <Info className="h-5 w-5" />
+            </Button>
+          </div>
+          <div className="flex items-center space-x-4">
+            <Select value={timeRange} onValueChange={setTimeRange}>
+              <SelectTrigger className="w-[180px] bg-gray-800 text-gray-200 border-gray-700">
+                <SelectValue placeholder="Select time range" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="24h">Last 24 hours</SelectItem>
+                <SelectItem value="7d">Last 7 days</SelectItem>
+                <SelectItem value="30d">Last 30 days</SelectItem>
+                <SelectItem value="90d">Last 90 days</SelectItem>
+              </SelectContent>
+            </Select>
+            <Select value={selectedModel} onValueChange={setSelectedModel}>
+              <SelectTrigger className="w-[180px] bg-gray-800 text-gray-200 border-gray-700">
+                <SelectValue placeholder="Select model" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">All Models</SelectItem>
+                <SelectItem value="gpt-3">GPT-3</SelectItem>
+                <SelectItem value="gpt-4">GPT-4</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
         </div>
+        
+        <Tabs defaultValue="overview" className="space-y-8">
+          <TabsList>
+            <TabsTrigger value="overview" className="data-[state=active]:bg-purple-600 data-[state=active]:text-white px-6 py-3">Overview</TabsTrigger>
+            <TabsTrigger value="costs" className="data-[state=active]:bg-purple-600 data-[state=active]:text-white px-6 py-3">Costs</TabsTrigger>
+            <TabsTrigger value="calls" className="data-[state=active]:bg-purple-600 data-[state=active]:text-white px-6 py-3">API Calls</TabsTrigger>
+          </TabsList>
+
+          <TabsContent value="overview">
+            <div className="space-y-8">
+              <SummaryCards data={data.summary} />
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                <CostTrendChart data={data.costTrend} />
+                <PerformanceChart data={data.performance} />
+              </div>
+            </div>
+          </TabsContent>
+
+          <TabsContent value="costs">
+            <div className="space-y-8">
+              <SummaryCards data={data.summary} />
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                <CostTrendChart data={data.costTrend} />
+                <CostBreakdownChart data={data.costBreakdown} />
+              </div>
+            </div>
+          </TabsContent>
+
+          <TabsContent value="calls">
+            <div className="space-y-8">
+              <SummaryCards data={data.summary} />
+              {data.recentCalls && data.recentCalls.length > 0 ? (
+                <>
+                  <RecentCallsTable data={data.recentCalls} />
+                  <div className="flex justify-end">
+                    <Button onClick={handleExportApiCalls} className="bg-purple-600 hover:bg-purple-700 text-white">
+                      <DownloadIcon className="mr-2 h-4 w-4" />
+                      Export API Calls
+                    </Button>
+                  </div>
+                </>
+              ) : (
+                <div className="text-center py-8">
+                  <AlertTriangle className="mx-auto h-12 w-12 text-yellow-400" />
+                  <h3 className="mt-2 text-sm font-semibold text-gray-100">No API Calls</h3>
+                  <p className="mt-1 text-sm text-gray-400">There are no recent API calls to display.</p>
+                </div>
+              )}
+            </div>
+          </TabsContent>
+        </Tabs>
       </div>
+      <InfoModal isOpen={isInfoModalOpen} onClose={() => setIsInfoModalOpen(false)} />
     </div>
   );
 };
