@@ -17,10 +17,10 @@ const ConsoleHeader = () => {
 
   const navItems = [
     { name: 'Dashboard', path: '/console/dashboard', icon: LayoutDashboard },
-    { name: 'Connections', path: '/console/connections', icon: LinkIcon },
-    { name: 'Deployment', path: '/console/deployment', icon: Rocket },
     { name: 'Library', path: '/console/library', icon: Library },
     { name: 'Workflow', path: '/console/workflow', icon: GitBranch },
+    { name: 'Integrations', path: '/console/connections', icon: LinkIcon },
+    { name: 'Deployment', path: '/console/deployment', icon: Rocket },
   ];
 
   return (

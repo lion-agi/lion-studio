@@ -1,0 +1,21 @@
+id,user_id,name,type,host,port,database,username,password,is_active,created_at,updated_at
+
+1,user123,Main PostgreSQL DB,postgres,db.example.com,5432,maindb,admin,securepass123,true,2023-01-15T10:30:00Z,2023-01-15T10:30:00Z
+
+2,user123,Analytics MySQL,mysql,analytics.example.com,3306,analytics_db,analyst,analyzeThis456,true,2023-02-01T14:45:00Z,2023-03-10T09:15:00Z
+
+3,user456,MongoDB Cluster,mongodb,mongo.example.com,27017,user_data,dbuser,mongoPass789,true,2023-02-15T11:20:00Z,2023-02-15T11:20:00Z
+
+4,user789,Dev PostgreSQL,postgres,dev-db.example.com,5432,devdb,devuser,devPass101,true,2023-03-01T09:00:00Z,2023-04-05T16:30:00Z
+
+5,user123,Legacy MySQL DB,mysql,old-db.example.com,3306,legacy_system,root,oldPass222,false,2023-01-10T08:00:00Z,2023-04-01T12:00:00Z
+
+6,user456,Test SQLite DB,sqlite,/path/to/test.db,,,,,true,2023-03-20T13:15:00Z,2023-03-20T13:15:00Z
+
+7,user789,Staging PostgreSQL,postgres,staging-db.example.com,5432,staging,stageuser,stagePass333,true,2023-04-01T10:00:00Z,2023-04-01T10:00:00Z
+
+8,user123,Redis Cache,redis,cache.example.com,6379,,,redisPass444,true,2023-04-10T15:30:00Z,2023-04-10T15:30:00Z
+
+9,user456,Elasticsearch Cluster,elasticsearch,elastic.example.com,9200,,,elasticPass555,true,2023-04-15T11:45:00Z,2023-04-15T11:45:00Z
+
+10,user789,Cassandra DB,cassandra,cassandra.example.com,9042,user_events,cassuser,cassPass666,true,2023-04-20T14:00:00Z,2023-04-20T14:00:00Z
