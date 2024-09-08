@@ -8,8 +8,17 @@ const DashboardHeader = () => {
   const [selectedModel, setSelectedModel] = useRecoilState(selectedModelState);
 
   return (
-    <div className="flex justify-between items-center">
-      <h1 className="text-3xl font-bold">Dashboard</h1>
+    <div className="flex items-center">
+      <h1 className="text-2xl font-bold mb-6 md:mb-0 text-gray-100 mr-4">Dashboard</h1>
+      <Button
+        variant="ghost"
+        size="sm"
+        onClick={() => setIsInfoModalOpen(true)}
+        className="text-gray-400 hover:text-gray-100"
+      >
+        <Info className="h-5 w-5" />
+      </Button>
+
       <div className="flex space-x-4">
         <Select value={timeRange} onValueChange={setTimeRange}>
           <SelectTrigger className="w-[180px]">

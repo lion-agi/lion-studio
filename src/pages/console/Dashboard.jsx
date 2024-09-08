@@ -11,6 +11,32 @@ import { Button } from "@/common/components/ui/button";
 import { Alert, AlertDescription, AlertTitle } from "@/common/components/ui/alert";
 import { DownloadIcon, AlertTriangle } from 'lucide-react';
 
+const LoadingSpinner = () => (
+  <div className="flex justify-center items-center h-64">
+    <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-primary"></div>
+  </div>
+);
+
+const InfoModal = ({ isOpen, onClose }) => (
+  <Dialog open={isOpen} onOpenChange={onClose}>
+    <DialogContent className="sm:max-w-[425px] bg-gray-800 text-gray-100">
+      <DialogHeader>
+        <DialogTitle>Dashboard Information</DialogTitle>
+      </DialogHeader>
+      <div className="mt-4">
+        <p>The Library is your central hub for monitoring and managing your project:</p>
+        <ul className="list-disc list-inside mt-2 space-y-1">
+          <li>Overview: Overall stats of the project</li>
+          <li>Costs: costs related stats for the project</li>
+          <li>API Calls: provide detailed logs of recent API calls</li>
+        </ul>
+      </div>
+    </DialogContent>
+  </Dialog>
+);
+
+
+
 const Dashboard = () => {
   const [timeFilter, setTimeFilter] = useState('7d');
   const [modelFilter, setModelFilter] = useState('all');
@@ -72,6 +98,14 @@ const Dashboard = () => {
         onTimeFilterChange={setTimeFilter}
         onModelFilterChange={setModelFilter}
       />
+      <Button
+        variant="ghost"
+        size="sm"
+        onClick={() => setIsInfoModalOpen(true)}
+        className="text-gray-400 hover:text-gray-100"
+      >
+        <Info className="h-5 w-5" />
+      </Button>
 
       <Tabs defaultValue="overview" className="space-y-4">
         <TabsList>
