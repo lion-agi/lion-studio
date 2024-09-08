@@ -42,14 +42,16 @@ const CostBreakdownChart = ({ data }) => {
   const renderLegend = (props) => {
     const { payload } = props;
     return (
-      <ul className="flex flex-wrap justify-center gap-2 mt-4">
+      <div className="grid grid-cols-2 gap-2 mt-4 max-h-40 overflow-y-auto">
         {payload.map((entry, index) => (
-          <li key={`legend-${index}`} className="flex items-center">
-            <span className="w-3 h-3 mr-2" style={{ backgroundColor: entry.color }}></span>
-            <span className="text-xs text-gray-300">{entry.value}</span>
-          </li>
+          <div key={`legend-${index}`} className="flex items-center">
+            <span className="w-3 h-3 mr-2 rounded-full" style={{ backgroundColor: entry.color }}></span>
+            <span className="text-xs text-gray-300 truncate" title={entry.value}>
+              {entry.value}
+            </span>
+          </div>
         ))}
-      </ul>
+      </div>
     );
   };
 
@@ -59,7 +61,7 @@ const CostBreakdownChart = ({ data }) => {
         <CardHeader>
           <CardTitle className="text-gray-100">Cost Breakdown by Model</CardTitle>
         </CardHeader>
-        <CardContent className="h-[400px] relative overflow-auto flex items-center justify-center">
+        <CardContent className="h-[400px] flex items-center justify-center">
           <p className="text-gray-400">No cost breakdown data available</p>
         </CardContent>
       </Card>
@@ -71,7 +73,7 @@ const CostBreakdownChart = ({ data }) => {
       <CardHeader>
         <CardTitle className="text-gray-100">Cost Breakdown by Model</CardTitle>
       </CardHeader>
-      <CardContent className="h-[400px] relative overflow-hidden">
+      <CardContent className="h-[400px]">
         <ResponsiveContainer width="100%" height="100%">
           <PieChart>
             <Pie
@@ -85,6 +87,25 @@ const CostBreakdownChart = ({ data }) => {
               dataKey="cost"
               onMouseEnter={onPieEnter}
               onMouseLeave={onPieLeave}
+              label={({ cx, cy, midAngle, innerRadius, outerRadius, percent, index }) => {
+                const RADIAN = Math.PI / 180;
+                const radius = innerRadius + (outerRadius - innerRadius) * 0.5;
+                const x = cx + radius * Math.cos(-midAngle * RADIAN);
+                const y = cy + radius * Math.sin(-midAngle * RADIAN);
+
+                return (
+                  <text
+                    x={x}
+                    y={y}
+                    fill="white"
+                    textAnchor={x > cx ? 'start' : 'end'}
+                    dominantBaseline="central"
+                    className="text-xs"
+                  >
+                    {`${(percent * 100).toFixed(0)}%`}
+                  </text>
+                );
+              }}
             >
               {processedData.map((entry, index) => (
                 <Cell 
