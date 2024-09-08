@@ -15,7 +15,6 @@ SQL Table Schema for api_calls:
 
 CREATE TABLE api_calls (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-    timestamp TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
     provider VARCHAR(255) NOT NULL,
     model VARCHAR(255) NOT NULL,
     endpoint VARCHAR(255) NOT NULL,
@@ -26,16 +25,14 @@ CREATE TABLE api_calls (
     response_time INTEGER NOT NULL,
     metadata JSONB,
     user_id UUID REFERENCES auth.users(id) ON DELETE CASCADE,
-    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE INDEX idx_api_calls_user_id ON api_calls(user_id);
-CREATE INDEX idx_api_calls_timestamp ON api_calls(timestamp);
+CREATE INDEX idx_api_calls_created_at ON api_calls(created_at);
 
 COMMENT ON TABLE api_calls IS 'Stores information about API calls made by users';
 COMMENT ON COLUMN api_calls.id IS 'Unique identifier for the API call';
-COMMENT ON COLUMN api_calls.timestamp IS 'Timestamp of when the API call was made';
 COMMENT ON COLUMN api_calls.provider IS 'The API provider (e.g., OpenAI, Anthropic)';
 COMMENT ON COLUMN api_calls.model IS 'The specific model used for the API call';
 COMMENT ON COLUMN api_calls.endpoint IS 'The API endpoint called';
@@ -46,15 +43,14 @@ COMMENT ON COLUMN api_calls.cost IS 'Cost of the API call';
 COMMENT ON COLUMN api_calls.response_time IS 'Response time of the API call in milliseconds';
 COMMENT ON COLUMN api_calls.metadata IS 'Additional metadata for the API call';
 COMMENT ON COLUMN api_calls.user_id IS 'Foreign key referencing the user who made the API call';
-COMMENT ON COLUMN api_calls.created_at IS 'Timestamp when the record was created';
-COMMENT ON COLUMN api_calls.updated_at IS 'Timestamp when the record was last updated';
+COMMENT ON COLUMN api_calls.created_at IS 'Timestamp when the API call was made';
 */
 
 export const useApiCalls = (options = {}) => useQuery({
     queryKey: ['apiCalls'],
     queryFn: async () => {
         try {
-            return await fromSupabase(supabase.from('api_calls').select('*').order('timestamp', { ascending: false }));
+            return await fromSupabase(supabase.from('api_calls').select('*').order('created_at', { ascending: false }));
         } catch (error) {
             console.error('Error fetching API calls:', error);
             throw error;
@@ -89,9 +85,9 @@ export const useApiCallsByDateRange = (startDate, endDate, options = {}) => useQ
             return await fromSupabase(
                 supabase.from('api_calls')
                     .select('*')
-                    .gte('timestamp', startDate)
-                    .lte('timestamp', endDate)
-                    .order('timestamp', { ascending: false })
+                    .gte('created_at', startDate)
+                    .lte('created_at', endDate)
+                    .order('created_at', { ascending: false })
             );
         } catch (error) {
             console.error('Error fetching API calls by date range:', error);
