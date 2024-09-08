@@ -100,15 +100,6 @@ const Dashboard = () => {
             onTimeFilterChange={setTimeFilter}
             onModelFilterChange={setModelFilter}
           />
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={() => setIsInfoModalOpen(true)}
-            className="text-gray-400 hover:text-gray-100"
-          >
-            <Info className="h-5 w-5" />
-          </Button>
-          <InfoModal isOpen={isInfoModalOpen} onClose={() => setIsInfoModalOpen(false)} />
         </div>
 
         <Tabs defaultValue="overview" className="space-y-4">
