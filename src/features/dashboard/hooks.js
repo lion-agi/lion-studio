@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 import { useApiCallsByDateRange, useApiCallStats } from '../../integrations/supabase/hooks/apiCalls';
-import { formatApiCallData } from './utils/dataFormatters';
+import { fetchApiData } from './api';
 
 export const useApiData = (timeRange, selectedModel) => {
   const endDate = new Date();
@@ -12,12 +12,18 @@ export const useApiData = (timeRange, selectedModel) => {
   const isLoading = apiCallsLoading || apiStatsLoading;
   const error = apiCallsError || apiStatsError;
 
-  const data = formatApiCallData(apiCalls, apiStats, selectedModel);
+  const { data, isLoading: dataProcessingLoading, error: dataProcessingError } = useQuery(
+    ['processedApiData', apiCalls, apiStats, selectedModel],
+    () => fetchApiData(apiCalls, apiStats),
+    {
+      enabled: !!apiCalls && !!apiStats,
+    }
+  );
 
   return {
     data,
-    isLoading,
-    error,
+    isLoading: isLoading || dataProcessingLoading,
+    error: error || dataProcessingError,
   };
 };
 

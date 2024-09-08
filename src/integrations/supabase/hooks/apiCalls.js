@@ -10,26 +10,6 @@ const fromSupabase = async (query) => {
     return data;
 };
 
-/*
-SQL Table Schema for api_calls:
-
-CREATE TABLE api_calls (
-    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-    provider VARCHAR(255) NOT NULL,
-    model VARCHAR(255) NOT NULL,
-    endpoint VARCHAR(255) NOT NULL,
-    method VARCHAR(10) NOT NULL,
-    base_url TEXT NOT NULL,
-    tokens INTEGER NOT NULL,
-    cost DECIMAL(10, 5) NOT NULL,
-    response_time INTEGER NOT NULL,
-    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
-    metadata JSONB
-);
-
-CREATE INDEX idx_api_calls_created_at ON api_calls(created_at);
-*/
-
 export const useApiCalls = (options = {}) => useQuery({
     queryKey: ['apiCalls'],
     queryFn: async () => {
@@ -85,11 +65,23 @@ export const useApiCallStats = (options = {}) => useQuery({
     queryKey: ['apiCallStats'],
     queryFn: async () => {
         try {
-            const { data, error } = await supabase.rpc('get_api_call_stats');
+            const { data, error } = await supabase.from('api_calls').select('*');
             if (error) throw error;
-            return data;
+            
+            // Calculate stats from the fetched data
+            const totalCalls = data.length;
+            const totalCost = data.reduce((sum, call) => sum + (call.cost || 0), 0);
+            const avgResponseTime = data.reduce((sum, call) => sum + (call.response_time || 0), 0) / totalCalls;
+            const errorRate = data.filter(call => call.error).length / totalCalls;
+
+            return {
+                totalCalls,
+                totalCost,
+                avgResponseTime,
+                errorRate,
+            };
         } catch (error) {
-            console.error('Error fetching API call stats:', error);
+            console.error('Error calculating API call stats:', error);
             throw error;
         }
     },
