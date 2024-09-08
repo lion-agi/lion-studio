@@ -1,60 +1,59 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useMemo } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from "@/common/components/ui/card";
-import { ResponsiveContainer, PieChart, Pie, Cell, Tooltip } from 'recharts';
+import { ResponsiveContainer, PieChart, Pie, Cell, Tooltip, Legend } from 'recharts';
 import { formatCurrency } from '@/features/dashboard/utils';
 
-const COLORS = ['#8B5CF6', '#EC4899', '#F59E0B', '#10B981', '#3B82F6'];
+const COLORS = ['#8B5CF6', '#EC4899', '#F59E0B', '#10B981', '#3B82F6', '#EF4444', '#14B8A6', '#6366F1', '#D946EF', '#F97316'];
 
 const CustomTooltip = ({ active, payload }) => {
   if (active && payload && payload.length) {
     const data = payload[0].payload;
     return (
       <div className="bg-gray-800 border border-gray-700 p-2 rounded shadow-lg">
-        <p className="text-gray-300 text-sm">{`${data.model}: ${formatCurrency(data.cost)}`}</p>
+        <p className="text-gray-300 text-sm font-semibold">{data.model}</p>
+        <p className="text-gray-300 text-sm">{`Cost: ${formatCurrency(data.cost)}`}</p>
+        <p className="text-gray-300 text-sm">{`Usage: ${data.percentage.toFixed(2)}%`}</p>
       </div>
     );
   }
   return null;
 };
 
-const InfoTable = ({ data }) => (
-  <div className="absolute top-4 right-4 bg-gray-800/80 backdrop-blur-sm border border-gray-700 p-4 rounded shadow-lg max-w-[200px]">
-    <h3 className="text-lg font-semibold mb-2 text-gray-200">{data.model}</h3>
-    <table className="w-full text-sm">
-      <tbody>
-        <tr>
-          <td className="text-gray-400">Total Cost:</td>
-          <td className="text-right text-gray-200">{formatCurrency(data.cost)}</td>
-        </tr>
-        <tr>
-          <td className="text-gray-400">Usage:</td>
-          <td className="text-right text-gray-200">{data.percentage.toFixed(2)}%</td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
-);
-
-const LegendItem = ({ color, model }) => (
-  <div className="flex items-center mb-1">
-    <div className="w-3 h-3 mr-2" style={{ backgroundColor: color }}></div>
-    <span className="text-xs text-gray-300">{model}</span>
-  </div>
-);
-
 const CostBreakdownChart = ({ data }) => {
-  const [hoveredIndex, setHoveredIndex] = useState(null);
+  const [activeIndex, setActiveIndex] = useState(null);
 
   const onPieEnter = useCallback((_, index) => {
-    setHoveredIndex(index);
+    setActiveIndex(index);
   }, []);
 
   const onPieLeave = useCallback(() => {
-    setHoveredIndex(null);
+    setActiveIndex(null);
   }, []);
 
-  // Check if data is undefined or not an array
-  if (!data || !Array.isArray(data) || data.length === 0) {
+  const processedData = useMemo(() => {
+    if (!data || !Array.isArray(data) || data.length === 0) return [];
+    const totalCost = data.reduce((sum, item) => sum + item.cost, 0);
+    return data.map(item => ({
+      ...item,
+      percentage: (item.cost / totalCost) * 100
+    })).sort((a, b) => b.cost - a.cost);
+  }, [data]);
+
+  const renderLegend = (props) => {
+    const { payload } = props;
+    return (
+      <ul className="flex flex-wrap justify-center gap-2 mt-4">
+        {payload.map((entry, index) => (
+          <li key={`legend-${index}`} className="flex items-center">
+            <span className="w-3 h-3 mr-2" style={{ backgroundColor: entry.color }}></span>
+            <span className="text-xs text-gray-300">{entry.value}</span>
+          </li>
+        ))}
+      </ul>
+    );
+  };
+
+  if (processedData.length === 0) {
     return (
       <Card className="bg-gray-900 border-gray-800">
         <CardHeader>
@@ -67,50 +66,39 @@ const CostBreakdownChart = ({ data }) => {
     );
   }
 
-  const totalCost = data.reduce((sum, item) => sum + item.cost, 0);
-  const processedData = data.map(item => ({
-    ...item,
-    percentage: (item.cost / totalCost) * 100
-  }));
-
-  const modelWithHighestUsage = processedData.reduce((prev, current) => 
-    (current.percentage > prev.percentage) ? current : prev
-  );
-
-  const displayedInfo = hoveredIndex !== null ? processedData[hoveredIndex] : modelWithHighestUsage;
-
   return (
     <Card className="bg-gray-900 border-gray-800">
       <CardHeader>
         <CardTitle className="text-gray-100">Cost Breakdown by Model</CardTitle>
       </CardHeader>
-      <CardContent className="h-[400px] relative overflow-auto">
+      <CardContent className="h-[400px] relative overflow-hidden">
         <ResponsiveContainer width="100%" height="100%">
           <PieChart>
             <Pie
               data={processedData}
               cx="50%"
               cy="50%"
-              labelLine={false}
-              outerRadius={150}
+              innerRadius="60%"
+              outerRadius="80%"
               fill="#8884d8"
+              paddingAngle={2}
               dataKey="cost"
               onMouseEnter={onPieEnter}
               onMouseLeave={onPieLeave}
             >
               {processedData.map((entry, index) => (
-                <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                <Cell 
+                  key={`cell-${index}`} 
+                  fill={COLORS[index % COLORS.length]}
+                  stroke={activeIndex === index ? '#fff' : 'none'}
+                  strokeWidth={2}
+                />
               ))}
             </Pie>
             <Tooltip content={<CustomTooltip />} />
+            <Legend content={renderLegend} />
           </PieChart>
         </ResponsiveContainer>
-        <InfoTable data={displayedInfo} />
-        <div className="absolute bottom-4 right-4 bg-gray-800/80 backdrop-blur-sm border border-gray-700 p-4 rounded shadow-lg">
-          {processedData.map((item, index) => (
-            <LegendItem key={item.model} color={COLORS[index % COLORS.length]} model={item.model} />
-          ))}
-        </div>
       </CardContent>
     </Card>
   );
