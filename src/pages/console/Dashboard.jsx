@@ -26,6 +26,8 @@ const ErrorFallback = ({ error }) => (
       An error occurred while fetching data: {error.message}
       <br />
       Please check your network connection and try again. If the problem persists, contact support.
+      <br />
+      Additional details: {error.stack}
     </AlertDescription>
   </Alert>
 );

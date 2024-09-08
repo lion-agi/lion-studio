@@ -23,24 +23,11 @@ CREATE TABLE api_calls (
     tokens INTEGER NOT NULL,
     cost DECIMAL(10, 5) NOT NULL,
     response_time INTEGER NOT NULL,
-    metadata JSONB,
-    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    metadata JSONB
 );
 
 CREATE INDEX idx_api_calls_created_at ON api_calls(created_at);
-
-COMMENT ON TABLE api_calls IS 'Stores information about API calls made by users';
-COMMENT ON COLUMN api_calls.id IS 'Unique identifier for the API call';
-COMMENT ON COLUMN api_calls.provider IS 'The API provider (e.g., OpenAI, Anthropic)';
-COMMENT ON COLUMN api_calls.model IS 'The specific model used for the API call';
-COMMENT ON COLUMN api_calls.endpoint IS 'The API endpoint called';
-COMMENT ON COLUMN api_calls.method IS 'The HTTP method used (e.g., GET, POST)';
-COMMENT ON COLUMN api_calls.base_url IS 'The base URL of the API';
-COMMENT ON COLUMN api_calls.tokens IS 'Number of tokens used in the API call';
-COMMENT ON COLUMN api_calls.cost IS 'Cost of the API call';
-COMMENT ON COLUMN api_calls.response_time IS 'Response time of the API call in milliseconds';
-COMMENT ON COLUMN api_calls.metadata IS 'Additional metadata for the API call';
-COMMENT ON COLUMN api_calls.created_at IS 'Timestamp when the API call was made';
 */
 
 export const useApiCalls = (options = {}) => useQuery({
