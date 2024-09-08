@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback, useRef } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from "@/common/components/ui/card";
 import { Button } from "@/common/components/ui/button";
 import { Input } from "@/common/components/ui/input";
@@ -30,6 +30,7 @@ const nodeCategories = [
 const NodeCreationCard = ({ onAddNode }) => {
   const [searchTerm, setSearchTerm] = useState('');
   const [expandedCategories, setExpandedCategories] = useState({});
+  const nodeRef = useRef(null);
 
   const filteredCategories = nodeCategories.map(category => ({
     ...category,
@@ -51,8 +52,8 @@ const NodeCreationCard = ({ onAddNode }) => {
   };
 
   return (
-    <Draggable bounds="parent" handle=".drag-handle">
-      <Card className="w-64 absolute top-4 right-4 shadow-lg">
+    <Draggable nodeRef={nodeRef} bounds="parent" handle=".drag-handle">
+      <Card ref={nodeRef} className="w-64 absolute top-4 right-4 shadow-lg">
         <CardHeader className="drag-handle cursor-move">
           <CardTitle>Create Nodes</CardTitle>
         </CardHeader>
