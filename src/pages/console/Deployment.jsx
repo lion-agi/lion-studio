@@ -123,10 +123,12 @@ const Deployment = () => {
     .filter(dep => environmentFilter === 'All Environments' || dep.environment === environmentFilter);
 
   return (
-    <div className="min-h-screen bg-gray-900 text-gray-100">
-      <div className="container mx-auto p-8 space-y-8">
+    <div className="min-h-screen bg-gray-900 text-gray-100 p-8">
+      <div className="container mx-auto">
         <div className="flex flex-col md:flex-row justify-between items-center mb-12">
-          <h1 className="text-2xl font-bold mb-6 md:mb-0 text-gray-100">Deployments</h1>
+          <div className="flex items-center">
+            <h1 className="text-2xl font-bold mb-6 md:mb-0 text-gray-100 mr-4">Deployments</h1>
+          </div>
           <div className="flex space-x-4 items-center">
             <Select value={environmentFilter} onValueChange={setEnvironmentFilter}>
               <SelectTrigger className="w-[180px] bg-gray-800 text-gray-200 border-gray-700">
