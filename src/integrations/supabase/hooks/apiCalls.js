@@ -1,4 +1,3 @@
-import React from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '../supabase';
 
@@ -43,24 +42,33 @@ export const useAddApiCall = () => {
     });
 };
 
-export const useApiCallsByDateRange = (startTimestamp, endTimestamp, options = {}) => useQuery({
-    queryKey: ['apiCalls', startTimestamp, endTimestamp],
-    queryFn: async () => {
-        try {
-            const query = supabase.from('api_calls')
-                .select('*')
-                .gte('created_at', new Date(startTimestamp * 1000).toISOString())
-                .lte('created_at', new Date(endTimestamp * 1000).toISOString())
-                .order('created_at', { ascending: false });
+export const useApiCallsByDateRange = (startTimestamp, endTimestamp, options = {}) => {
+    const now = Math.floor(Date.now() / 1000);
+    const defaultEndTimestamp = now;
+    const defaultStartTimestamp = now - 7 * 24 * 60 * 60; // 7 days ago
 
-            return await fromSupabase(query);
-        } catch (error) {
-            console.error('Error fetching API calls by date range:', error);
-            throw error;
-        }
-    },
-    ...options,
-});
+    const start = startTimestamp || defaultStartTimestamp;
+    const end = endTimestamp || defaultEndTimestamp;
+
+    return useQuery({
+        queryKey: ['apiCalls', start, end],
+        queryFn: async () => {
+            try {
+                const query = supabase.from('api_calls')
+                    .select('*')
+                    .gte('created_at', start)
+                    .lte('created_at', end)
+                    .order('created_at', { ascending: false });
+
+                return await fromSupabase(query);
+            } catch (error) {
+                console.error('Error fetching API calls by date range:', error);
+                throw error;
+            }
+        },
+        ...options,
+    });
+};
 
 export const useApiCallStats = (startTimestamp, endTimestamp, options = {}) => {
     const { data: apiCalls, isLoading, error } = useApiCallsByDateRange(startTimestamp, endTimestamp, options);
