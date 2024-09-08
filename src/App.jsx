@@ -14,6 +14,9 @@ import Registration from './pages/Registration';
 import AuthCallback from './pages/AuthCallback';
 import EmailConfirmation from './pages/EmailConfirmation';
 import WorkflowEditor from '@/features/workflow/components/WorkflowEditor';
+import About from './pages/About';
+import Pricing from './pages/Pricing';
+import Contact from './pages/Contact';
 
 import Library from './pages/console/library/Library';
 import Dashboard from './pages/console/Dashboard';
@@ -43,6 +46,9 @@ const AppRoutes = () => (
     <Route path="/register" element={<Registration />} />
     <Route path="/auth/callback" element={<AuthCallback />} />
     <Route path="/email-confirmation" element={<EmailConfirmation />} />
+    <Route path="/about" element={<About />} />
+    <Route path="/pricing" element={<Pricing />} />
+    <Route path="/contact" element={<Contact />} />
 
     {/* Console routes */}
     <Route path="/console" element={<ProtectedRoute><ConsoleLayout><Navigate to="/console/dashboard" replace /></ConsoleLayout></ProtectedRoute>} />
