@@ -18,9 +18,7 @@ const CollectionModal = ({ collection, isOpen, onClose }) => {
           <p className="text-gray-300">{collection.description}</p>
           <div className="flex items-center space-x-2">
             <Badge variant="outline">Created: {new Date(collection.created_at).toLocaleString()}</Badge>
-            {collection.updated_at && (
-              <Badge variant="outline">Updated: {new Date(collection.updated_at).toLocaleString()}</Badge>
-            )}
+            <Badge variant="outline">Updated: {new Date(collection.updated_at).toLocaleString()}</Badge>
           </div>
           {collection.metadata && (
             <div>

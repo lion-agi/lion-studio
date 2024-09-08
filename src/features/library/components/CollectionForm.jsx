@@ -4,13 +4,11 @@ import { Button } from "@/common/components/ui/button";
 import { Input } from "@/common/components/ui/input";
 import { Textarea } from "@/common/components/ui/textarea";
 import { Label } from "@/common/components/ui/label";
-import { Switch } from "@/common/components/ui/switch";
 
 const CollectionForm = ({ collection, isOpen, onClose, onSave }) => {
   const [formData, setFormData] = useState({
     title: '',
     description: '',
-    is_active: true,
     metadata: {},
   });
 
@@ -19,25 +17,35 @@ const CollectionForm = ({ collection, isOpen, onClose, onSave }) => {
       setFormData({
         title: collection.title || '',
         description: collection.description || '',
-        is_active: collection.is_active !== undefined ? collection.is_active : true,
         metadata: collection.metadata || {},
       });
     } else {
       setFormData({
         title: '',
         description: '',
-        is_active: true,
         metadata: {},
       });
     }
   }, [collection]);
 
   const handleInputChange = (e) => {
-    const { name, value, type, checked } = e.target;
+    const { name, value } = e.target;
     setFormData(prev => ({
       ...prev,
-      [name]: type === 'checkbox' ? checked : value
+      [name]: value
     }));
+  };
+
+  const handleMetadataChange = (e) => {
+    try {
+      const metadata = JSON.parse(e.target.value);
+      setFormData(prev => ({
+        ...prev,
+        metadata
+      }));
+    } catch (error) {
+      console.error('Invalid JSON for metadata');
+    }
   };
 
   const handleSubmit = (e) => {
@@ -76,14 +84,16 @@ const CollectionForm = ({ collection, isOpen, onClose, onSave }) => {
               rows={3}
             />
           </div>
-          <div className="flex items-center space-x-2">
-            <Switch
-              id="is_active"
-              name="is_active"
-              checked={formData.is_active}
-              onCheckedChange={(checked) => setFormData(prev => ({ ...prev, is_active: checked }))}
+          <div className="space-y-2">
+            <Label htmlFor="metadata">Metadata (JSON)</Label>
+            <Textarea
+              id="metadata"
+              name="metadata"
+              value={JSON.stringify(formData.metadata, null, 2)}
+              onChange={handleMetadataChange}
+              className="bg-gray-700 text-white border-gray-600 focus:border-purple-500"
+              rows={5}
             />
-            <Label htmlFor="is_active">Active</Label>
           </div>
           <div className="flex justify-end space-x-3 pt-4">
             <Button type="button" onClick={onClose} variant="secondary">Cancel</Button>
