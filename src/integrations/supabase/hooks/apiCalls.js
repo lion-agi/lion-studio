@@ -66,13 +66,16 @@ export const useApiCallsByDateRange = (startDate, endDate, options = {}) => useQ
     queryKey: ['apiCalls', startDate, endDate],
     queryFn: async () => {
         try {
-            return await fromSupabase(
-                supabase.from('api_calls')
-                    .select('*')
-                    .gte('created_at', startDate)
-                    .lte('created_at', endDate)
-                    .order('created_at', { ascending: false })
-            );
+            const query = supabase.from('api_calls').select('*').order('created_at', { ascending: false });
+            
+            if (startDate) {
+                query.gte('created_at', startDate.toISOString());
+            }
+            if (endDate) {
+                query.lte('created_at', endDate.toISOString());
+            }
+
+            return await fromSupabase(query);
         } catch (error) {
             console.error('Error fetching API calls by date range:', error);
             throw error;
@@ -82,9 +85,10 @@ export const useApiCallsByDateRange = (startDate, endDate, options = {}) => useQ
 });
 
 export const useApiCallStats = (options = {}) => {
-    const sevenDaysAgo = new Date().getDate() - 7;
-    const defaultStartDate = sevenDaysAgo;
-    const defaultEndDate = new Date().getDate();
+    const sevenDaysAgo = new Date();
+    sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
+    const defaultStartDate = sevenDaysAgo.toISOString();
+    const defaultEndDate = new Date().toISOString();
 
     return useQuery({
         queryKey: ['apiCallStats', defaultStartDate, defaultEndDate],
