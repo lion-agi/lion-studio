@@ -89,21 +89,22 @@ export const useApiCallStats = (options = {}) => useQuery({
         try {
             const { data, error } = await supabase
                 .from('api_calls')
-                .select(`
-                    count(*),
-                    sum(cost),
-                    avg(response_time),
-                    sum(case when error then 1 else 0 end)::float / nullif(count(*), 0) as error_rate
-                `)
-                .single();
+                .select('cost, response_time, error');
 
             if (error) throw error;
 
+            // Calculate stats on the client side
+            const totalCalls = data.length;
+            const totalCost = data.reduce((sum, call) => sum + call.cost, 0);
+            const avgResponseTime = data.reduce((sum, call) => sum + call.response_time, 0) / totalCalls;
+            const errorCount = data.filter(call => call.error).length;
+            const errorRate = errorCount / totalCalls;
+
             return {
-                totalCalls: data.count,
-                totalCost: data.sum,
-                avgResponseTime: data.avg,
-                errorRate: data.error_rate || 0,
+                totalCalls,
+                totalCost,
+                avgResponseTime,
+                errorRate,
             };
         } catch (error) {
             console.error('Error fetching API call stats:', error);
