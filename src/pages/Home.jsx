@@ -12,11 +12,11 @@ const Home = () => {
     <div className="min-h-screen bg-background text-foreground flex flex-col">
       <MainWebsiteHeader />
       
-      <main className="flex-grow flex flex-col items-center justify-center text-center px-4 space-y-16 mt-32"> {/* Increased top margin */}
+      <main className="flex-grow flex flex-col items-center justify-center text-center px-4 space-y-16 mt-64"> {/* Increased top margin */}
         <h1 className="text-5xl md:text-7xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-purple-400 to-pink-600 max-w-4xl">
           Intelligent Workflow Automation
         </h1>
-        <p className="text-xl max-w-2xl text-gray-300 mb-16"> {/* Increased bottom margin */}
+        <p className="text-xl max-w-2xl text-gray-300 mb-32"> {/* Increased bottom margin */}
           Streamline your business processes with AI-powered automation solutions
         </p>
         <Card className="w-full max-w-2xl overflow-hidden transform rotate shadow-xl mb-16"> {/* Added bottom margin */}
@@ -33,7 +33,7 @@ const Home = () => {
         )}
       </main>
 
-      <footer className="bg-gray-800 text-white py-12 px-4 mt-16">
+      <footer className="bg-gray-800 text-white py-12 px-4 mt-32">
         <div className="max-w-4xl mx-auto text-center">
           <h2 className="text-2xl font-semibold mb-4">Ready to Transform Your Business?</h2>
           <p className="mb-6">Join thousands of companies already using Lion Studio for their workflow automation</p>
