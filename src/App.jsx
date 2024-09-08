@@ -20,7 +20,7 @@ import Pricing from './pages/Pricing';
 import Contact from './pages/Contact';
 
 import Library from './pages/console/library/Library';
-import Dashboard from './pages/console/Dashboard';
+import Dashboard from '@/features/dashboard/pages/Dashboard';
 import Integrations from './pages/console/Integrations';
 import Deployment from './pages/console/Deployment';
 
