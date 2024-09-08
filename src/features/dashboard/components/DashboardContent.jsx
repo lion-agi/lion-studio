@@ -1,5 +1,6 @@
 import React from 'react';
-import { useApiData } from '../hooks';
+import { useRecoilValue } from 'recoil';
+import { apiDataState } from '../atoms';
 import SummaryCards from './SummaryCards';
 import CostTrendChart from './CostTrendChart';
 import CostBreakdownChart from './CostBreakdownChart';
@@ -9,7 +10,7 @@ const LoadingSpinner = () => <div>Loading...</div>;
 const ErrorMessage = ({ error }) => <div className="text-red-500">Error: {error.message}</div>;
 
 const DashboardContent = () => {
-  const { data, isLoading, error } = useApiData();
+  const { data, isLoading, error } = useRecoilValue(apiDataState);
 
   if (isLoading) return <LoadingSpinner />;
   if (error) return <ErrorMessage error={error} />;

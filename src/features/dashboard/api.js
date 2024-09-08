@@ -29,8 +29,10 @@ const generatePerformanceData = (apiCalls, timeRange) => {
   }));
 };
 
-export const fetchApiData = async (apiCalls, apiStats, selectedModel, timeRange) => {
-  // Filter apiCalls based on selectedModel if needed
+export const fetchApiData = async (timeRange, selectedModel) => {
+  const apiCalls = await fetchApiCalls(timeRange, selectedModel);
+  const apiStats = await fetchApiStats(timeRange, selectedModel);
+
   const filteredCalls = selectedModel === 'all' 
     ? apiCalls 
     : apiCalls.filter(call => call.model === selectedModel);
