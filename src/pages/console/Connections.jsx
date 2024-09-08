@@ -9,35 +9,35 @@ import { Badge } from "@/common/components/ui/badge";
 import { Switch } from "@/common/components/ui/switch";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/common/components/ui/select";
 import { Textarea } from "@/common/components/ui/textarea";
-import { CheckCircle2, XCircle, Database, Cloud, FileText, Link as LinkIcon, Brain, Search, Server, Code } from 'lucide-react';
+import { CheckCircle2, XCircle, Database, Cloud, FileText, Link as LinkIcon, Brain, Search } from 'lucide-react';
 
-const IntegrationCard = ({ integration, onConfigure, onToggle }) => (
+const ConnectionCard = ({ connection, onConfigure, onToggle }) => (
   <Card className="bg-gray-800 hover:bg-gray-700 transition-colors">
     <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-      <CardTitle className="text-lg font-semibold text-gray-100">{integration.type}</CardTitle>
-      <integration.icon className="h-5 w-5 text-gray-400" />
+      <CardTitle className="text-lg font-semibold text-gray-100">{connection.name}</CardTitle>
+      <connection.icon className="h-5 w-5 text-gray-400" />
     </CardHeader>
     <CardContent>
       <Badge 
-        variant={integration.status === 'Connected' ? 'success' : 'secondary'}
-        className={integration.status === 'Connected' ? 'bg-green-500/10 text-green-500' : 'bg-gray-500/10 text-gray-400'}
+        variant={connection.status === 'Connected' ? 'success' : 'secondary'}
+        className={connection.status === 'Connected' ? 'bg-green-500/10 text-green-500' : 'bg-gray-500/10 text-gray-400'}
       >
-        {integration.status}
+        {connection.status}
       </Badge>
     </CardContent>
     <CardFooter className="flex justify-between">
-      <Button variant="outline" size="sm" onClick={() => onConfigure(integration)}>Configure</Button>
+      <Button variant="outline" size="sm" onClick={() => onConfigure(connection)}>Configure</Button>
       <Switch 
-        checked={integration.status === 'Connected'} 
-        onCheckedChange={() => onToggle(integration)}
-        className={integration.status === 'Connected' ? 'bg-green-500' : 'bg-gray-500'}
+        checked={connection.status === 'Connected'} 
+        onCheckedChange={() => onToggle(connection)}
+        className={connection.status === 'Connected' ? 'bg-green-500' : 'bg-gray-500'}
       />
     </CardFooter>
   </Card>
 );
 
-const ConfigureIntegrationModal = ({ isOpen, onClose, integration, onSave }) => {
-  const [formData, setFormData] = useState(integration || {});
+const ConfigureConnectionModal = ({ isOpen, onClose, connection, onSave }) => {
+  const [formData, setFormData] = useState(connection || {});
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -53,12 +53,16 @@ const ConfigureIntegrationModal = ({ isOpen, onClose, integration, onSave }) => 
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="sm:max-w-[600px] bg-gray-800 text-gray-100">
         <DialogHeader>
-          <DialogTitle className="text-2xl">Configure Integration</DialogTitle>
+          <DialogTitle className="text-2xl">Configure Connection</DialogTitle>
           <DialogDescription className="text-gray-400">
-            Update the details for your integration. Ensure all required fields are filled.
+            Update the details for your connection. Ensure all required fields are filled.
           </DialogDescription>
         </DialogHeader>
         <div className="grid gap-6 py-4">
+          <div className="grid grid-cols-4 items-center gap-4">
+            <Label htmlFor="name" className="text-right">Name</Label>
+            <Input id="name" name="name" value={formData.name || ''} onChange={handleInputChange} className="col-span-3 bg-gray-700 text-gray-100" />
+          </div>
           <div className="grid grid-cols-4 items-center gap-4">
             <Label htmlFor="type" className="text-right">Type</Label>
             <Select name="type" value={formData.type || ''} onValueChange={(value) => handleInputChange({ target: { name: 'type', value } })}>
@@ -70,9 +74,6 @@ const ConfigureIntegrationModal = ({ isOpen, onClose, integration, onSave }) => 
                 <SelectItem value="api">API</SelectItem>
                 <SelectItem value="cloud">Cloud Storage</SelectItem>
                 <SelectItem value="ai">AI Model</SelectItem>
-                <SelectItem value="runtime">Runtime Environment</SelectItem>
-                <SelectItem value="messaging">Messaging Service</SelectItem>
-                <SelectItem value="analytics">Analytics Platform</SelectItem>
               </SelectContent>
             </Select>
           </div>
@@ -122,12 +123,6 @@ const ConfigureIntegrationModal = ({ isOpen, onClose, integration, onSave }) => 
               <Input id="modelName" name="modelName" value={formData.modelName || ''} onChange={handleInputChange} className="col-span-3 bg-gray-700 text-gray-100" />
             </div>
           )}
-          {formData.type === 'runtime' && (
-            <div className="grid grid-cols-4 items-center gap-4">
-              <Label htmlFor="environment" className="text-right">Environment</Label>
-              <Input id="environment" name="environment" value={formData.environment || ''} onChange={handleInputChange} className="col-span-3 bg-gray-700 text-gray-100" />
-            </div>
-          )}
           <div className="grid grid-cols-4 items-center gap-4">
             <Label htmlFor="description" className="text-right">Description</Label>
             <Textarea
@@ -149,47 +144,47 @@ const ConfigureIntegrationModal = ({ isOpen, onClose, integration, onSave }) => 
   );
 };
 
-const Integrations = () => {
+const Connections = () => {
   const [activeTab, setActiveTab] = useState('all');
-  const [isNewIntegrationDialogOpen, setIsNewIntegrationDialogOpen] = useState(false);
+  const [isNewConnectionDialogOpen, setIsNewConnectionDialogOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
   const [typeFilter, setTypeFilter] = useState('All Types');
-  const [integrations, setIntegrations] = useState([
-    { id: 1, type: 'Database', status: 'Connected', icon: Database },
-    { id: 2, type: 'Cloud Storage', status: 'Connected', icon: Cloud },
-    { id: 3, type: 'API', status: 'Disconnected', icon: LinkIcon },
-    { id: 4, type: 'AI Model', status: 'Connected', icon: Brain },
-    { id: 5, type: 'Runtime Environment', status: 'Connected', icon: Server },
+  const [connections, setConnections] = useState([
+    { id: 1, name: 'PostgreSQL Database', type: 'database', status: 'Connected', icon: Database },
+    { id: 2, name: 'AWS S3 Bucket', type: 'cloud', status: 'Connected', icon: Cloud },
+    { id: 3, name: 'Google Drive', type: 'cloud', status: 'Disconnected', icon: FileText },
+    { id: 4, name: 'Stripe API', type: 'api', status: 'Connected', icon: LinkIcon },
+    { id: 5, name: 'OpenAI GPT-3', type: 'ai', status: 'Connected', icon: Brain },
   ]);
-  const [selectedIntegration, setSelectedIntegration] = useState(null);
+  const [selectedConnection, setSelectedConnection] = useState(null);
   const [isConfigureModalOpen, setIsConfigureModalOpen] = useState(false);
 
-  const filteredIntegrations = integrations
-    .filter(conn => activeTab === 'all' || conn.type.toLowerCase() === activeTab)
-    .filter(conn => conn.type.toLowerCase().includes(searchTerm.toLowerCase()))
-    .filter(conn => typeFilter === 'All Types' || conn.type === typeFilter)
+  const filteredConnections = connections
+    .filter(conn => activeTab === 'all' || conn.type === activeTab)
+    .filter(conn => conn.name.toLowerCase().includes(searchTerm.toLowerCase()))
+    .filter(conn => typeFilter === 'All Types' || conn.type === typeFilter.toLowerCase())
     .sort((a, b) => {
       if (a.status === 'Connected' && b.status !== 'Connected') return -1;
       if (a.status !== 'Connected' && b.status === 'Connected') return 1;
       return 0;
     });
 
-  const handleConfigure = (integration) => {
-    setSelectedIntegration(integration);
+  const handleConfigure = (connection) => {
+    setSelectedConnection(connection);
     setIsConfigureModalOpen(true);
   };
 
-  const handleToggle = (integration) => {
-    setIntegrations(integrations.map(conn =>
-      conn.id === integration.id
+  const handleToggle = (connection) => {
+    setConnections(connections.map(conn =>
+      conn.id === connection.id
         ? { ...conn, status: conn.status === 'Connected' ? 'Disconnected' : 'Connected' }
         : conn
     ));
   };
 
-  const handleSaveIntegration = (updatedIntegration) => {
-    setIntegrations(integrations.map(conn =>
-      conn.id === updatedIntegration.id ? updatedIntegration : conn
+  const handleSaveConnection = (updatedConnection) => {
+    setConnections(connections.map(conn =>
+      conn.id === updatedConnection.id ? updatedConnection : conn
     ));
   };
 
@@ -197,7 +192,7 @@ const Integrations = () => {
     <div className="min-h-screen bg-gray-900 text-gray-100">
       <div className="container mx-auto p-8 space-y-8">
         <div className="flex flex-col md:flex-row justify-between items-center mb-12">
-          <h1 className="text-2xl font-bold mb-6 md:mb-0 text-gray-100">Integrations</h1>
+          <h1 className="text-2xl font-bold mb-6 md:mb-0 text-gray-100">Connections</h1>
           <div className="flex space-x-4 items-center">
             <Select value={typeFilter} onValueChange={setTypeFilter}>
               <SelectTrigger className="w-[180px] bg-gray-800 text-gray-200 border-gray-700">
@@ -206,18 +201,15 @@ const Integrations = () => {
               <SelectContent>
                 <SelectItem value="All Types">All Types</SelectItem>
                 <SelectItem value="Database">Database</SelectItem>
-                <SelectItem value="Cloud Storage">Cloud Storage</SelectItem>
+                <SelectItem value="Cloud">Cloud Storage</SelectItem>
                 <SelectItem value="API">APIs</SelectItem>
-                <SelectItem value="AI Model">AI Models</SelectItem>
-                <SelectItem value="Runtime Environment">Runtime Environment</SelectItem>
-                <SelectItem value="Messaging Service">Messaging Service</SelectItem>
-                <SelectItem value="Analytics Platform">Analytics Platform</SelectItem>
+                <SelectItem value="AI">AI Models</SelectItem>
               </SelectContent>
             </Select>
             <div className="relative w-full md:w-80">
               <Input
                 type="text"
-                placeholder="Search integrations..."
+                placeholder="Search connections..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 className="w-full bg-gray-800 text-gray-200 placeholder-gray-400 border-gray-700 focus:border-purple-500 focus:ring-1 focus:ring-purple-500 pr-10"
@@ -231,18 +223,17 @@ const Integrations = () => {
           <TabsList className="bg-gray-800">
             <TabsTrigger value="all" className="data-[state=active]:bg-purple-600 data-[state=active]:text-white">All</TabsTrigger>
             <TabsTrigger value="database" className="data-[state=active]:bg-purple-600 data-[state=active]:text-white">Databases</TabsTrigger>
-            <TabsTrigger value="cloud storage" className="data-[state=active]:bg-purple-600 data-[state=active]:text-white">Cloud Storage</TabsTrigger>
+            <TabsTrigger value="cloud" className="data-[state=active]:bg-purple-600 data-[state=active]:text-white">Cloud Storage</TabsTrigger>
             <TabsTrigger value="api" className="data-[state=active]:bg-purple-600 data-[state=active]:text-white">APIs</TabsTrigger>
-            <TabsTrigger value="ai model" className="data-[state=active]:bg-purple-600 data-[state=active]:text-white">AI Models</TabsTrigger>
-            <TabsTrigger value="runtime environment" className="data-[state=active]:bg-purple-600 data-[state=active]:text-white">Runtime</TabsTrigger>
+            <TabsTrigger value="ai" className="data-[state=active]:bg-purple-600 data-[state=active]:text-white">AI Models</TabsTrigger>
           </TabsList>
 
           <TabsContent value={activeTab}>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {filteredIntegrations.map((conn) => (
-                <IntegrationCard 
+              {filteredConnections.map((conn) => (
+                <ConnectionCard 
                   key={conn.id} 
-                  integration={conn} 
+                  connection={conn} 
                   onConfigure={handleConfigure}
                   onToggle={handleToggle}
                 />
@@ -253,22 +244,22 @@ const Integrations = () => {
 
         <div className="flex justify-end mt-6">
           <Button 
-            onClick={() => setIsNewIntegrationDialogOpen(true)}
+            onClick={() => setIsNewConnectionDialogOpen(true)}
             className="bg-purple-600 hover:bg-purple-700 text-white"
           >
-            Add New Integration
+            Add New Connection
           </Button>
         </div>
 
-        <ConfigureIntegrationModal 
+        <ConfigureConnectionModal 
           isOpen={isConfigureModalOpen}
           onClose={() => setIsConfigureModalOpen(false)}
-          integration={selectedIntegration}
-          onSave={handleSaveIntegration}
+          connection={selectedConnection}
+          onSave={handleSaveConnection}
         />
       </div>
     </div>
   );
 };
 
-export default Integrations;
+export default Connections;
