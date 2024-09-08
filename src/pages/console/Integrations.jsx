@@ -12,35 +12,41 @@ import { Textarea } from "@/common/components/ui/textarea";
 import { CheckCircle2, XCircle, Database, Cloud, FileText, Link as LinkIcon, Brain, Search } from 'lucide-react';
 import { useIntegrations, useAddIntegration, useUpdateIntegration, useDeleteIntegration } from '@/integrations/supabase/hooks/integrations';
 import { useToast } from "@/common/components/ui/use-toast";
+import { useStore } from '@/store';
 
-const IntegrationCard = ({ integration, onConfigure, onToggle }) => (
-  <Card className="bg-gray-800 hover:bg-gray-700 transition-colors">
-    <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-      <CardTitle className="text-lg font-semibold text-gray-100">{integration.name}</CardTitle>
-      {integration.type === 'database' && <Database className="h-5 w-5 text-gray-400" />}
-      {integration.type === 'cloud' && <Cloud className="h-5 w-5 text-gray-400" />}
-      {integration.type === 'api' && <LinkIcon className="h-5 w-5 text-gray-400" />}
-      {integration.type === 'ai' && <Brain className="h-5 w-5 text-gray-400" />}
-    </CardHeader>
-    <CardContent>
-      <Badge 
-        variant={integration.isActive ? 'success' : 'secondary'}
-        className={integration.isActive ? 'bg-green-500/10 text-green-500' : 'bg-gray-500/10 text-gray-400'}
-      >
-        {integration.isActive ? 'Active' : 'Inactive'}
-      </Badge>
-      <p className="text-sm text-gray-400 mt-2">{integration.description}</p>
-    </CardContent>
-    <CardFooter className="flex justify-between">
-      <Button variant="outline" size="sm" onClick={() => onConfigure(integration)}>Configure</Button>
-      <Switch 
-        checked={integration.isActive}
-        onCheckedChange={() => onToggle(integration.id)}
-        className={integration.isActive ? 'bg-green-500' : 'bg-gray-500'}
-      />
-    </CardFooter>
-  </Card>
-);
+const IntegrationCard = ({ integration, onConfigure, onToggle }) => {
+  const activeIntegrations = useStore((state) => state.activeIntegrations);
+  const isActive = activeIntegrations[integration.id] || false;
+
+  return (
+    <Card className="bg-gray-800 hover:bg-gray-700 transition-colors">
+      <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+        <CardTitle className="text-lg font-semibold text-gray-100">{integration.name}</CardTitle>
+        {integration.type === 'database' && <Database className="h-5 w-5 text-gray-400" />}
+        {integration.type === 'cloud' && <Cloud className="h-5 w-5 text-gray-400" />}
+        {integration.type === 'api' && <LinkIcon className="h-5 w-5 text-gray-400" />}
+        {integration.type === 'ai' && <Brain className="h-5 w-5 text-gray-400" />}
+      </CardHeader>
+      <CardContent>
+        <Badge 
+          variant={isActive ? 'success' : 'secondary'}
+          className={isActive ? 'bg-green-500/10 text-green-500' : 'bg-gray-500/10 text-gray-400'}
+        >
+          {isActive ? 'Active' : 'Inactive'}
+        </Badge>
+        <p className="text-sm text-gray-400 mt-2">{integration.description}</p>
+      </CardContent>
+      <CardFooter className="flex justify-between">
+        <Button variant="outline" size="sm" onClick={() => onConfigure(integration)}>Configure</Button>
+        <Switch 
+          checked={isActive}
+          onCheckedChange={() => onToggle(integration.id)}
+          className={isActive ? 'bg-green-500' : 'bg-gray-500'}
+        />
+      </CardFooter>
+    </Card>
+  );
+};
 
 const ConfigureIntegrationModal = ({ isOpen, onClose, integration, onSave }) => {
   const [formData, setFormData] = useState(integration || {});
@@ -122,7 +128,6 @@ const Integrations = () => {
   const [typeFilter, setTypeFilter] = useState('All Types');
   const [selectedIntegration, setSelectedIntegration] = useState(null);
   const [isConfigureModalOpen, setIsConfigureModalOpen] = useState(false);
-  const [localIntegrations, setLocalIntegrations] = useState([]);
 
   const { data: fetchedIntegrations, isLoading, error } = useIntegrations();
   const addIntegration = useAddIntegration();
@@ -130,22 +135,24 @@ const Integrations = () => {
   const deleteIntegration = useDeleteIntegration();
   const { toast } = useToast();
 
+  const integrations = useStore((state) => state.integrations);
+  const activeIntegrations = useStore((state) => state.activeIntegrations);
+  const setIntegrations = useStore((state) => state.setIntegrations);
+  const toggleIntegrationStatus = useStore((state) => state.toggleIntegrationStatus);
+
   useEffect(() => {
     if (fetchedIntegrations) {
-      setLocalIntegrations(fetchedIntegrations.map(integration => ({
-        ...integration,
-        isActive: false // Set initial state to inactive
-      })));
+      setIntegrations(fetchedIntegrations);
     }
-  }, [fetchedIntegrations]);
+  }, [fetchedIntegrations, setIntegrations]);
 
-  const filteredIntegrations = localIntegrations
+  const filteredIntegrations = integrations
     ?.filter(conn => activeTab === 'all' || conn.type === activeTab)
     .filter(conn => conn.name.toLowerCase().includes(searchTerm.toLowerCase()))
     .filter(conn => typeFilter === 'All Types' || conn.type === typeFilter.toLowerCase())
     .sort((a, b) => {
-      if (a.isActive && !b.isActive) return -1;
-      if (!a.isActive && b.isActive) return 1;
+      if (activeIntegrations[a.id] && !activeIntegrations[b.id]) return -1;
+      if (!activeIntegrations[a.id] && activeIntegrations[b.id]) return 1;
       return 0;
     }) || [];
 
@@ -155,17 +162,11 @@ const Integrations = () => {
   };
 
   const handleToggle = (id) => {
-    setLocalIntegrations(prevIntegrations =>
-      prevIntegrations.map(integration =>
-        integration.id === id
-          ? { ...integration, isActive: !integration.isActive }
-          : integration
-      )
-    );
+    toggleIntegrationStatus(id);
     toast({
       title: "Status Updated",
       description: `Integration status toggled.`,
-      duration: 3000, // Set duration to 3 seconds
+      duration: 3000,
     });
   };
 
@@ -173,23 +174,23 @@ const Integrations = () => {
     try {
       if (updatedIntegration.id) {
         await updateIntegration.mutateAsync(updatedIntegration);
-        setLocalIntegrations(prevIntegrations =>
+        setIntegrations(prevIntegrations =>
           prevIntegrations.map(integration =>
-            integration.id === updatedIntegration.id ? { ...updatedIntegration, isActive: integration.isActive } : integration
+            integration.id === updatedIntegration.id ? updatedIntegration : integration
           )
         );
         toast({
           title: "Integration Updated",
           description: "The integration has been successfully updated.",
-          duration: 3000, // Set duration to 3 seconds
+          duration: 3000,
         });
       } else {
         const newIntegration = await addIntegration.mutateAsync(updatedIntegration);
-        setLocalIntegrations(prevIntegrations => [...prevIntegrations, { ...newIntegration, isActive: false }]);
+        setIntegrations(prevIntegrations => [...prevIntegrations, newIntegration]);
         toast({
           title: "Integration Added",
           description: "A new integration has been successfully added.",
-          duration: 3000, // Set duration to 3 seconds
+          duration: 3000,
         });
       }
       setIsConfigureModalOpen(false);
@@ -200,7 +201,7 @@ const Integrations = () => {
         title: "Error",
         description: "Failed to save integration. Please try again.",
         variant: "destructive",
-        duration: 3000, // Set duration to 3 seconds
+        duration: 3000,
       });
     }
   };
