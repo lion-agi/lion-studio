@@ -1,6 +1,6 @@
 import { formatDate } from './utils';
 
-const generateCostTrendData = (apiCalls) => {
+const generateCostTrendData = (apiCalls, timeRange) => {
   const costByDate = apiCalls.reduce((acc, call) => {
     const date = formatDate(new Date(call.created_at));
     acc[date] = (acc[date] || 0) + call.cost;
@@ -10,7 +10,7 @@ const generateCostTrendData = (apiCalls) => {
   return Object.entries(costByDate).map(([date, cost]) => ({ date, cost }));
 };
 
-const generatePerformanceData = (apiCalls) => {
+const generatePerformanceData = (apiCalls, timeRange) => {
   const perfByDate = apiCalls.reduce((acc, call) => {
     const date = formatDate(new Date(call.created_at));
     if (!acc[date]) {
@@ -29,12 +29,14 @@ const generatePerformanceData = (apiCalls) => {
   }));
 };
 
-export const fetchApiData = async (apiCalls, apiStats) => {
-  // Simulate API delay
-  await new Promise(resolve => setTimeout(resolve, 1000));
+export const fetchApiData = async (apiCalls, apiStats, selectedModel, timeRange) => {
+  // Filter apiCalls based on selectedModel if needed
+  const filteredCalls = selectedModel === 'all' 
+    ? apiCalls 
+    : apiCalls.filter(call => call.model === selectedModel);
 
-  const costTrend = generateCostTrendData(apiCalls);
-  const performance = generatePerformanceData(apiCalls);
+  const costTrend = generateCostTrendData(filteredCalls, timeRange);
+  const performance = generatePerformanceData(filteredCalls, timeRange);
 
   return {
     summary: {
@@ -54,6 +56,6 @@ export const fetchApiData = async (apiCalls, apiStats) => {
       { model: 'claude-3-opus', cost: apiStats.totalCost * 0.1 },
     ],
     performance,
-    recentCalls: apiCalls.slice(0, 100), // Get the 100 most recent calls
+    recentCalls: filteredCalls.slice(0, 100), // Get the 100 most recent calls
   };
 };

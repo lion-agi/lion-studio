@@ -20,8 +20,8 @@ export const useApiData = (timeRange, selectedModel) => {
   const error = apiCallsQuery.error || apiStatsQuery.error;
 
   const processedDataQuery = useQuery({
-    queryKey: ['processedApiData', apiCallsQuery.data, apiStatsQuery.data, selectedModel],
-    queryFn: () => fetchApiData(apiCallsQuery.data, apiStatsQuery.data, selectedModel),
+    queryKey: ['processedApiData', apiCallsQuery.data, apiStatsQuery.data, selectedModel, timeRange],
+    queryFn: () => fetchApiData(apiCallsQuery.data, apiStatsQuery.data, selectedModel, timeRange),
     enabled: !!apiCallsQuery.data && !!apiStatsQuery.data,
     staleTime: 5 * 60 * 1000, // 5 minutes
   });
