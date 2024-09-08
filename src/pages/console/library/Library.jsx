@@ -6,10 +6,12 @@ import { Button } from "@/common/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/common/components/ui/dialog";
 import LibraryTabs from '../../../features/library/components/LibraryTabs';
 import Pagination from '../../../features/library/components/Pagination';
-import Modals from './Modals';
 import PageForm from '../../../features/library/components/PageForm';
+import CollectionForm from '../../../features/library/components/CollectionForm';
+import CollectionModal from '../../../features/library/components/CollectionModal';
 import { usePages, useAddPage, useUpdatePage, useDeletePage } from '../../../integrations/supabase/hooks/pages';
 import { useThreads } from '../../../integrations/supabase/hooks/threads';
+import { useCollections, useAddCollection, useUpdateCollection, useDeleteCollection } from '../../../integrations/supabase/hooks/collections';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
 const queryClient = new QueryClient();
@@ -45,25 +47,38 @@ const Library = () => {
 
   const { data: pages, isLoading: pagesLoading, error: pagesError } = usePages();
   const { data: threads, isLoading: threadsLoading, error: threadsError } = useThreads();
+  const { data: collections, isLoading: collectionsLoading, error: collectionsError } = useCollections();
   
   const addPage = useAddPage();
   const updatePage = useUpdatePage();
   const deletePage = useDeletePage();
+  const addCollection = useAddCollection();
+  const updateCollection = useUpdateCollection();
+  const deleteCollection = useDeleteCollection();
 
   const [searchTerm, setSearchTerm] = useState('');
-  const [isCreateCollectionOpen, setIsCreateCollectionOpen] = useState(false);
   const [selectedThread, setSelectedThread] = useState(null);
   const [selectedPage, setSelectedPage] = useState(null);
-  const [isCreatePageOpen, setIsCreatePageOpen] = useState(false);
+  const [selectedCollection, setSelectedCollection] = useState(null);
+  const [isPageFormOpen, setIsPageFormOpen] = useState(false);
+  const [isCollectionFormOpen, setIsCollectionFormOpen] = useState(false);
+  const [isCollectionModalOpen, setIsCollectionModalOpen] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [isInfoModalOpen, setIsInfoModalOpen] = useState(false);
   const itemsPerPage = 12;
 
   const handleOpenThreadModal = (thread) => setSelectedThread(thread);
   const handleOpenPageModal = (page) => setSelectedPage(page);
+  const handleOpenCollectionModal = (collection) => {
+    setSelectedCollection(collection);
+    setIsCollectionModalOpen(true);
+  };
+
   const handleCloseModal = () => {
     setSelectedThread(null);
     setSelectedPage(null);
+    setSelectedCollection(null);
+    setIsCollectionModalOpen(false);
   };
 
   const handleDeletePage = async (id) => {
@@ -76,7 +91,7 @@ const Library = () => {
 
   const handleEditPage = (page) => {
     setSelectedPage(page);
-    setIsCreatePageOpen(true);
+    setIsPageFormOpen(true);
   };
 
   const handleCreatePage = async (pageData) => {
@@ -86,7 +101,7 @@ const Library = () => {
       } else {
         await addPage.mutateAsync(pageData);
       }
-      setIsCreatePageOpen(false);
+      setIsPageFormOpen(false);
       setSelectedPage(null);
     } catch (error) {
       console.error('Error saving page:', error);
@@ -95,7 +110,39 @@ const Library = () => {
 
   const handleCreateNewPage = () => {
     setSelectedPage(null);
-    setIsCreatePageOpen(true);
+    setIsPageFormOpen(true);
+  };
+
+  const handleDeleteCollection = async (id) => {
+    try {
+      await deleteCollection.mutateAsync(id);
+    } catch (error) {
+      console.error('Error deleting collection:', error);
+    }
+  };
+
+  const handleEditCollection = (collection) => {
+    setSelectedCollection(collection);
+    setIsCollectionFormOpen(true);
+  };
+
+  const handleCreateCollection = async (collectionData) => {
+    try {
+      if (selectedCollection) {
+        await updateCollection.mutateAsync({ id: selectedCollection.id, ...collectionData });
+      } else {
+        await addCollection.mutateAsync(collectionData);
+      }
+      setIsCollectionFormOpen(false);
+      setSelectedCollection(null);
+    } catch (error) {
+      console.error('Error saving collection:', error);
+    }
+  };
+
+  const handleCreateNewCollection = () => {
+    setSelectedCollection(null);
+    setIsCollectionFormOpen(true);
   };
 
   const filteredPages = pages?.filter(page => 
@@ -103,10 +150,16 @@ const Library = () => {
     page.content.toLowerCase().includes(searchTerm.toLowerCase())
   ) || [];
 
-  const paginatedPages = filteredPages.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
+  const filteredCollections = collections?.filter(collection =>
+    collection.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    collection.description.toLowerCase().includes(searchTerm.toLowerCase())
+  ) || [];
 
-  const isLoading = pagesLoading || threadsLoading;
-  const error = pagesError || threadsError;
+  const paginatedPages = filteredPages.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
+  const paginatedCollections = filteredCollections.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
+
+  const isLoading = pagesLoading || threadsLoading || collectionsLoading;
+  const error = pagesError || threadsError || collectionsError;
 
   if (isLoading) {
     return <LoadingSpinner />;
@@ -150,35 +203,47 @@ const Library = () => {
             onTabChange={(newTab) => setSearchParams({ tab: newTab })}
             threads={threads}
             pages={paginatedPages}
-            collections={[]} // You might want to add a hook for collections
+            collections={paginatedCollections}
             handleOpenThreadModal={handleOpenThreadModal}
             handleOpenPageModal={handleOpenPageModal}
+            handleOpenCollectionModal={handleOpenCollectionModal}
             handleDeletePage={handleDeletePage}
             handleEditPage={handleEditPage}
-            setIsCreateCollectionOpen={setIsCreateCollectionOpen}
+            handleDeleteCollection={handleDeleteCollection}
+            handleEditCollection={handleEditCollection}
             handleCreateNewPage={handleCreateNewPage}
+            handleCreateNewCollection={handleCreateNewCollection}
             error={error}
           />
 
           <Pagination
             currentPage={currentPage}
             setCurrentPage={setCurrentPage}
-            totalPages={Math.ceil(filteredPages.length / itemsPerPage)}
-          />
-
-          <Modals
-            selectedThread={selectedThread}
-            selectedPage={selectedPage}
-            handleCloseModal={handleCloseModal}
-            isCreateCollectionOpen={isCreateCollectionOpen}
-            setIsCreateCollectionOpen={setIsCreateCollectionOpen}
+            totalPages={Math.ceil(
+              (activeTab === 'pages' ? filteredPages.length : 
+               activeTab === 'collections' ? filteredCollections.length : 
+               threads?.length || 0) / itemsPerPage
+            )}
           />
 
           <PageForm
             page={selectedPage}
-            isOpen={isCreatePageOpen}
-            onClose={() => setIsCreatePageOpen(false)}
+            isOpen={isPageFormOpen}
+            onClose={() => setIsPageFormOpen(false)}
             onSave={handleCreatePage}
+          />
+
+          <CollectionForm
+            collection={selectedCollection}
+            isOpen={isCollectionFormOpen}
+            onClose={() => setIsCollectionFormOpen(false)}
+            onSave={handleCreateCollection}
+          />
+
+          <CollectionModal
+            collection={selectedCollection}
+            isOpen={isCollectionModalOpen}
+            onClose={() => setIsCollectionModalOpen(false)}
           />
 
           <InfoModal
