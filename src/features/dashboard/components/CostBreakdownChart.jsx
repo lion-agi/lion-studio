@@ -23,28 +23,30 @@ const CostBreakdownChart = ({ data }) => {
       <CardHeader>
         <CardTitle className="text-gray-100">Cost Breakdown by Model</CardTitle>
       </CardHeader>
-      <CardContent className="h-[400px]">
-        <ResponsiveContainer width="100%" height="100%">
-          <PieChart>
-            <Pie
-              data={data}
-              cx="50%"
-              cy="50%"
-              labelLine={false}
-              outerRadius={150}
-              fill="#8884d8"
-              dataKey="cost"
-              nameKey="model"
-              label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
-            >
-              {data.map((entry, index) => (
-                <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-              ))}
-            </Pie>
-            <Tooltip content={<CustomTooltip />} />
-            <Legend formatter={(value) => <span className="text-gray-300">{value}</span>} />
-          </PieChart>
-        </ResponsiveContainer>
+      <CardContent className="h-[300px] flex justify-center items-center">
+        <div className="w-full h-full max-w-[300px] max-h-[300px]">
+          <ResponsiveContainer width="100%" height="100%">
+            <PieChart>
+              <Pie
+                data={data}
+                cx="50%"
+                cy="50%"
+                labelLine={false}
+                outerRadius={100}
+                fill="#8884d8"
+                dataKey="cost"
+                nameKey="model"
+                label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
+              >
+                {data.map((entry, index) => (
+                  <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                ))}
+              </Pie>
+              <Tooltip content={<CustomTooltip />} />
+              <Legend formatter={(value) => <span className="text-gray-300">{value}</span>} />
+            </PieChart>
+          </ResponsiveContainer>
+        </div>
       </CardContent>
     </Card>
   );
