@@ -24,7 +24,8 @@ const createThreadsTable = async () => {
                     is_active BOOLEAN DEFAULT true,
                     metadata JSONB,
                     created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
-                    updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+                    updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+                    user_id UUID REFERENCES auth.users(id)
                 );
             `
         });
@@ -40,15 +41,8 @@ export const useThreads = (options = {}) => useQuery({
     queryFn: async () => {
         try {
             await createThreadsTable();
-            return fromSupabase(supabase.from('threads').select(`
-                *,
-                author:users(username),
-                comments:thread_comments(*)
-            `));
+            return fromSupabase(supabase.from('threads').select('*'));
         } catch (error) {
-            if (error.status === 404) {
-                console.error('404 error fetching threads:', error);
-            }
             console.error('Error fetching threads:', error);
             throw error;
         }
@@ -60,15 +54,8 @@ export const useThread = (id, options = {}) => useQuery({
     queryKey: ['threads', id],
     queryFn: async () => {
         try {
-            return fromSupabase(supabase.from('threads').select(`
-                *,
-                author:users(username),
-                comments:thread_comments(*)
-            `).eq('id', id).single());
+            return fromSupabase(supabase.from('threads').select('*').eq('id', id).single());
         } catch (error) {
-            if (error.status === 404) {
-                console.error('404 error fetching thread:', error);
-            }
             console.error('Error fetching thread:', error);
             throw error;
         }
@@ -86,9 +73,6 @@ export const useAddThread = () => {
             try {
                 return fromSupabase(supabase.from('threads').insert([threadWithUser]).select());
             } catch (error) {
-                if (error.status === 404) {
-                    console.error('404 error adding thread:', error);
-                }
                 console.error('Error adding thread:', error);
                 throw error;
             }
@@ -108,9 +92,6 @@ export const useUpdateThread = () => {
             try {
                 return fromSupabase(supabase.from('threads').update(updates).eq('id', id).eq('user_id', user.id).select());
             } catch (error) {
-                if (error.status === 404) {
-                    console.error('404 error updating thread:', error);
-                }
                 console.error('Error updating thread:', error);
                 throw error;
             }
@@ -130,9 +111,6 @@ export const useDeleteThread = () => {
             try {
                 return fromSupabase(supabase.from('threads').delete().eq('id', id).eq('user_id', user.id));
             } catch (error) {
-                if (error.status === 404) {
-                    console.error('404 error deleting thread:', error);
-                }
                 console.error('Error deleting thread:', error);
                 throw error;
             }
@@ -147,11 +125,8 @@ export const useThreadParticipants = (threadId, options = {}) => useQuery({
     queryKey: ['threadParticipants', threadId],
     queryFn: async () => {
         try {
-            return fromSupabase(supabase.from('thread_participants').select('participants(*)').eq('thread_id', threadId));
+            return fromSupabase(supabase.from('thread_participants').select('*').eq('thread_id', threadId));
         } catch (error) {
-            if (error.status === 404) {
-                console.error('404 error fetching thread participants:', error);
-            }
             console.error('Error fetching thread participants:', error);
             throw error;
         }
@@ -166,9 +141,6 @@ export const useAddThreadParticipant = () => {
             try {
                 return fromSupabase(supabase.from('thread_participants').insert([{ thread_id: threadId, participant_id: participantId }]));
             } catch (error) {
-                if (error.status === 404) {
-                    console.error('404 error adding thread participant:', error);
-                }
                 console.error('Error adding thread participant:', error);
                 throw error;
             }
@@ -185,9 +157,6 @@ export const useThreadMessages = (threadId, options = {}) => useQuery({
         try {
             return fromSupabase(supabase.from('messages').select('*').eq('thread_id', threadId).order('created_at', { ascending: true }));
         } catch (error) {
-            if (error.status === 404) {
-                console.error('404 error fetching thread messages:', error);
-            }
             console.error('Error fetching thread messages:', error);
             throw error;
         }
@@ -202,9 +171,6 @@ export const useAddMessage = () => {
             try {
                 return fromSupabase(supabase.from('messages').insert([newMessage]));
             } catch (error) {
-                if (error.status === 404) {
-                    console.error('404 error adding message:', error);
-                }
                 console.error('Error adding message:', error);
                 throw error;
             }
@@ -221,9 +187,6 @@ export const useThreadTags = (threadId, options = {}) => useQuery({
         try {
             return fromSupabase(supabase.from('thread_tag_associations').select('thread_tags(*)').eq('thread_id', threadId));
         } catch (error) {
-            if (error.status === 404) {
-                console.error('404 error fetching thread tags:', error);
-            }
             console.error('Error fetching thread tags:', error);
             throw error;
         }
@@ -238,9 +201,6 @@ export const useAddThreadTag = () => {
             try {
                 return fromSupabase(supabase.from('thread_tag_associations').insert([{ thread_id: threadId, tag_id: tagId }]));
             } catch (error) {
-                if (error.status === 404) {
-                    console.error('404 error adding thread tag:', error);
-                }
                 console.error('Error adding thread tag:', error);
                 throw error;
             }
@@ -257,9 +217,6 @@ export const useThreadSummary = (threadId, options = {}) => useQuery({
         try {
             return fromSupabase(supabase.rpc('get_thread_summary', { thread_id: threadId }));
         } catch (error) {
-            if (error.status === 404) {
-                console.error('404 error fetching thread summary:', error);
-            }
             console.error('Error fetching thread summary:', error);
             throw error;
         }
