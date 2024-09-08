@@ -44,7 +44,7 @@ const DashboardHeader = () => {
           <Info className="h-5 w-5" />
         </Button>
       </div>
-      <div className="relative w-full md:w-80">
+      <div className="relative w-full md:w-80 space-x-4">
         <Select value={timeRange} onValueChange={setTimeRange}>
           <SelectTrigger className="w-[180px] bg-gray-800 text-gray-200 border-gray-700">
             <SelectValue placeholder="Select time range" />
