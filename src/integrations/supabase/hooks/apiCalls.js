@@ -1,3 +1,4 @@
+import React, { useMemo } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '../supabase';
 
@@ -73,7 +74,7 @@ export const useApiCallsByDateRange = (startTimestamp, endTimestamp, options = {
 export const useApiCallStats = (startTimestamp, endTimestamp, options = {}) => {
     const { data: apiCalls, isLoading, error } = useApiCallsByDateRange(startTimestamp, endTimestamp, options);
 
-    const stats = React.useMemo(() => {
+    const stats = useMemo(() => {
         if (!apiCalls) return null;
 
         const totalCalls = apiCalls.length;
