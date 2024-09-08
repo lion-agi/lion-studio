@@ -18,26 +18,19 @@ const CustomTooltip = ({ active, payload }) => {
 };
 
 const RADIAN = Math.PI / 180;
-const renderCustomizedLabel = ({ cx, cy, midAngle, innerRadius, outerRadius, percent, index }) => {
+const renderCustomizedLabel = ({ cx, cy, midAngle, innerRadius, outerRadius, percent, index, model }) => {
   const radius = innerRadius + (outerRadius - innerRadius) * 0.5;
   const x = cx + radius * Math.cos(-midAngle * RADIAN);
   const y = cy + radius * Math.sin(-midAngle * RADIAN);
 
   return (
     <text x={x} y={y} fill="white" textAnchor={x > cx ? 'start' : 'end'} dominantBaseline="central">
-      {`${index}`}
+      {`${model} ${(percent * 100).toFixed(0)}%`}
     </text>
   );
 };
 
 const CostBreakdownChart = ({ data }) => {
-  const simplifiedData = data.map((item, index) => ({
-    ...item,
-    model: `${index}`
-  }));
-
-  const modelNames = ['0', '1', '2', 'gpt-4o-mini', 'gpt-4o', 'claude-sonnet-3.5'];
-
   return (
     <Card className="bg-gray-900 border-gray-800">
       <CardHeader>
@@ -48,7 +41,7 @@ const CostBreakdownChart = ({ data }) => {
           <ResponsiveContainer width="100%" height="100%">
             <PieChart>
               <Pie
-                data={simplifiedData}
+                data={data}
                 cx="50%"
                 cy="50%"
                 labelLine={false}
@@ -57,17 +50,12 @@ const CostBreakdownChart = ({ data }) => {
                 fill="#8884d8"
                 dataKey="cost"
               >
-                {simplifiedData.map((entry, index) => (
+                {data.map((entry, index) => (
                   <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                 ))}
               </Pie>
               <Tooltip content={<CustomTooltip />} />
-              <Legend 
-                formatter={(value, entry, index) => [
-                  `${index}: ${modelNames[index] || value}`,
-                  entry.payload
-                ]}
-              />
+              <Legend formatter={(value) => <span className="text-gray-300">{value}</span>} />
             </PieChart>
           </ResponsiveContainer>
         </div>
