@@ -21,7 +21,7 @@ const ThreadItem = ({ thread, onOpenModal }) => {
             <span className="mx-2">•</span>
             <span>Author: {thread.author}</span>
             <span className="mx-2">•</span>
-            <span>Comments: {thread.comments.length}</span>
+            <span>Comments: {thread.comments?.length || 0}</span>
           </div>
         </div>
         <div className="flex items-center space-x-2">
