@@ -23,26 +23,13 @@ CREATE TABLE api_calls (
     tokens INTEGER NOT NULL,
     cost DECIMAL(10, 5) NOT NULL,
     response_time INTEGER NOT NULL,
+    error BOOLEAN DEFAULT false,
     metadata JSONB,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE INDEX idx_api_calls_created_at ON api_calls(created_at);
-
-COMMENT ON TABLE api_calls IS 'Stores information about API calls made by users';
-COMMENT ON COLUMN api_calls.id IS 'Unique identifier for the API call';
-COMMENT ON COLUMN api_calls.created_at IS 'Timestamp of when the API call was made';
-COMMENT ON COLUMN api_calls.provider IS 'The API provider (e.g., OpenAI, Anthropic)';
-COMMENT ON COLUMN api_calls.model IS 'The specific model used for the API call';
-COMMENT ON COLUMN api_calls.endpoint IS 'The API endpoint called';
-COMMENT ON COLUMN api_calls.method IS 'The HTTP method used (e.g., GET, POST)';
-COMMENT ON COLUMN api_calls.base_url IS 'The base URL of the API';
-COMMENT ON COLUMN api_calls.tokens IS 'Number of tokens used in the API call';
-COMMENT ON COLUMN api_calls.cost IS 'Cost of the API call';
-COMMENT ON COLUMN api_calls.response_time IS 'Response time of the API call in milliseconds';
-COMMENT ON COLUMN api_calls.metadata IS 'Additional metadata for the API call';
-COMMENT ON COLUMN api_calls.updated_at IS 'Timestamp when the record was last updated';
 */
 
 export const useApiCalls = (options = {}) => useQuery({
@@ -106,7 +93,7 @@ export const useApiCallStats = (options = {}) => useQuery({
                     count(*),
                     sum(cost),
                     avg(response_time),
-                    sum(case when response_time > 1000 then 1 else 0 end)::float / nullif(count(*), 0) as error_rate
+                    sum(case when error then 1 else 0 end)::float / nullif(count(*), 0) as error_rate
                 `)
                 .single();
 
@@ -116,12 +103,14 @@ export const useApiCallStats = (options = {}) => useQuery({
                 totalCalls: data.count,
                 totalCost: data.sum,
                 avgResponseTime: data.avg,
-                errorRate: data.error_rate,
+                errorRate: data.error_rate || 0,
             };
         } catch (error) {
             console.error('Error fetching API call stats:', error);
             throw error;
         }
     },
+    retry: 3,
+    retryDelay: 10000, // 10 seconds
     ...options,
 });
