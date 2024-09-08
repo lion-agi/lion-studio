@@ -81,43 +81,34 @@ export const useApiCallsByDateRange = (startDate, endDate, options = {}) => useQ
     ...options,
 });
 
-export const useApiCallStats = (startDate, endDate, options = {}) => {
-    // Set default start date to 7 days ago if not provided
-    const defaultStartDate = new Date();
-    defaultStartDate.setDate(defaultStartDate.getDate() - 7);
-    
-    const effectiveStartDate = startDate || defaultStartDate.toISOString();
-    const effectiveEndDate = endDate || new Date().toISOString();
+export const useApiCallStats = (startDate, endDate = new Date(), options = {}) => useQuery({
+    queryKey: ['apiCallStats', startDate, endDate],
+    queryFn: async () => {
+        try {
+            const { data, error } = await supabase
+                .from('api_calls')
+                .select('cost, response_time, tokens')
+                .gte('created_at', startDate)
+                .lte('created_at', endDate);
 
-    return useQuery({
-        queryKey: ['apiCallStats', effectiveStartDate, effectiveEndDate],
-        queryFn: async () => {
-            try {
-                const { data, error } = await supabase
-                    .from('api_calls')
-                    .select('cost, response_time, tokens')
-                    .gte('created_at', effectiveStartDate)
-                    .lte('created_at', effectiveEndDate);
+            if (error) throw error;
 
-                if (error) throw error;
+            // Calculate stats on the client side
+            const totalCalls = data.length;
+            const totalCost = data.reduce((sum, call) => sum + parseFloat(call.cost), 0);
+            const totalTokens = data.reduce((sum, call) => sum + call.tokens, 0);
+            const avgResponseTime = data.reduce((sum, call) => sum + call.response_time, 0) / totalCalls || 0;
 
-                // Calculate stats on the client side
-                const totalCalls = data.length;
-                const totalCost = data.reduce((sum, call) => sum + parseFloat(call.cost), 0);
-                const totalTokens = data.reduce((sum, call) => sum + call.tokens, 0);
-                const avgResponseTime = data.reduce((sum, call) => sum + call.response_time, 0) / totalCalls || 0;
-
-                return {
-                    totalCalls,
-                    totalCost,
-                    totalTokens,
-                    avgResponseTime,
-                };
-            } catch (error) {
-                console.error('Error fetching API call stats:', error);
-                throw error;
-            }
-        },
-        ...options,
-    });
-};
+            return {
+                totalCalls,
+                totalCost,
+                totalTokens,
+                avgResponseTime,
+            };
+        } catch (error) {
+            console.error('Error fetching API call stats:', error);
+            throw error;
+        }
+    },
+    ...options,
+});
