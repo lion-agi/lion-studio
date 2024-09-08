@@ -23,7 +23,9 @@ const ErrorFallback = ({ error }) => (
   <Alert variant="destructive">
     <AlertTitle>Error</AlertTitle>
     <AlertDescription>
-      An error occurred: {error.message}
+      An error occurred while fetching data: {error.message}
+      <br />
+      Please check your network connection and try again. If the problem persists, contact support.
     </AlertDescription>
   </Alert>
 );
@@ -48,7 +50,7 @@ const Dashboard = () => {
       if (isLoading) {
         setIsTimeout(true);
       }
-    }, 10000); // 10 seconds timeout
+    }, 15000); // 15 seconds timeout
 
     return () => clearTimeout(timer);
   }, [isLoading]);
@@ -64,7 +66,7 @@ const Dashboard = () => {
   }, [refetch]);
 
   if (isLoading && !isTimeout) return <LoadingSpinner />;
-  if (isTimeout) return <ErrorFallback error={{ message: "Loading timed out. Please try again." }} />;
+  if (isTimeout) return <ErrorFallback error={{ message: "Loading timed out. The server might be experiencing high load. Please try again later." }} />;
   if (error) return <ErrorFallback error={error} />;
 
   const filteredData = {
@@ -144,15 +146,15 @@ const CallsTab = ({ data }) => {
     const csvContent = [
       ['Timestamp', 'Provider', 'Model', 'Endpoint', 'Method', 'Base URL', 'Tokens', 'Cost', 'Response Time'],
       ...data.recentCalls.map(call => [
-        call.timestamp,
+        call.created_at,
         call.provider,
         call.model,
         call.endpoint,
         call.method,
-        call.baseUrl,
+        call.base_url,
         call.tokens,
         call.cost,
-        call.responseTime
+        call.response_time
       ])
     ].map(row => row.join(',')).join('\n');
 

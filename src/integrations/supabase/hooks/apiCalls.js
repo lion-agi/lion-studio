@@ -24,11 +24,9 @@ CREATE TABLE api_calls (
     cost DECIMAL(10, 5) NOT NULL,
     response_time INTEGER NOT NULL,
     metadata JSONB,
-    user_id UUID REFERENCES auth.users(id) ON DELETE CASCADE,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
 );
 
-CREATE INDEX idx_api_calls_user_id ON api_calls(user_id);
 CREATE INDEX idx_api_calls_created_at ON api_calls(created_at);
 
 COMMENT ON TABLE api_calls IS 'Stores information about API calls made by users';
@@ -42,7 +40,6 @@ COMMENT ON COLUMN api_calls.tokens IS 'Number of tokens used in the API call';
 COMMENT ON COLUMN api_calls.cost IS 'Cost of the API call';
 COMMENT ON COLUMN api_calls.response_time IS 'Response time of the API call in milliseconds';
 COMMENT ON COLUMN api_calls.metadata IS 'Additional metadata for the API call';
-COMMENT ON COLUMN api_calls.user_id IS 'Foreign key referencing the user who made the API call';
 COMMENT ON COLUMN api_calls.created_at IS 'Timestamp when the API call was made';
 */
 

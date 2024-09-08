@@ -23,7 +23,7 @@ const RecentCallsTable = ({ data }) => {
           {data.map((call) => (
             <TableRow key={call.id}>
               <TableCell className="whitespace-nowrap">
-                {new Date(call.timestamp).toLocaleString(undefined, {
+                {new Date(call.created_at).toLocaleString(undefined, {
                   year: 'numeric',
                   month: '2-digit',
                   day: '2-digit',
@@ -37,10 +37,10 @@ const RecentCallsTable = ({ data }) => {
               <TableCell className="whitespace-nowrap">{call.model}</TableCell>
               <TableCell className="whitespace-nowrap">{call.endpoint}</TableCell>
               <TableCell className="whitespace-nowrap">{call.method}</TableCell>
-              <TableCell className="whitespace-nowrap">{call.baseUrl}</TableCell>
+              <TableCell className="whitespace-nowrap">{call.base_url}</TableCell>
               <TableCell className="text-right">{formatNumber(Math.round(call.tokens))}</TableCell>
               <TableCell className="text-right">{typeof call.cost === 'number' ? call.cost.toFixed(5) : 'N/A'}</TableCell>
-              <TableCell className="text-right">{call.responseTime} ms</TableCell>
+              <TableCell className="text-right">{call.response_time} ms</TableCell>
             </TableRow>
           ))}
         </TableBody>

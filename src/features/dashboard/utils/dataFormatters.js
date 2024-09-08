@@ -29,7 +29,7 @@ export const formatApiCallData = (apiCalls, apiStats, selectedModel) => {
 
 const calculateCostTrend = (apiCalls) => {
   return apiCalls.reduce((acc, call) => {
-    const date = call.timestamp.split('T')[0];
+    const date = call.created_at.split('T')[0];
     if (!acc[date]) {
       acc[date] = { date, cost: 0 };
     }
@@ -50,7 +50,7 @@ const calculateCostBreakdown = (apiCalls) => {
 
 const calculatePerformance = (apiCalls) => {
   return apiCalls.reduce((acc, call) => {
-    const date = call.timestamp.split('T')[0];
+    const date = call.created_at.split('T')[0];
     if (!acc[date]) {
       acc[date] = { date, responseTime: 0, errorRate: 0, count: 0 };
     }
