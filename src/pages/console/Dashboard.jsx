@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useEffect } from 'react';
+import React, { useState, useCallback } from 'react';
 import { RecoilRoot } from 'recoil';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ErrorBoundary } from 'react-error-boundary';
@@ -20,9 +20,8 @@ import { formatCurrency, formatNumber } from '@/features/dashboard/utils';
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
-      retry: 3,
-      retryDelay: (attemptIndex) => Math.min(1000 * 2 ** attemptIndex, 30000),
       staleTime: 5 * 60 * 1000, // 5 minutes
+      cacheTime: 10 * 60 * 1000, // 10 minutes
     },
   },
 });
@@ -51,20 +50,18 @@ const Dashboard = () => {
   const [timeFilter, setTimeFilter] = useState('7d');
   const [modelFilter, setModelFilter] = useState('all');
 
-  const { data, isLoading, error, refetch } = useApiData(timeFilter, modelFilter);
+  const { data, isLoading, error } = useApiData(timeFilter, modelFilter);
 
   const handleTimeFilterChange = useCallback((value) => {
     setTimeFilter(value);
-    refetch();
-  }, [refetch]);
+  }, []);
 
   const handleModelFilterChange = useCallback((value) => {
     setModelFilter(value);
-    refetch();
-  }, [refetch]);
+  }, []);
 
   if (isLoading) return <LoadingSpinner />;
-  if (error) return <ErrorFallback error={error} resetErrorBoundary={refetch} />;
+  if (error) return <ErrorFallback error={error} resetErrorBoundary={() => queryClient.invalidateQueries()} />;
 
   const filteredData = {
     ...data,
@@ -77,7 +74,7 @@ const Dashboard = () => {
   return (
     <RecoilRoot>
       <QueryClientProvider client={queryClient}>
-        <ErrorBoundary FallbackComponent={ErrorFallback} onReset={refetch}>
+        <ErrorBoundary FallbackComponent={ErrorFallback} onReset={() => queryClient.invalidateQueries()}>
           <div className="min-h-screen bg-gray-900 text-gray-100">
             <div className="container mx-auto p-8 space-y-8">
               <DashboardHeader 

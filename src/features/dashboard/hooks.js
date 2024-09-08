@@ -6,17 +6,24 @@ export const useApiData = (timeRange, selectedModel) => {
   const endTimestamp = Math.floor(Date.now() / 1000); // Current timestamp in seconds
   const startTimestamp = endTimestamp - getTimeRangeInSeconds(timeRange);
 
-  const apiCallsQuery = useApiCallsByDateRange(startTimestamp, endTimestamp);
+  const apiCallsQuery = useApiCallsByDateRange(startTimestamp, endTimestamp, {
+    staleTime: 5 * 60 * 1000, // 5 minutes
+    refetchInterval: 5 * 60 * 1000, // 5 minutes
+  });
 
-  const apiStatsQuery = useApiCallStats();
+  const apiStatsQuery = useApiCallStats({
+    staleTime: 5 * 60 * 1000, // 5 minutes
+    refetchInterval: 5 * 60 * 1000, // 5 minutes
+  });
 
   const isLoading = apiCallsQuery.isLoading || apiStatsQuery.isLoading;
   const error = apiCallsQuery.error || apiStatsQuery.error;
 
   const processedDataQuery = useQuery({
     queryKey: ['processedApiData', apiCallsQuery.data, apiStatsQuery.data, selectedModel],
-    queryFn: () => fetchApiData(apiCallsQuery.data, apiStatsQuery.data),
+    queryFn: () => fetchApiData(apiCallsQuery.data, apiStatsQuery.data, selectedModel),
     enabled: !!apiCallsQuery.data && !!apiStatsQuery.data,
+    staleTime: 5 * 60 * 1000, // 5 minutes
   });
 
   return {
