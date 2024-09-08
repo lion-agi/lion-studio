@@ -4,16 +4,18 @@ import Home from '../pages/website/Home';
 import Login from '../pages/auth/Login';
 import Registration from '../pages/auth/Registration';
 import AuthCallback from '../pages/auth/AuthCallback';
-import EmailConfirmation from '../pages/auth/EmailConfirmation';
 import Dashboard from '@/features/dashboard/pages/Dashboard';
 import Integrations from '../pages/console/Integrations';
 import Deployment from '@/features/deployment/pages/Deployment';
-import Library from '../pages/console/library/Library';
+import Library from '@/features/library/pages/Library';
 import WorkflowEditor from '../features/workflow/components/WorkflowEditor';
 import About from '../pages/website/About';
 import Pricing from '../pages/website/Pricing';
 import Contact from '../pages/website/Contact';
 import UserProfile from '../pages/console/UserProfile';
+import Overview from '@/features/dashboard/pages/Overview';
+import CallsTab from '@/features/dashboard/pages/CallsTab';
+import CostsTab from '@/features/dashboard/pages/CostsTab';
 
 const AppRoutes = () => (
   <Routes>
@@ -21,7 +23,6 @@ const AppRoutes = () => (
     <Route path="/login" element={<Login />} />
     <Route path="/register" element={<Registration />} />
     <Route path="/auth/callback" element={<AuthCallback />} />
-    <Route path="/email-confirmation" element={<EmailConfirmation />} />
     <Route path="/console/dashboard" element={<Dashboard />} />
     <Route path="/console/integrations" element={<Integrations />} />
     <Route path="/console/deployment" element={<Deployment />} />
