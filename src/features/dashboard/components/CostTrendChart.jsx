@@ -20,34 +20,39 @@ const CostTrendChart = ({ data }) => (
     <CardHeader>
       <CardTitle className="text-gray-100">Cost Trend</CardTitle>
     </CardHeader>
-    <CardContent className="h-[300px]">
-      <ResponsiveContainer width="100%" height="100%">
-        <LineChart data={data}>
-          <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
-          <XAxis 
-            dataKey="date" 
-            stroke="#9CA3AF" 
-            tick={{ fill: '#9CA3AF' }}
-            tickLine={{ stroke: '#9CA3AF' }}
-          />
-          <YAxis 
-            stroke="#9CA3AF" 
-            tickFormatter={(value) => formatCurrency(value).replace(/\.00$/, '')}
-            tick={{ fill: '#9CA3AF' }}
-            tickLine={{ stroke: '#9CA3AF' }}
-            width={80}
-          />
-          <Tooltip content={<CustomTooltip />} />
-          <Line 
-            type="monotone" 
-            dataKey="cost" 
-            stroke="#8B5CF6" 
-            strokeWidth={2}
-            dot={false}
-            activeDot={{ r: 8 }}
-          />
-        </LineChart>
-      </ResponsiveContainer>
+    <CardContent className="pt-0">
+      <div className="h-[300px] w-full">
+        <ResponsiveContainer width="100%" height="100%">
+          <LineChart data={data} margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
+            <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
+            <XAxis 
+              dataKey="date" 
+              stroke="#9CA3AF" 
+              tick={{ fill: '#9CA3AF' }}
+              tickLine={{ stroke: '#9CA3AF' }}
+            />
+            <YAxis 
+              stroke="#9CA3AF" 
+              tickFormatter={(value) => {
+                const formatted = formatCurrency(value);
+                return formatted.endsWith('.00') ? formatted.slice(0, -3) : formatted;
+              }}
+              tick={{ fill: '#9CA3AF' }}
+              tickLine={{ stroke: '#9CA3AF' }}
+              width={80}
+            />
+            <Tooltip content={<CustomTooltip />} />
+            <Line 
+              type="monotone" 
+              dataKey="cost" 
+              stroke="#8B5CF6" 
+              strokeWidth={2}
+              dot={false}
+              activeDot={{ r: 8 }}
+            />
+          </LineChart>
+        </ResponsiveContainer>
+      </div>
     </CardContent>
   </Card>
 );
