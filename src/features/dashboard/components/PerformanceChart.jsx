@@ -16,6 +16,20 @@ const CustomTooltip = ({ active, payload, label }) => {
 };
 
 const PerformanceChart = ({ data }) => {
+  // Check if data is an array and has elements
+  if (!Array.isArray(data) || data.length === 0) {
+    return (
+      <Card className="bg-gray-900 border-gray-800">
+        <CardHeader>
+          <CardTitle className="text-gray-100">Performance Metrics</CardTitle>
+        </CardHeader>
+        <CardContent className="h-[300px] flex items-center justify-center">
+          <p className="text-gray-400">No performance data available</p>
+        </CardContent>
+      </Card>
+    );
+  }
+
   const sortedData = [...data].sort((a, b) => new Date(a.date) - new Date(b.date));
 
   return (
