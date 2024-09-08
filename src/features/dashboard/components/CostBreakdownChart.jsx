@@ -17,6 +17,19 @@ const CustomTooltip = ({ active, payload }) => {
   return null;
 };
 
+const RADIAN = Math.PI / 180;
+const renderCustomizedLabel = ({ cx, cy, midAngle, innerRadius, outerRadius, percent, index, model }) => {
+  const radius = innerRadius + (outerRadius - innerRadius) * 0.5;
+  const x = cx + radius * Math.cos(-midAngle * RADIAN);
+  const y = cy + radius * Math.sin(-midAngle * RADIAN);
+
+  return (
+    <text x={x} y={y} fill="white" textAnchor={x > cx ? 'start' : 'end'} dominantBaseline="central">
+      {`${model} ${(percent * 100).toFixed(0)}%`}
+    </text>
+  );
+};
+
 const CostBreakdownChart = ({ data }) => {
   return (
     <Card className="bg-gray-900 border-gray-800">
@@ -32,11 +45,10 @@ const CostBreakdownChart = ({ data }) => {
                 cx="50%"
                 cy="50%"
                 labelLine={false}
-                outerRadius={100}
+                label={renderCustomizedLabel}
+                outerRadius={90}
                 fill="#8884d8"
                 dataKey="cost"
-                nameKey="model"
-                label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
               >
                 {data.map((entry, index) => (
                   <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
