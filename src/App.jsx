@@ -16,7 +16,7 @@ import WorkflowEditor from '@/features/workflow/components/WorkflowEditor';
 
 import Library from './pages/console/library/Library';
 import Dashboard from './pages/console/Dashboard';
-import Connections from './pages/console/Connections';
+import Integrations from './pages/console/Integrations';
 import Deployment from './pages/console/Deployment';
 
 // Create a client
@@ -48,7 +48,7 @@ const AppRoutes = () => (
     <Route path="/console/dashboard" element={<ProtectedRoute><ConsoleLayout><Dashboard /></ConsoleLayout></ProtectedRoute>} />
     <Route path="/console/workflow" element={<ProtectedRoute><ConsoleLayout><WorkflowEditor /></ConsoleLayout></ProtectedRoute>} />
     <Route path="/console/library" element={<ProtectedRoute><ConsoleLayout><Library /></ConsoleLayout></ProtectedRoute>} />
-    <Route path="/console/connections" element={<ProtectedRoute><ConsoleLayout><Connections /></ConsoleLayout></ProtectedRoute>} />
+    <Route path="/console/connections" element={<ProtectedRoute><ConsoleLayout><Integrations /></ConsoleLayout></ProtectedRoute>} />
     <Route path="/console/deployment" element={<ProtectedRoute><ConsoleLayout><Deployment /></ConsoleLayout></ProtectedRoute>} />
 
     {/* Add more console routes as needed */}

@@ -11,7 +11,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Textarea } from "@/common/components/ui/textarea";
 import { CheckCircle2, XCircle, Database, Cloud, FileText, Link as LinkIcon, Brain, Search } from 'lucide-react';
 
-const ConnectionCard = ({ connection, onConfigure, onToggle }) => (
+const IntegrationCard = ({ connection, onConfigure, onToggle }) => (
   <Card className="bg-gray-800 hover:bg-gray-700 transition-colors">
     <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
       <CardTitle className="text-lg font-semibold text-gray-100">{connection.name}</CardTitle>
@@ -36,7 +36,7 @@ const ConnectionCard = ({ connection, onConfigure, onToggle }) => (
   </Card>
 );
 
-const ConfigureConnectionModal = ({ isOpen, onClose, connection, onSave }) => {
+const ConfigureIntegrationModal = ({ isOpen, onClose, connection, onSave }) => {
   const [formData, setFormData] = useState(connection || {});
 
   const handleInputChange = (e) => {
@@ -144,7 +144,7 @@ const ConfigureConnectionModal = ({ isOpen, onClose, connection, onSave }) => {
   );
 };
 
-const Connections = () => {
+const Integrations = () => {
   const [activeTab, setActiveTab] = useState('all');
   const [isNewConnectionDialogOpen, setIsNewConnectionDialogOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
@@ -231,7 +231,7 @@ const Connections = () => {
           <TabsContent value={activeTab}>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {filteredConnections.map((conn) => (
-                <ConnectionCard 
+                <IntegrationCard 
                   key={conn.id} 
                   connection={conn} 
                   onConfigure={handleConfigure}
@@ -251,7 +251,7 @@ const Connections = () => {
           </Button>
         </div>
 
-        <ConfigureConnectionModal 
+        <ConfigureIntegrationModal 
           isOpen={isConfigureModalOpen}
           onClose={() => setIsConfigureModalOpen(false)}
           connection={selectedConnection}
@@ -262,4 +262,4 @@ const Connections = () => {
   );
 };
 
-export default Connections;
+export default Integrations;
