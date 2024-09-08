@@ -23,10 +23,8 @@ CREATE TABLE api_calls (
     tokens INTEGER NOT NULL,
     cost DECIMAL(10, 5) NOT NULL,
     response_time INTEGER NOT NULL,
-    error BOOLEAN DEFAULT false,
     metadata JSONB,
-    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE INDEX idx_api_calls_created_at ON api_calls(created_at);
@@ -89,22 +87,21 @@ export const useApiCallStats = (options = {}) => useQuery({
         try {
             const { data, error } = await supabase
                 .from('api_calls')
-                .select('cost, response_time, error');
+                .select('cost, response_time, tokens');
 
             if (error) throw error;
 
             // Calculate stats on the client side
             const totalCalls = data.length;
-            const totalCost = data.reduce((sum, call) => sum + call.cost, 0);
+            const totalCost = data.reduce((sum, call) => sum + parseFloat(call.cost), 0);
+            const totalTokens = data.reduce((sum, call) => sum + call.tokens, 0);
             const avgResponseTime = data.reduce((sum, call) => sum + call.response_time, 0) / totalCalls;
-            const errorCount = data.filter(call => call.error).length;
-            const errorRate = errorCount / totalCalls;
 
             return {
                 totalCalls,
                 totalCost,
+                totalTokens,
                 avgResponseTime,
-                errorRate,
             };
         } catch (error) {
             console.error('Error fetching API call stats:', error);
