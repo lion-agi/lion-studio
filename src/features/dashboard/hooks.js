@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 import { useApiCallsByDateRange, useApiCallStats } from '../../integrations/supabase/hooks/apiCalls';
-import { formatApiCallData } from '../utils/dataFormatters';
+import { formatApiCallData } from './utils/dataFormatters';
 
 export const useApiData = (timeRange, selectedModel) => {
   const endDate = new Date();

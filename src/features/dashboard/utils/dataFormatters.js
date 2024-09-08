@@ -29,15 +29,32 @@ export const formatApiCallData = (apiCalls, apiStats, selectedModel) => {
 
 const calculateCostTrend = (apiCalls) => {
   // Implementation for cost trend calculation
-  // ...
+  // This is a placeholder and should be implemented based on your specific requirements
+  return apiCalls.map(call => ({
+    date: call.timestamp,
+    cost: call.cost
+  }));
 };
 
 const calculateCostBreakdown = (apiCalls) => {
   // Implementation for cost breakdown calculation
-  // ...
+  // This is a placeholder and should be implemented based on your specific requirements
+  const breakdown = {};
+  apiCalls.forEach(call => {
+    if (!breakdown[call.model]) {
+      breakdown[call.model] = 0;
+    }
+    breakdown[call.model] += call.cost;
+  });
+  return Object.entries(breakdown).map(([model, cost]) => ({ model, cost }));
 };
 
 const calculatePerformance = (apiCalls) => {
   // Implementation for performance calculation
-  // ...
+  // This is a placeholder and should be implemented based on your specific requirements
+  return apiCalls.map(call => ({
+    date: call.timestamp,
+    responseTime: call.response_time,
+    errorRate: call.error ? 1 : 0
+  }));
 };
