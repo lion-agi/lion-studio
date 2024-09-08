@@ -31,10 +31,10 @@ const DashboardHeader = () => {
   const [isInfoModalOpen, setIsInfoModalOpen] = useState(false);
 
   return (
-    <div className="mb-8">
-      <div className="flex justify-between items-center mb-6">
-        <div className="flex items-center">
-          <h1 className="text-2xl font-bold text-gray-100 mr-4">Dashboard</h1>
+    <div className="space-y-4">
+      <div className="flex justify-between items-center">
+        <div className="flex items-center space-x-2">
+          <h1 className="text-2xl font-bold text-gray-100">Dashboard</h1>
           <Button
             variant="ghost"
             size="sm"
@@ -44,31 +44,34 @@ const DashboardHeader = () => {
             <Info className="h-5 w-5" />
           </Button>
         </div>
-        <div className="flex justify-end w-full">
-          <div className="flex space-x-4">
-            <Select value={timeRange} onValueChange={setTimeRange}>
-              <SelectTrigger className="w-[180px]">
-                <SelectValue placeholder="Select time range" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="7d">Last 7 days</SelectItem>
-                <SelectItem value="24h">Last 24 hours</SelectItem>
-                <SelectItem value="30d">Last 30 days</SelectItem>
-                <SelectItem value="90d">Last 90 days</SelectItem>
-              </SelectContent>
-            </Select>
-            <Select value={selectedModel} onValueChange={setSelectedModel}>
-              <SelectTrigger className="w-[180px]">
-                <SelectValue placeholder="Select model" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">All Models</SelectItem>
-                <SelectItem value="gpt-3">GPT-3</SelectItem>
-                <SelectItem value="gpt-4">GPT-4</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
+        <div className="flex space-x-4">
+          <Select value={timeRange} onValueChange={setTimeRange}>
+            <SelectTrigger className="w-[150px] bg-gray-800 border-gray-700">
+              <SelectValue placeholder="Select time range" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="7d">Last 7 days</SelectItem>
+              <SelectItem value="24h">Last 24 hours</SelectItem>
+              <SelectItem value="30d">Last 30 days</SelectItem>
+              <SelectItem value="90d">Last 90 days</SelectItem>
+            </SelectContent>
+          </Select>
+          <Select value={selectedModel} onValueChange={setSelectedModel}>
+            <SelectTrigger className="w-[150px] bg-gray-800 border-gray-700">
+              <SelectValue placeholder="Select model" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">All Models</SelectItem>
+              <SelectItem value="gpt-3">GPT-3</SelectItem>
+              <SelectItem value="gpt-4">GPT-4</SelectItem>
+            </SelectContent>
+          </Select>
         </div>
+      </div>
+      <div className="flex space-x-1 bg-gray-800 rounded-lg p-1 w-fit">
+        <Button variant="ghost" className="text-purple-500 bg-purple-500/10 hover:bg-purple-500/20">Overview</Button>
+        <Button variant="ghost" className="text-gray-300 hover:text-white hover:bg-gray-700">Costs</Button>
+        <Button variant="ghost" className="text-gray-300 hover:text-white hover:bg-gray-700">API Calls</Button>
       </div>
       <InfoModal isOpen={isInfoModalOpen} onClose={() => setIsInfoModalOpen(false)} />
     </div>
