@@ -53,6 +53,20 @@ const CostBreakdownChart = ({ data }) => {
     setHoveredIndex(null);
   }, []);
 
+  // Check if data is undefined or not an array
+  if (!data || !Array.isArray(data) || data.length === 0) {
+    return (
+      <Card className="bg-gray-900 border-gray-800">
+        <CardHeader>
+          <CardTitle className="text-gray-100">Cost Breakdown by Model</CardTitle>
+        </CardHeader>
+        <CardContent className="h-[400px] relative overflow-auto flex items-center justify-center">
+          <p className="text-gray-400">No cost breakdown data available</p>
+        </CardContent>
+      </Card>
+    );
+  }
+
   const totalCost = data.reduce((sum, item) => sum + item.cost, 0);
   const processedData = data.map(item => ({
     ...item,
