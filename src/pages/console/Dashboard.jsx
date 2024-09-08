@@ -1,11 +1,13 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import { RecoilRoot } from 'recoil';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ErrorBoundary } from 'react-error-boundary';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/common/components/ui/tabs";
 import { Button } from "@/common/components/ui/button";
 import { Alert, AlertDescription, AlertTitle } from "@/common/components/ui/alert";
-import { DownloadIcon } from 'lucide-react';
+import { Input } from "@/common/components/ui/input";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/common/components/ui/select";
+import { InfoIcon, DownloadIcon, Activity, Clock, AlertTriangle, Search } from 'lucide-react';
 import DashboardHeader from '@/features/dashboard/components/DashboardHeader';
 import SummaryCards from '@/features/dashboard/components/SummaryCards';
 import CostTrendChart from '@/features/dashboard/components/CostTrendChart';
@@ -45,6 +47,7 @@ const LoadingSpinner = () => (
 
 const Dashboard = () => {
   const [activeTab, setActiveTab] = useState('overview');
+  const [searchTerm, setSearchTerm] = useState('');
   const [timeFilter, setTimeFilter] = useState('7d');
   const [modelFilter, setModelFilter] = useState('all');
 
@@ -63,6 +66,14 @@ const Dashboard = () => {
   if (isLoading) return <LoadingSpinner />;
   if (error) return <ErrorFallback error={error} resetErrorBoundary={refetch} />;
 
+  const filteredData = {
+    ...data,
+    recentCalls: data?.recentCalls?.filter(call => 
+      call.provider.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      call.model.toLowerCase().includes(searchTerm.toLowerCase())
+    ) || []
+  };
+
   return (
     <RecoilRoot>
       <QueryClientProvider client={queryClient}>
@@ -74,6 +85,8 @@ const Dashboard = () => {
                 modelFilter={modelFilter}
                 onTimeFilterChange={handleTimeFilterChange}
                 onModelFilterChange={handleModelFilterChange}
+                searchTerm={searchTerm}
+                onSearchTermChange={setSearchTerm}
               />
 
               <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
@@ -83,13 +96,13 @@ const Dashboard = () => {
                   <TabsTrigger value="calls" className="data-[state=active]:bg-purple-600 data-[state=active]:text-white">API Calls</TabsTrigger>
                 </TabsList>
                 <TabsContent value="overview">
-                  <OverviewTab data={data} />
+                  <OverviewTab data={filteredData} />
                 </TabsContent>
                 <TabsContent value="costs">
-                  <CostsTab data={data} />
+                  <CostsTab data={filteredData} />
                 </TabsContent>
                 <TabsContent value="calls">
-                  <CallsTab data={data} />
+                  <CallsTab data={filteredData} />
                 </TabsContent>
               </Tabs>
             </div>
