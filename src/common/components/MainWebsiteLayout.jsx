@@ -1,6 +1,6 @@
 import React from 'react';
 import MainWebsiteHeader from './header/MainWebsiteHeader';
-import Footer from './footer';
+import Footer from './footer/Footer';
 
 const MainWebsiteLayout = ({ children }) => {
   return (
