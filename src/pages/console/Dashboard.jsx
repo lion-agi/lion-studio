@@ -161,6 +161,40 @@ const CostsTab = ({ timeFilter, modelFilter }) => {
 const CallsTab = ({ timeFilter, modelFilter }) => {
   const { data, isLoading, error } = useApiData();
 
+  const handleExportApiCalls = () => {
+    if (!data || !data.recentCalls) {
+      console.error('No data available for export');
+      return;
+    }
+
+    const csvContent = [
+      ['Timestamp', 'Provider', 'Model', 'Endpoint', 'Method', 'Base URL', 'Tokens', 'Cost', 'Response Time'],
+      ...data.recentCalls.map(call => [
+        call.timestamp,
+        call.provider,
+        call.model,
+        call.endpoint,
+        call.method,
+        call.baseUrl,
+        call.tokens,
+        call.cost,
+        call.responseTime
+      ])
+    ].map(row => row.join(',')).join('\n');
+
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement('a');
+    if (link.download !== undefined) {
+      const url = URL.createObjectURL(blob);
+      link.setAttribute('href', url);
+      link.setAttribute('download', 'api_calls_export.csv');
+      link.style.visibility = 'hidden';
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    }
+  };
+
   if (isLoading) return <LoadingSpinner />;
   if (error) return <ErrorFallback error={error} />;
 
@@ -176,7 +210,7 @@ const CallsTab = ({ timeFilter, modelFilter }) => {
       }} />
       <RecentCallsTable data={data?.recentCalls || []} />
       <div className="flex justify-end">
-        <Button className="bg-purple-600 hover:bg-purple-700 text-white">
+        <Button className="bg-purple-600 hover:bg-purple-700 text-white" onClick={handleExportApiCalls}>
           <DownloadIcon className="mr-2 h-4 w-4" />
           Export API Calls
         </Button>
