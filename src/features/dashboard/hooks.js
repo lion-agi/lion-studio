@@ -6,15 +6,9 @@ export const useApiData = (timeRange, selectedModel) => {
   const endDate = new Date();
   const startDate = new Date(endDate.getTime() - getTimeRangeInMilliseconds(timeRange));
 
-  const apiCallsQuery = useQuery({
-    queryKey: ['apiCalls', startDate.toISOString(), endDate.toISOString()],
-    queryFn: () => useApiCallsByDateRange(startDate.toISOString(), endDate.toISOString()),
-  });
+  const apiCallsQuery = useApiCallsByDateRange(startDate.toISOString(), endDate.toISOString());
 
-  const apiStatsQuery = useQuery({
-    queryKey: ['apiStats'],
-    queryFn: useApiCallStats,
-  });
+  const apiStatsQuery = useApiCallStats();
 
   const isLoading = apiCallsQuery.isLoading || apiStatsQuery.isLoading;
   const error = apiCallsQuery.error || apiStatsQuery.error;
