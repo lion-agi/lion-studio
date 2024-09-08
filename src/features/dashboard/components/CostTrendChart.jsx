@@ -20,7 +20,7 @@ const CostTrendChart = ({ data }) => (
     <CardHeader>
       <CardTitle className="text-gray-100">Cost Trend</CardTitle>
     </CardHeader>
-    <CardContent className="pt-0">
+    <CardContent className="pt-0 flex justify-center">
       <div className="w-full h-[300px]">
         <ResponsiveContainer width="100%" height="100%">
           <LineChart data={data} margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
