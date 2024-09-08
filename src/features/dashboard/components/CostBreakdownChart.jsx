@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React, { useState, useCallback, useMemo } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from "@/common/components/ui/card";
 import { ResponsiveContainer, PieChart, Pie, Cell, Tooltip, Legend } from 'recharts';
 import { formatCurrency } from '@/features/dashboard/utils';
@@ -20,6 +20,16 @@ const CustomTooltip = ({ active, payload }) => {
 };
 
 const CostBreakdownChart = ({ data }) => {
+  const [activeIndex, setActiveIndex] = useState(null);
+
+  const onPieEnter = useCallback((_, index) => {
+    setActiveIndex(index);
+  }, []);
+
+  const onPieLeave = useCallback(() => {
+    setActiveIndex(null);
+  }, []);
+
   const processedData = useMemo(() => {
     if (!data || !Array.isArray(data) || data.length === 0) return [];
     const totalCost = data.reduce((sum, item) => sum + item.cost, 0);
@@ -29,18 +39,17 @@ const CostBreakdownChart = ({ data }) => {
     })).sort((a, b) => b.cost - a.cost);
   }, [data]);
 
-  const renderCustomizedLabel = ({ cx, cy, midAngle, innerRadius, outerRadius, percent, index }) => {
-    const RADIAN = Math.PI / 180;
-    const radius = innerRadius + (outerRadius - innerRadius) * 0.5;
-    const x = cx + radius * Math.cos(-midAngle * RADIAN);
-    const y = cy + radius * Math.sin(-midAngle * RADIAN);
-    const model = processedData[index].model;
-    const displayName = model.length > 10 ? `${model.slice(0, 8)}...` : model;
-
+  const renderLegend = (props) => {
+    const { payload } = props;
     return (
-      <text x={x} y={y} fill="white" textAnchor={x > cx ? 'start' : 'end'} dominantBaseline="central">
-        {`${displayName} ${(percent * 100).toFixed(0)}%`}
-      </text>
+      <ul className="flex flex-wrap justify-center gap-2 mt-4">
+        {payload.map((entry, index) => (
+          <li key={`legend-${index}`} className="flex items-center">
+            <span className="w-3 h-3 mr-2" style={{ backgroundColor: entry.color }}></span>
+            <span className="text-xs text-gray-300">{entry.value}</span>
+          </li>
+        ))}
+      </ul>
     );
   };
 
@@ -50,7 +59,7 @@ const CostBreakdownChart = ({ data }) => {
         <CardHeader>
           <CardTitle className="text-gray-100">Cost Breakdown by Model</CardTitle>
         </CardHeader>
-        <CardContent className="h-[400px] flex items-center justify-center">
+        <CardContent className="h-[400px] relative overflow-auto flex items-center justify-center">
           <p className="text-gray-400">No cost breakdown data available</p>
         </CardContent>
       </Card>
@@ -62,24 +71,32 @@ const CostBreakdownChart = ({ data }) => {
       <CardHeader>
         <CardTitle className="text-gray-100">Cost Breakdown by Model</CardTitle>
       </CardHeader>
-      <CardContent className="h-[400px]">
+      <CardContent className="h-[400px] relative overflow-hidden">
         <ResponsiveContainer width="100%" height="100%">
           <PieChart>
             <Pie
               data={processedData}
               cx="50%"
               cy="50%"
-              labelLine={false}
-              label={renderCustomizedLabel}
-              outerRadius={150}
+              innerRadius="60%"
+              outerRadius="80%"
               fill="#8884d8"
+              paddingAngle={2}
               dataKey="cost"
+              onMouseEnter={onPieEnter}
+              onMouseLeave={onPieLeave}
             >
               {processedData.map((entry, index) => (
-                <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                <Cell 
+                  key={`cell-${index}`} 
+                  fill={COLORS[index % COLORS.length]}
+                  stroke={activeIndex === index ? '#fff' : 'none'}
+                  strokeWidth={2}
+                />
               ))}
             </Pie>
             <Tooltip content={<CustomTooltip />} />
+            <Legend content={renderLegend} />
           </PieChart>
         </ResponsiveContainer>
       </CardContent>
