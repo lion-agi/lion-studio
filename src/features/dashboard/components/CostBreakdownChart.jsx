@@ -25,12 +25,17 @@ const renderCustomizedLabel = ({ cx, cy, midAngle, innerRadius, outerRadius, per
 
   return (
     <text x={x} y={y} fill="white" textAnchor={x > cx ? 'start' : 'end'} dominantBaseline="central">
-      {`${model} ${(percent * 100).toFixed(0)}%`}
+      {`${index}`}
     </text>
   );
 };
 
 const CostBreakdownChart = ({ data }) => {
+  const simplifiedData = data.map((item, index) => ({
+    ...item,
+    model: `${index}`
+  }));
+
   return (
     <Card className="bg-gray-900 border-gray-800">
       <CardHeader>
@@ -41,7 +46,7 @@ const CostBreakdownChart = ({ data }) => {
           <ResponsiveContainer width="100%" height="100%">
             <PieChart>
               <Pie
-                data={data}
+                data={simplifiedData}
                 cx="50%"
                 cy="50%"
                 labelLine={false}
@@ -50,12 +55,17 @@ const CostBreakdownChart = ({ data }) => {
                 fill="#8884d8"
                 dataKey="cost"
               >
-                {data.map((entry, index) => (
+                {simplifiedData.map((entry, index) => (
                   <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                 ))}
               </Pie>
               <Tooltip content={<CustomTooltip />} />
-              <Legend formatter={(value) => <span className="text-gray-300">{value}</span>} />
+              <Legend 
+                formatter={(value, entry, index) => [
+                  `${index}: ${['0', '1', '2', 'gpt-4o-mini', 'gpt-4o', 'claude-sonnet-3.5'][index] || value}`,
+                  entry.payload
+                ]}
+              />
             </PieChart>
           </ResponsiveContainer>
         </div>
