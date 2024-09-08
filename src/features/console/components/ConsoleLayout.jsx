@@ -9,7 +9,7 @@ const ConsoleLayout = ({ children }) => (
         {children}
       </div>
     </main>
-    <footer className="bg-gray-900 text-gray-400 py-4 text-center text-xs">
+    <footer className="bg-gray-900 text-gray-400 py-4 text-center text-xs mt-auto">
       <p>&copy; {new Date().getFullYear()} Lion Intelligence LLC</p>
       <p>Long Island City, New York, 11102</p>
     </footer>
