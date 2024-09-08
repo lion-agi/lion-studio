@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Card, CardContent, CardHeader, CardTitle, CardFooter } from "@/common/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/common/components/ui/card";
 import { Button } from "@/common/components/ui/button";
 import { Input } from "@/common/components/ui/input";
 import { Label } from "@/common/components/ui/label";
@@ -25,14 +25,14 @@ const IntegrationCard = ({ integration, onConfigure, onToggle }) => (
         {integration.status}
       </Badge>
     </CardContent>
-    <CardFooter className="flex justify-between">
+    <CardContent className="flex justify-between">
       <Button variant="outline" size="sm" onClick={() => onConfigure(integration)}>Configure</Button>
       <Switch 
         checked={integration.status === 'Connected'} 
         onCheckedChange={() => onToggle(integration)}
         className={integration.status === 'Connected' ? 'bg-green-500' : 'bg-gray-500'}
       />
-    </CardFooter>
+    </CardContent>
   </Card>
 );
 
