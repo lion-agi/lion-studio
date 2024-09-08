@@ -81,23 +81,21 @@ export const useApiCallsByDateRange = (startDate, endDate, options = {}) => useQ
     ...options,
 });
 
-export const useApiCallStats = (startDate, endDate, options = {}) => {
-    // Set default start date to 7 days ago if not provided
-    const defaultStartDate = new Date();
-    defaultStartDate.setDate(defaultStartDate.getDate() - 7);
-    
-    const effectiveStartDate = startDate || defaultStartDate.toISOString();
-    const effectiveEndDate = endDate || new Date().toISOString();
+export const useApiCallStats = (options = {}) => {
+    const sevenDaysAgo = new Date();
+    sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
+    const defaultStartDate = sevenDaysAgo.toISOString();
+    const defaultEndDate = new Date().toISOString();
 
     return useQuery({
-        queryKey: ['apiCallStats', effectiveStartDate, effectiveEndDate],
+        queryKey: ['apiCallStats', defaultStartDate, defaultEndDate],
         queryFn: async () => {
             try {
                 const { data, error } = await supabase
                     .from('api_calls')
                     .select('cost, response_time, tokens')
-                    .gte('created_at', effectiveStartDate)
-                    .lte('created_at', effectiveEndDate);
+                    .gte('created_at', defaultStartDate)
+                    .lte('created_at', defaultEndDate);
 
                 if (error) throw error;
 
