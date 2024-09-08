@@ -47,6 +47,7 @@ const Home = () => {
         <p className="text-xl mb-8 max-w-2xl">
           Streamline your business processes with AI-powered automation solutions
         </p>
+        <img src="/demo1.jpg" alt="Demo 1" className="w-full rounded-lg shadow-lg mb-8" />
         {!user && (
           <Link to="/register">
             <Button size="lg" className="bg-purple-600 hover:bg-purple-700">Get Started</Button>
