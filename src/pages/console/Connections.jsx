@@ -11,17 +11,26 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { CheckCircle2, XCircle, Database, Cloud, FileText, Link as LinkIcon, Brain, Search } from 'lucide-react';
 
 const ConnectionCard = ({ connection, onConfigure, onToggle }) => (
-  <Card className={`hover:bg-gray-700 transition-colors ${connection.status === 'Connected' ? 'bg-green-900/10' : 'bg-gray-800'}`}>
+  <Card className="bg-gray-800 hover:bg-gray-700 transition-colors">
     <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
       <CardTitle className="text-lg font-semibold text-gray-100">{connection.name}</CardTitle>
       <connection.icon className="h-5 w-5 text-gray-400" />
     </CardHeader>
     <CardContent>
-      <Badge variant={connection.status === 'Connected' ? 'success' : 'secondary'}>{connection.status}</Badge>
+      <Badge 
+        variant={connection.status === 'Connected' ? 'success' : 'secondary'}
+        className={connection.status === 'Connected' ? 'bg-green-500/10 text-green-500' : 'bg-gray-500/10 text-gray-400'}
+      >
+        {connection.status}
+      </Badge>
     </CardContent>
     <CardFooter className="flex justify-between">
       <Button variant="outline" size="sm" onClick={() => onConfigure(connection)}>Configure</Button>
-      <Switch checked={connection.status === 'Connected'} onCheckedChange={() => onToggle(connection)} />
+      <Switch 
+        checked={connection.status === 'Connected'} 
+        onCheckedChange={() => onToggle(connection)}
+        className={connection.status === 'Connected' ? 'bg-green-500' : 'bg-gray-500'}
+      />
     </CardFooter>
   </Card>
 );
