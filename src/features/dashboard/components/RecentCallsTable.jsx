@@ -33,7 +33,7 @@ const RecentCallsTable = ({ calls }) => {
   const displayedCalls = filteredCalls.slice(startIndex, endIndex);
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-4 my-8"> {/* Added vertical margin */}
       <div className="flex justify-between items-center">
         <Input
           placeholder="Filter calls..."
