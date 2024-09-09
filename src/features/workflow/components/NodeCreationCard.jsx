@@ -3,11 +3,11 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/common/components/ui
 import { Button } from "@/common/components/ui/button";
 import { Input } from "@/common/components/ui/input";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/common/components/ui/collapsible";
-import { ChevronDown, Search, ChevronUp, Save, Upload } from 'lucide-react';
+import { ChevronDown, Search, ChevronUp } from 'lucide-react';
 import { ScrollArea } from "@/common/components/ui/scroll-area";
 import { nodeCategories } from '@/common/components/nodes/nodeCategories';
 
-const NodeCreationCard = ({ onAddNode, onSave, onLoad }) => {
+const NodeCreationCard = ({ onAddNode, onExportJSON, onCreateFlow, onOpenSettings }) => {
   const [searchTerm, setSearchTerm] = useState('');
   const [expandedCategories, setExpandedCategories] = useState({});
   const [isExpanded, setIsExpanded] = useState(true);
@@ -81,13 +81,14 @@ const NodeCreationCard = ({ onAddNode, onSave, onLoad }) => {
               ))}
             </ScrollArea>
             <div className="space-y-4 mt-4">
-              <Button onClick={onSave} className="w-full">
-                <Save className="mr-2 h-4 w-4" />
-                Save Workflow
+              <Button onClick={onExportJSON} className="w-full">
+                Export JSON
               </Button>
-              <Button onClick={onLoad} className="w-full">
-                <Upload className="mr-2 h-4 w-4" />
-                Load Workflow
+              <Button onClick={onCreateFlow} className="w-full">
+                Create New Flow
+              </Button>
+              <Button onClick={onOpenSettings} className="w-full">
+                Settings
               </Button>
             </div>
           </CardContent>
