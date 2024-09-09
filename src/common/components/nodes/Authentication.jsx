@@ -1,16 +1,23 @@
 import React from 'react';
 import BaseNode from './BaseNode';
 import { Lock } from 'lucide-react';
+import { nodeCategories } from './nodeCategories';
 
 const Authentication = (props) => {
+  const nodeCategory = nodeCategories.find(category => 
+    category.nodes.some(node => node.type === 'authentication')
+  );
+
+  const nodeConfig = nodeCategory.nodes.find(node => node.type === 'authentication');
+
   return (
     <BaseNode 
       {...props} 
       icon={Lock} 
       type="authentication"
-      baseColor="#97266D"
-      gradientFrom="from-pink-900/30"
-      gradientTo="to-pink-800/10"
+      baseColor={nodeConfig.baseColor}
+      gradientFrom={nodeConfig.gradientFrom}
+      gradientTo={nodeConfig.gradientTo}
     >
       Authentication
     </BaseNode>
