@@ -26,9 +26,9 @@ const Dashboard = () => {
   const navigate = useNavigate();
 
   const [dashboardSettings, setDashboardSettings] = useState({
-    tableFields: ['timestamp', 'provider', 'model', 'tokens', 'cost', 'response_time'],
-    costsTabCharts: ['costTrend', 'costBreakdown'],
-    performanceMetrics: ['responseTime', 'errorRate'],
+    showCostTrend: true,
+    showCostBreakdown: true,
+    showPerformanceMetrics: true,
   });
 
   useEffect(() => {
@@ -49,24 +49,13 @@ const Dashboard = () => {
     });
   };
 
-  const InfoModal = () => (
-    <Dialog open={isInfoModalOpen} onOpenChange={setIsInfoModalOpen}>
-      <DialogContent className="sm:max-w-[425px] bg-gray-800 text-gray-100">
-        <DialogHeader>
-          <DialogTitle>Dashboard Information</DialogTitle>
-        </DialogHeader>
-        <div className="mt-4">
-          <p>The Dashboard provides an overview of your project's performance and usage:</p>
-          <ul className="list-disc list-inside mt-2 space-y-1">
-            <li>View total costs and API calls</li>
-            <li>Monitor response times and error rates</li>
-            <li>Analyze trends and performance metrics</li>
-          </ul>
-          <p className="mt-4">Use the filters to adjust the time range and model selection, and use the search bar to find specific information.</p>
-        </div>
-      </DialogContent>
-    </Dialog>
-  );
+  const handleSettingsChange = (newSettings) => {
+    setDashboardSettings(newSettings);
+    toast({
+      title: "Settings Updated",
+      description: "Your dashboard settings have been saved.",
+    });
+  };
 
   if (isLoading) {
     return <div className="flex justify-center items-center h-64">Loading...</div>;
@@ -132,16 +121,16 @@ const Dashboard = () => {
         <TabsContent value="overview" className="space-y-8">
           <SummaryCards data={data.summary} />
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-            <CostTrendChart data={data.costTrend} />
-            <PerformanceChart data={data.performance} />
+            {dashboardSettings.showCostTrend && <CostTrendChart data={data.costTrend} />}
+            {dashboardSettings.showPerformanceMetrics && <PerformanceChart data={data.performance} />}
           </div>
         </TabsContent>
 
         <TabsContent value="costs" className="space-y-8">
           <SummaryCards data={data.summary} />
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-            {dashboardSettings.costsTabCharts.includes('costTrend') && <CostTrendChart data={data.costTrend} />}
-            {dashboardSettings.costsTabCharts.includes('costBreakdown') && <CostBreakdownChart data={data.costBreakdown} />}
+            {dashboardSettings.showCostTrend && <CostTrendChart data={data.costTrend} />}
+            {dashboardSettings.showCostBreakdown && <CostBreakdownChart data={data.costBreakdown} />}
           </div>
         </TabsContent>
 
@@ -149,7 +138,7 @@ const Dashboard = () => {
           <SummaryCards data={data.summary} />
           {data.recentCalls && data.recentCalls.length > 0 ? (
             <>
-              <RecentCallsTable data={data.recentCalls} fields={dashboardSettings.tableFields} />
+              <RecentCallsTable data={data.recentCalls} />
               <div className="flex justify-end">
                 <Button onClick={handleExportData} className="bg-purple-600 hover:bg-purple-700 text-white">
                   Export API Calls
@@ -167,12 +156,27 @@ const Dashboard = () => {
         <TabsContent value="settings" className="space-y-8">
           <SettingsTab
             settings={dashboardSettings}
-            onSettingsChange={setDashboardSettings}
+            onSettingsChange={handleSettingsChange}
           />
         </TabsContent>
       </Tabs>
 
-      <InfoModal />
+      <Dialog open={isInfoModalOpen} onOpenChange={setIsInfoModalOpen}>
+        <DialogContent className="sm:max-w-[425px] bg-gray-800 text-gray-100">
+          <DialogHeader>
+            <DialogTitle>Dashboard Information</DialogTitle>
+          </DialogHeader>
+          <div className="mt-4">
+            <p>The Dashboard provides an overview of your project's performance and usage:</p>
+            <ul className="list-disc list-inside mt-2 space-y-1">
+              <li>View total costs and API calls</li>
+              <li>Monitor response times and error rates</li>
+              <li>Analyze trends and performance metrics</li>
+            </ul>
+            <p className="mt-4">Use the filters to adjust the time range and model selection, and use the search bar to find specific information.</p>
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };
