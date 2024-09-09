@@ -8,10 +8,11 @@ import { Label } from "@/common/components/ui/label";
 import { Input } from "@/common/components/ui/input";
 import { ScrollArea } from "@/common/components/ui/scroll-area";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/common/components/ui/collapsible";
-import { Zap, Save, Upload, PlusCircle, FileJson, Play, Pause, Undo, Redo, Settings, Lock, Unlock, ZoomIn, ZoomOut, RotateCcw, Download, Share, ChevronUp, ChevronDown } from 'lucide-react';
+import { Zap, Save, Upload, PlusCircle, FileJson, Play, Pause, Undo, Redo, Settings, Lock, Unlock, ZoomIn, ZoomOut, RotateCcw, Download, Share, ChevronUp, ChevronDown, Sliders } from 'lucide-react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogFooter } from "@/common/components/ui/dialog";
 import JSONModal from '@/common/components/JSONModal';
 import EdgePropertiesDialog from './EdgePropertiesDialog';
+import VariableManipulationModal from '@/common/components/VariableManipulationModal';
 
 const WorkflowOperationsPanel = ({ 
   onExportJSON, 
@@ -39,6 +40,7 @@ const WorkflowOperationsPanel = ({
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [showEdgePropertiesDialog, setShowEdgePropertiesDialog] = useState(false);
   const [selectedEdge, setSelectedEdge] = useState(null);
+  const [showVariableManipulationModal, setShowVariableManipulationModal] = useState(false);
 
   const handleExportJSON = () => {
     const jsonData = onExportJSON();
@@ -251,6 +253,19 @@ const WorkflowOperationsPanel = ({
                     </TooltipContent>
                   </Tooltip>
                 </TooltipProvider>
+
+                <TooltipProvider>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <Button variant="outline" size="icon" onClick={() => setShowVariableManipulationModal(true)}>
+                        <Sliders className="h-4 w-4" />
+                      </Button>
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      <p>Variable Manipulation</p>
+                    </TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
               </div>
             </ScrollArea>
           </CollapsibleContent>
@@ -341,6 +356,11 @@ const WorkflowOperationsPanel = ({
           onEdgeClick(updatedEdge);
           setShowEdgePropertiesDialog(false);
         }}
+      />
+
+      <VariableManipulationModal
+        isOpen={showVariableManipulationModal}
+        onClose={() => setShowVariableManipulationModal(false)}
       />
     </Card>
   );

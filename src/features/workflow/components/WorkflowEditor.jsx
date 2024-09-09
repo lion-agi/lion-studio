@@ -1,6 +1,5 @@
 import React, { useMemo, useRef, useState, useEffect, useCallback } from 'react';
 import ReactFlow, { 
-  Background, 
   MiniMap, 
   Panel, 
   useReactFlow,
@@ -146,7 +145,6 @@ const WorkflowEditorContent = () => {
           nodesConnectable={!isLocked}
           elementsSelectable={!isLocked}
         >
-          <Background />
           <MiniMap 
             nodeColor={(node) => {
               switch (node.type) {
