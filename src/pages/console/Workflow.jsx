@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/common/components/ui/tabs";
-import { WorkflowEditor } from '../../features/workflow/WorkflowEditor';
-import { WorkflowSettingsProvider } from '../../features/workflow/WorkflowSettingsContext';
+import { WorkflowEditor } from '../../features/workflow/components/WorkflowEditor';
+import { WorkflowSettingsProvider } from '../../features/workflow/components/WorkflowSettingsContext';
 import Sidebar from '@/common/components/Sidebar';
 import SecondaryNavigation from '@/common/components/SecondaryNavigation';
 import NodeCreationCard from '@/features/workflow/components/NodeCreationCard';
@@ -10,6 +10,12 @@ import JSONModal from '@/common/components/JSONModal';
 import { Button } from "@/common/components/ui/button";
 import { Input } from "@/common/components/ui/input";
 import { Search, Info } from 'lucide-react';
+import { ScrollArea } from "@/common/components/ui/scroll-area";
+import { Card, CardContent, CardHeader, CardTitle } from "@/common/components/ui/card";
+import { Label } from "@/common/components/ui/label";
+import { Switch } from "@/common/components/ui/switch";
+import { Slider } from "@/common/components/ui/slider";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/common/components/ui/select";
 
 const WorkflowEditorPage = () => {
   const [sidebarExpanded, setSidebarExpanded] = useState(true);
@@ -102,7 +108,69 @@ const WorkflowEditorPage = () => {
             </TabsContent>
 
             <TabsContent value="settings">
-              <div className="text-gray-300">Workflow settings content goes here.</div>
+              <ScrollArea className="h-[calc(100vh-200px)] pr-4">
+                <Card className="bg-gray-800 text-gray-100">
+                  <CardHeader>
+                    <CardTitle>Workflow Settings</CardTitle>
+                  </CardHeader>
+                  <CardContent className="space-y-6">
+                    <div className="space-y-2">
+                      <Label htmlFor="auto-save">Auto Save</Label>
+                      <Switch id="auto-save" />
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="grid-size">Grid Size</Label>
+                      <Slider
+                        id="grid-size"
+                        min={5}
+                        max={50}
+                        step={5}
+                        defaultValue={[20]}
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="theme">Theme</Label>
+                      <Select id="theme">
+                        <SelectTrigger>
+                          <SelectValue placeholder="Select theme" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="light">Light</SelectItem>
+                          <SelectItem value="dark">Dark</SelectItem>
+                          <SelectItem value="system">System</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="node-spacing">Node Spacing</Label>
+                      <Slider
+                        id="node-spacing"
+                        min={10}
+                        max={100}
+                        step={10}
+                        defaultValue={[50]}
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="edge-type">Edge Type</Label>
+                      <Select id="edge-type">
+                        <SelectTrigger>
+                          <SelectValue placeholder="Select edge type" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="bezier">Bezier</SelectItem>
+                          <SelectItem value="straight">Straight</SelectItem>
+                          <SelectItem value="step">Step</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="minimap">Show Minimap</Label>
+                      <Switch id="minimap" />
+                    </div>
+                  </CardContent>
+                </Card>
+              </ScrollArea>
             </TabsContent>
           </Tabs>
         </div>
