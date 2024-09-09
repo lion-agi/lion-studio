@@ -198,3 +198,52 @@ body.dragging * {
 .node-card.initializer {
   @apply from-red-500/20 to-red-400/10;
 }
+
+/* Color-coded system for different setting types */
+.settings-display {
+  @apply text-blue-500;
+}
+
+.settings-data {
+  @apply text-green-500;
+}
+
+.settings-general {
+  @apply text-yellow-500;
+}
+
+/* Increase contrast ratio for better readability */
+body {
+  @apply bg-background text-foreground;
+}
+
+/* Add CSS classes for color-coded system for different setting types */
+.settings-display {
+  @apply text-blue-500;
+}
+
+.settings-data {
+  @apply text-green-500;
+}
+
+.settings-general {
+  @apply text-yellow-500;
+}
+
+/* Add CSS classes for larger font sizes for headers and labels */
+.header {
+  @apply text-2xl;
+}
+
+.label {
+  @apply text-lg;
+}
+
+/* Add CSS classes for additional spacing between elements */
+.section {
+  @apply mb-6;
+}
+
+.setting {
+  @apply mb-4;
+}
