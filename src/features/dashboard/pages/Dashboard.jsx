@@ -117,14 +117,14 @@ const Dashboard = () => {
           </div>
         </div>
 
-        <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-          <TabsList className="bg-gray-800">
+        <Tabs value={activeTab} onValueChange={setActiveTab} className="mt-8">
+          <TabsList className="bg-gray-800 mb-6">
             <TabsTrigger value="overview" className="data-[state=active]:bg-purple-600 data-[state=active]:text-white">Overview</TabsTrigger>
             <TabsTrigger value="costs" className="data-[state=active]:bg-purple-600 data-[state=active]:text-white">Costs</TabsTrigger>
             <TabsTrigger value="calls" className="data-[state=active]:bg-purple-600 data-[state=active]:text-white">API Calls</TabsTrigger>
           </TabsList>
 
-          <TabsContent value="overview">
+          <TabsContent value="overview" className="mt-6">
             <div className="space-y-8">
               <SummaryCards data={data.summary} />
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
@@ -134,7 +134,7 @@ const Dashboard = () => {
             </div>
           </TabsContent>
 
-          <TabsContent value="costs">
+          <TabsContent value="costs" className="mt-6">
             <div className="space-y-8">
               <SummaryCards data={data.summary} />
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
@@ -144,7 +144,7 @@ const Dashboard = () => {
             </div>
           </TabsContent>
 
-          <TabsContent value="calls">
+          <TabsContent value="calls" className="mt-6">
             <div className="space-y-8">
               <SummaryCards data={data.summary} />
               {data.recentCalls && data.recentCalls.length > 0 ? (

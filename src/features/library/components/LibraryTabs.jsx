@@ -24,9 +24,9 @@ const LibraryTabs = ({
 }) => (
   <Tabs value={activeTab} onValueChange={onTabChange} className="mt-8">
     <TabsList className="bg-gray-800 mb-6">
-      <TabsTrigger value="threads" className="data-[state=active]:bg-purple-600 data-[state=active]:text-white">Threads</TabsTrigger>
-      <TabsTrigger value="pages" className="data-[state=active]:bg-purple-600 data-[state=active]:text-white">Pages</TabsTrigger>
-      <TabsTrigger value="collections" className="data-[state=active]:bg-purple-600 data-[state=active]:text-white">Collections</TabsTrigger>
+      <TabsTrigger value="threads" className="data-[state=active]:bg-purple-600 data-[state=active]:text-white px-6 py-3">Threads</TabsTrigger>
+      <TabsTrigger value="pages" className="data-[state=active]:bg-purple-600 data-[state=active]:text-white px-6 py-3">Pages</TabsTrigger>
+      <TabsTrigger value="collections" className="data-[state=active]:bg-purple-600 data-[state=active]:text-white px-6 py-3">Collections</TabsTrigger>
     </TabsList>
     {error ? (
       <Alert variant="destructive">
