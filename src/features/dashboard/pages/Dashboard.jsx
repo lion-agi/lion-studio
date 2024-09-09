@@ -177,3 +177,5 @@ const Dashboard = () => {
 };
 
 export default Dashboard;
+
+// Path: src/features/dashboard/pages/Dashboard.jsx

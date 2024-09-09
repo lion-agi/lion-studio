@@ -92,3 +92,6 @@ const createIntegrationSchema = (type, additionalFields = {}) => {
 };
 
 export { commonFields, specificFields, createIntegrationSchema };
+
+
+// Path: src/features/integrations/integrationFields.js

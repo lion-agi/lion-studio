@@ -47,3 +47,6 @@ const AppRoutes = () => (
 );
 
 export default AppRoutes;
+
+
+// Path: src/routes/index.jsx

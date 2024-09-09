@@ -190,3 +190,6 @@ const WorkflowEditor = () => (
 );
 
 export default WorkflowEditor;
+
+
+// Path: src/features/workflow/components/WorkflowEditor.jsx

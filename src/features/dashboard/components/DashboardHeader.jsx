@@ -58,3 +58,5 @@ const DashboardHeader = () => {
 };
 
 export default DashboardHeader;
+
+// Path: src/features/dashboard/components/DashboardHeader.jsx

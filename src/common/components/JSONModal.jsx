@@ -47,3 +47,6 @@ const JSONModal = ({ isOpen, onClose, jsonData }) => {
 };
 
 export default JSONModal;
+
+
+// Path: src/common/components/JSONModal.jsx

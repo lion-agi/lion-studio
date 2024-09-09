@@ -81,3 +81,5 @@ const Modals = ({ selectedThread, selectedPage, selectedDataSource, handleCloseM
 };
 
 export default Modals;
+
+// Path: src/features/library/components/Modals.jsx

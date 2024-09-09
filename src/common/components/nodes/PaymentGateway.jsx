@@ -18,3 +18,5 @@ const PaymentGateway = (props) => {
 };
 
 export default PaymentGateway;
+
+// Path: src/common/components/nodes/PaymentGateway.jsx

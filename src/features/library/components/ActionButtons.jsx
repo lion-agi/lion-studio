@@ -32,3 +32,5 @@ const ActionButtons = ({ setIsCreateCollectionOpen }) => (
 );
 
 export default ActionButtons;
+
+// Path: src/features/library/components/ActionButtons.jsx

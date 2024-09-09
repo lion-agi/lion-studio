@@ -6,3 +6,6 @@ const CallsTab = ({ data }) => (
 );
 
 export default CallsTab;
+
+
+// Path: src/features/dashboard/pages/CallTab.jsx

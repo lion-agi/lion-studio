@@ -38,3 +38,5 @@ const CollectionModal = ({ collection, isOpen, onClose }) => {
 };
 
 export default CollectionModal;
+
+// Path: src/features/library/components/CollectionModal.jsx

@@ -165,3 +165,5 @@ const UserProfile = () => {
 };
 
 export default UserProfile;
+
+// Path: src/features/library/pages/UseProfile.jsx

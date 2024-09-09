@@ -41,3 +41,5 @@ const OverviewTab = ({ data }) => (
 );
 
 export default OverviewTab;
+
+// Path: src/features/dashboard/pages/OverviewTab.jsx

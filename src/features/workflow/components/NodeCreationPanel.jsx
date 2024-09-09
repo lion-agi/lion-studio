@@ -80,3 +80,4 @@ const NodeCreationPanel = () => {
 };
 
 export default NodeCreationPanel;
+// Path: src/features/workflow/components/NodeCreationPanel.jsx

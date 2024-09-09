@@ -46,3 +46,6 @@ export const useEdgeHighlighting = (edges, setEdges) => {
 
   return { onNodeClick, edgeOptions, getEdgeStyle };
 };
+
+
+// Path: src/features/workflow/hooks/useEdgeHighlighting.js

@@ -33,3 +33,5 @@ export const WorkflowSettingsProvider = ({ children }) => {
     </WorkflowSettingsContext.Provider>
   );
 };
+
+// Path: src/features/workflow/components/WorkflowSettingsContext.jsx

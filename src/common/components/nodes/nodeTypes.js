@@ -39,3 +39,5 @@ export const nodeTypes = {
   dataProcessor: DataProcessor,
   documentAnalysis: DocumentAnalysis,
 };
+
+// Path: src/common/components/nodes/nodeTypes.js

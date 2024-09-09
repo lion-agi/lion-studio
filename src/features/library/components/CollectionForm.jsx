@@ -107,3 +107,6 @@ const CollectionForm = ({ collection, isOpen, onClose, onSave }) => {
 };
 
 export default CollectionForm;
+
+
+// Path: src/features/library/components/CollectionForm.jsx

@@ -170,3 +170,5 @@ const WorkflowSettingsPanel = ({ onClose }) => {
 };
 
 export default WorkflowSettingsPanel;
+
+// Path: src/features/workflow/components/WorkflowSettingsPanel.jsx

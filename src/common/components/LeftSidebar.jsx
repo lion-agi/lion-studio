@@ -97,3 +97,5 @@ const LeftSidebar = ({ onShowHelp, onFeatureChange }) => {
 };
 
 export default LeftSidebar;
+
+// Path: src/common/components/LeftSidebar.jsx

@@ -23,3 +23,5 @@ const ThreadList = ({ threads, onOpenModal }) => {
 };
 
 export default ThreadList;
+
+// Path: src/features/library/components/ThreadList.jsx

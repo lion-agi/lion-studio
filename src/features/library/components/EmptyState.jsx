@@ -11,3 +11,5 @@ const EmptyState = ({ message, icon: Icon, action }) => {
 };
 
 export default EmptyState;
+
+// Path: src/features/library/components/EmptyState.jsx

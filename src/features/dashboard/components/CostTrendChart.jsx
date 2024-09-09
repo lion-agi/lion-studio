@@ -77,3 +77,6 @@ const CostTrendChart = ({ data }) => {
 };
 
 export default CostTrendChart;
+
+
+// Path: src/features/dashboard/components/CostBreakdownChart.jsx

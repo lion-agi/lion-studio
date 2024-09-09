@@ -138,3 +138,5 @@ export const useWorkflowHandlers = (nodes, setNodes, edges, setEdges) => {
     setIsWizardOpen,
   };
 };
+
+// Path: src/features/workflow/hooks/useEdgeHighlighting.js

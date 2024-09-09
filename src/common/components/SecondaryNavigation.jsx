@@ -114,3 +114,5 @@ const SecondaryNavigation = ({ activeFeature, isExpanded, toggleExpanded }) => {
 };
 
 export default SecondaryNavigation;
+
+// Path: src/common/components/SecondaryNavigation.jsx

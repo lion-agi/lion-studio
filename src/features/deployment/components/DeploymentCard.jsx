@@ -36,3 +36,6 @@ const DeploymentCard = ({ name, environment, status, lastDeployed, version }) =>
 };
 
 export default DeploymentCard;
+
+
+// Path: src/features/deployment/components/DeploymentCard.jsx

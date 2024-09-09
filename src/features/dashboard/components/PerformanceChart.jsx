@@ -69,3 +69,5 @@ const PerformanceChart = ({ data }) => {
 };
 
 export default PerformanceChart;
+
+// Path: src/features/dashboard/components/PerformanceChart.jsx

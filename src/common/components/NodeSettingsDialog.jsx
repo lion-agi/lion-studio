@@ -148,3 +148,5 @@ const NodeSettingsDialog = ({ node, onSave, onDelete }) => {
 };
 
 export default NodeSettingsDialog;
+
+// Path: src/common/components/NodeSettingsDialog.jsx

@@ -40,3 +40,5 @@ const CollectionsContent = ({ collections, handleOpenPageModal, handleDeletePage
 );
 
 export default CollectionsContent;
+
+// Path: src/features/library/components/CollectionsContent.jsx

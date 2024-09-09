@@ -98,3 +98,5 @@ const NodeCreationCard = ({ onAddNode, onSave, onLoad, backgroundColor }) => {
 };
 
 export default NodeCreationCard;
+
+// Path: src/features/workflow/components/NodeCreationCard.jsx

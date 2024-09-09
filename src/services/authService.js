@@ -40,3 +40,5 @@ export const authService = {
     return data;
   },
 };
+
+// Path: src/services/authService.js

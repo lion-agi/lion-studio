@@ -73,3 +73,6 @@ const SettingsModal = ({ isOpen, onClose }) => {
 };
 
 export default SettingsModal;
+
+
+// Path: src/common/components/SettingsModal.jsx

@@ -44,3 +44,5 @@ const IntegrationCard = ({ integration, onConfigure, onToggle, isActive }) => {
 };
 
 export default IntegrationCard;
+
+// Path: src/features/integrations/components/IntegrationCard.jsx

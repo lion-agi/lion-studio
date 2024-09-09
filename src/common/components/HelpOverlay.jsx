@@ -36,3 +36,6 @@ const HelpOverlay = ({ onClose }) => {
 };
 
 export default HelpOverlay;
+
+
+// Path: src/common/components/HelpOverlay.jsx

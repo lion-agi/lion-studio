@@ -153,3 +153,5 @@ const BaseNode = ({
 };
 
 export default BaseNode;
+
+// Path: src/common/components/nodes/BaseNode.jsx

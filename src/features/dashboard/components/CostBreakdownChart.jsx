@@ -91,3 +91,6 @@ const CostBreakdownChart = ({ data }) => {
 };
 
 export default CostBreakdownChart;
+
+
+// Path: src/features/dashboard/components/CostBreakdownChart.jsx

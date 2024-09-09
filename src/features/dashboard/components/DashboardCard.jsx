@@ -17,3 +17,5 @@ const DashboardCard = ({ title, value, change, icon: Icon }) => (
 );
 
 export default DashboardCard;
+
+// Path: src/features/dashboard/components/DashboardCard.jsx

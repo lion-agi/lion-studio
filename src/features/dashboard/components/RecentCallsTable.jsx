@@ -50,3 +50,6 @@ const RecentCallsTable = ({ data }) => {
 };
 
 export default RecentCallsTable;
+
+
+// Path: src/features/dashboard/components/RecentCallsTable.jsx
