@@ -5,6 +5,14 @@ import Note from './Note';
 import DatabaseNode from './DatabaseNode';
 import WorkflowNode from './WorkflowNode';
 import MixtureOfExperts from './MixtureOfExperts';
+import Worker from './Worker';
+import Tool from './Tool';
+import AIModel from './AIModel';
+import TaskQueue from './TaskQueue';
+import Scheduler from './Scheduler';
+import APIEndpoint from './APIEndpoint';
+import Webhook from './Webhook';
+import EventTrigger from './EventTrigger';
 
 export const nodeTypes = {
   apiCall: APICall,
@@ -14,4 +22,12 @@ export const nodeTypes = {
   database: DatabaseNode,
   workflow: WorkflowNode,
   experts: MixtureOfExperts,
+  worker: Worker,
+  tool: Tool,
+  aiModel: AIModel,
+  taskQueue: TaskQueue,
+  scheduler: Scheduler,
+  apiEndpoint: APIEndpoint,
+  webhook: Webhook,
+  eventTrigger: EventTrigger,
 };
