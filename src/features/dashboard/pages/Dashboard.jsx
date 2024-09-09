@@ -1,24 +1,27 @@
-import React, { useState, useEffect } from 'react';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/common/components/ui/tabs";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/common/components/ui/select";
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Button } from "@/common/components/ui/button";
-import { Calendar } from "@/common/components/ui/calendar";
-import { Popover, PopoverContent, PopoverTrigger } from "@/common/components/ui/popover";
-import { format } from 'date-fns';
-import { Calendar as CalendarIcon } from 'lucide-react';
+import { Input } from "@/common/components/ui/input";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/common/components/ui/select";
+import { Search, Info } from 'lucide-react';
 import SummaryCards from '../components/SummaryCards';
 import CostTrendChart from '../components/CostTrendChart';
-import CostBreakdownChart from '../components/CostBreakdownChart';
 import RecentCallsTable from '../components/RecentCallsTable';
 import { useApiData } from '../hooks/useApiData';
+import { Card, CardContent, CardHeader, CardTitle } from "@/common/components/ui/card";
+import AgenticFlowWizard from '@/common/components/AgenticFlowWizard';
+import WorkflowOperationsPanel from '@/features/workflow/components/WorkflowOperationsPanel';
+import NodeCreationCard from '@/features/workflow/components/NodeCreationCard';
 
 const Dashboard = () => {
-  const [activeTab, setActiveTab] = useState('overview');
-  const [selectedMetric, setSelectedMetric] = useState('totalCost');
   const [timeRange, setTimeRange] = useState('7d');
-  const [customDateRange, setCustomDateRange] = useState({ from: null, to: null });
+  const [selectedMetric, setSelectedMetric] = useState('totalCost');
+  const [isInfoModalOpen, setIsInfoModalOpen] = useState(false);
+  const [isWizardOpen, setIsWizardOpen] = useState(false);
+  const [wizardType, setWizardType] = useState('');
+  const navigate = useNavigate();
 
-  const { data, isLoading, error } = useApiData(timeRange, customDateRange);
+  const { data, isLoading, error } = useApiData(timeRange);
 
   const handleMetricClick = (metric) => {
     setSelectedMetric(metric);
@@ -26,16 +29,11 @@ const Dashboard = () => {
 
   const handleTimeRangeChange = (value) => {
     setTimeRange(value);
-    if (value !== 'custom') {
-      setCustomDateRange({ from: null, to: null });
-    }
   };
 
-  const handleCustomDateChange = (range) => {
-    if (range.from && range.to) {
-      setCustomDateRange(range);
-      setTimeRange('custom');
-    }
+  const openWizard = (type) => {
+    setWizardType(type);
+    setIsWizardOpen(true);
   };
 
   if (isLoading) return <div>Loading dashboard data...</div>;
@@ -43,9 +41,19 @@ const Dashboard = () => {
 
   return (
     <div className="container mx-auto p-6 space-y-6">
-      <div className="flex justify-between items-center mb-6">
-        <h1 className="text-2xl font-bold">Dashboard</h1>
-        <div className="flex items-center space-x-4">
+      <div className="flex flex-col md:flex-row justify-between items-center mb-6">
+        <div className="flex items-center">
+          <h1 className="text-2xl font-bold mb-6 md:mb-0 text-gray-100 mr-4">Dashboard</h1>
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={() => setIsInfoModalOpen(true)}
+            className="text-gray-400 hover:text-gray-100"
+          >
+            <Info className="h-5 w-5" />
+          </Button>
+        </div>
+        <div className="flex space-x-4 items-center">
           <Select value={timeRange} onValueChange={handleTimeRangeChange}>
             <SelectTrigger className="w-[180px]">
               <SelectValue placeholder="Select time range" />
@@ -55,68 +63,62 @@ const Dashboard = () => {
               <SelectItem value="7d">Last 7 days</SelectItem>
               <SelectItem value="30d">Last 30 days</SelectItem>
               <SelectItem value="90d">Last 90 days</SelectItem>
-              <SelectItem value="custom">Custom Range</SelectItem>
             </SelectContent>
           </Select>
-          {timeRange === 'custom' && (
-            <Popover>
-              <PopoverTrigger asChild>
-                <Button variant="outline" className="w-[280px] justify-start text-left font-normal">
-                  <CalendarIcon className="mr-2 h-4 w-4" />
-                  {customDateRange.from ? (
-                    customDateRange.to ? (
-                      <>
-                        {format(customDateRange.from, "LLL dd, y")} -{" "}
-                        {format(customDateRange.to, "LLL dd, y")}
-                      </>
-                    ) : (
-                      format(customDateRange.from, "LLL dd, y")
-                    )
-                  ) : (
-                    <span>Pick a date range</span>
-                  )}
-                </Button>
-              </PopoverTrigger>
-              <PopoverContent className="w-auto p-0" align="start">
-                <Calendar
-                  mode="range"
-                  selected={customDateRange}
-                  onSelect={handleCustomDateChange}
-                  initialFocus
-                />
-              </PopoverContent>
-            </Popover>
-          )}
         </div>
       </div>
 
-      <Tabs value={activeTab} onValueChange={setActiveTab}>
-        <TabsList>
-          <TabsTrigger value="overview">Overview</TabsTrigger>
-          <TabsTrigger value="calls">Calls</TabsTrigger>
-          <TabsTrigger value="costs">Costs</TabsTrigger>
-        </TabsList>
+      <SummaryCards data={data.summary} onMetricClick={handleMetricClick} />
+      
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
+        <CostTrendChart data={data.costTrend} selectedMetric={selectedMetric} />
+        <Card>
+          <CardHeader>
+            <CardTitle>Quick Actions</CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <Button className="w-full" onClick={() => openWizard('agentic-flow')}>
+              Create Agentic Flow
+            </Button>
+            <Button className="w-full" onClick={() => navigate('/console/workflow')}>
+              Open Workflow Editor
+            </Button>
+            <Button className="w-full" onClick={() => openWizard('integration')}>
+              Add New Integration
+            </Button>
+            <Button className="w-full" onClick={() => navigate('/console/library')}>
+              Manage Knowledge Base
+            </Button>
+          </CardContent>
+        </Card>
+      </div>
+      
+      <RecentCallsTable calls={data.recentCalls} />
 
-        <TabsContent value="overview">
-          <SummaryCards data={data.summary} onMetricClick={handleMetricClick} />
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
-            <CostTrendChart data={data.costTrend} selectedMetric={selectedMetric} />
-            <CostBreakdownChart data={data.costBreakdown} />
-          </div>
-          <RecentCallsTable calls={data.recentCalls} />
-        </TabsContent>
+      <AgenticFlowWizard
+        isOpen={isWizardOpen && wizardType === 'agentic-flow'}
+        onClose={() => setIsWizardOpen(false)}
+        onCreateFlow={(flowConfig) => {
+          console.log('Creating new flow:', flowConfig);
+          setIsWizardOpen(false);
+        }}
+      />
 
-        <TabsContent value="calls">
-          <RecentCallsTable calls={data.recentCalls} />
-        </TabsContent>
+      {isWizardOpen && wizardType === 'integration' && (
+        <WorkflowOperationsPanel
+          onExportJSON={() => {}}
+          onSaveLoad={() => {}}
+          onCreateAgenticFlow={() => {}}
+          onClose={() => setIsWizardOpen(false)}
+        />
+      )}
 
-        <TabsContent value="costs">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <CostTrendChart data={data.costTrend} selectedMetric={selectedMetric} />
-            <CostBreakdownChart data={data.costBreakdown} />
-          </div>
-        </TabsContent>
-      </Tabs>
+      <NodeCreationCard
+        onAddNode={() => {}}
+        onSave={() => {}}
+        onLoad={() => {}}
+        backgroundColor="bg-gray-800"
+      />
     </div>
   );
 };
