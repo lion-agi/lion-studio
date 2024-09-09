@@ -2,7 +2,7 @@ import {
   UserIcon, FileUp, Globe, Database, Mail, FileDown, Brain, Image, Mic, PieChart,
   Languages, CleaningServices, Transform, GitMerge, Filter, AlertTriangle, GitBranch,
   Repeat, SwitchCamera, Zap, Clock, Link, Webhook, TableChart, ChartBar, Dashboard,
-  Description, Variable, Functions, StickyNote2, BugReport
+  Description, Variable, Functions, StickyNote2, Bug
 } from 'lucide-react';
 
 export const categoryColors = {
@@ -154,7 +154,7 @@ export const nodeCategories = [
       { type: 'variableAssignment', label: 'Variable Assignment', icon: Variable },
       { type: 'functionSubflow', label: 'Function/Subflow', icon: Functions },
       { type: 'commentNote', label: 'Comment/Note', icon: StickyNote2 },
-      { type: 'debug', label: 'Debug', icon: BugReport },
+      { type: 'debug', label: 'Debug', icon: Bug },
     ]
   },
 ];
