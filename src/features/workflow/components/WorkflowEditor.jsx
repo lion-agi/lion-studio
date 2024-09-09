@@ -1,4 +1,4 @@
-import React, { useMemo, useRef, useState, useEffect } from 'react';
+import React, { useMemo, useRef, useState, useEffect, useCallback } from 'react';
 import ReactFlow, { Background, Controls, MiniMap, Panel } from 'reactflow';
 import 'reactflow/dist/style.css';
 import SaveLoadDialog from '@/common/components/SaveLoadDialog';
@@ -15,12 +15,14 @@ import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/common/co
 import { ChevronDown, ChevronUp, Save, Upload, PlusCircle, FileJson, Settings } from 'lucide-react';
 import WorkflowSettingsPanel from './WorkflowSettingsPanel';
 import NodeCreationPanel from './NodeCreationPanel';
+import AgenticFlowWizard from '@/common/components/AgenticFlowWizard';
 
 const WorkflowEditorContent = () => {
   const containerRef = useRef(null);
   const [containerSize, setContainerSize] = useState({ width: 0, height: 0 });
   const [isSettingsExpanded, setIsSettingsExpanded] = useState(true);
   const [isToolsExpanded, setIsToolsExpanded] = useState(true);
+  const [isAgenticFlowWizardOpen, setIsAgenticFlowWizardOpen] = useState(false);
 
   const {
     nodes,
@@ -42,6 +44,7 @@ const WorkflowEditorContent = () => {
     handleExportJSON,
     handleSaveLoad,
     handleCreateAgenticFlow,
+    onNodeClick,
   } = useWorkflowHandlers(nodes, setNodes, edges, setEdges);
 
   const {
@@ -53,7 +56,7 @@ const WorkflowEditorContent = () => {
     setJsonData,
   } = useWorkflowModals();
 
-  const { onNodeClick, edgeOptions, getEdgeStyle } = useEdgeHighlighting(edges, setEdges);
+  const { edgeOptions, getEdgeStyle } = useEdgeHighlighting(edges, setEdges);
 
   const { backgroundColor, gridSize } = useWorkflowSettings();
 
@@ -83,6 +86,21 @@ const WorkflowEditorContent = () => {
 
   const toggleSettings = () => setIsSettingsExpanded(!isSettingsExpanded);
   const toggleTools = () => setIsToolsExpanded(!isToolsExpanded);
+
+  const handleExportJSONClick = () => {
+    const jsonContent = handleExportJSON();
+    setJsonData(jsonContent);
+    setShowJSONModal(true);
+  };
+
+  const handleCreateFlow = () => {
+    setIsAgenticFlowWizardOpen(true);
+  };
+
+  const onDeleteNode = useCallback((nodeId) => {
+    setNodes((nds) => nds.filter((node) => node.id !== nodeId));
+    setEdges((eds) => eds.filter((edge) => edge.source !== nodeId && edge.target !== nodeId));
+  }, [setNodes, setEdges]);
 
   return (
     <div ref={containerRef} className="h-full w-full relative" style={{ height: 'calc(100vh - 64px)' }}>
@@ -165,7 +183,7 @@ const WorkflowEditorContent = () => {
                 <CardContent className="pt-2 px-2">
                   <WorkflowSettingsPanel />
                   <div className="flex flex-col space-y-1 mt-2">
-                    <Button onClick={handleExportJSON} size="sm" className="w-full text-xs py-1 h-7">
+                    <Button onClick={handleExportJSONClick} size="sm" className="w-full text-xs py-1 h-7">
                       <FileJson className="mr-1 h-3 w-3" />
                       Export JSON
                     </Button>
@@ -173,7 +191,7 @@ const WorkflowEditorContent = () => {
                       <Save className="mr-1 h-3 w-3" />
                       Save/Load
                     </Button>
-                    <Button onClick={handleCreateAgenticFlow} size="sm" className="w-full text-xs py-1 h-7">
+                    <Button onClick={handleCreateFlow} size="sm" className="w-full text-xs py-1 h-7">
                       <PlusCircle className="mr-1 h-3 w-3" />
                       Create Flow
                     </Button>
@@ -216,6 +234,11 @@ const WorkflowEditorContent = () => {
         isOpen={showJSONModal}
         onClose={() => setShowJSONModal(false)}
         jsonData={jsonData}
+      />
+      <AgenticFlowWizard
+        isOpen={isAgenticFlowWizardOpen}
+        onClose={() => setIsAgenticFlowWizardOpen(false)}
+        onCreateFlow={handleCreateAgenticFlow}
       />
     </div>
   );
