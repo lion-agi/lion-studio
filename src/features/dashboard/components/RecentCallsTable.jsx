@@ -3,7 +3,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { useSettingsStore } from '@/store/settingsSlice';
 import { formatDate, formatNumber, formatCurrency, formatResponseTime } from '@/common/utils/formatters';
 
-const RecentCallsTable = ({ data }) => {
+const RecentCallsTable = ({ calls }) => {
   const tableFields = useSettingsStore((state) => state.tableFields);
 
   const formatField = (field, value) => {
@@ -25,6 +25,9 @@ const RecentCallsTable = ({ data }) => {
     return string.charAt(0).toUpperCase() + string.slice(1);
   };
 
+  // Add a null check and provide a default empty array
+  const safeCalls = calls || [];
+
   return (
     <Table>
       <TableHeader>
@@ -35,7 +38,7 @@ const RecentCallsTable = ({ data }) => {
         </TableRow>
       </TableHeader>
       <TableBody>
-        {data.map((call, index) => (
+        {safeCalls.map((call, index) => (
           <TableRow key={index}>
             {Object.entries(tableFields).map(([field, isVisible]) => 
               isVisible && (
