@@ -9,11 +9,8 @@ import { useWorkflowHandlers } from '../hooks/useWorkflowHandlers';
 import { useWorkflowModals } from '../hooks/useWorkflowModals';
 import { useEdgeHighlighting } from '../hooks/useEdgeHighlighting';
 import WorkflowToolbar from './WorkflowToolbar';
-import NodeCreationCard from './NodeCreationCard';
-import { WorkflowSettingsProvider } from './WorkflowSettingsContext';
+import { WorkflowSettingsProvider, useWorkflowSettings } from './WorkflowSettingsContext';
 import WorkflowSettingsPanel from './WorkflowSettingsPanel';
-
-const GRID_SIZE = 20;
 
 const WorkflowEditor = () => {
   const containerRef = useRef(null);
@@ -60,6 +57,8 @@ const WorkflowEditor = () => {
     [edges, getEdgeStyle]
   );
 
+  const { backgroundColor, gridSize } = useWorkflowSettings();
+
   useEffect(() => {
     const updateSize = () => {
       if (containerRef.current) {
@@ -94,17 +93,17 @@ const WorkflowEditor = () => {
           nodeTypes={nodeTypes}
           defaultEdgeOptions={edgeOptions}
           snapToGrid={true}
-          snapGrid={[GRID_SIZE, GRID_SIZE]}
+          snapGrid={[gridSize, gridSize]}
           fitView
           style={{
             width: containerSize.width,
             height: containerSize.height,
-            backgroundColor: '#2C3E50', // Dark muted blue-gray background
+            backgroundColor: backgroundColor,
           }}
         >
           <Background 
             variant="dots" 
-            gap={GRID_SIZE} 
+            gap={gridSize} 
             size={1} 
             color="rgba(255, 255, 255, 0.05)" 
             style={{ zIndex: -1 }}
@@ -142,9 +141,6 @@ const WorkflowEditor = () => {
               boxShadow: '0 1px 3px rgba(0, 0, 0, 0.2)',
             }}
           />
-          <Panel position="top-left">
-            <NodeCreationCard onAddNode={(type) => {/* Add node logic */}} />
-          </Panel>
           <Panel position="top-right">
             <WorkflowToolbar
               onExportJSON={handleExportJSON}
