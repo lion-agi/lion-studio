@@ -2,7 +2,7 @@ import React from 'react';
 import { Button } from "@/common/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/common/components/ui/dialog";
 import { MessageSquare, FileText, FolderPlus } from 'lucide-react';
-import CreateCollectionForm from '../../../common/components/CreateCollectionForm';
+import CreateCollectionForm from './CreateCollectionForm';
 
 const Modals = ({ selectedThread, selectedPage, selectedDataSource, handleCloseModal, isCreateCollectionOpen, setIsCreateCollectionOpen }) => {
   return (

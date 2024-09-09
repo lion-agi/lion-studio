@@ -6,6 +6,8 @@ import IntegrationCard from './components/IntegrationCard';
 import IntegrationFilters from './components/IntegrationFilters';
 import ConfigureIntegrationModal from './components/ConfigureIntegrationModal';
 import { Button } from "@/common/components/ui/button";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/common/components/ui/dialog";
+import { Info } from 'lucide-react';
 
 const Integrations = () => {
   const [activeTab, setActiveTab] = useState('all');
@@ -13,6 +15,7 @@ const Integrations = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [typeFilter, setTypeFilter] = useState('All Types');
   const [selectedIntegration, setSelectedIntegration] = useState(null);
+  const [isInfoModalOpen, setIsInfoModalOpen] = useState(false);
 
   const { data: fetchedIntegrations, isLoading, error } = useIntegrations();
   const addIntegration = useAddIntegration();
@@ -52,7 +55,8 @@ const Integrations = () => {
     const integration = integrations.find(i => i.id === id);
     const status = newStatus ? 'Activated' : 'Deactivated';
     toast({
-      title: `${integration.name} ${status}!`,
+      title: "Connection Status Update",
+      description: `${integration.name} ${status}!`,
       duration: 3000,
     });
   };
@@ -67,7 +71,7 @@ const Integrations = () => {
           )
         );
         toast({
-          title: "Integration Updated",
+          title: "Connection Status Update",
           description: "The integration has been successfully updated.",
           duration: 3000,
         });
@@ -75,7 +79,7 @@ const Integrations = () => {
         const newIntegration = await addIntegration.mutateAsync(updatedIntegration);
         setIntegrations(prevIntegrations => [...prevIntegrations, newIntegration]);
         toast({
-          title: "Integration Added",
+          title: "Connection Status Update",
           description: "A new integration has been successfully added.",
           duration: 3000,
         });
@@ -106,6 +110,7 @@ const Integrations = () => {
           setSearchTerm={setSearchTerm}
           typeFilter={typeFilter}
           setTypeFilter={setTypeFilter}
+          setIsInfoModalOpen={setIsInfoModalOpen}
         />
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -141,6 +146,24 @@ const Integrations = () => {
           integration={selectedIntegration}
           onSave={handleSaveIntegration}
         />
+
+        <Dialog open={isInfoModalOpen} onOpenChange={setIsInfoModalOpen}>
+          <DialogContent className="sm:max-w-[425px] bg-gray-800 text-gray-100">
+            <DialogHeader>
+              <DialogTitle>Integrations Information</DialogTitle>
+            </DialogHeader>
+            <div className="mt-4">
+              <p>Integrations allow you to connect Lion Studio with various external services and data sources. Here you can manage your integrations, including:</p>
+              <ul className="list-disc list-inside mt-2 space-y-1">
+                <li>Database connections</li>
+                <li>API integrations</li>
+                <li>Cloud storage services</li>
+                <li>AI model connections</li>
+              </ul>
+              <p className="mt-4">Use the filters and search bar to quickly find specific integrations.</p>
+            </div>
+          </DialogContent>
+        </Dialog>
       </div>
     </div>
   );

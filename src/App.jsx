@@ -9,15 +9,15 @@ import commonStyles from '@/common/components/ui/style-guide';
 
 // Import components
 import ConsoleHeader from '@/features/console/components/ConsoleHeader';
-import Home from './pages/Home';
-import Login from './pages/Login';
-import Registration from './pages/Registration';
-import AuthCallback from './pages/AuthCallback';
-import EmailConfirmation from './pages/EmailConfirmation';
+import Home from './pages/home/Home';
+import Login from './pages/home/Login';
+import Registration from './pages/home/Registration';
+import AuthCallback from './pages/home/AuthCallback';
+import EmailConfirmation from './pages/home/EmailConfirmation';
 import WorkflowEditor from '@/features/workflow/components/WorkflowEditor';
-import About from './pages/About';
-import Pricing from './pages/Pricing';
-import Contact from './pages/Contact';
+import About from './pages/home/About';
+import Pricing from './pages/home/Pricing';
+import Contact from './pages/home/Contact';
 
 import Library from './features/library/pages/Library';
 import Dashboard from '@/features/dashboard/pages/Dashboard';
@@ -26,7 +26,7 @@ import Deployment from '@/features/deployment/pages/Deployment';
 import Overview from '@/features/dashboard/pages/Overview';
 import CallsTab from '@/features/dashboard/pages/CallsTab';
 import CostsTab from '@/features/dashboard/pages/CostsTab';
-import UserProfile from './pages/console/UserProfile';
+import UserProfile from './features/profile/pages/UserProfile';
 
 // Create a client
 const queryClient = new QueryClient();

@@ -1,5 +1,5 @@
 import React from 'react';
-import MainWebsiteLayout from '../common/components/MainWebsiteLayout';
+import MainWebsiteLayout from '../../common/components/MainWebsiteLayout';
 
 const Contact = () => {
   return (
