@@ -26,6 +26,7 @@ import Deployment from '@/features/deployment/pages/Deployment';
 import Overview from '@/features/dashboard/pages/Overview';
 import CallsTab from '@/features/dashboard/pages/CallsTab';
 import CostsTab from '@/features/dashboard/pages/CostsTab';
+import UserProfile from './pages/console/UserProfile';
 
 // Create a client
 const queryClient = new QueryClient();
@@ -61,6 +62,7 @@ const AppRoutes = () => (
     <Route path="/console/library" element={<ProtectedRoute><ConsoleLayout><Library /></ConsoleLayout></ProtectedRoute>} />
     <Route path="/console/integrations" element={<ProtectedRoute><ConsoleLayout><Integrations /></ConsoleLayout></ProtectedRoute>} />
     <Route path="/console/deployment" element={<ProtectedRoute><ConsoleLayout><Deployment /></ConsoleLayout></ProtectedRoute>} />
+    <Route path="/console/user-profile" element={<ProtectedRoute><ConsoleLayout><UserProfile /></ConsoleLayout></ProtectedRoute>} />
 
     {/* Add more console routes as needed */}
   </Routes>
