@@ -12,7 +12,7 @@ import WorkflowEditor from '@/features/workflow/components/WorkflowEditor';
 import About from '@/pages/home/About';
 import Pricing from '@/pages/home/Pricing';
 import Contact from '@/pages/home/Contact';
-import UserProfile from '@-/features/profile/pages/UserProfile';
+import UserProfile from '@/features/profile/pages/UserProfile';
 import Overview from '@/features/dashboard/pages/Overview';
 import CallsTab from '@/features/dashboard/pages/CallsTab';
 import CostsTab from '@/features/dashboard/pages/CostsTab';
