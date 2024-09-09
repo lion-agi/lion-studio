@@ -9,15 +9,14 @@ const CustomTooltip = ({ active, payload, label }) => {
     return (
       <div className="bg-gray-800 border border-gray-700 p-2 rounded shadow-lg">
         <p className="text-gray-300 text-sm">{`Date: ${label}`}</p>
-        <p className="text-purple-400 text-sm">{`Cost: ${formatCurrency(payload[0].value)}`}</p>
+        <p className="text-purple-400 text-sm">{`${payload[0].name}: ${formatCurrency(payload[0].value)}`}</p>
       </div>
     );
   }
   return null;
 };
 
-const CostTrendChart = ({ data }) => {
-  // Check if data is undefined or not an array
+const CostTrendChart = ({ data, selectedMetric }) => {
   if (!data || !Array.isArray(data) || data.length === 0) {
     return (
       <Card className="bg-gray-900 border-gray-800" style={commonStyles}>
@@ -62,7 +61,8 @@ const CostTrendChart = ({ data }) => {
               <Tooltip content={<CustomTooltip />} />
               <Line 
                 type="monotone" 
-                dataKey="cost" 
+                dataKey={selectedMetric}
+                name={selectedMetric}
                 stroke="#8B5CF6" 
                 strokeWidth={2}
                 dot={false}
@@ -77,6 +77,3 @@ const CostTrendChart = ({ data }) => {
 };
 
 export default CostTrendChart;
-
-
-// Path: src/features/dashboard/components/CostBreakdownChart.jsx

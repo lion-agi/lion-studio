@@ -9,7 +9,12 @@ import SettingsTab from '../components/SettingsTab';
 
 const Dashboard = () => {
   const [activeTab, setActiveTab] = useState('overview');
+  const [selectedMetric, setSelectedMetric] = useState('totalCost');
   const { data, isLoading, error } = useApiData();
+
+  const handleMetricClick = (metric) => {
+    setSelectedMetric(metric);
+  };
 
   if (isLoading) return <div>Loading dashboard data...</div>;
   if (error) return <div>Error loading dashboard data: {error.message}</div>;
@@ -27,9 +32,9 @@ const Dashboard = () => {
         </TabsList>
 
         <TabsContent value="overview">
-          <SummaryCards data={data.summary} />
+          <SummaryCards data={data.summary} onMetricClick={handleMetricClick} />
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
-            <CostTrendChart data={data.costTrend} />
+            <CostTrendChart data={data.costTrend} selectedMetric={selectedMetric} />
             <CostBreakdownChart data={data.costBreakdown} />
           </div>
           <RecentCallsTable calls={data.recentCalls} />
@@ -41,7 +46,7 @@ const Dashboard = () => {
 
         <TabsContent value="costs">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <CostTrendChart data={data.costTrend} />
+            <CostTrendChart data={data.costTrend} selectedMetric={selectedMetric} />
             <CostBreakdownChart data={data.costBreakdown} />
           </div>
         </TabsContent>
