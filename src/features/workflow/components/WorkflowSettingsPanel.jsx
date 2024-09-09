@@ -2,19 +2,22 @@ import React from 'react';
 import { useWorkflowSettings } from './WorkflowSettingsContext';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/common/components/ui/select";
 import { Switch } from "@/common/components/ui/switch";
-import { Slider } from "@/common/components/ui/slider";
 import { Label } from "@/common/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle } from "@/common/components/ui/card";
 import { Settings, Palette, Eye, Zap } from 'lucide-react';
+import { Button } from "@/common/components/ui/button";
+import { Input } from "@/common/components/ui/input";
 
-const backgroundColors = {
-  'Dark Blue': '#1A2530',
-  'Light Gray': '#F0F4F8',
-  'Dark Gray': '#2C3E50',
-  'Navy': '#34495E',
-};
+const presetColors = [
+  { name: 'Dark Blue', value: '#1A2530' },
+  { name: 'Light Gray', value: '#F0F4F8' },
+  { name: 'Dark Gray', value: '#2C3E50' },
+  { name: 'Navy', value: '#34495E' },
+  { name: 'Forest Green', value: '#2ECC71' },
+  { name: 'Deep Purple', value: '#8E44AD' },
+];
 
-const WorkflowSettingsPanel = () => {
+const WorkflowSettingsPanel = ({ onClose }) => {
   const { 
     backgroundColor, 
     setBackgroundColor,
@@ -25,6 +28,13 @@ const WorkflowSettingsPanel = () => {
     theme,
     setTheme,
   } = useWorkflowSettings();
+
+  const [tempBackgroundColor, setTempBackgroundColor] = React.useState(backgroundColor);
+
+  const handleSave = () => {
+    setBackgroundColor(tempBackgroundColor);
+    onClose();
+  };
 
   return (
     <Card className="bg-gray-800 text-white">
@@ -41,22 +51,34 @@ const WorkflowSettingsPanel = () => {
               <Palette className="w-4 h-4 mr-2" />
               Background
             </Label>
-            <Select value={backgroundColor} onValueChange={setBackgroundColor}>
-              <SelectTrigger className="w-[120px]">
+            <Select value={tempBackgroundColor} onValueChange={setTempBackgroundColor}>
+              <SelectTrigger className="w-[180px]">
                 <SelectValue placeholder="Select color" />
               </SelectTrigger>
               <SelectContent>
-                {Object.entries(backgroundColors).map(([name, color]) => (
-                  <SelectItem key={color} value={color}>
+                {presetColors.map(({ name, value }) => (
+                  <SelectItem key={value} value={value}>
                     <div className="flex items-center">
-                      <div className="w-4 h-4 rounded-full mr-2" style={{ backgroundColor: color }} />
+                      <div className="w-4 h-4 rounded-full mr-2" style={{ backgroundColor: value }} />
                       {name}
                     </div>
                   </SelectItem>
                 ))}
+                <SelectItem value="custom">Custom Color</SelectItem>
               </SelectContent>
             </Select>
           </div>
+          {tempBackgroundColor === 'custom' && (
+            <div className="flex items-center justify-between">
+              <Label className="text-sm">Custom Color</Label>
+              <Input
+                type="color"
+                value={tempBackgroundColor}
+                onChange={(e) => setTempBackgroundColor(e.target.value)}
+                className="w-[100px]"
+              />
+            </div>
+          )}
           <div className="flex items-center justify-between">
             <Label className="text-sm flex items-center">
               <Zap className="w-4 h-4 mr-2" />
@@ -84,6 +106,9 @@ const WorkflowSettingsPanel = () => {
               </SelectContent>
             </Select>
           </div>
+          <Button onClick={handleSave} className="w-full mt-4">
+            Save Settings
+          </Button>
         </div>
       </CardContent>
     </Card>
