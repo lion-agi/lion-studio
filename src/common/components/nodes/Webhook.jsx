@@ -1,16 +1,16 @@
 import React from 'react';
 import BaseNode from './BaseNode';
-import { Zap } from 'lucide-react';
+import { Share2 } from 'lucide-react';
 
 const Webhook = (props) => {
   return (
     <BaseNode 
       {...props} 
-      icon={Zap} 
+      icon={Share2} 
       type="webhook"
-      baseColor="pink"
-      gradientFrom="from-pink-500/30"
-      gradientTo="to-pink-400/10"
+      baseColor="#ED64A6"
+      gradientFrom="from-pink-600/30"
+      gradientTo="to-pink-500/10"
     >
       Webhook
     </BaseNode>
