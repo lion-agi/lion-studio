@@ -1,255 +1,197 @@
 import React, { useState } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from "@/common/components/ui/card";
-import { Label } from "@/common/components/ui/label";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/common/components/ui/select";
-import { Switch } from "@/common/components/ui/switch";
-import { Accordion, AccordionItem, AccordionTrigger, AccordionContent } from "@/common/components/ui/accordion";
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/common/components/ui/tooltip";
-import { Info, Table, Eye, Settings, Bell, Globe } from 'lucide-react';
-import { Button } from "@/common/components/ui/button";
+import { useSettingsStore } from '@/store/settingsSlice';
 import { Input } from "@/common/components/ui/input";
-import useSettingsStore from '@/store/settingsSlice';
+import { Button } from "@/common/components/ui/button";
+import { Label } from "@/common/components/ui/label";
+import { Switch } from "@/common/components/ui/switch";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/common/components/ui/select";
+import { Card, CardContent, CardHeader, CardTitle } from "@/common/components/ui/card";
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/common/components/ui/accordion";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/common/components/ui/table";
+import { Eye, Settings, Palette, Globe } from 'lucide-react';
 
-const TableCustomization = () => {
-  const { tableFields, toggleTableField } = useSettingsStore();
-  const [customFunction, setCustomFunction] = useState('');
-  const [error, setError] = useState('');
+const SettingsTab = () => {
+  const {
+    tableFields,
+    toggleTableField,
+    theme,
+    setTheme,
+    autoRefreshInterval,
+    setAutoRefreshInterval,
+    chartType,
+    setChartType,
+    colorScheme,
+    setColorScheme,
+    language,
+    setLanguage,
+    enableNotifications,
+    setEnableNotifications,
+  } = useSettingsStore();
 
-  const handleCustomFunctionChange = (e) => {
-    try {
-      // Basic validation for custom function
-      new Function(e.target.value);
-      setError('');
-    } catch (err) {
-      setError('Invalid function');
-    }
-    setCustomFunction(e.target.value);
-  };
+  const [searchTerm, setSearchTerm] = useState('');
+
+  const filteredSettings = [
+    { id: 'table-customization', title: 'Table Customization', icon: <Eye className="h-5 w-5" />, component: TableCustomization },
+    { id: 'display-preferences', title: 'Display Preferences', icon: <Palette className="h-5 w-5" />, component: DisplayPreferences },
+    { id: 'general-settings', title: 'General Settings', icon: <Settings className="h-5 w-5" />, component: GeneralSettings },
+  ].filter(setting => 
+    setting.title.toLowerCase().includes(searchTerm.toLowerCase())
+  );
 
   return (
-    <div className="space-y-4 settings-data">
-      {Object.entries(tableFields).map(([field, isVisible]) => (
-        <div key={field} className="flex items-center space-x-4">
-          <TooltipProvider>
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <Switch 
-                  id={field} 
-                  checked={isVisible}
-                  onCheckedChange={() => toggleTableField(field)}
-                />
-              </TooltipTrigger>
-              <TooltipContent>
-                <p>Toggle {field}</p>
-              </TooltipContent>
-            </Tooltip>
-          </TooltipProvider>
-          <Label htmlFor={field} className="capitalize text-lg">{field}</Label>
-        </div>
-      ))}
-      <div className="flex flex-col space-y-2">
-        <Label htmlFor="customFunction" className="text-lg">Custom Function</Label>
-        <Input 
-          id="customFunction"
-          value={customFunction}
-          onChange={handleCustomFunctionChange}
-          placeholder="Enter custom function"
+    <div className="p-6 space-y-6 bg-gray-900 text-gray-100">
+      <div className="flex justify-between items-center">
+        <h2 className="text-3xl font-bold">Settings</h2>
+        <Input
+          type="text"
+          placeholder="Search settings..."
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          className="w-64 bg-gray-800 text-gray-100 border-gray-700"
         />
-        {error && <p className="text-red-500">{error}</p>}
+      </div>
+      <Accordion type="single" collapsible className="space-y-4">
+        {filteredSettings.map(({ id, title, icon, component: Component }) => (
+          <AccordionItem key={id} value={id}>
+            <AccordionTrigger className="text-xl font-semibold">
+              <div className="flex items-center">
+                {icon}
+                <span className="ml-2">{title}</span>
+              </div>
+            </AccordionTrigger>
+            <AccordionContent>
+              <Card className="bg-gray-800 border-gray-700">
+                <CardContent className="pt-6">
+                  <Component />
+                </CardContent>
+              </Card>
+            </AccordionContent>
+          </AccordionItem>
+        ))}
+      </Accordion>
+      <div className="flex justify-end space-x-4 mt-6">
+        <Button variant="outline" onClick={() => useSettingsStore.getState().resetToDefault()}>
+          Reset to Default
+        </Button>
+        <Button onClick={() => console.log('Settings saved')}>
+          Save Changes
+        </Button>
       </div>
     </div>
   );
 };
 
-const DisplayPreferences = () => {
-  const { theme, setTheme, autoRefreshInterval, setAutoRefreshInterval } = useSettingsStore();
-  const [chartType, setChartType] = useState('bar');
-  const [colorScheme, setColorScheme] = useState('default');
+const TableCustomization = () => {
+  const { tableFields, toggleTableField } = useSettingsStore();
 
   return (
-    <div className="space-y-4 settings-display">
-      <div className="flex items-center space-x-4">
-        <Label htmlFor="theme" className="text-lg">Theme</Label>
-        <TooltipProvider>
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <Select value={theme} onValueChange={setTheme}>
-                <SelectTrigger id="theme">
-                  <SelectValue placeholder="Select theme" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="light">Light</SelectItem>
-                  <SelectItem value="dark">Dark</SelectItem>
-                  <SelectItem value="system">System</SelectItem>
-                </SelectContent>
-              </Select>
-            </TooltipTrigger>
-            <TooltipContent>
-              <p>Select the theme</p>
-            </TooltipContent>
-          </Tooltip>
-        </TooltipProvider>
+    <Table>
+      <TableHeader>
+        <TableRow>
+          <TableHead>Field</TableHead>
+          <TableHead>Visible</TableHead>
+        </TableRow>
+      </TableHeader>
+      <TableBody>
+        {Object.entries(tableFields).map(([field, isVisible]) => (
+          <TableRow key={field}>
+            <TableCell className="font-medium">{field}</TableCell>
+            <TableCell>
+              <Switch
+                checked={isVisible}
+                onCheckedChange={() => toggleTableField(field)}
+              />
+            </TableCell>
+          </TableRow>
+        ))}
+      </TableBody>
+    </Table>
+  );
+};
+
+const DisplayPreferences = () => {
+  const { theme, setTheme, autoRefreshInterval, setAutoRefreshInterval, chartType, setChartType, colorScheme, setColorScheme } = useSettingsStore();
+
+  return (
+    <div className="space-y-4">
+      <div className="flex items-center justify-between">
+        <Label htmlFor="theme">Theme</Label>
+        <Select value={theme} onValueChange={setTheme}>
+          <SelectTrigger id="theme" className="w-[180px]">
+            <SelectValue placeholder="Select theme" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="light">Light</SelectItem>
+            <SelectItem value="dark">Dark</SelectItem>
+            <SelectItem value="system">System</SelectItem>
+          </SelectContent>
+        </Select>
       </div>
-      <div className="flex items-center space-x-4">
-        <Label htmlFor="autoRefresh" className="text-lg">Auto Refresh Interval (seconds)</Label>
-        <TooltipProvider>
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <Select 
-                value={autoRefreshInterval.toString()} 
-                onValueChange={(value) => setAutoRefreshInterval(parseInt(value, 10))}
-              >
-                <SelectTrigger id="autoRefresh">
-                  <SelectValue placeholder="Select interval" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="0">Disabled</SelectItem>
-                  <SelectItem value="30">30 seconds</SelectItem>
-                  <SelectItem value="60">1 minute</SelectItem>
-                  <SelectItem value="300">5 minutes</SelectItem>
-                </SelectContent>
-              </Select>
-            </TooltipTrigger>
-            <TooltipContent>
-              <p>Select the auto-refresh interval</p>
-            </TooltipContent>
-          </Tooltip>
-        </TooltipProvider>
+      <div className="flex items-center justify-between">
+        <Label htmlFor="autoRefresh">Auto Refresh Interval (seconds)</Label>
+        <Input
+          id="autoRefresh"
+          type="number"
+          value={autoRefreshInterval}
+          onChange={(e) => setAutoRefreshInterval(Number(e.target.value))}
+          className="w-[180px]"
+        />
       </div>
-      <div className="flex items-center space-x-4">
-        <Label htmlFor="chartType" className="text-lg">Chart Type</Label>
-        <TooltipProvider>
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <Select value={chartType} onValueChange={setChartType}>
-                <SelectTrigger id="chartType">
-                  <SelectValue placeholder="Select chart type" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="bar">Bar</SelectItem>
-                  <SelectItem value="line">Line</SelectItem>
-                  <SelectItem value="pie">Pie</SelectItem>
-                </SelectContent>
-              </Select>
-            </TooltipTrigger>
-            <TooltipContent>
-              <p>Select the chart type</p>
-            </TooltipContent>
-          </Tooltip>
-        </TooltipProvider>
+      <div className="flex items-center justify-between">
+        <Label htmlFor="chartType">Chart Type</Label>
+        <Select value={chartType} onValueChange={setChartType}>
+          <SelectTrigger id="chartType" className="w-[180px]">
+            <SelectValue placeholder="Select chart type" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="bar">Bar</SelectItem>
+            <SelectItem value="line">Line</SelectItem>
+            <SelectItem value="pie">Pie</SelectItem>
+          </SelectContent>
+        </Select>
       </div>
-      <div className="flex items-center space-x-4">
-        <Label htmlFor="colorScheme" className="text-lg">Color Scheme</Label>
-        <TooltipProvider>
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <Select value={colorScheme} onValueChange={setColorScheme}>
-                <SelectTrigger id="colorScheme">
-                  <SelectValue placeholder="Select color scheme" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="default">Default</SelectItem>
-                  <SelectItem value="highContrast">High Contrast</SelectItem>
-                  <SelectItem value="custom">Custom</SelectItem>
-                </SelectContent>
-              </Select>
-            </TooltipTrigger>
-            <TooltipContent>
-              <p>Select the color scheme</p>
-            </TooltipContent>
-          </Tooltip>
-        </TooltipProvider>
+      <div className="flex items-center justify-between">
+        <Label htmlFor="colorScheme">Color Scheme</Label>
+        <Select value={colorScheme} onValueChange={setColorScheme}>
+          <SelectTrigger id="colorScheme" className="w-[180px]">
+            <SelectValue placeholder="Select color scheme" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="default">Default</SelectItem>
+            <SelectItem value="colorblind">Colorblind Friendly</SelectItem>
+            <SelectItem value="pastel">Pastel</SelectItem>
+          </SelectContent>
+        </Select>
       </div>
     </div>
   );
 };
 
 const GeneralSettings = () => {
-  return (
-    <div className="space-y-4 settings-general">
-      <div className="flex items-center space-x-4">
-        <Label htmlFor="notifications" className="text-lg">Enable Notifications</Label>
-        <TooltipProvider>
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <Switch id="notifications" />
-            </TooltipTrigger>
-            <TooltipContent>
-              <p>Toggle notifications</p>
-            </TooltipContent>
-          </Tooltip>
-        </TooltipProvider>
-      </div>
-      <div className="flex items-center space-x-4">
-        <Label htmlFor="language" className="text-lg">Language</Label>
-        <TooltipProvider>
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <Select>
-                <SelectTrigger id="language">
-                  <SelectValue placeholder="Select language" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="en">English</SelectItem>
-                  <SelectItem value="es">Spanish</SelectItem>
-                  <SelectItem value="fr">French</SelectItem>
-                </SelectContent>
-              </Select>
-            </TooltipTrigger>
-            <TooltipContent>
-              <p>Select the language</p>
-            </TooltipContent>
-          </Tooltip>
-        </TooltipProvider>
-      </div>
-    </div>
-  );
-};
-
-const SettingsTab = () => {
-  const [searchTerm, setSearchTerm] = useState('');
-
-  const settingsSections = [
-    { title: "Table Customization", component: <TableCustomization />, icon: <Table /> },
-    { title: "Display Preferences", component: <DisplayPreferences />, icon: <Eye /> },
-    { title: "General Settings", component: <GeneralSettings />, icon: <Settings /> },
-  ];
-
-  const filterSettings = (settings) => {
-    return settings.filter(setting => 
-      setting.title.toLowerCase().includes(searchTerm.toLowerCase())
-    );
-  };
+  const { language, setLanguage, enableNotifications, setEnableNotifications } = useSettingsStore();
 
   return (
-    <div className="space-y-6">
-      <div className="flex justify-end mb-4">
-        <Input 
-          type="text"
-          placeholder="Search settings..."
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-          className="w-full md:w-1/3"
+    <div className="space-y-4">
+      <div className="flex items-center justify-between">
+        <Label htmlFor="language">Language</Label>
+        <Select value={language} onValueChange={setLanguage}>
+          <SelectTrigger id="language" className="w-[180px]">
+            <SelectValue placeholder="Select language" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="en">English</SelectItem>
+            <SelectItem value="es">Español</SelectItem>
+            <SelectItem value="fr">Français</SelectItem>
+          </SelectContent>
+        </Select>
+      </div>
+      <div className="flex items-center justify-between">
+        <Label htmlFor="notifications">Enable Notifications</Label>
+        <Switch
+          id="notifications"
+          checked={enableNotifications}
+          onCheckedChange={setEnableNotifications}
         />
-      </div>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        {filterSettings(settingsSections).map((section, index) => (
-          <Accordion key={index} type="single" collapsible>
-            <AccordionItem value={`item-${index}`}>
-              <AccordionTrigger>
-                <div className="flex items-center space-x-2">
-                  {section.icon}
-                  <span>{section.title}</span>
-                </div>
-              </AccordionTrigger>
-              <AccordionContent>{section.component}</AccordionContent>
-            </AccordionItem>
-          </Accordion>
-        ))}
-      </div>
-      <div className="flex justify-end mt-6">
-        <Button className="bg-purple-600 hover:bg-purple-700 text-white">Save Changes</Button>
-        <Button variant="outline" className="ml-2">Reset to Default</Button>
       </div>
     </div>
   );
