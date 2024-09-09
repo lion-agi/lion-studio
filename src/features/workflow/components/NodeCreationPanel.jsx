@@ -30,7 +30,7 @@ const NodeCreationPanel = () => {
   };
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-4 mb-4">
       <Input
         type="text"
         placeholder="Search nodes..."
@@ -38,7 +38,7 @@ const NodeCreationPanel = () => {
         onChange={(e) => setSearchTerm(e.target.value)}
         className="w-full"
       />
-      <ScrollArea className="h-[calc(100vh-400px)]">
+      <ScrollArea className="h-[calc(50vh-100px)]">
         {filteredCategories.map((category) => (
           <Collapsible
             key={category.name}

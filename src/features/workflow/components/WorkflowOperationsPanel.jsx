@@ -84,22 +84,17 @@ const WorkflowOperationsPanel = ({
   ];
 
   return (
-    <Card className="bg-gray-800 text-white w-72">
-      <Collapsible open={!isCollapsed} onOpenChange={setIsCollapsed}>
-        <CardHeader className="pb-2">
-          <CollapsibleTrigger asChild>
-            <div className="flex items-center justify-between cursor-pointer">
-              <CardTitle className="text-sm font-medium flex items-center">
-                <Zap className="w-4 h-4 mr-2" />
-                Workflow Operations
-              </CardTitle>
-              {isCollapsed ? <ChevronDown className="h-4 w-4" /> : <ChevronUp className="h-4 w-4" />}
-            </div>
-          </CollapsibleTrigger>
-        </CardHeader>
-        <CollapsibleContent>
-          <CardContent className="pt-2">
-            <ScrollArea className="h-[320px]" style={{ backgroundColor: tempBackgroundColor }}>
+    <Card className="bg-gray-800 text-white">
+      <CardHeader className="pb-2">
+        <CardTitle className="text-sm font-medium flex items-center">
+          <Zap className="w-4 h-4 mr-2" />
+          Workflow Operations
+        </CardTitle>
+      </CardHeader>
+      <CardContent className="pt-2">
+        <Collapsible open={!isCollapsed} onOpenChange={setIsCollapsed}>
+          <CollapsibleContent>
+            <ScrollArea className="h-[calc(50vh-100px)]">
               <div className="grid grid-cols-3 gap-2">
                 <TooltipProvider>
                   <Tooltip>
@@ -258,9 +253,14 @@ const WorkflowOperationsPanel = ({
                 </TooltipProvider>
               </div>
             </ScrollArea>
-          </CardContent>
-        </CollapsibleContent>
-      </Collapsible>
+          </CollapsibleContent>
+        </Collapsible>
+        <CollapsibleTrigger asChild>
+          <Button variant="ghost" size="sm" className="w-full mt-2">
+            {isCollapsed ? <ChevronDown className="h-4 w-4" /> : <ChevronUp className="h-4 w-4" />}
+          </Button>
+        </CollapsibleTrigger>
+      </CardContent>
 
       <JSONModal
         isOpen={showJSONModal}
