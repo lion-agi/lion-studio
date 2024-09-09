@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useRef } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from "@/common/components/ui/card";
 import { Button } from "@/common/components/ui/button";
 import { Input } from "@/common/components/ui/input";
@@ -7,7 +7,7 @@ import { ChevronDown, Search, ChevronUp, Save, Upload } from 'lucide-react';
 import { ScrollArea } from "@/common/components/ui/scroll-area";
 import { nodeCategories } from '@/common/components/nodes/nodeCategories';
 
-const NodeCreationCard = ({ onAddNode, onSave, onLoad }) => {
+const NodeCreationCard = ({ onAddNode, onSave, onLoad, backgroundColor }) => {
   const [searchTerm, setSearchTerm] = useState('');
   const [expandedCategories, setExpandedCategories] = useState({});
   const [isExpanded, setIsExpanded] = useState(true);
@@ -36,7 +36,7 @@ const NodeCreationCard = ({ onAddNode, onSave, onLoad }) => {
   };
 
   return (
-    <Card className="w-72 fixed top-4 left-4 z-50 shadow-lg">
+    <Card className="w-72 fixed top-4 left-4 z-50 shadow-lg" style={{ backgroundColor }}>
       <CardHeader className="cursor-pointer flex flex-row items-center justify-between" onClick={toggleExpand}>
         <CardTitle>Create Node</CardTitle>
         <Button variant="ghost" size="sm">
@@ -53,7 +53,7 @@ const NodeCreationCard = ({ onAddNode, onSave, onLoad }) => {
               onChange={(e) => setSearchTerm(e.target.value)}
               className="mb-4"
             />
-            <ScrollArea className="h-[calc(100vh-300px)]">
+            <ScrollArea className="h-[calc(100vh-300px)]" style={{ backgroundColor }}>
               {filteredCategories.map((category) => (
                 <Collapsible
                   key={category.name}
