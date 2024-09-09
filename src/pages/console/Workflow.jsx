@@ -3,6 +3,7 @@ import { WorkflowEditor } from '../../features/workflow/WorkflowEditor';
 import { WorkflowSettingsProvider } from '../../features/workflow/WorkflowSettingsContext';
 import Sidebar from '@/common/components/Sidebar';
 import SecondaryNavigation from '@/common/components/SecondaryNavigation';
+import NodeCreationCard from '@/features/workflow/components/NodeCreationCard';
 
 const Workflow = () => {
   const [sidebarExpanded, setSidebarExpanded] = useState(true);
@@ -25,10 +26,11 @@ const Workflow = () => {
         isExpanded={secondarySidebarExpanded}
         toggleExpanded={toggleSecondarySidebar}
       />
-      <div className="flex-grow overflow-hidden">
+      <div className="flex-grow overflow-hidden relative">
         <WorkflowSettingsProvider>
           <WorkflowEditor />
         </WorkflowSettingsProvider>
+        <NodeCreationCard className="absolute top-4 left-4 z-10" />
       </div>
     </div>
   );
