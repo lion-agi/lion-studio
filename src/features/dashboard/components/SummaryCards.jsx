@@ -32,11 +32,11 @@ const SummaryCards = ({ data, onMetricClick }) => {
         onClick={() => onMetricClick('avgResponseTime')}
       />
       <DashboardCard
-        title="Error Rate"
-        value={formatPercentage(data.errorRate)}
-        change={formatPercentage(data.errorRateChange)}
+        title="Avg API Cost"
+        value={formatCurrency(data.avgCost)}
+        change={formatPercentage(data.avgCostChange)}
         icon={AlertTriangle}
-        onClick={() => onMetricClick('errorRate')}
+        onClick={() => onMetricClick('avgCost')}
       />
     </div>
   );
