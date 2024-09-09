@@ -22,7 +22,7 @@ import Contact from './pages/Contact';
 import Library from './features/library/pages/Library';
 import Dashboard from '@/features/dashboard/pages/Dashboard';
 import Integrations from './pages/console/Integrations';
-import Deployment from './pages/console/Deployment';
+import Deployment from '@/features/deployment/pages/Deployment';
 import Overview from '@/features/dashboard/pages/Overview';
 import CallsTab from '@/features/dashboard/pages/CallsTab';
 import CostsTab from '@/features/dashboard/pages/CostsTab';
