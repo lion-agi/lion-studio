@@ -3,10 +3,11 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/common/components/ui
 import { Label } from "@/common/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/common/components/ui/select";
 import { Switch } from "@/common/components/ui/switch";
-import { Input } from "@/common/components/ui/input";
 import { Accordion, AccordionItem, AccordionTrigger, AccordionContent } from "@/common/components/ui/accordion";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/common/components/ui/tooltip";
 import { Info } from 'lucide-react';
+import { Button } from "@/common/components/ui/button";
+import { Input } from "@/common/components/ui/input";
 import useSettingsStore from '@/store/settingsSlice';
 
 const TableCustomization = () => {
@@ -139,17 +140,17 @@ const GeneralSettings = () => {
 const SettingsTab = () => {
   const [searchTerm, setSearchTerm] = useState('');
 
-  const filterSettings = (settings) => {
-    return settings.filter(setting => 
-      setting.props.children.props.children.toLowerCase().includes(searchTerm.toLowerCase())
-    );
-  };
-
   const settingsSections = [
     { title: "Table Customization", component: <TableCustomization /> },
     { title: "Display Preferences", component: <DisplayPreferences /> },
     { title: "General Settings", component: <GeneralSettings /> },
   ];
+
+  const filterSettings = (settings) => {
+    return settings.filter(setting => 
+      setting.title.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+  };
 
   return (
     <div className="space-y-6">
