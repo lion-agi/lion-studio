@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { Tabs, TabsContent } from "@/common/components/ui/tabs";
 import TabSwitchBar from '@/common/components/TabSwitchBar';
 import UserRoles from '../components/UserRoles';
-import AccessLogs from '@/common/components/AccessLogs';
 import SecuritySettings from '../components/SecuritySettings';
 import Secrets from '../components/Secrets';
 import { useAdminData } from '../useAdminData';
@@ -11,7 +10,6 @@ const Admin = () => {
   const [activeTab, setActiveTab] = useState('overview');
   const {
     roles,
-    logs,
     securitySettings,
     secrets,
     newSecret,
@@ -36,7 +34,7 @@ const Admin = () => {
         <TabSwitchBar tabs={tabs} />
         <TabsContent value="overview">
           <UserRoles roles={roles} handleRoleChange={handleRoleChange} />
-          <AccessLogs logs={logs} />
+          {/* Access Logs have been removed */}
         </TabsContent>
         <TabsContent value="security">
           <SecuritySettings settings={securitySettings} handleSettingChange={handleSecuritySettingChange} />
