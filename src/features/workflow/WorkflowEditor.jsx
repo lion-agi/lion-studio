@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React, { useMemo, useState } from 'react';
 import ReactFlow, { Background, Controls, MiniMap, Panel } from 'reactflow';
 import 'reactflow/dist/style.css';
 import NodeCreationCard from './NodeCreationCard';
@@ -9,10 +9,13 @@ import { useWorkflowState } from '../hooks/useWorkflowState';
 import { useWorkflowHandlers } from '../hooks/useWorkflowHandlers';
 import { useWorkflowModals } from '../hooks/useWorkflowModals';
 import { useEdgeHighlighting } from '../hooks/useEdgeHighlighting';
+import SettingsModal from '@/common/components/SettingsModal';
 
 const GRID_SIZE = 20;
 
 const WorkflowEditor = () => {
+  const [showSettingsModal, setShowSettingsModal] = useState(false);
+
   const {
     nodes,
     edges,
@@ -132,6 +135,10 @@ const WorkflowEditor = () => {
         isOpen={showJSONModal}
         onClose={() => setShowJSONModal(false)}
         jsonData={jsonData}
+      />
+      <SettingsModal
+        isOpen={showSettingsModal}
+        onClose={() => setShowSettingsModal(false)}
       />
     </div>
   );

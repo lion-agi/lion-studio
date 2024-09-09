@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { X } from 'lucide-react';
 import { Button } from "@/common/components/ui/button"
 import { Input } from "@/common/components/ui/input"
@@ -14,7 +14,9 @@ const backgroundColors = {
   'Navy': '#34495E',
 };
 
-const SettingsModal = ({ onClose }) => {
+const SettingsModal = ({ isOpen, onClose }) => {
+  if (!isOpen) return null;
+
   return (
     <div className="fixed inset-0 bg-background/80 backdrop-blur-sm z-50 flex items-center justify-center">
       <div className="bg-card p-6 rounded-lg shadow-lg max-w-md w-full">
