@@ -17,6 +17,7 @@ import SettingsModal from '@/common/components/SettingsModal';
 const WorkflowEditorContent = () => {
   const containerRef = useRef(null);
   const [containerSize, setContainerSize] = useState({ width: 0, height: 0 });
+  const [showSettingsModal, setShowSettingsModal] = useState(false);
 
   const {
     nodes,
@@ -53,8 +54,6 @@ const WorkflowEditorContent = () => {
 
   const { backgroundColor, gridSize } = useWorkflowSettings();
 
-  const [showSettingsModal, setShowSettingsModal] = useState(false);
-
   const styledEdges = useMemo(() => 
     edges.map(edge => ({
       ...edge,
@@ -78,6 +77,14 @@ const WorkflowEditorContent = () => {
 
     return () => window.removeEventListener('resize', updateSize);
   }, []);
+
+  const handleOpenSettings = () => {
+    setShowSettingsModal(true);
+  };
+
+  const handleCloseSettings = () => {
+    setShowSettingsModal(false);
+  };
 
   return (
     <div ref={containerRef} className="h-full w-full relative" style={{ height: 'calc(100vh - 64px)' }}>
@@ -151,7 +158,7 @@ const WorkflowEditorContent = () => {
             onLoad={() => setShowSaveLoadDialog(true)}
             onExportJSON={handleExportJSON}
             onCreateFlow={handleCreateAgenticFlow}
-            onOpenSettings={() => setShowSettingsModal(true)}
+            onOpenSettings={handleOpenSettings}
           />
         </Panel>
         <Panel position="top-right">
@@ -159,7 +166,7 @@ const WorkflowEditorContent = () => {
             onExportJSON={handleExportJSON}
             onSaveLoad={() => setShowSaveLoadDialog(true)}
             onCreateFlow={handleCreateAgenticFlow}
-            onOpenSettings={() => setShowSettingsModal(true)}
+            onOpenSettings={handleOpenSettings}
           />
         </Panel>
         <Panel position="bottom-right">
@@ -183,7 +190,7 @@ const WorkflowEditorContent = () => {
       />
       <SettingsModal
         isOpen={showSettingsModal}
-        onClose={() => setShowSettingsModal(false)}
+        onClose={handleCloseSettings}
       />
     </div>
   );
