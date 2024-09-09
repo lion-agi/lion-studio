@@ -1,6 +1,6 @@
 import React from 'react';
 import { Outlet } from 'react-router-dom';
-import ConsoleHeader from './components/ConsoleHeader';
+import ConsoleHeader from '@/common/components/ConsoleHeader';
 import { Toaster } from "@/common/components/ui/toaster";
 import commonStyles from '@/common/components/ui/style-guide';
 
