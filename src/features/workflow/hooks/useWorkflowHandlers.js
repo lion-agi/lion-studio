@@ -1,17 +1,25 @@
 import { useCallback, useRef, useState } from 'react';
 import { addEdge } from 'reactflow';
+import { useUndoRedo } from './useUndoRedo';
 
 export const useWorkflowHandlers = (nodes, setNodes, edges, setEdges) => {
   const reactFlowWrapper = useRef(null);
   const [reactFlowInstance, setReactFlowInstance] = useState(null);
+  const { undo, redo, canUndo, canRedo, takeSnapshot } = useUndoRedo(nodes, edges, setNodes, setEdges);
 
-  const onConnect = useCallback((params) => setEdges((eds) => addEdge({
-    ...params,
-    type: 'smoothstep',
-    animated: true,
-    style: { stroke: '#6366F1', strokeWidth: 2 },
-    markerEnd: { type: 'arrowclosed', color: '#6366F1' },
-  }, eds)), [setEdges]);
+  const onConnect = useCallback((params) => {
+    setEdges((eds) => {
+      const newEdges = addEdge({
+        ...params,
+        type: 'smoothstep',
+        animated: true,
+        style: { stroke: '#6366F1', strokeWidth: 2 },
+        markerEnd: { type: 'arrowclosed', color: '#6366F1' },
+      }, eds);
+      takeSnapshot(nodes, newEdges);
+      return newEdges;
+    });
+  }, [nodes, setEdges, takeSnapshot]);
 
   const onDragOver = useCallback((event) => {
     event.preventDefault();
@@ -41,17 +49,25 @@ export const useWorkflowHandlers = (nodes, setNodes, edges, setEdges) => {
         data: { label: `${type.charAt(0).toUpperCase() + type.slice(1)} Node` },
       };
 
-      setNodes((nds) => nds.concat(newNode));
+      setNodes((nds) => {
+        const newNodes = nds.concat(newNode);
+        takeSnapshot(newNodes, edges);
+        return newNodes;
+      });
     },
-    [nodes, setNodes, reactFlowInstance]
+    [nodes, setNodes, edges, reactFlowInstance, takeSnapshot]
   );
 
   const onNodeDragStop = useCallback((event, node) => {
     const { x, y } = node.position;
-    setNodes((nds) =>
-      nds.map((n) => (n.id === node.id ? { ...n, position: { x: Math.round(x / 20) * 20, y: Math.round(y / 20) * 20 } } : n))
-    );
-  }, [setNodes]);
+    setNodes((nds) => {
+      const updatedNodes = nds.map((n) => 
+        n.id === node.id ? { ...n, position: { x: Math.round(x / 20) * 20, y: Math.round(y / 20) * 20 } } : n
+      );
+      takeSnapshot(updatedNodes, edges);
+      return updatedNodes;
+    });
+  }, [setNodes, edges, takeSnapshot]);
 
   const handleExportJSON = useCallback(() => {
     if (reactFlowInstance) {
@@ -88,5 +104,9 @@ export const useWorkflowHandlers = (nodes, setNodes, edges, setEdges) => {
     handleSaveLoad,
     handleCreateAgenticFlow,
     onNodeClick,
+    undo,
+    redo,
+    canUndo,
+    canRedo,
   };
 };

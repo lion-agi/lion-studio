@@ -8,7 +8,6 @@ import { useWorkflowModals } from '../hooks/useWorkflowModals';
 import { useEdgeHighlighting } from '../hooks/useEdgeHighlighting';
 import { WorkflowSettingsProvider, useWorkflowSettings } from './WorkflowSettingsContext';
 import WorkflowOperationsPanel from './WorkflowOperationsPanel';
-import WorkflowSettingsPanel from './WorkflowSettingsPanel';
 import NodeCreationPanel from './NodeCreationPanel';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/common/components/ui/tooltip";
 
@@ -37,6 +36,10 @@ const WorkflowEditorContent = () => {
     handleSaveLoad,
     handleCreateAgenticFlow,
     onNodeClick,
+    undo,
+    redo,
+    canUndo,
+    canRedo,
   } = useWorkflowHandlers(nodes, setNodes, edges, setEdges);
 
   const { edgeOptions, getEdgeStyle } = useEdgeHighlighting(edges, setEdges);
@@ -95,7 +98,6 @@ const WorkflowEditorContent = () => {
           backgroundColor: backgroundColor,
         }}
       >
-        <Background variant="dots" gap={20} size={1} />
         <Controls />
         <MiniMap 
           nodeColor={(node) => {
@@ -120,8 +122,11 @@ const WorkflowEditorContent = () => {
               onExportJSON={handleExportJSON}
               onSaveLoad={handleSaveLoad}
               onCreateAgenticFlow={handleCreateAgenticFlow}
+              onUndo={undo}
+              onRedo={redo}
+              canUndo={canUndo}
+              canRedo={canRedo}
             />
-            <WorkflowSettingsPanel />
           </div>
         </Panel>
       </ReactFlow>
