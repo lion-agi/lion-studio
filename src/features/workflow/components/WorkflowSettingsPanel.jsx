@@ -1,20 +1,19 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useWorkflowSettings } from './WorkflowSettingsContext';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/common/components/ui/select";
 import { Switch } from "@/common/components/ui/switch";
 import { Label } from "@/common/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle } from "@/common/components/ui/card";
-import { Settings, Palette, Eye, Zap } from 'lucide-react';
+import { Settings, Palette, Eye } from 'lucide-react';
 import { Button } from "@/common/components/ui/button";
 import { Input } from "@/common/components/ui/input";
+import { X } from 'lucide-react';
 
 const presetColors = [
   { name: 'Dark Blue', value: '#1A2530' },
   { name: 'Light Gray', value: '#F0F4F8' },
   { name: 'Dark Gray', value: '#2C3E50' },
   { name: 'Navy', value: '#34495E' },
-  { name: 'Forest Green', value: '#2ECC71' },
-  { name: 'Deep Purple', value: '#8E44AD' },
 ];
 
 const WorkflowSettingsPanel = ({ onClose }) => {
@@ -23,17 +22,36 @@ const WorkflowSettingsPanel = ({ onClose }) => {
     setBackgroundColor,
     autoSave,
     setAutoSave,
-    performanceMode,
-    setPerformanceMode,
     theme,
     setTheme,
   } = useWorkflowSettings();
 
-  const [tempBackgroundColor, setTempBackgroundColor] = React.useState(backgroundColor);
+  const [tempBackgroundColor, setTempBackgroundColor] = useState(backgroundColor);
+  const [showColorPicker, setShowColorPicker] = useState(false);
+  const [customColorName, setCustomColorName] = useState('');
+  const [customColors, setCustomColors] = useState([]);
+
+  useEffect(() => {
+    const savedCustomColors = localStorage.getItem('customColors');
+    if (savedCustomColors) {
+      setCustomColors(JSON.parse(savedCustomColors));
+    }
+  }, []);
 
   const handleSave = () => {
     setBackgroundColor(tempBackgroundColor);
     onClose();
+  };
+
+  const handleCustomColorSave = () => {
+    if (customColorName && tempBackgroundColor) {
+      const newCustomColor = { name: customColorName, value: tempBackgroundColor };
+      const updatedCustomColors = [...customColors, newCustomColor];
+      setCustomColors(updatedCustomColors);
+      localStorage.setItem('customColors', JSON.stringify(updatedCustomColors));
+      setCustomColorName('');
+      setShowColorPicker(false);
+    }
   };
 
   return (
@@ -51,7 +69,14 @@ const WorkflowSettingsPanel = ({ onClose }) => {
               <Palette className="w-4 h-4 mr-2" />
               Background
             </Label>
-            <Select value={tempBackgroundColor} onValueChange={setTempBackgroundColor}>
+            <Select value={tempBackgroundColor} onValueChange={(value) => {
+              setTempBackgroundColor(value);
+              if (value === 'custom') {
+                setShowColorPicker(true);
+              } else {
+                setShowColorPicker(false);
+              }
+            }}>
               <SelectTrigger className="w-[180px]">
                 <SelectValue placeholder="Select color" />
               </SelectTrigger>
@@ -64,34 +89,45 @@ const WorkflowSettingsPanel = ({ onClose }) => {
                     </div>
                   </SelectItem>
                 ))}
+                {customColors.map(({ name, value }) => (
+                  <SelectItem key={value} value={value}>
+                    <div className="flex items-center">
+                      <div className="w-4 h-4 rounded-full mr-2" style={{ backgroundColor: value }} />
+                      {name}
+                    </div>
+                  </SelectItem>
+                ))}
                 <SelectItem value="custom">Custom Color</SelectItem>
               </SelectContent>
             </Select>
           </div>
-          {tempBackgroundColor === 'custom' && (
-            <div className="flex items-center justify-between">
-              <Label className="text-sm">Custom Color</Label>
+          {showColorPicker && (
+            <div className="flex items-center space-x-2">
               <Input
                 type="color"
                 value={tempBackgroundColor}
                 onChange={(e) => setTempBackgroundColor(e.target.value)}
                 className="w-[100px]"
               />
+              <Input
+                type="text"
+                placeholder="Color name"
+                value={customColorName}
+                onChange={(e) => setCustomColorName(e.target.value)}
+                className="flex-grow"
+              />
+              <Button onClick={handleCustomColorSave}>Save</Button>
+              <Button variant="ghost" size="icon" onClick={() => setShowColorPicker(false)}>
+                <X className="h-4 w-4" />
+              </Button>
             </div>
           )}
           <div className="flex items-center justify-between">
             <Label className="text-sm flex items-center">
-              <Zap className="w-4 h-4 mr-2" />
+              <Eye className="w-4 h-4 mr-2" />
               Auto Save
             </Label>
             <Switch checked={autoSave} onCheckedChange={setAutoSave} />
-          </div>
-          <div className="flex items-center justify-between">
-            <Label className="text-sm flex items-center">
-              <Eye className="w-4 h-4 mr-2" />
-              Performance Mode
-            </Label>
-            <Switch checked={performanceMode} onCheckedChange={setPerformanceMode} />
           </div>
           <div className="flex items-center justify-between">
             <Label className="text-sm">Theme</Label>
