@@ -1,4 +1,4 @@
-import { Zap, Bot, User, StickyNote, Database, GitBranch, MessageSquare, Users, Play, Filter, Code, FileText, Briefcase, Brain, Cog, Cpu, Network, Layers, Wrench } from 'lucide-react';
+import { Zap, Bot, User, StickyNote, Database, GitBranch, MessageSquare, Users, Play, Filter, Code, FileText, Briefcase, Brain, Cog, Cpu, Network, Layers, Wrench, Globe } from 'lucide-react';
 import BaseNode from './BaseNode';
 
 export const nodeCategories = [
@@ -42,7 +42,7 @@ export const nodeCategories = [
   {
     name: 'Integration',
     nodes: [
-      { type: 'apiEndpoint', label: 'API Endpoint', icon: Network, component: BaseNode },
+      { type: 'apiEndpoint', label: 'API Endpoint', icon: Globe, component: BaseNode },
       { type: 'webhook', label: 'Webhook', icon: Zap, component: BaseNode },
       { type: 'eventTrigger', label: 'Event Trigger', icon: Cpu, component: BaseNode },
     ]

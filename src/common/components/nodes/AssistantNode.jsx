@@ -12,7 +12,7 @@ const AssistantNode = (props) => {
       gradientFrom="from-amber-800/30"
       gradientTo="to-amber-700/10"
     >
-      Assistant Node
+      Assistant
     </BaseNode>
   );
 };

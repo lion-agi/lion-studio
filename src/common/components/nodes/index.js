@@ -17,6 +17,7 @@ import Webhook from './Webhook';
 import EventTrigger from './EventTrigger';
 import Scheduler from './Scheduler';
 import TaskQueue from './TaskQueue';
+import APIEndpoint from './APIEndpoint';
 
 export const nodeTypes = {
   assistant: AssistantNode,
@@ -38,4 +39,5 @@ export const nodeTypes = {
   eventTrigger: EventTrigger,
   scheduler: Scheduler,
   taskQueue: TaskQueue,
+  apiEndpoint: APIEndpoint,
 };

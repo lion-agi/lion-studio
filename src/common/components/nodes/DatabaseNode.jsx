@@ -12,7 +12,7 @@ const DatabaseNode = (props) => {
       gradientFrom="from-indigo-500/30"
       gradientTo="to-indigo-400/10"
     >
-      Database Node
+      Database
     </BaseNode>
   );
 };
