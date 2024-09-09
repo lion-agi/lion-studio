@@ -1,8 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from "@/common/components/ui/button";
 import { Input } from "@/common/components/ui/input";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/common/components/ui/select";
 import { Search, Info } from 'lucide-react';
 import SummaryCards from '../components/SummaryCards';
 import CostTrendChart from '../components/CostTrendChart';
@@ -11,7 +10,7 @@ import { useApiData } from '../hooks/useApiData';
 import { Card, CardContent, CardHeader, CardTitle } from "@/common/components/ui/card";
 import AgenticFlowWizard from '@/common/components/AgenticFlowWizard';
 import WorkflowOperationsPanel from '@/features/workflow/components/WorkflowOperationsPanel';
-import NodeCreationCard from '@/features/workflow/components/NodeCreationCard';
+import { MessageSquare, FileText, FolderPlus, PlusCircle } from 'lucide-react';
 
 const Dashboard = () => {
   const [timeRange, setTimeRange] = useState('7d');
@@ -40,7 +39,7 @@ const Dashboard = () => {
   if (error) return <div>Error loading dashboard data: {error.message}</div>;
 
   return (
-    <div className="container mx-auto p-6 space-y-6">
+    <div className="container mx-auto p-8 space-y-6">
       <div className="flex flex-col md:flex-row justify-between items-center mb-6">
         <div className="flex items-center">
           <h1 className="text-2xl font-bold mb-6 md:mb-0 text-gray-100 mr-4">Dashboard</h1>
@@ -53,18 +52,13 @@ const Dashboard = () => {
             <Info className="h-5 w-5" />
           </Button>
         </div>
-        <div className="flex space-x-4 items-center">
-          <Select value={timeRange} onValueChange={handleTimeRangeChange}>
-            <SelectTrigger className="w-[180px]">
-              <SelectValue placeholder="Select time range" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="24h">Last 24 hours</SelectItem>
-              <SelectItem value="7d">Last 7 days</SelectItem>
-              <SelectItem value="30d">Last 30 days</SelectItem>
-              <SelectItem value="90d">Last 90 days</SelectItem>
-            </SelectContent>
-          </Select>
+        <div className="relative w-full md:w-80">
+          <Input
+            type="text"
+            placeholder="Search workflows..."
+            className="w-full bg-gray-800 text-gray-200 placeholder-gray-400 border-gray-700 focus:border-purple-500 focus:ring-1 focus:ring-purple-500 pr-10"
+          />
+          <Search className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
         </div>
       </div>
 
@@ -72,21 +66,37 @@ const Dashboard = () => {
       
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
         <CostTrendChart data={data.costTrend} selectedMetric={selectedMetric} />
-        <Card>
+        <Card className="bg-gray-800 text-white">
           <CardHeader>
             <CardTitle>Quick Actions</CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
-            <Button className="w-full" onClick={() => openWizard('agentic-flow')}>
+            <Button 
+              className="w-full bg-purple-600 hover:bg-purple-700 text-white flex items-center justify-center"
+              onClick={() => openWizard('agentic-flow')}
+            >
+              <PlusCircle className="h-4 w-4 mr-2" />
               Create Agentic Flow
             </Button>
-            <Button className="w-full" onClick={() => navigate('/console/workflow')}>
+            <Button 
+              className="w-full bg-blue-600 hover:bg-blue-700 text-white flex items-center justify-center"
+              onClick={() => navigate('/console/workflow')}
+            >
+              <MessageSquare className="h-4 w-4 mr-2" />
               Open Workflow Editor
             </Button>
-            <Button className="w-full" onClick={() => openWizard('integration')}>
+            <Button 
+              className="w-full bg-green-600 hover:bg-green-700 text-white flex items-center justify-center"
+              onClick={() => openWizard('integration')}
+            >
+              <FileText className="h-4 w-4 mr-2" />
               Add New Integration
             </Button>
-            <Button className="w-full" onClick={() => navigate('/console/library')}>
+            <Button 
+              className="w-full bg-yellow-600 hover:bg-yellow-700 text-white flex items-center justify-center"
+              onClick={() => navigate('/console/library')}
+            >
+              <FolderPlus className="h-4 w-4 mr-2" />
               Manage Knowledge Base
             </Button>
           </CardContent>
@@ -112,13 +122,6 @@ const Dashboard = () => {
           onClose={() => setIsWizardOpen(false)}
         />
       )}
-
-      <NodeCreationCard
-        onAddNode={() => {}}
-        onSave={() => {}}
-        onLoad={() => {}}
-        backgroundColor="bg-gray-800"
-      />
     </div>
   );
 };
