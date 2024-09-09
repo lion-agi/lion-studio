@@ -14,6 +14,7 @@ export const WorkflowSettingsProvider = ({ children }) => {
   const [backgroundColor, setBackgroundColor] = useState('#1A2530');
   const [gridSize, setGridSize] = useState(20);
   const [snapToGrid, setSnapToGrid] = useState(true);
+  const [jsonData, setJsonData] = useState(null);
 
   const value = {
     backgroundColor,
@@ -22,6 +23,8 @@ export const WorkflowSettingsProvider = ({ children }) => {
     setGridSize,
     snapToGrid,
     setSnapToGrid,
+    jsonData,
+    setJsonData,
   };
 
   return (
