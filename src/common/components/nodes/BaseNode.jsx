@@ -78,7 +78,7 @@ const BaseNode = ({
             transform: 'translateY(-50%)', 
             width: '12px', 
             height: '12px',
-            background: 'transparent'
+            background: `var(--${baseColor}-400)`
           }}
           isConnectable={isConnectable}
         />
@@ -91,7 +91,7 @@ const BaseNode = ({
             transform: 'translateY(-50%)', 
             width: '12px', 
             height: '12px',
-            background: 'transparent'
+            background: `var(--${baseColor}-400)`
           }}
           isConnectable={isConnectable}
         />
