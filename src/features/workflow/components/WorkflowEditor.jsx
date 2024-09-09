@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React, { useMemo, useRef, useState, useEffect } from 'react';
 import ReactFlow, { Background, Controls, MiniMap, Panel } from 'reactflow';
 import 'reactflow/dist/style.css';
 import SaveLoadDialog from '@/common/components/SaveLoadDialog';
@@ -8,10 +8,15 @@ import { useWorkflowState } from '../hooks/useWorkflowState';
 import { useWorkflowHandlers } from '../hooks/useWorkflowHandlers';
 import { useWorkflowModals } from '../hooks/useWorkflowModals';
 import { useEdgeHighlighting } from '../hooks/useEdgeHighlighting';
+import WorkflowToolbar from './WorkflowToolbar';
+import NodeCreationCard from './NodeCreationCard';
 
 const GRID_SIZE = 20;
 
 const WorkflowEditor = () => {
+  const containerRef = useRef(null);
+  const [containerSize, setContainerSize] = useState({ width: 0, height: 0 });
+
   const {
     nodes,
     edges,
@@ -53,8 +58,24 @@ const WorkflowEditor = () => {
     [edges, getEdgeStyle]
   );
 
+  useEffect(() => {
+    const updateSize = () => {
+      if (containerRef.current) {
+        setContainerSize({
+          width: containerRef.current.offsetWidth,
+          height: containerRef.current.offsetHeight,
+        });
+      }
+    };
+
+    window.addEventListener('resize', updateSize);
+    updateSize();
+
+    return () => window.removeEventListener('resize', updateSize);
+  }, []);
+
   return (
-    <div className="h-full w-full relative">
+    <div ref={containerRef} className="h-full w-full relative" style={{ height: 'calc(100vh - 64px)' }}>
       <ReactFlow
         nodes={nodes}
         edges={styledEdges}
@@ -72,8 +93,8 @@ const WorkflowEditor = () => {
         snapGrid={[GRID_SIZE, GRID_SIZE]}
         fitView
         style={{
-          width: '100%',
-          height: '100%',
+          width: containerSize.width,
+          height: containerSize.height,
           backgroundColor: '#2C3E50', // Dark muted blue-gray background
         }}
       >
@@ -118,6 +139,16 @@ const WorkflowEditor = () => {
             boxShadow: '0 1px 3px rgba(0, 0, 0, 0.2)',
           }}
         />
+        <Panel position="top-left">
+          <NodeCreationCard onAddNode={(type) => {/* Add node logic */}} />
+        </Panel>
+        <Panel position="top-right">
+          <WorkflowToolbar
+            onExportJSON={handleExportJSON}
+            onSaveLoad={() => setShowSaveLoadDialog(true)}
+            onCreateFlow={handleCreateAgenticFlow}
+          />
+        </Panel>
       </ReactFlow>
       <SaveLoadDialog
         isOpen={showSaveLoadDialog}
