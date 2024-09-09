@@ -3,11 +3,11 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/common/components/ui
 import { Button } from "@/common/components/ui/button";
 import { Input } from "@/common/components/ui/input";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/common/components/ui/collapsible";
-import { ChevronDown, Search, ChevronUp, Save, Upload, Settings } from 'lucide-react';
+import { ChevronDown, Search, ChevronUp, Save, Upload } from 'lucide-react';
 import { ScrollArea } from "@/common/components/ui/scroll-area";
 import { nodeCategories } from '@/common/components/nodes/nodeCategories';
 
-const NodeCreationCard = ({ onAddNode, onExportJSON, onCreateFlow, onOpenSettings }) => {
+const NodeCreationCard = ({ onAddNode, onSave, onLoad }) => {
   const [searchTerm, setSearchTerm] = useState('');
   const [expandedCategories, setExpandedCategories] = useState({});
   const [isExpanded, setIsExpanded] = useState(true);
@@ -36,7 +36,7 @@ const NodeCreationCard = ({ onAddNode, onExportJSON, onCreateFlow, onOpenSetting
   };
 
   return (
-    <Card className="w-72 shadow-lg mt-4 ml-4">
+    <Card className="w-72 fixed top-4 left-4 z-50 shadow-lg">
       <CardHeader className="cursor-pointer flex flex-row items-center justify-between" onClick={toggleExpand}>
         <CardTitle>Workflow Tools</CardTitle>
         <Button variant="ghost" size="sm">
@@ -81,17 +81,13 @@ const NodeCreationCard = ({ onAddNode, onExportJSON, onCreateFlow, onOpenSetting
               ))}
             </ScrollArea>
             <div className="space-y-4 mt-4">
-              <Button onClick={onExportJSON} className="w-full">
+              <Button onClick={onSave} className="w-full">
                 <Save className="mr-2 h-4 w-4" />
-                Export JSON
+                Save Workflow
               </Button>
-              <Button onClick={onCreateFlow} className="w-full">
+              <Button onClick={onLoad} className="w-full">
                 <Upload className="mr-2 h-4 w-4" />
-                Create Workflow
-              </Button>
-              <Button onClick={onOpenSettings} className="w-full">
-                <Settings className="mr-2 h-4 w-4" />
-                Settings
+                Load Workflow
               </Button>
             </div>
           </CardContent>
