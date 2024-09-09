@@ -17,8 +17,10 @@ export const useUndoRedo = (initialNodes, initialEdges, setNodes, setEdges) => {
     if (currentIndex > 0) {
       setCurrentIndex(prev => prev - 1);
       const prevState = history[currentIndex - 1];
-      setNodes(prevState.nodes);
-      setEdges(prevState.edges);
+      if (prevState && prevState.nodes && prevState.edges) {
+        setNodes(prevState.nodes);
+        setEdges(prevState.edges);
+      }
     }
   }, [currentIndex, history, setNodes, setEdges]);
 
@@ -26,8 +28,10 @@ export const useUndoRedo = (initialNodes, initialEdges, setNodes, setEdges) => {
     if (currentIndex < history.length - 1) {
       setCurrentIndex(prev => prev + 1);
       const nextState = history[currentIndex + 1];
-      setNodes(nextState.nodes);
-      setEdges(nextState.edges);
+      if (nextState && nextState.nodes && nextState.edges) {
+        setNodes(nextState.nodes);
+        setEdges(nextState.edges);
+      }
     }
   }, [currentIndex, history, setNodes, setEdges]);
 
