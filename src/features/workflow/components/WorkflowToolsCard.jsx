@@ -1,13 +1,13 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from "@/common/components/ui/card";
 import { Button } from "@/common/components/ui/button";
 import { Input } from "@/common/components/ui/input";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/common/components/ui/collapsible";
-import { ChevronDown, Search, ChevronUp, Save, Upload } from 'lucide-react';
-import { ScrollArea } from "@/common/components/ui/scroll-area";
+import { ChevronDown, ChevronUp, Save, Upload, PlusCircle, FileJson } from 'lucide-react';
 import { nodeCategories } from '@/common/components/nodes/nodeCategories';
+import { ScrollArea } from "@/common/components/ui/scroll-area";
 
-const NodeCreationCard = ({ onAddNode, onSave, onLoad }) => {
+const WorkflowToolsCard = ({ onAddNode, onExportJSON, onSaveLoad, onCreateFlow }) => {
   const [searchTerm, setSearchTerm] = useState('');
   const [expandedCategories, setExpandedCategories] = useState({});
   const [isExpanded, setIsExpanded] = useState(true);
@@ -81,13 +81,17 @@ const NodeCreationCard = ({ onAddNode, onSave, onLoad }) => {
               ))}
             </ScrollArea>
             <div className="space-y-4 mt-4">
-              <Button onClick={onSave} className="w-full">
-                <Save className="mr-2 h-4 w-4" />
-                Save Workflow
+              <Button onClick={onExportJSON} className="w-full">
+                <FileJson className="mr-2 h-4 w-4" />
+                Export JSON
               </Button>
-              <Button onClick={onLoad} className="w-full">
-                <Upload className="mr-2 h-4 w-4" />
-                Load Workflow
+              <Button onClick={onSaveLoad} className="w-full">
+                <Save className="mr-2 h-4 w-4" />
+                Save/Load
+              </Button>
+              <Button onClick={onCreateFlow} className="w-full">
+                <PlusCircle className="mr-2 h-4 w-4" />
+                Create Flow
               </Button>
             </div>
           </CardContent>
@@ -97,4 +101,4 @@ const NodeCreationCard = ({ onAddNode, onSave, onLoad }) => {
   );
 };
 
-export default NodeCreationCard;
+export default WorkflowToolsCard;

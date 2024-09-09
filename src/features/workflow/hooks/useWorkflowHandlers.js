@@ -56,9 +56,9 @@ export const useWorkflowHandlers = (nodes, setNodes, edges, setEdges) => {
   const handleExportJSON = useCallback(() => {
     if (reactFlowInstance) {
       const flow = reactFlowInstance.toObject();
-      console.log(flow);
-      // Here you would typically save or process the JSON data
+      return flow;
     }
+    return null;
   }, [reactFlowInstance]);
 
   const handleSaveLoad = useCallback((savedGraph) => {

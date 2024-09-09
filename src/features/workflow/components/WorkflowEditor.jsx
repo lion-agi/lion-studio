@@ -233,7 +233,7 @@ const WorkflowEditorContent = () => {
                 <CardHeader className="cursor-pointer flex flex-row items-center justify-between pb-1 pt-1">
                   <CardTitle className="text-xs font-semibold text-white flex items-center">
                     <PlusCircle className="mr-2 h-3 w-3" />
-                    Workflow Tools
+                    Create Node
                   </CardTitle>
                   {isToolsExpanded ? <ChevronUp className="h-3 w-3" /> : <ChevronDown className="h-3 w-3" />}
                 </CardHeader>
@@ -241,6 +241,37 @@ const WorkflowEditorContent = () => {
               <CollapsibleContent>
                 <CardContent className="pt-2 px-2">
                   <NodeCreationPanel />
+                </CardContent>
+              </CollapsibleContent>
+            </Collapsible>
+          </Card>
+          <Card className="bg-gray-800 rounded-lg shadow-lg p-2 w-56 mt-2">
+            <Collapsible open={isToolsExpanded} onOpenChange={setIsToolsExpanded}>
+              <CollapsibleTrigger asChild>
+                <CardHeader className="cursor-pointer flex flex-row items-center justify-between pb-1 pt-1">
+                  <CardTitle className="text-xs font-semibold text-white flex items-center">
+                    <PlusCircle className="mr-2 h-3 w-3" />
+                    Workflow Operations
+                  </CardTitle>
+                  {isToolsExpanded ? <ChevronUp className="h-3 w-3" /> : <ChevronDown className="h-3 w-3" />}
+                </CardHeader>
+              </CollapsibleTrigger>
+              <CollapsibleContent>
+                <CardContent className="pt-2 px-2">
+                  <div className="flex flex-col space-y-1 mt-2">
+                    <Button onClick={handleExportJSONClick} size="sm" className="w-full text-xs py-1 h-7">
+                      <FileJson className="mr-1 h-3 w-3" />
+                      Export JSON
+                    </Button>
+                    <Button onClick={() => setShowSaveLoadDialog(true)} size="sm" className="w-full text-xs py-1 h-7">
+                      <Save className="mr-1 h-3 w-3" />
+                      Save/Load
+                    </Button>
+                    <Button onClick={handleCreateFlow} size="sm" className="w-full text-xs py-1 h-7">
+                      <PlusCircle className="mr-1 h-3 w-3" />
+                      Create Flow
+                    </Button>
+                  </div>
                 </CardContent>
               </CollapsibleContent>
             </Collapsible>
