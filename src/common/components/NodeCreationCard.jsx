@@ -14,9 +14,9 @@ const NodeCreationCard = ({ onAddNode }) => {
   const [isExpanded, setIsExpanded] = useState(true);
   const nodeRef = useRef(null);
 
-  const filteredCategories = Object.entries(nodeCategories).map(([category, nodes]) => ({
-    category,
-    nodes: nodes.filter(node =>
+  const filteredCategories = nodeCategories.map(category => ({
+    category: category.name,
+    nodes: category.nodes.filter(node =>
       node.label.toLowerCase().includes(searchTerm.toLowerCase())
     )
   })).filter(category => category.nodes.length > 0);

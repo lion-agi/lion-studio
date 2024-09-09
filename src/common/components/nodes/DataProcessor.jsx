@@ -1,16 +1,23 @@
 import React from 'react';
 import BaseNode from './BaseNode';
 import { Filter } from 'lucide-react';
+import { nodeCategories } from './nodeCategories';
 
 const DataProcessor = (props) => {
+  const nodeCategory = nodeCategories.find(category => 
+    category.nodes.some(node => node.type === 'dataProcessor')
+  );
+
+  const nodeConfig = nodeCategory.nodes.find(node => node.type === 'dataProcessor');
+
   return (
     <BaseNode 
       {...props} 
       icon={Filter} 
       type="dataProcessor"
-      baseColor="green"
-      gradientFrom="from-green-500/30"
-      gradientTo="to-green-400/10"
+      baseColor={nodeConfig.baseColor}
+      gradientFrom={nodeConfig.gradientFrom}
+      gradientTo={nodeConfig.gradientTo}
     >
       Data Processor
     </BaseNode>
