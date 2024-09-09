@@ -1,7 +1,13 @@
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from "@/common/components/ui/card";
+import { Checkbox } from "@/common/components/ui/checkbox";
+import { Label } from "@/common/components/ui/label";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/common/components/ui/select";
+import useSettingsStore from '@/store/settingsSlice';
 
 const SettingsTab = () => {
+  const { tableFields, theme, toggleTableField, setTheme } = useSettingsStore();
+
   return (
     <div className="space-y-6">
       <Card>
@@ -9,7 +15,18 @@ const SettingsTab = () => {
           <CardTitle>Table Customization</CardTitle>
         </CardHeader>
         <CardContent>
-          <p>Table customization options will go here.</p>
+          <div className="space-y-4">
+            {Object.entries(tableFields).map(([field, isChecked]) => (
+              <div className="flex items-center space-x-2" key={field}>
+                <Checkbox
+                  id={field}
+                  checked={isChecked}
+                  onCheckedChange={() => toggleTableField(field)}
+                />
+                <Label htmlFor={field}>{field}</Label>
+              </div>
+            ))}
+          </div>
         </CardContent>
       </Card>
       
@@ -24,10 +41,19 @@ const SettingsTab = () => {
       
       <Card>
         <CardHeader>
-          <CardTitle>Component Library</CardTitle>
+          <CardTitle>Theme</CardTitle>
         </CardHeader>
         <CardContent>
-          <p>Component library options will go here.</p>
+          <Select value={theme} onValueChange={setTheme}>
+            <SelectTrigger className="w-[180px]">
+              <SelectValue placeholder="Select theme" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="light">Light</SelectItem>
+              <SelectItem value="dark">Dark</SelectItem>
+              <SelectItem value="system">System</SelectItem>
+            </SelectContent>
+          </Select>
         </CardContent>
       </Card>
       
