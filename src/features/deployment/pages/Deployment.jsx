@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Input } from "@/common/components/ui/input";
 import { Label } from "@/common/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/common/components/ui/tabs";
@@ -9,6 +10,8 @@ import DeploymentCard from '../components/DeploymentCard';
 import NewDeploymentDialog from '../components/NewDeploymentDialog';
 import DeploymentTimeline from '../components/DeploymentTimeline';
 import useDeployment from '../hooks/useDeployment';
+import { Card, CardContent, CardHeader, CardTitle } from "@/common/components/ui/card";
+import { Progress } from "@/common/components/ui/progress";
 
 const Deployment = () => {
   const {
@@ -84,14 +87,14 @@ const Deployment = () => {
                 <AccordionTrigger>Frontend App v1.2.3 (Production)</AccordionTrigger>
                 <AccordionContent>
                   Deployed 2 hours ago. Status: Success. 
-                  <Button variant="link">View Logs</Button>
+                  <button className="text-purple-400 hover:text-purple-300 ml-2">View Logs</button>
                 </AccordionContent>
               </AccordionItem>
               <AccordionItem value="item-2">
                 <AccordionTrigger>Backend API v2.0.0 (Staging)</AccordionTrigger>
                 <AccordionContent>
                   Deployed 1 day ago. Status: Success. 
-                  <Button variant="link">View Logs</Button>
+                  <button className="text-purple-400 hover:text-purple-300 ml-2">View Logs</button>
                 </AccordionContent>
               </AccordionItem>
             </Accordion>
@@ -117,12 +120,12 @@ const Deployment = () => {
         </Tabs>
 
         <div className="flex justify-end mt-6">
-          <Button 
+          <button 
             onClick={() => setIsNewDeploymentDialogOpen(true)}
-            className="bg-purple-600 hover:bg-purple-700 text-white"
+            className="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded"
           >
             New Deployment
-          </Button>
+          </button>
         </div>
 
         <NewDeploymentDialog 
