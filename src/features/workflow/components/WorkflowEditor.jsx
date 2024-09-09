@@ -10,7 +10,6 @@ import { useWorkflowModals } from '../hooks/useWorkflowModals';
 import { useEdgeHighlighting } from '../hooks/useEdgeHighlighting';
 import WorkflowToolbar from './WorkflowToolbar';
 import { WorkflowSettingsProvider, useWorkflowSettings } from './WorkflowSettingsContext';
-import WorkflowSettingsPanel from './WorkflowSettingsPanel';
 import NodeCreationCard from './NodeCreationCard';
 import SettingsModal from '@/common/components/SettingsModal';
 
@@ -168,9 +167,6 @@ const WorkflowEditorContent = () => {
             onCreateFlow={handleCreateAgenticFlow}
             onOpenSettings={handleOpenSettings}
           />
-        </Panel>
-        <Panel position="bottom-right">
-          <WorkflowSettingsPanel />
         </Panel>
       </ReactFlow>
       <SaveLoadDialog
