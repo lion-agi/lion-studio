@@ -142,7 +142,7 @@ const Dashboard = () => {
           </TabsList>
 
           <TabsContent value="overview">
-            <div className="space-y-8">
+            <div className="bg-gray-900">
               <SummaryCards data={data.summary} />
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
                 <CostTrendChart data={data.costTrend} />
@@ -152,7 +152,7 @@ const Dashboard = () => {
           </TabsContent>
 
           <TabsContent value="costs">
-            <div className="space-y-8">
+            <div className="bg-gray-900">
               <SummaryCards data={data.summary} />
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
                 <CostTrendChart data={data.costTrend} />
@@ -162,7 +162,7 @@ const Dashboard = () => {
           </TabsContent>
 
           <TabsContent value="calls">
-            <div className="space-y-8">
+            <div className="bg-gray-900">
               <SummaryCards data={data.summary} />
               {data.recentCalls && data.recentCalls.length > 0 ? (
                 <>

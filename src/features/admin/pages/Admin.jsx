@@ -29,7 +29,7 @@ const Admin = () => {
 
   return (
     <div className="container mx-auto p-8">
-      <h1 className="text-3xl font-bold mb-8">Admin</h1>
+      <h1 className="text-2xl font-bold text-gray-100 mr-4">Admin</h1>
       <Tabs value={activeTab} onValueChange={setActiveTab} className="min-h-screen bg-gray-900 text-gray-100">
         <TabSwitchBar tabs={tabs} />
         <TabsContent value="overview">
