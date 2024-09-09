@@ -7,7 +7,8 @@ import { Switch } from "@/common/components/ui/switch";
 import { Label } from "@/common/components/ui/label";
 import { Input } from "@/common/components/ui/input";
 import { ScrollArea } from "@/common/components/ui/scroll-area";
-import { Zap, Save, Upload, PlusCircle, FileJson, Play, Pause, Undo, Redo, Settings, Lock, Unlock, ZoomIn, ZoomOut, RotateCcw, Download, Share } from 'lucide-react';
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/common/components/ui/collapsible";
+import { Zap, Save, Upload, PlusCircle, FileJson, Play, Pause, Undo, Redo, Settings, Lock, Unlock, ZoomIn, ZoomOut, RotateCcw, Download, Share, ChevronUp, ChevronDown } from 'lucide-react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogFooter } from "@/common/components/ui/dialog";
 import JSONModal from '@/common/components/JSONModal';
 
@@ -19,15 +20,17 @@ const WorkflowOperationsPanel = ({
   onRedo, 
   canUndo, 
   canRedo,
-  onSaveSettings
+  onSaveSettings,
+  backgroundColor
 }) => {
   const [showJSONModal, setShowJSONModal] = useState(false);
   const [showSettingsModal, setShowSettingsModal] = useState(false);
-  const [backgroundColor, setBackgroundColor] = useState('#1A2530');
+  const [tempBackgroundColor, setTempBackgroundColor] = useState(backgroundColor);
   const [autoSave, setAutoSave] = useState(true);
   const [performanceMode, setPerformanceMode] = useState(false);
   const [theme, setTheme] = useState('dark');
   const [isLocked, setIsLocked] = useState(false);
+  const [isCollapsed, setIsCollapsed] = useState(false);
 
   const handleExportJSON = () => {
     const jsonData = onExportJSON();
@@ -48,7 +51,7 @@ const WorkflowOperationsPanel = ({
 
   const handleSettingsSave = () => {
     onSaveSettings({
-      backgroundColor,
+      backgroundColor: tempBackgroundColor,
       autoSave,
       performanceMode,
       theme
@@ -71,172 +74,179 @@ const WorkflowOperationsPanel = ({
   return (
     <Card className="bg-gray-800 text-white">
       <CardHeader className="pb-2">
-        <CardTitle className="text-sm font-medium flex items-center">
-          <Zap className="w-4 h-4 mr-2" />
-          Workflow Operations
-        </CardTitle>
+        <CollapsibleTrigger onClick={() => setIsCollapsed(!isCollapsed)} className="flex items-center justify-between w-full">
+          <CardTitle className="text-sm font-medium flex items-center">
+            <Zap className="w-4 h-4 mr-2" />
+            Workflow Operations
+          </CardTitle>
+          {isCollapsed ? <ChevronDown className="h-4 w-4" /> : <ChevronUp className="h-4 w-4" />}
+        </CollapsibleTrigger>
       </CardHeader>
-      <CardContent className="pt-2">
-        <ScrollArea className="h-[120px]">
-          <div className="grid grid-cols-3 gap-2">
-            <TooltipProvider>
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <Button variant="outline" size="icon" onClick={handleExportJSON}>
-                    <FileJson className="h-4 w-4" />
-                  </Button>
-                </TooltipTrigger>
-                <TooltipContent>
-                  <p>Export JSON</p>
-                </TooltipContent>
-              </Tooltip>
-            </TooltipProvider>
+      <Collapsible open={!isCollapsed}>
+        <CollapsibleContent>
+          <CardContent className="pt-2">
+            <ScrollArea className="h-[120px]" style={{ backgroundColor: tempBackgroundColor }}>
+              <div className="grid grid-cols-3 gap-2">
+                <TooltipProvider>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <Button variant="outline" size="icon" onClick={handleExportJSON}>
+                        <FileJson className="h-4 w-4" />
+                      </Button>
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      <p>Export JSON</p>
+                    </TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
 
-            <TooltipProvider>
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <Button variant="outline" size="icon" onClick={handleSave}>
-                    <Save className="h-4 w-4" />
-                  </Button>
-                </TooltipTrigger>
-                <TooltipContent>
-                  <p>Save Workflow</p>
-                </TooltipContent>
-              </Tooltip>
-            </TooltipProvider>
+                <TooltipProvider>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <Button variant="outline" size="icon" onClick={handleSave}>
+                        <Save className="h-4 w-4" />
+                      </Button>
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      <p>Save Workflow</p>
+                    </TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
 
-            <TooltipProvider>
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <Button variant="outline" size="icon" onClick={handleLoad}>
-                    <Upload className="h-4 w-4" />
-                  </Button>
-                </TooltipTrigger>
-                <TooltipContent>
-                  <p>Load Workflow</p>
-                </TooltipContent>
-              </Tooltip>
-            </TooltipProvider>
+                <TooltipProvider>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <Button variant="outline" size="icon" onClick={handleLoad}>
+                        <Upload className="h-4 w-4" />
+                      </Button>
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      <p>Load Workflow</p>
+                    </TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
 
-            <TooltipProvider>
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <Button variant="outline" size="icon" onClick={onCreateAgenticFlow}>
-                    <PlusCircle className="h-4 w-4" />
-                  </Button>
-                </TooltipTrigger>
-                <TooltipContent>
-                  <p>New Agentic Flow</p>
-                </TooltipContent>
-              </Tooltip>
-            </TooltipProvider>
+                <TooltipProvider>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <Button variant="outline" size="icon" onClick={onCreateAgenticFlow}>
+                        <PlusCircle className="h-4 w-4" />
+                      </Button>
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      <p>New Agentic Flow</p>
+                    </TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
 
-            <TooltipProvider>
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <Button variant="outline" size="icon" onClick={onUndo} disabled={!canUndo}>
-                    <Undo className="h-4 w-4" />
-                  </Button>
-                </TooltipTrigger>
-                <TooltipContent>
-                  <p>Undo</p>
-                </TooltipContent>
-              </Tooltip>
-            </TooltipProvider>
+                <TooltipProvider>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <Button variant="outline" size="icon" onClick={onUndo} disabled={!canUndo}>
+                        <Undo className="h-4 w-4" />
+                      </Button>
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      <p>Undo</p>
+                    </TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
 
-            <TooltipProvider>
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <Button variant="outline" size="icon" onClick={onRedo} disabled={!canRedo}>
-                    <Redo className="h-4 w-4" />
-                  </Button>
-                </TooltipTrigger>
-                <TooltipContent>
-                  <p>Redo</p>
-                </TooltipContent>
-              </Tooltip>
-            </TooltipProvider>
+                <TooltipProvider>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <Button variant="outline" size="icon" onClick={onRedo} disabled={!canRedo}>
+                        <Redo className="h-4 w-4" />
+                      </Button>
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      <p>Redo</p>
+                    </TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
 
-            <TooltipProvider>
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <Button variant="outline" size="icon" onClick={() => setShowSettingsModal(true)}>
-                    <Settings className="h-4 w-4" />
-                  </Button>
-                </TooltipTrigger>
-                <TooltipContent>
-                  <p>Settings</p>
-                </TooltipContent>
-              </Tooltip>
-            </TooltipProvider>
+                <TooltipProvider>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <Button variant="outline" size="icon" onClick={() => setShowSettingsModal(true)}>
+                        <Settings className="h-4 w-4" />
+                      </Button>
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      <p>Settings</p>
+                    </TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
 
-            <TooltipProvider>
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <Button variant="outline" size="icon" onClick={toggleLock}>
-                    {isLocked ? <Lock className="h-4 w-4" /> : <Unlock className="h-4 w-4" />}
-                  </Button>
-                </TooltipTrigger>
-                <TooltipContent>
-                  <p>{isLocked ? 'Unlock' : 'Lock'} Workflow</p>
-                </TooltipContent>
-              </Tooltip>
-            </TooltipProvider>
+                <TooltipProvider>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <Button variant="outline" size="icon" onClick={toggleLock}>
+                        {isLocked ? <Lock className="h-4 w-4" /> : <Unlock className="h-4 w-4" />}
+                      </Button>
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      <p>{isLocked ? 'Unlock' : 'Lock'} Workflow</p>
+                    </TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
 
-            <TooltipProvider>
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <Button variant="outline" size="icon">
-                    <ZoomIn className="h-4 w-4" />
-                  </Button>
-                </TooltipTrigger>
-                <TooltipContent>
-                  <p>Zoom In</p>
-                </TooltipContent>
-              </Tooltip>
-            </TooltipProvider>
+                <TooltipProvider>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <Button variant="outline" size="icon">
+                        <ZoomIn className="h-4 w-4" />
+                      </Button>
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      <p>Zoom In</p>
+                    </TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
 
-            <TooltipProvider>
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <Button variant="outline" size="icon">
-                    <ZoomOut className="h-4 w-4" />
-                  </Button>
-                </TooltipTrigger>
-                <TooltipContent>
-                  <p>Zoom Out</p>
-                </TooltipContent>
-              </Tooltip>
-            </TooltipProvider>
+                <TooltipProvider>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <Button variant="outline" size="icon">
+                        <ZoomOut className="h-4 w-4" />
+                      </Button>
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      <p>Zoom Out</p>
+                    </TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
 
-            <TooltipProvider>
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <Button variant="outline" size="icon">
-                    <RotateCcw className="h-4 w-4" />
-                  </Button>
-                </TooltipTrigger>
-                <TooltipContent>
-                  <p>Reset View</p>
-                </TooltipContent>
-              </Tooltip>
-            </TooltipProvider>
+                <TooltipProvider>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <Button variant="outline" size="icon">
+                        <RotateCcw className="h-4 w-4" />
+                      </Button>
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      <p>Reset View</p>
+                    </TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
 
-            <TooltipProvider>
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <Button variant="outline" size="icon">
-                    <Download className="h-4 w-4" />
-                  </Button>
-                </TooltipTrigger>
-                <TooltipContent>
-                  <p>Download Workflow</p>
-                </TooltipContent>
-              </Tooltip>
-            </TooltipProvider>
-          </div>
-        </ScrollArea>
-      </CardContent>
+                <TooltipProvider>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <Button variant="outline" size="icon">
+                        <Download className="h-4 w-4" />
+                      </Button>
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      <p>Download Workflow</p>
+                    </TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
+              </div>
+            </ScrollArea>
+          </CardContent>
+        </CollapsibleContent>
+      </Collapsible>
 
       <JSONModal
         isOpen={showJSONModal}
@@ -252,7 +262,7 @@ const WorkflowOperationsPanel = ({
           <div className="space-y-4">
             <div className="flex items-center justify-between">
               <Label htmlFor="backgroundColor">Background Color</Label>
-              <Select value={backgroundColor} onValueChange={setBackgroundColor}>
+              <Select value={tempBackgroundColor} onValueChange={setTempBackgroundColor}>
                 <SelectTrigger className="w-[180px]">
                   <SelectValue placeholder="Select color" />
                 </SelectTrigger>
@@ -269,14 +279,14 @@ const WorkflowOperationsPanel = ({
                 </SelectContent>
               </Select>
             </div>
-            {backgroundColor === 'custom' && (
+            {tempBackgroundColor === 'custom' && (
               <div className="flex items-center justify-between">
                 <Label htmlFor="customColor">Custom Color</Label>
                 <Input
                   id="customColor"
                   type="color"
-                  value={backgroundColor}
-                  onChange={(e) => setBackgroundColor(e.target.value)}
+                  value={tempBackgroundColor}
+                  onChange={(e) => setTempBackgroundColor(e.target.value)}
                   className="w-[100px]"
                 />
               </div>
