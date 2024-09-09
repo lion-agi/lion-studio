@@ -22,6 +22,10 @@ export const useWorkflowHandlers = (nodes, setNodes, edges, setEdges) => {
     (event) => {
       event.preventDefault();
 
+      if (!reactFlowWrapper.current || !reactFlowInstance) {
+        return;
+      }
+
       const reactFlowBounds = reactFlowWrapper.current.getBoundingClientRect();
       const type = event.dataTransfer.getData('application/reactflow');
 
