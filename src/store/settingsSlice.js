@@ -91,3 +91,4 @@ const useSettingsStore = create(
 );
 
 export { useSettingsStore };
+export default useSettingsStore;
