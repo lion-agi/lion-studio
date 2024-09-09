@@ -1,71 +1,39 @@
 import React, { useState } from 'react';
-import { useRecoilState } from 'recoil';
-import { useApiData } from '@/features/dashboard/hooks';
-import { timeRangeState, selectedModelState } from '@/features/dashboard/atoms';
+import { useNavigate } from 'react-router-dom';
+import { Input } from "@/common/components/ui/input";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/common/components/ui/tabs";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/common/components/ui/select";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/common/components/ui/dialog";
+import { Search, Info } from 'lucide-react';
+import { Button } from "@/common/components/ui/button";
 import SummaryCards from '@/features/dashboard/components/SummaryCards';
 import CostTrendChart from '@/features/dashboard/components/CostTrendChart';
 import CostBreakdownChart from '@/features/dashboard/components/CostBreakdownChart';
 import PerformanceChart from '@/features/dashboard/components/PerformanceChart';
 import RecentCallsTable from '@/features/dashboard/components/RecentCallsTable';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/common/components/ui/tabs";
-import { Button } from "@/common/components/ui/button";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/common/components/ui/dialog";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/common/components/ui/select";
-import { Input } from "@/common/components/ui/input";
-import { DownloadIcon, AlertTriangle, Info, Search } from 'lucide-react';
-
-const LoadingSpinner = () => (
-  <div className="flex justify-center items-center h-64">
-    <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-primary"></div>
-  </div>
-);
-
-const InfoModal = ({ isOpen, onClose }) => (
-  <Dialog open={isOpen} onOpenChange={onClose}>
-    <DialogContent className="sm:max-w-[425px] bg-gray-800 text-gray-100">
-      <DialogHeader>
-        <DialogTitle>Dashboard Information</DialogTitle>
-      </DialogHeader>
-      <div className="mt-4">
-        <p>The Dashboard provides an overview of your project's performance and usage:</p>
-        <ul className="list-disc list-inside mt-2 space-y-1">
-          <li>View total costs and API calls</li>
-          <li>Monitor response times and error rates</li>
-          <li>Analyze trends and performance metrics</li>
-        </ul>
-        <p className="mt-4">Use the filters to adjust the time range and model selection, and use the search bar to find specific information.</p>
-      </div>
-    </DialogContent>
-  </Dialog>
-);
+import { useApiData } from '@/features/dashboard/hooks';
+import SettingsTab from '../components/SettingsTab';
 
 const Dashboard = () => {
-  const [timeRange, setTimeRange] = useRecoilState(timeRangeState);
-  const [selectedModel, setSelectedModel] = useRecoilState(selectedModelState);
+  const [timeRange, setTimeRange] = useState('7d');
+  const [selectedModel, setSelectedModel] = useState('all');
+  const [searchTerm, setSearchTerm] = useState('');
   const [isInfoModalOpen, setIsInfoModalOpen] = useState(false);
   const { data, isLoading, error } = useApiData(timeRange, selectedModel);
-
-  const [searchTerm, setSearchTerm] = useState('');
-  const [activeTab, setActiveTab] = useState('overview');
-
-  if (isLoading) {
-    return <LoadingSpinner />;
-  }
-
-  if (error) {
-    return (
-      <div className="text-center py-8">
-        <AlertTriangle className="mx-auto h-12 w-12 text-yellow-400" />
-        <h3 className="mt-2 text-sm font-semibold text-gray-100">Error</h3>
-        <p className="mt-1 text-sm text-gray-400">{error.message || "An unknown error occurred"}</p>
-      </div>
-    );
-  }
+  const navigate = useNavigate();
 
   const handleExportApiCalls = () => {
     // Implement export functionality here
     console.log('Exporting API calls...');
   };
+
+  if (isLoading) {
+    return <div className="flex justify-center items-center h-64">Loading...</div>;
+  }
+
+  if (error) {
+    return <div className="text-red-500">Error: {error.message}</div>;
+  }
 
   return (
     <div className="min-h-screen bg-gray-900 text-gray-100">
@@ -117,14 +85,15 @@ const Dashboard = () => {
           </div>
         </div>
 
-        <Tabs value={activeTab} onValueChange={setActiveTab} className="mt-8">
+        <Tabs defaultValue="overview" className="space-y-6">
           <TabsList className="bg-gray-800 mb-6">
             <TabsTrigger value="overview" className="data-[state=active]:bg-purple-600 data-[state=active]:text-white">Overview</TabsTrigger>
             <TabsTrigger value="costs" className="data-[state=active]:bg-purple-600 data-[state=active]:text-white">Costs</TabsTrigger>
             <TabsTrigger value="calls" className="data-[state=active]:bg-purple-600 data-[state=active]:text-white">API Calls</TabsTrigger>
+            <TabsTrigger value="settings" className="data-[state=active]:bg-purple-600 data-[state=active]:text-white">Settings</TabsTrigger>
           </TabsList>
 
-          <TabsContent value="overview" className="mt-6">
+          <TabsContent value="overview">
             <div className="space-y-8">
               <SummaryCards data={data.summary} />
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
@@ -134,7 +103,7 @@ const Dashboard = () => {
             </div>
           </TabsContent>
 
-          <TabsContent value="costs" className="mt-6">
+          <TabsContent value="costs">
             <div className="space-y-8">
               <SummaryCards data={data.summary} />
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
@@ -144,7 +113,7 @@ const Dashboard = () => {
             </div>
           </TabsContent>
 
-          <TabsContent value="calls" className="mt-6">
+          <TabsContent value="calls">
             <div className="space-y-8">
               <SummaryCards data={data.summary} />
               {data.recentCalls && data.recentCalls.length > 0 ? (
@@ -152,30 +121,42 @@ const Dashboard = () => {
                   <RecentCallsTable data={data.recentCalls} />
                   <div className="flex justify-end">
                     <Button onClick={handleExportApiCalls} className="bg-purple-600 hover:bg-purple-700 text-white">
-                      <DownloadIcon className="mr-2 h-4 w-4" />
                       Export API Calls
                     </Button>
                   </div>
                 </>
               ) : (
                 <div className="text-center py-8">
-                  <AlertTriangle className="mx-auto h-12 w-12 text-yellow-400" />
-                  <h3 className="mt-2 text-sm font-semibold text-gray-100">No API Calls</h3>
-                  <p className="mt-1 text-sm text-gray-400">There are no recent API calls to display.</p>
+                  <p className="text-gray-400">No recent API calls to display.</p>
                 </div>
               )}
             </div>
           </TabsContent>
+
+          <TabsContent value="settings">
+            <SettingsTab />
+          </TabsContent>
         </Tabs>
       </div>
-      <InfoModal
-        isOpen={isInfoModalOpen}
-        onClose={() => setIsInfoModalOpen(false)}
-      />
+
+      <Dialog open={isInfoModalOpen} onOpenChange={setIsInfoModalOpen}>
+        <DialogContent className="sm:max-w-[425px] bg-gray-800 text-gray-100">
+          <DialogHeader>
+            <DialogTitle>Dashboard Information</DialogTitle>
+          </DialogHeader>
+          <div className="mt-4">
+            <p>The Dashboard provides an overview of your project's performance and usage:</p>
+            <ul className="list-disc list-inside mt-2 space-y-1">
+              <li>View total costs and API calls</li>
+              <li>Monitor response times and error rates</li>
+              <li>Analyze trends and performance metrics</li>
+            </ul>
+            <p className="mt-4">Use the filters to adjust the time range and model selection, and use the search bar to find specific information.</p>
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };
 
 export default Dashboard;
-
-// Path: src/features/dashboard/pages/Dashboard.jsx
