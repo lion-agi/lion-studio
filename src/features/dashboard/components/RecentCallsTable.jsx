@@ -1,7 +1,7 @@
 import React from 'react';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/common/components/ui/table";
 import useSettingsStore from '@/store/settingsSlice';
-import { formatDate, formatNumber, formatCurrency } from '@/features/dashboard/utils';
+import { formatDate, formatNumber, formatCurrency, formatResponseTime } from '@/common/utils/formatters';
 
 const RecentCallsTable = ({ data }) => {
   const tableFields = useSettingsStore((state) => state.tableFields);
@@ -15,9 +15,9 @@ const RecentCallsTable = ({ data }) => {
       case 'cost':
         return formatCurrency(value);
       case 'responseTime':
-        return `${value} ms`;
+        return formatResponseTime(value);
       default:
-        return value;
+        return value || 'N/A';
     }
   };
 
@@ -35,8 +35,8 @@ const RecentCallsTable = ({ data }) => {
         </TableRow>
       </TableHeader>
       <TableBody>
-        {data.map((call) => (
-          <TableRow key={call.id}>
+        {data.map((call, index) => (
+          <TableRow key={index}>
             {Object.entries(tableFields).map(([field, isVisible]) => 
               isVisible && (
                 <TableCell key={field}>

@@ -1,66 +1,66 @@
-import { formatDate } from './utils';
+import { formatDate, formatNumber, formatCurrency, formatResponseTime } from '@/common/utils/formatters';
 
-const generateCostTrendData = (apiCalls, timeRange) => {
-  const costByDate = apiCalls.reduce((acc, call) => {
-    const date = formatDate(new Date(call.created_at));
-    acc[date] = (acc[date] || 0) + call.cost;
-    return acc;
-  }, {});
-
-  return Object.entries(costByDate).map(([date, cost]) => ({ date, cost }));
+const providers = ['OpenAI', 'Anthropic', 'Cohere'];
+const models = {
+  OpenAI: ['GPT-3.5-turbo', 'GPT-4'],
+  Anthropic: ['Claude-v1', 'Claude-instant-v1'],
+  Cohere: ['Command', 'Generate']
+};
+const endpoints = {
+  OpenAI: '/v1/chat/completions',
+  Anthropic: '/v1/complete',
+  Cohere: '/v1/generate'
+};
+const methods = ['POST', 'GET'];
+const baseUrls = {
+  OpenAI: 'https://api.openai.com',
+  Anthropic: 'https://api.anthropic.com',
+  Cohere: 'https://api.cohere.ai'
 };
 
-const generatePerformanceData = (apiCalls, timeRange) => {
-  const perfByDate = apiCalls.reduce((acc, call) => {
-    const date = formatDate(new Date(call.created_at));
-    if (!acc[date]) {
-      acc[date] = { responseTime: 0, errorCount: 0, totalCalls: 0 };
-    }
-    acc[date].responseTime += call.response_time;
-    acc[date].errorCount += call.error ? 1 : 0;
-    acc[date].totalCalls += 1;
-    return acc;
-  }, {});
-
-  return Object.entries(perfByDate).map(([date, data]) => ({
-    date,
-    responseTime: data.responseTime / data.totalCalls,
-    errorRate: data.errorCount / data.totalCalls,
-  }));
+export const generateRecentCalls = (count) => {
+  const calls = [];
+  for (let i = 0; i < count; i++) {
+    const provider = providers[Math.floor(Math.random() * providers.length)];
+    calls.push({
+      id: `call-${i}`,
+      timestamp: new Date(Date.now() - i * 60000).toISOString(),
+      provider,
+      model: models[provider][Math.floor(Math.random() * models[provider].length)],
+      endpoint: endpoints[provider],
+      method: methods[Math.floor(Math.random() * methods.length)],
+      baseUrl: baseUrls[provider],
+      tokens: Math.floor(Math.random() * 1000) + 100,
+      cost: (Math.random() * 0.1 + 0.01),
+      responseTime: Math.floor(Math.random() * 1000) + 100,
+    });
+  }
+  return calls;
 };
 
 export const fetchApiData = async (timeRange, selectedModel) => {
-  const apiCalls = await fetchApiCalls(timeRange, selectedModel);
-  const apiStats = await fetchApiStats(timeRange, selectedModel);
+  // Simulate API call
+  await new Promise(resolve => setTimeout(resolve, 500));
 
-  const filteredCalls = selectedModel === 'all' 
-    ? apiCalls 
-    : apiCalls.filter(call => call.model === selectedModel);
-
-  const costTrend = generateCostTrendData(filteredCalls, timeRange);
-  const performance = generatePerformanceData(filteredCalls, timeRange);
+  const apiCalls = generateRecentCalls(100);
+  const apiStats = {
+    totalCost: apiCalls.reduce((sum, call) => sum + call.cost, 0),
+    totalCalls: apiCalls.length,
+    avgResponseTime: apiCalls.reduce((sum, call) => sum + call.responseTime, 0) / apiCalls.length,
+    errorRate: Math.random() * 0.1,
+  };
 
   return {
     summary: {
-      totalCost: apiStats.totalCost,
-      totalCalls: apiStats.totalCalls,
-      avgResponseTime: apiStats.avgResponseTime,
-      errorRate: apiStats.errorRate,
-      costChange: Math.random() * 0.2 - 0.1, // Random change between -10% and 10%
-      callsChange: Math.random() * 0.3 - 0.15, // Random change between -15% and 15%
-      responseTimeChange: Math.random() * 0.2 - 0.1,
-      errorRateChange: Math.random() * 0.1 - 0.05,
+      totalCost: formatCurrency(apiStats.totalCost),
+      totalCalls: formatNumber(apiStats.totalCalls),
+      avgResponseTime: formatResponseTime(apiStats.avgResponseTime),
+      errorRate: `${(apiStats.errorRate * 100).toFixed(2)}%`,
+      costChange: `${(Math.random() * 20 - 10).toFixed(2)}%`,
+      callsChange: `${(Math.random() * 30 - 15).toFixed(2)}%`,
+      responseTimeChange: `${(Math.random() * 20 - 10).toFixed(2)}%`,
+      errorRateChange: `${(Math.random() * 10 - 5).toFixed(2)}%`,
     },
-    costTrend,
-    costBreakdown: [
-      { model: 'gpt-3.5-turbo', cost: apiStats.totalCost * 0.4 },
-      { model: 'gpt-4', cost: apiStats.totalCost * 0.5 },
-      { model: 'claude-3-opus', cost: apiStats.totalCost * 0.1 },
-    ],
-    performance,
-    recentCalls: filteredCalls.slice(0, 100), // Get the 100 most recent calls
+    recentCalls: apiCalls,
   };
 };
-
-
-// Path: src/features/dashboard/api.js

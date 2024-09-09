@@ -15,22 +15,12 @@ const useSettingsStore = create(
         cost: true,
         responseTime: true,
       },
-      displayPreferences: {
-        overview: ['summaryCards', 'costTrendChart', 'performanceChart'],
-        costs: ['summaryCards', 'costTrendChart', 'costBreakdownChart'],
-        calls: ['summaryCards', 'recentCallsTable'],
-      },
       theme: 'light',
-      autoRefreshInterval: 0, // 0 means disabled
+      autoRefreshInterval: 0,
 
       toggleTableField: (field) => 
         set((state) => ({
           tableFields: { ...state.tableFields, [field]: !state.tableFields[field] },
-        })),
-
-      updateDisplayPreference: (tab, components) =>
-        set((state) => ({
-          displayPreferences: { ...state.displayPreferences, [tab]: components },
         })),
 
       setTheme: (theme) => set({ theme }),
