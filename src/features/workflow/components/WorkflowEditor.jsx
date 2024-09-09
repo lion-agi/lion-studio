@@ -99,73 +99,76 @@ const WorkflowEditorContent = () => {
   }, [setEdges]);
 
   return (
-    <div ref={containerRef} className="h-full w-full relative" style={{ height: 'calc(100vh - 64px)' }}>
-      <ReactFlow
-        ref={reactFlowWrapper}
-        nodes={nodes}
-        edges={styledEdges}
-        onNodesChange={onNodesChange}
-        onEdgesChange={onEdgesChange}
-        onConnect={onConnect}
-        onInit={setReactFlowInstance}
-        onDrop={onDrop}
-        onDragOver={onDragOver}
-        onNodeClick={onNodeClick}
-        onEdgeClick={onEdgeClick}
-        onNodeDragStop={onNodeDragStop}
-        nodeTypes={nodeTypes}
-        defaultEdgeOptions={edgeOptions}
-        fitView
-        style={{
-          width: containerSize.width,
-          height: containerSize.height,
-          backgroundColor: backgroundColor,
-        }}
-        panOnDrag={!isLocked}
-        zoomOnScroll={!isLocked}
-        nodesDraggable={!isLocked}
-        nodesConnectable={!isLocked}
-        elementsSelectable={!isLocked}
-      >
-        <MiniMap 
-          nodeColor={(node) => {
-            switch (node.type) {
-              case 'user': return '#22c55e';
-              case 'assistant': return '#CD7F32';
-              case 'group': return '#FF4136';
-              case 'initializer': return '#ec4899';
-              case 'conversation': return '#1ABC9C';
-              case 'note': return '#f97316';
-              default: return '#6366f1';
-            }
+    <div ref={containerRef} className="flex h-full w-full relative">
+      <div className="flex-grow overflow-hidden">
+        <ReactFlow
+          ref={reactFlowWrapper}
+          nodes={nodes}
+          edges={styledEdges}
+          onNodesChange={onNodesChange}
+          onEdgesChange={onEdgesChange}
+          onConnect={onConnect}
+          onInit={setReactFlowInstance}
+          onDrop={onDrop}
+          onDragOver={onDragOver}
+          onNodeClick={onNodeClick}
+          onEdgeClick={onEdgeClick}
+          onNodeDragStop={onNodeDragStop}
+          nodeTypes={nodeTypes}
+          defaultEdgeOptions={edgeOptions}
+          fitView
+          style={{
+            width: '100%',
+            height: '100%',
+            backgroundColor: backgroundColor,
           }}
-          nodeStrokeWidth={3} 
-          zoomable 
-          pannable
-        />
-        <Panel position="top-left">
-          <div className="space-y-2">
-            <NodeCreationPanel />
-            <WorkflowOperationsPanel
-              onExportJSON={handleExportJSON}
-              onSaveLoad={handleSaveLoad}
-              onCreateAgenticFlow={handleCreateAgenticFlow}
-              onUndo={undo}
-              onRedo={redo}
-              canUndo={canUndo}
-              canRedo={canRedo}
-              onDeleteNode={handleDeleteNode}
-              onSaveSettings={handleSaveSettings}
-              isLocked={isLocked}
-              setIsLocked={setIsLocked}
-              onZoomIn={zoomIn}
-              onZoomOut={zoomOut}
-              onResetView={fitView}
-              onEdgeClick={onEdgeClick}
-            />
-          </div>
-        </Panel>
-      </ReactFlow>
+          panOnDrag={!isLocked}
+          zoomOnScroll={!isLocked}
+          nodesDraggable={!isLocked}
+          nodesConnectable={!isLocked}
+          elementsSelectable={!isLocked}
+        >
+          <Background />
+          <MiniMap 
+            nodeColor={(node) => {
+              switch (node.type) {
+                case 'user': return '#22c55e';
+                case 'assistant': return '#CD7F32';
+                case 'group': return '#FF4136';
+                case 'initializer': return '#ec4899';
+                case 'conversation': return '#1ABC9C';
+                case 'note': return '#f97316';
+                default: return '#6366f1';
+              }
+            }}
+            nodeStrokeWidth={3} 
+            zoomable 
+            pannable
+          />
+        </ReactFlow>
+      </div>
+      <Panel position="top-left">
+        <div className="space-y-2">
+          <NodeCreationPanel />
+          <WorkflowOperationsPanel
+            onExportJSON={handleExportJSON}
+            onSaveLoad={handleSaveLoad}
+            onCreateAgenticFlow={handleCreateAgenticFlow}
+            onUndo={undo}
+            onRedo={redo}
+            canUndo={canUndo}
+            canRedo={canRedo}
+            onDeleteNode={handleDeleteNode}
+            onSaveSettings={handleSaveSettings}
+            isLocked={isLocked}
+            setIsLocked={setIsLocked}
+            onZoomIn={zoomIn}
+            onZoomOut={zoomOut}
+            onResetView={fitView}
+            onEdgeClick={onEdgeClick}
+          />
+        </div>
+      </Panel>
       <AgenticFlowWizard
         isOpen={isWizardOpen}
         onClose={() => setIsWizardOpen(false)}
