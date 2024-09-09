@@ -2,7 +2,7 @@ import React from 'react';
 import { WorkflowSettingsProvider } from './WorkflowSettingsContext';
 import WorkflowEditor from './WorkflowEditor';
 
-const WorkflowEditorContainer = () => {
+export const WorkflowEditorContainer = () => {
   return (
     <WorkflowSettingsProvider>
       <WorkflowEditor />
@@ -11,5 +11,3 @@ const WorkflowEditorContainer = () => {
 };
 
 export default WorkflowEditorContainer;
-
-// Path: src/features/workflow/components/WorkflowEditorContainer.jsx

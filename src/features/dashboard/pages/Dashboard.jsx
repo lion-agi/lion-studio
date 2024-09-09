@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { WorkflowEditorContainer } from '@/features/workflow/components/WorkflowEditorContainer';
+import WorkflowEditorContainer from '@/features/workflow/components/WorkflowEditorContainer';
 import Sidebar from '@/common/components/Sidebar';
 import { Button } from "@/common/components/ui/button";
 import { Input } from "@/common/components/ui/input";
