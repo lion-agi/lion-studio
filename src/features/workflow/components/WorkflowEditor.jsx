@@ -118,6 +118,7 @@ const WorkflowEditor = () => {
           }}
         />
       </ReactFlow>
+      <NodeCreationCard onAddNode={handleCreateAgenticFlow} />
       <SaveLoadDialog
         isOpen={showSaveLoadDialog}
         onClose={() => setShowSaveLoadDialog(false)}
