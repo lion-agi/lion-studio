@@ -12,12 +12,10 @@ import WorkflowToolbar from './WorkflowToolbar';
 import { WorkflowSettingsProvider, useWorkflowSettings } from './WorkflowSettingsContext';
 import WorkflowSettingsPanel from './WorkflowSettingsPanel';
 import NodeCreationCard from './NodeCreationCard';
-import SettingsModal from '@/common/components/SettingsModal';
 
 const WorkflowEditorContent = () => {
   const containerRef = useRef(null);
   const [containerSize, setContainerSize] = useState({ width: 0, height: 0 });
-  const [showSettingsModal, setShowSettingsModal] = useState(false);
 
   const {
     nodes,
@@ -157,7 +155,6 @@ const WorkflowEditorContent = () => {
             onExportJSON={handleExportJSON}
             onSaveLoad={() => setShowSaveLoadDialog(true)}
             onCreateFlow={handleCreateAgenticFlow}
-            onOpenSettings={() => setShowSettingsModal(true)}
           />
         </Panel>
         <Panel position="bottom-right">
@@ -178,10 +175,6 @@ const WorkflowEditorContent = () => {
         isOpen={showJSONModal}
         onClose={() => setShowJSONModal(false)}
         jsonData={jsonData}
-      />
-      <SettingsModal
-        isOpen={showSettingsModal}
-        onClose={() => setShowSettingsModal(false)}
       />
     </div>
   );
