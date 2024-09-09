@@ -119,24 +119,24 @@ const Dashboard = () => {
         </TabsList>
 
         <TabsContent value="overview" className="space-y-8">
-          <SummaryCards data={data.summary} />
+          <SummaryCards data={data?.summary || {}} />
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-            {dashboardSettings.showCostTrend && <CostTrendChart data={data.costTrend} />}
-            {dashboardSettings.showPerformanceMetrics && <PerformanceChart data={data.performance} />}
+            {dashboardSettings.showCostTrend && <CostTrendChart data={data?.costTrend || []} />}
+            {dashboardSettings.showPerformanceMetrics && <PerformanceChart data={data?.performance || []} />}
           </div>
         </TabsContent>
 
         <TabsContent value="costs" className="space-y-8">
-          <SummaryCards data={data.summary} />
+          <SummaryCards data={data?.summary || {}} />
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-            {dashboardSettings.showCostTrend && <CostTrendChart data={data.costTrend} />}
-            {dashboardSettings.showCostBreakdown && <CostBreakdownChart data={data.costBreakdown} />}
+            {dashboardSettings.showCostTrend && <CostTrendChart data={data?.costTrend || []} />}
+            {dashboardSettings.showCostBreakdown && <CostBreakdownChart data={data?.costBreakdown || []} />}
           </div>
         </TabsContent>
 
         <TabsContent value="calls" className="space-y-8">
-          <SummaryCards data={data.summary} />
-          {data.recentCalls && data.recentCalls.length > 0 ? (
+          <SummaryCards data={data?.summary || {}} />
+          {data?.recentCalls && data.recentCalls.length > 0 ? (
             <>
               <RecentCallsTable data={data.recentCalls} />
               <div className="flex justify-end">
