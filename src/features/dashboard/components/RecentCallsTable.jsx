@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/common/components/ui/table";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/common/components/ui/select";
 import { Input } from "@/common/components/ui/input";
@@ -10,12 +10,21 @@ const RecentCallsTable = ({ calls }) => {
   const [currentPage, setCurrentPage] = useState(1);
   const [filter, setFilter] = useState('');
 
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [filter, rowsPerPage]);
+
+  // Safely access object properties
+  const safeAccess = (obj, path) => {
+    return path.split('.').reduce((acc, part) => acc && acc[part], obj) ?? '';
+  };
+
   // Filter calls based on the search input
-  const filteredCalls = calls.filter(call => 
+  const filteredCalls = calls?.filter(call => 
     Object.values(call).some(value => 
-      value.toString().toLowerCase().includes(filter.toLowerCase())
+      String(value).toLowerCase().includes(filter.toLowerCase())
     )
-  );
+  ) ?? [];
 
   // Calculate pagination
   const totalPages = Math.ceil(filteredCalls.length / rowsPerPage);
@@ -56,11 +65,11 @@ const RecentCallsTable = ({ calls }) => {
         <TableBody>
           {displayedCalls.map((call, index) => (
             <TableRow key={index}>
-              <TableCell>{formatDate(call.created_at)}</TableCell>
-              <TableCell>{call.model}</TableCell>
-              <TableCell>{formatNumber(call.tokens)}</TableCell>
-              <TableCell>{formatCurrency(call.cost)}</TableCell>
-              <TableCell>{call.response_time} ms</TableCell>
+              <TableCell>{formatDate(safeAccess(call, 'created_at'))}</TableCell>
+              <TableCell>{safeAccess(call, 'model')}</TableCell>
+              <TableCell>{formatNumber(safeAccess(call, 'tokens'))}</TableCell>
+              <TableCell>{formatCurrency(safeAccess(call, 'cost'))}</TableCell>
+              <TableCell>{safeAccess(call, 'response_time')} ms</TableCell>
             </TableRow>
           ))}
         </TableBody>
