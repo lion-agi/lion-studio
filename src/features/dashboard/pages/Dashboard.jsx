@@ -5,6 +5,7 @@ import { Input } from "@/common/components/ui/input";
 import { Search, Info } from 'lucide-react';
 import { useToast } from "@/common/components/ui/use-toast";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/common/components/ui/dialog";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/common/components/ui/tabs";
 import SummaryCards from '../components/SummaryCards';
 import CostTrendChart from '../components/CostTrendChart';
 import CostBreakdownChart from '../components/CostBreakdownChart';
@@ -32,22 +33,9 @@ const Dashboard = () => {
 
   return (
     <div className="container mx-auto p-6 space-y-6">
-      <div className="flex justify-between items-center mb-6">
-        <h1 className="text-2xl font-bold text-gray-100">Dashboard</h1>
-        <div className="flex items-center space-x-4">
-          <div className="relative">
-            <Input
-              type="text"
-              placeholder="Search dashboard..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-64 bg-gray-800 text-gray-200 placeholder-gray-400 border-gray-700 focus:border-purple-500 focus:ring-1 focus:ring-purple-500 pr-10"
-            />
-            <Search 
-              className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5 cursor-pointer" 
-              onClick={handleSearch}
-            />
-          </div>
+      <div className="flex flex-col md:flex-row justify-between items-center mb-6">
+        <div className="flex items-center">
+          <h1 className="text-2xl font-bold mb-6 md:mb-0 text-gray-100 mr-4">Dashboard</h1>
           <Button
             variant="ghost"
             size="sm"
@@ -57,16 +45,45 @@ const Dashboard = () => {
             <Info className="h-5 w-5" />
           </Button>
         </div>
+        <div className="relative w-full md:w-80">
+          <Input
+            type="text"
+            placeholder="Search dashboard..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="w-full bg-gray-800 text-gray-200 placeholder-gray-400 border-gray-700 focus:border-purple-500 focus:ring-1 focus:ring-purple-500 pr-10"
+          />
+          <Search className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
+        </div>
       </div>
 
-      <SummaryCards data={data.summary} />
-      
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <CostTrendChart data={data.costTrend} />
-        <CostBreakdownChart data={data.costBreakdown} />
-      </div>
-      
-      <RecentCallsTable calls={data.recentCalls} />
+      <Tabs defaultValue="overview" className="space-y-6">
+        <TabsList>
+          <TabsTrigger value="overview">Overview</TabsTrigger>
+          <TabsTrigger value="calls">Calls</TabsTrigger>
+          <TabsTrigger value="costs">Costs</TabsTrigger>
+        </TabsList>
+
+        <TabsContent value="overview">
+          <SummaryCards data={data.summary} />
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
+            <CostTrendChart data={data.costTrend} />
+            <CostBreakdownChart data={data.costBreakdown} />
+          </div>
+          <RecentCallsTable calls={data.recentCalls} />
+        </TabsContent>
+
+        <TabsContent value="calls">
+          <RecentCallsTable calls={data.recentCalls} />
+        </TabsContent>
+
+        <TabsContent value="costs">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <CostTrendChart data={data.costTrend} />
+            <CostBreakdownChart data={data.costBreakdown} />
+          </div>
+        </TabsContent>
+      </Tabs>
 
       <Dialog open={isInfoModalOpen} onOpenChange={setIsInfoModalOpen}>
         <DialogContent className="sm:max-w-[425px] bg-gray-800 text-gray-100">
