@@ -130,13 +130,13 @@ const WorkflowEditorContent = () => {
         <MiniMap 
           nodeColor={(node) => {
             switch (node.type) {
-              case 'user': return '#3498DB';
-              case 'assistant': return '#F39C12';
-              case 'group': return '#E74C3C';
-              case 'initializer': return '#9B59B6';
+              case 'user': return '#22c55e';
+              case 'assistant': return '#CD7F32';
+              case 'group': return '#FF4136';
+              case 'initializer': return '#ec4899';
               case 'conversation': return '#1ABC9C';
-              case 'note': return '#34495E';
-              default: return '#95A5A6';
+              case 'note': return '#f97316';
+              default: return '#6366f1';
             }
           }}
           nodeStrokeWidth={3} 
