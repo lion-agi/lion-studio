@@ -8,11 +8,13 @@ import { useWorkflowState } from '../hooks/useWorkflowState';
 import { useWorkflowHandlers } from '../hooks/useWorkflowHandlers';
 import { useWorkflowModals } from '../hooks/useWorkflowModals';
 import { useEdgeHighlighting } from '../hooks/useEdgeHighlighting';
-import WorkflowToolbar from './WorkflowToolbar';
 import { WorkflowSettingsProvider, useWorkflowSettings } from './WorkflowSettingsContext';
-import NodeCreationCard from './NodeCreationCard';
-import { ChevronDown, ChevronUp } from 'lucide-react';
 import { Button } from "@/common/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/common/components/ui/card";
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/common/components/ui/collapsible";
+import { ChevronDown, ChevronUp, Save, Upload, PlusCircle, FileJson, Settings } from 'lucide-react';
+import WorkflowSettingsPanel from './WorkflowSettingsPanel';
+import NodeCreationPanel from './NodeCreationPanel';
 
 const WorkflowEditorContent = () => {
   const containerRef = useRef(null);
@@ -148,50 +150,56 @@ const WorkflowEditorContent = () => {
           }}
         />
         <Panel position="top-left">
-          <div className="bg-gray-800 rounded-lg shadow-lg p-4 mb-4">
-            <div className="flex justify-between items-center mb-2">
-              <h3 className="text-lg font-semibold text-white">Workflow Settings</h3>
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={toggleSettings}
-                className="text-gray-400 hover:text-white"
-              >
-                {isSettingsExpanded ? <ChevronUp className="h-5 w-5" /> : <ChevronDown className="h-5 w-5" />}
-              </Button>
-            </div>
-            {isSettingsExpanded && (
-              <WorkflowToolbar
-                onExportJSON={handleExportJSON}
-                onSaveLoad={() => setShowSaveLoadDialog(true)}
-                onCreateFlow={handleCreateAgenticFlow}
-              />
-            )}
-          </div>
-        </Panel>
-        <Panel position="top-right">
-          <div className="bg-gray-800 rounded-lg shadow-lg p-4">
-            <div className="flex justify-between items-center mb-2">
-              <h3 className="text-lg font-semibold text-white">Workflow Tools</h3>
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={toggleTools}
-                className="text-gray-400 hover:text-white"
-              >
-                {isToolsExpanded ? <ChevronUp className="h-5 w-5" /> : <ChevronDown className="h-5 w-5" />}
-              </Button>
-            </div>
-            {isToolsExpanded && (
-              <NodeCreationCard
-                onAddNode={(type) => {/* Implement add node logic */}}
-                onSave={handleSaveLoad}
-                onLoad={() => setShowSaveLoadDialog(true)}
-                onExportJSON={handleExportJSON}
-                onCreateFlow={handleCreateAgenticFlow}
-              />
-            )}
-          </div>
+          <Card className="bg-gray-800 rounded-lg shadow-lg p-4 mb-4 w-80">
+            <Collapsible open={isSettingsExpanded} onOpenChange={setIsSettingsExpanded}>
+              <CollapsibleTrigger asChild>
+                <CardHeader className="cursor-pointer flex flex-row items-center justify-between pb-2">
+                  <CardTitle className="text-lg font-semibold text-white flex items-center">
+                    <Settings className="mr-2 h-5 w-5" />
+                    Workflow Settings
+                  </CardTitle>
+                  {isSettingsExpanded ? <ChevronUp className="h-5 w-5" /> : <ChevronDown className="h-5 w-5" />}
+                </CardHeader>
+              </CollapsibleTrigger>
+              <CollapsibleContent>
+                <CardContent>
+                  <WorkflowSettingsPanel />
+                  <div className="flex flex-col space-y-2 mt-4">
+                    <Button onClick={handleExportJSON} className="w-full">
+                      <FileJson className="mr-2 h-4 w-4" />
+                      Export JSON
+                    </Button>
+                    <Button onClick={() => setShowSaveLoadDialog(true)} className="w-full">
+                      <Save className="mr-2 h-4 w-4" />
+                      Save/Load
+                    </Button>
+                    <Button onClick={handleCreateAgenticFlow} className="w-full">
+                      <PlusCircle className="mr-2 h-4 w-4" />
+                      Create Flow
+                    </Button>
+                  </div>
+                </CardContent>
+              </CollapsibleContent>
+            </Collapsible>
+          </Card>
+          <Card className="bg-gray-800 rounded-lg shadow-lg p-4">
+            <Collapsible open={isToolsExpanded} onOpenChange={setIsToolsExpanded}>
+              <CollapsibleTrigger asChild>
+                <CardHeader className="cursor-pointer flex flex-row items-center justify-between pb-2">
+                  <CardTitle className="text-lg font-semibold text-white flex items-center">
+                    <PlusCircle className="mr-2 h-5 w-5" />
+                    Workflow Tools
+                  </CardTitle>
+                  {isToolsExpanded ? <ChevronUp className="h-5 w-5" /> : <ChevronDown className="h-5 w-5" />}
+                </CardHeader>
+              </CollapsibleTrigger>
+              <CollapsibleContent>
+                <CardContent>
+                  <NodeCreationPanel />
+                </CardContent>
+              </CollapsibleContent>
+            </Collapsible>
+          </Card>
         </Panel>
       </ReactFlow>
       <SaveLoadDialog
