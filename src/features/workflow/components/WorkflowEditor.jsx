@@ -150,31 +150,31 @@ const WorkflowEditorContent = () => {
           }}
         />
         <Panel position="top-left">
-          <Card className="bg-gray-800 rounded-lg shadow-lg p-4 mb-4 w-80">
+          <Card className="bg-gray-800 rounded-lg shadow-lg p-2 mb-2 w-64">
             <Collapsible open={isSettingsExpanded} onOpenChange={setIsSettingsExpanded}>
               <CollapsibleTrigger asChild>
-                <CardHeader className="cursor-pointer flex flex-row items-center justify-between pb-2">
-                  <CardTitle className="text-lg font-semibold text-white flex items-center">
-                    <Settings className="mr-2 h-5 w-5" />
+                <CardHeader className="cursor-pointer flex flex-row items-center justify-between pb-1">
+                  <CardTitle className="text-sm font-semibold text-white flex items-center">
+                    <Settings className="mr-2 h-4 w-4" />
                     Workflow Settings
                   </CardTitle>
-                  {isSettingsExpanded ? <ChevronUp className="h-5 w-5" /> : <ChevronDown className="h-5 w-5" />}
+                  {isSettingsExpanded ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
                 </CardHeader>
               </CollapsibleTrigger>
               <CollapsibleContent>
-                <CardContent>
+                <CardContent className="pt-2">
                   <WorkflowSettingsPanel />
-                  <div className="flex flex-col space-y-2 mt-4">
-                    <Button onClick={handleExportJSON} className="w-full">
-                      <FileJson className="mr-2 h-4 w-4" />
+                  <div className="flex flex-col space-y-1 mt-2">
+                    <Button onClick={handleExportJSON} size="sm" className="w-full text-xs">
+                      <FileJson className="mr-1 h-3 w-3" />
                       Export JSON
                     </Button>
-                    <Button onClick={() => setShowSaveLoadDialog(true)} className="w-full">
-                      <Save className="mr-2 h-4 w-4" />
+                    <Button onClick={() => setShowSaveLoadDialog(true)} size="sm" className="w-full text-xs">
+                      <Save className="mr-1 h-3 w-3" />
                       Save/Load
                     </Button>
-                    <Button onClick={handleCreateAgenticFlow} className="w-full">
-                      <PlusCircle className="mr-2 h-4 w-4" />
+                    <Button onClick={handleCreateAgenticFlow} size="sm" className="w-full text-xs">
+                      <PlusCircle className="mr-1 h-3 w-3" />
                       Create Flow
                     </Button>
                   </div>
@@ -182,19 +182,19 @@ const WorkflowEditorContent = () => {
               </CollapsibleContent>
             </Collapsible>
           </Card>
-          <Card className="bg-gray-800 rounded-lg shadow-lg p-4">
+          <Card className="bg-gray-800 rounded-lg shadow-lg p-2 w-64">
             <Collapsible open={isToolsExpanded} onOpenChange={setIsToolsExpanded}>
               <CollapsibleTrigger asChild>
-                <CardHeader className="cursor-pointer flex flex-row items-center justify-between pb-2">
-                  <CardTitle className="text-lg font-semibold text-white flex items-center">
-                    <PlusCircle className="mr-2 h-5 w-5" />
+                <CardHeader className="cursor-pointer flex flex-row items-center justify-between pb-1">
+                  <CardTitle className="text-sm font-semibold text-white flex items-center">
+                    <PlusCircle className="mr-2 h-4 w-4" />
                     Workflow Tools
                   </CardTitle>
-                  {isToolsExpanded ? <ChevronUp className="h-5 w-5" /> : <ChevronDown className="h-5 w-5" />}
+                  {isToolsExpanded ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
                 </CardHeader>
               </CollapsibleTrigger>
               <CollapsibleContent>
-                <CardContent>
+                <CardContent className="pt-2">
                   <NodeCreationPanel />
                 </CardContent>
               </CollapsibleContent>
