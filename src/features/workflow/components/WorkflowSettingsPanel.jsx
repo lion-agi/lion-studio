@@ -38,8 +38,13 @@ const WorkflowSettingsPanel = ({ onClose }) => {
     }
   }, []);
 
+  useEffect(() => {
+    setTempBackgroundColor(backgroundColor);
+  }, [backgroundColor]);
+
   const handleSave = () => {
     setBackgroundColor(tempBackgroundColor);
+    localStorage.setItem('backgroundColor', tempBackgroundColor);
     onClose();
   };
 
@@ -52,6 +57,11 @@ const WorkflowSettingsPanel = ({ onClose }) => {
       setCustomColorName('');
       setShowColorPicker(false);
     }
+  };
+
+  const handleColorChange = (color) => {
+    setTempBackgroundColor(color);
+    setBackgroundColor(color);
   };
 
   return (
@@ -72,14 +82,21 @@ const WorkflowSettingsPanel = ({ onClose }) => {
             <Select 
               value={tempBackgroundColor} 
               onValueChange={(value) => {
-                setTempBackgroundColor(value);
                 if (value === 'custom') {
                   setShowColorPicker(true);
+                } else {
+                  handleColorChange(value);
+                  setShowColorPicker(false);
                 }
               }}
             >
               <SelectTrigger className="w-[180px]">
-                <SelectValue placeholder="Select color" />
+                <SelectValue placeholder="Select color">
+                  <div className="flex items-center">
+                    <div className="w-4 h-4 rounded-full mr-2" style={{ backgroundColor: tempBackgroundColor }} />
+                    {tempBackgroundColor === backgroundColor ? 'Current Color' : 'Custom'}
+                  </div>
+                </SelectValue>
               </SelectTrigger>
               <SelectContent>
                 {presetColors.map(({ name, value }) => (
@@ -102,12 +119,12 @@ const WorkflowSettingsPanel = ({ onClose }) => {
               </SelectContent>
             </Select>
           </div>
-          {(showColorPicker || tempBackgroundColor === 'custom') && (
+          {showColorPicker && (
             <div className="flex items-center space-x-2">
               <Input
                 type="color"
-                value={tempBackgroundColor === 'custom' ? '#000000' : tempBackgroundColor}
-                onChange={(e) => setTempBackgroundColor(e.target.value)}
+                value={tempBackgroundColor}
+                onChange={(e) => handleColorChange(e.target.value)}
                 className="w-[100px]"
               />
               <Input
@@ -118,6 +135,9 @@ const WorkflowSettingsPanel = ({ onClose }) => {
                 className="flex-grow"
               />
               <Button onClick={handleCustomColorSave}>Save</Button>
+              <Button variant="ghost" onClick={() => setShowColorPicker(false)}>
+                <X className="h-4 w-4" />
+              </Button>
             </div>
           )}
           <div className="flex items-center justify-between">
