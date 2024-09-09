@@ -11,12 +11,13 @@ import { useEdgeHighlighting } from '../hooks/useEdgeHighlighting';
 import WorkflowToolbar from './WorkflowToolbar';
 import { WorkflowSettingsProvider, useWorkflowSettings } from './WorkflowSettingsContext';
 import NodeCreationCard from './NodeCreationCard';
-import SettingsModal from '@/common/components/SettingsModal';
+import { ChevronDown, ChevronUp } from 'lucide-react';
+import { Button } from "@/common/components/ui/button";
 
 const WorkflowEditorContent = () => {
   const containerRef = useRef(null);
   const [containerSize, setContainerSize] = useState({ width: 0, height: 0 });
-  const [showSettingsModal, setShowSettingsModal] = useState(false);
+  const [isSettingsExpanded, setIsSettingsExpanded] = useState(true);
 
   const {
     nodes,
@@ -77,12 +78,8 @@ const WorkflowEditorContent = () => {
     return () => window.removeEventListener('resize', updateSize);
   }, []);
 
-  const handleOpenSettings = () => {
-    setShowSettingsModal(true);
-  };
-
-  const handleCloseSettings = () => {
-    setShowSettingsModal(false);
+  const toggleSettings = () => {
+    setIsSettingsExpanded(!isSettingsExpanded);
   };
 
   return (
@@ -151,22 +148,35 @@ const WorkflowEditorContent = () => {
           }}
         />
         <Panel position="top-left">
-          <NodeCreationCard
-            onAddNode={(type) => {/* Implement add node logic */}}
-            onSave={handleSaveLoad}
-            onLoad={() => setShowSaveLoadDialog(true)}
-            onExportJSON={handleExportJSON}
-            onCreateFlow={handleCreateAgenticFlow}
-            onOpenSettings={handleOpenSettings}
-          />
-        </Panel>
-        <Panel position="top-right">
-          <WorkflowToolbar
-            onExportJSON={handleExportJSON}
-            onSaveLoad={() => setShowSaveLoadDialog(true)}
-            onCreateFlow={handleCreateAgenticFlow}
-            onOpenSettings={handleOpenSettings}
-          />
+          <div className="bg-gray-800 rounded-lg shadow-lg p-4">
+            <div className="flex justify-between items-center mb-2">
+              <h3 className="text-lg font-semibold text-white">Workflow Settings</h3>
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={toggleSettings}
+                className="text-gray-400 hover:text-white"
+              >
+                {isSettingsExpanded ? <ChevronUp className="h-5 w-5" /> : <ChevronDown className="h-5 w-5" />}
+              </Button>
+            </div>
+            {isSettingsExpanded && (
+              <>
+                <NodeCreationCard
+                  onAddNode={(type) => {/* Implement add node logic */}}
+                  onSave={handleSaveLoad}
+                  onLoad={() => setShowSaveLoadDialog(true)}
+                  onExportJSON={handleExportJSON}
+                  onCreateFlow={handleCreateAgenticFlow}
+                />
+                <WorkflowToolbar
+                  onExportJSON={handleExportJSON}
+                  onSaveLoad={() => setShowSaveLoadDialog(true)}
+                  onCreateFlow={handleCreateAgenticFlow}
+                />
+              </>
+            )}
+          </div>
         </Panel>
       </ReactFlow>
       <SaveLoadDialog
@@ -183,10 +193,6 @@ const WorkflowEditorContent = () => {
         isOpen={showJSONModal}
         onClose={() => setShowJSONModal(false)}
         jsonData={jsonData}
-      />
-      <SettingsModal
-        isOpen={showSettingsModal}
-        onClose={handleCloseSettings}
       />
     </div>
   );
