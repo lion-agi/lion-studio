@@ -38,32 +38,36 @@ const NodeCreationPanel = () => {
         onChange={(e) => setSearchTerm(e.target.value)}
         className="w-full"
       />
-      <ScrollArea className="h-[calc(50vh-100px)]">
-        {filteredCategories.map((category) => (
-          <Collapsible
-            key={category.name}
-            open={expandedCategories[category.name]}
-            onOpenChange={() => toggleCategory(category.name)}
-          >
-            <CollapsibleTrigger className="flex items-center justify-between w-full p-2 bg-gray-700 rounded-md mb-2">
-              <span>{category.name}</span>
-              <ChevronDown className={`h-4 w-4 transition-transform duration-200 ${expandedCategories[category.name] ? 'rotate-180' : ''}`} />
-            </CollapsibleTrigger>
-            <CollapsibleContent>
-              {category.nodes.map((node) => (
-                <div
-                  key={node.type}
-                  className="flex items-center p-2 hover:bg-gray-700 rounded-md cursor-move mb-2"
-                  draggable
-                  onDragStart={(e) => handleDragStart(e, node.type)}
-                >
-                  {node.icon && <node.icon className="h-4 w-4 mr-2" />}
-                  <span className="ml-2">{node.label}</span>
+      <ScrollArea className="h-[calc(50vh-100px)] pr-4" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
+        <div className="space-y-2">
+          {filteredCategories.map((category) => (
+            <Collapsible
+              key={category.name}
+              open={expandedCategories[category.name]}
+              onOpenChange={() => toggleCategory(category.name)}
+            >
+              <CollapsibleTrigger className="flex items-center justify-between w-full p-2 bg-gray-700 rounded-md mb-2 hover:bg-gray-600 transition-colors duration-200">
+                <span>{category.name}</span>
+                <ChevronDown className={`h-4 w-4 transition-transform duration-200 ${expandedCategories[category.name] ? 'rotate-180' : ''}`} />
+              </CollapsibleTrigger>
+              <CollapsibleContent>
+                <div className="space-y-1 ml-2">
+                  {category.nodes.map((node) => (
+                    <div
+                      key={node.type}
+                      className="flex items-center p-2 hover:bg-gray-700 rounded-md cursor-move transition-colors duration-200"
+                      draggable
+                      onDragStart={(e) => handleDragStart(e, node.type)}
+                    >
+                      {node.icon && <node.icon className="h-4 w-4 mr-2 text-gray-400" />}
+                      <span className="text-sm">{node.label}</span>
+                    </div>
+                  ))}
                 </div>
-              ))}
-            </CollapsibleContent>
-          </Collapsible>
-        ))}
+              </CollapsibleContent>
+            </Collapsible>
+          ))}
+        </div>
       </ScrollArea>
     </div>
   );
