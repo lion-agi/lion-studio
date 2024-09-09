@@ -23,7 +23,7 @@ const ConsoleHeader = () => {
     { name: 'Integrations', path: '/console/integrations', icon: LinkIcon },
     { name: 'Deployment', path: '/console/deployment', icon: Rocket },
     { name: 'Library', path: '/console/library', icon: Library },
-    { name: 'Workflow', path: '/console/workflow-editor', icon: GitBranch },
+    { name: 'Workflow', path: '/console/workflow', icon: GitBranch },
     { name: 'Profile', path: '/console/user-profile', icon: User },
     { name: 'Admin', path: '/console/admin', icon: Settings },
   ];
@@ -49,12 +49,12 @@ const ConsoleHeader = () => {
             Log Out
           </Button>
         </div>
-        <nav className="flex space-x-2">
+        <nav className="flex space-x-2 overflow-x-auto">
           {navItems.map((item) => (
             <Link
               key={item.name}
               to={item.path}
-              className={`px-3 py-2 rounded-md text-sm font-medium flex items-center transition-colors duration-200 ${
+              className={`px-3 py-2 rounded-md text-sm font-medium flex items-center transition-colors duration-200 whitespace-nowrap ${
                 location.pathname.startsWith(item.path)
                   ? 'bg-gray-700 text-white'
                   : 'text-gray-300 hover:bg-gray-700 hover:text-white'
