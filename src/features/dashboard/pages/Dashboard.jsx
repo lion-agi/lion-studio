@@ -1,8 +1,8 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from "@/common/components/ui/button";
 import { Input } from "@/common/components/ui/input";
-import { Search, Info } from 'lucide-react';
+import { Search, Info, MessageSquare, FileText, FolderPlus, PlusCircle } from 'lucide-react';
 import SummaryCards from '../components/SummaryCards';
 import CostTrendChart from '../components/CostTrendChart';
 import RecentCallsTable from '../components/RecentCallsTable';
@@ -10,7 +10,6 @@ import { useApiData } from '../hooks/useApiData';
 import { Card, CardContent, CardHeader, CardTitle } from "@/common/components/ui/card";
 import AgenticFlowWizard from '@/common/components/AgenticFlowWizard';
 import WorkflowOperationsPanel from '@/features/workflow/components/WorkflowOperationsPanel';
-import { MessageSquare, FileText, FolderPlus, PlusCircle } from 'lucide-react';
 import { DateRangePicker } from "@/common/components/ui/date-range-picker";
 
 const Dashboard = () => {
@@ -56,9 +55,8 @@ const Dashboard = () => {
         </div>
         <div className="flex items-center space-x-4">
           <DateRangePicker
-            from={dateRange.from}
-            to={dateRange.to}
-            onSelect={setDateRange}
+            value={dateRange}
+            onValueChange={setDateRange}
           />
           <div className="relative w-full md:w-80">
             <Input
