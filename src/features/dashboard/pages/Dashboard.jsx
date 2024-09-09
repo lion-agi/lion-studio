@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Input } from "@/common/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/common/components/ui/tabs";
@@ -13,6 +13,7 @@ import PerformanceChart from '@/features/dashboard/components/PerformanceChart';
 import RecentCallsTable from '@/features/dashboard/components/RecentCallsTable';
 import { useApiData } from '@/features/dashboard/hooks';
 import SettingsTab from '../components/SettingsTab';
+import useSettingsStore from '@/store/settingsSlice';
 
 const Dashboard = () => {
   const [timeRange, setTimeRange] = useState('7d');
@@ -21,38 +22,50 @@ const Dashboard = () => {
   const [isInfoModalOpen, setIsInfoModalOpen] = useState(false);
   const { data, isLoading, error } = useApiData(timeRange, selectedModel);
   const navigate = useNavigate();
+  const { theme, autoRefreshInterval } = useSettingsStore();
 
-  const handleExportApiCalls = () => {
-    // Implement export functionality here
-    console.log('Exporting API calls...');
-  };
+  useEffect(() => {
+    // Apply theme
+    document.documentElement.className = theme;
+  }, [theme]);
+
+  useEffect(() => {
+    if (autoRefreshInterval > 0) {
+      const intervalId = setInterval(() => {
+        // Trigger data refresh here
+      }, autoRefreshInterval * 1000);
+
+      return () => clearInterval(intervalId);
+    }
+  }, [autoRefreshInterval]);
 
   if (isLoading) {
     return <div className="flex justify-center items-center h-64">Loading...</div>;
   }
 
   if (error) {
-    return <div className="text-red-500">Error: {error.message}</div>;
+    console.error('Error fetching data:', error);
+    return <div>Error: {error.message}</div>;
   }
 
   return (
-    <div className="min-h-screen bg-gray-900 text-gray-100">
-      <div className="container mx-auto p-8 space-y-8">
+    <div className="min-h-screen bg-background text-foreground p-8">
+      <div className="container mx-auto">
         <div className="flex flex-col md:flex-row justify-between items-center mb-12">
           <div className="flex items-center">
-            <h1 className="text-2xl font-bold mb-6 md:mb-0 text-gray-100 mr-4">Dashboard</h1>
+            <h1 className="text-2xl font-bold mb-6 md:mb-0 text-foreground mr-4">Dashboard</h1>
             <Button
               variant="ghost"
               size="sm"
               onClick={() => setIsInfoModalOpen(true)}
-              className="text-gray-400 hover:text-gray-100"
+              className="text-muted-foreground hover:text-foreground"
             >
               <Info className="h-5 w-5" />
             </Button>
           </div>
           <div className="flex space-x-4 items-center">
             <Select value={timeRange} onValueChange={setTimeRange}>
-              <SelectTrigger className="w-[180px] bg-gray-800 text-gray-200 border-gray-700">
+              <SelectTrigger className="w-[180px]">
                 <SelectValue placeholder="Select time range" />
               </SelectTrigger>
               <SelectContent>
@@ -63,7 +76,7 @@ const Dashboard = () => {
               </SelectContent>
             </Select>
             <Select value={selectedModel} onValueChange={setSelectedModel}>
-              <SelectTrigger className="w-[180px] bg-gray-800 text-gray-200 border-gray-700">
+              <SelectTrigger className="w-[180px]">
                 <SelectValue placeholder="Select model" />
               </SelectTrigger>
               <SelectContent>
@@ -78,19 +91,19 @@ const Dashboard = () => {
                 placeholder="Search dashboard..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full bg-gray-800 text-gray-200 placeholder-gray-400 border-gray-700 focus:border-purple-500 focus:ring-1 focus:ring-purple-500 pr-10"
+                className="w-full pr-10"
               />
-              <Search className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
+              <Search className="absolute right-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-5 w-5" />
             </div>
           </div>
         </div>
 
         <Tabs defaultValue="overview" className="space-y-6">
-          <TabsList className="bg-gray-800 mb-6">
-            <TabsTrigger value="overview" className="data-[state=active]:bg-purple-600 data-[state=active]:text-white">Overview</TabsTrigger>
-            <TabsTrigger value="costs" className="data-[state=active]:bg-purple-600 data-[state=active]:text-white">Costs</TabsTrigger>
-            <TabsTrigger value="calls" className="data-[state=active]:bg-purple-600 data-[state=active]:text-white">API Calls</TabsTrigger>
-            <TabsTrigger value="settings" className="data-[state=active]:bg-purple-600 data-[state=active]:text-white">Settings</TabsTrigger>
+          <TabsList>
+            <TabsTrigger value="overview">Overview</TabsTrigger>
+            <TabsTrigger value="costs">Costs</TabsTrigger>
+            <TabsTrigger value="calls">API Calls</TabsTrigger>
+            <TabsTrigger value="settings">Settings</TabsTrigger>
           </TabsList>
 
           <TabsContent value="overview">
@@ -117,17 +130,10 @@ const Dashboard = () => {
             <div className="space-y-8">
               <SummaryCards data={data.summary} />
               {data.recentCalls && data.recentCalls.length > 0 ? (
-                <>
-                  <RecentCallsTable data={data.recentCalls} />
-                  <div className="flex justify-end">
-                    <Button onClick={handleExportApiCalls} className="bg-purple-600 hover:bg-purple-700 text-white">
-                      Export API Calls
-                    </Button>
-                  </div>
-                </>
+                <RecentCallsTable data={data.recentCalls} />
               ) : (
                 <div className="text-center py-8">
-                  <p className="text-gray-400">No recent API calls to display.</p>
+                  <p className="text-muted-foreground">No recent API calls to display.</p>
                 </div>
               )}
             </div>
@@ -140,7 +146,7 @@ const Dashboard = () => {
       </div>
 
       <Dialog open={isInfoModalOpen} onOpenChange={setIsInfoModalOpen}>
-        <DialogContent className="sm:max-w-[425px] bg-gray-800 text-gray-100">
+        <DialogContent className="sm:max-w-[425px]">
           <DialogHeader>
             <DialogTitle>Dashboard Information</DialogTitle>
           </DialogHeader>
