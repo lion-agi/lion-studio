@@ -13,6 +13,10 @@ import Scheduler from './Scheduler';
 import APIEndpoint from './APIEndpoint';
 import Webhook from './Webhook';
 import EventTrigger from './EventTrigger';
+import CodeExecution from './CodeExecution';
+import Conversation from './Conversation';
+import DataProcessor from './DataProcessor';
+import DocumentAnalysis from './DocumentAnalysis';
 
 export const nodeTypes = {
   apiCall: APICall,
@@ -30,4 +34,8 @@ export const nodeTypes = {
   apiEndpoint: APIEndpoint,
   webhook: Webhook,
   eventTrigger: EventTrigger,
+  codeExecution: CodeExecution,
+  conversation: Conversation,
+  dataProcessor: DataProcessor,
+  documentAnalysis: DocumentAnalysis,
 };
