@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react';
+import React, { useCallback, useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from "@/common/components/ui/card";
 import { Button } from "@/common/components/ui/button";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/common/components/ui/tooltip";
@@ -84,7 +84,7 @@ const WorkflowOperationsPanel = ({
   ];
 
   return (
-    <Card className="bg-gray-800 text-white">
+    <Card className="bg-gray-800 text-white w-72">
       <Collapsible open={!isCollapsed} onOpenChange={setIsCollapsed}>
         <CardHeader className="pb-2">
           <CollapsibleTrigger asChild>
@@ -99,7 +99,7 @@ const WorkflowOperationsPanel = ({
         </CardHeader>
         <CollapsibleContent>
           <CardContent className="pt-2">
-            <ScrollArea className="h-[120px]" style={{ backgroundColor: tempBackgroundColor }}>
+            <ScrollArea className="h-[240px]" style={{ backgroundColor: tempBackgroundColor }}>
               <div className="grid grid-cols-3 gap-2">
                 <TooltipProvider>
                   <Tooltip>

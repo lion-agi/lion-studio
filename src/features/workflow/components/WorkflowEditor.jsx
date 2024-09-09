@@ -1,7 +1,6 @@
 import React, { useMemo, useRef, useState, useEffect, useCallback } from 'react';
 import ReactFlow, { 
   Background, 
-  Controls, 
   MiniMap, 
   Panel, 
   useReactFlow,
@@ -74,9 +73,10 @@ const WorkflowEditorContent = () => {
   useEffect(() => {
     const updateSize = () => {
       if (containerRef.current) {
+        const { offsetWidth, offsetHeight } = containerRef.current;
         setContainerSize({
-          width: containerRef.current.offsetWidth,
-          height: containerRef.current.offsetHeight,
+          width: offsetWidth,
+          height: offsetHeight,
         });
       }
     };
@@ -127,7 +127,6 @@ const WorkflowEditorContent = () => {
         nodesConnectable={!isLocked}
         elementsSelectable={!isLocked}
       >
-        <Controls />
         <MiniMap 
           nodeColor={(node) => {
             switch (node.type) {
