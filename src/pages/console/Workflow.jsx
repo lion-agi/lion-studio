@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/common/components/ui/tabs";
 import { WorkflowEditor } from '../../features/workflow/components/WorkflowEditor';
 import { WorkflowSettingsProvider } from '../../features/workflow/components/WorkflowSettingsContext';
@@ -27,9 +27,27 @@ const WorkflowEditorPage = () => {
   const [showSaveLoadDialog, setShowSaveLoadDialog] = useState(false);
   const [showJSONModal, setShowJSONModal] = useState(false);
   const [jsonData, setJsonData] = useState(null);
+  const [editorSize, setEditorSize] = useState({ width: 0, height: 0 });
+  const editorContainerRef = useRef(null);
 
   const toggleSidebar = () => setSidebarExpanded(!sidebarExpanded);
   const toggleSecondarySidebar = () => setSecondarySidebarExpanded(!secondarySidebarExpanded);
+
+  useEffect(() => {
+    const updateSize = () => {
+      if (editorContainerRef.current) {
+        setEditorSize({
+          width: editorContainerRef.current.offsetWidth,
+          height: editorContainerRef.current.offsetHeight,
+        });
+      }
+    };
+
+    window.addEventListener('resize', updateSize);
+    updateSize();
+
+    return () => window.removeEventListener('resize', updateSize);
+  }, []);
 
   return (
     <div className="h-screen bg-background text-foreground flex">
@@ -80,8 +98,8 @@ const WorkflowEditorPage = () => {
 
             <TabsContent value="editor" className="flex-grow overflow-hidden">
               <WorkflowSettingsProvider>
-                <div className="relative h-full">
-                  <WorkflowEditor />
+                <div ref={editorContainerRef} className="relative h-full">
+                  <WorkflowEditor width={editorSize.width} height={editorSize.height} />
                   <NodeCreationCard className="absolute top-4 left-4 z-10" />
                   <SaveLoadDialog
                     isOpen={showSaveLoadDialog}
