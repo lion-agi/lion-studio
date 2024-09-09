@@ -65,7 +65,7 @@ const BaseNode = ({
         <CardTitle className={`text-${baseColor}-100 font-bold flex items-center justify-between text-sm`}>
           <div className="flex items-center">
             <Icon className={`w-4 h-4 mr-2 text-${baseColor}-100`} />
-            {data.label || children}
+            {children}
           </div>
           {isExpanded ? <ChevronUp className="w-3 h-3" /> : <ChevronDown className="w-3 h-3" />}
         </CardTitle>

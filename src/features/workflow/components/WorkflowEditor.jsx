@@ -124,7 +124,6 @@ const WorkflowEditor = () => {
             nodeColor={(node) => {
               switch (node.type) {
                 case 'user': return '#3498DB';
-                case 'agent': return '#2ECC71';
                 case 'assistant': return '#F39C12';
                 case 'group': return '#E74C3C';
                 case 'initializer': return '#9B59B6';
