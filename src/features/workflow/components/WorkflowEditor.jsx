@@ -16,6 +16,7 @@ import { ChevronDown, ChevronUp, Save, Upload, PlusCircle, FileJson, Settings } 
 import WorkflowSettingsPanel from './WorkflowSettingsPanel';
 import NodeCreationPanel from './NodeCreationPanel';
 import AgenticFlowWizard from '@/common/components/AgenticFlowWizard';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/common/components/ui/select";
 
 const WorkflowEditorContent = () => {
   const containerRef = useRef(null);
@@ -23,6 +24,7 @@ const WorkflowEditorContent = () => {
   const [isSettingsExpanded, setIsSettingsExpanded] = useState(true);
   const [isToolsExpanded, setIsToolsExpanded] = useState(true);
   const [isAgenticFlowWizardOpen, setIsAgenticFlowWizardOpen] = useState(false);
+  const [selectedBackgroundColor, setSelectedBackgroundColor] = useState('#1A2530');
 
   const {
     nodes,
@@ -102,6 +104,13 @@ const WorkflowEditorContent = () => {
     setEdges((eds) => eds.filter((edge) => edge.source !== nodeId && edge.target !== nodeId));
   }, [setNodes, setEdges]);
 
+  const backgroundColors = {
+    'Dark Blue': '#1A2530',
+    'Light Gray': '#F0F4F8',
+    'Dark Gray': '#2C3E50',
+    'Navy': '#34495E',
+  };
+
   return (
     <div ref={containerRef} className="h-full w-full relative" style={{ height: 'calc(100vh - 64px)' }}>
       <ReactFlow
@@ -124,7 +133,7 @@ const WorkflowEditorContent = () => {
         style={{
           width: containerSize.width,
           height: containerSize.height,
-          backgroundColor: backgroundColor,
+          backgroundColor: selectedBackgroundColor,
         }}
       >
         <Background 
@@ -195,6 +204,24 @@ const WorkflowEditorContent = () => {
                       <PlusCircle className="mr-1 h-3 w-3" />
                       Create Flow
                     </Button>
+                  </div>
+                  <div className="mt-4">
+                    <label className="block text-sm font-medium text-gray-300 mb-2">Background Color</label>
+                    <Select value={selectedBackgroundColor} onValueChange={setSelectedBackgroundColor}>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select background color" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {Object.entries(backgroundColors).map(([name, color]) => (
+                          <SelectItem key={color} value={color}>
+                            <div className="flex items-center">
+                              <div className="w-4 h-4 rounded-full mr-2" style={{ backgroundColor: color }} />
+                              {name}
+                            </div>
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
                   </div>
                 </CardContent>
               </CollapsibleContent>
