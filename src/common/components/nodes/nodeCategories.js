@@ -1,6 +1,6 @@
 import {
   UserIcon, FileUp, Globe, Database, Mail, FileDown, Brain, Image, Mic, PieChart,
-  Languages, CleaningServices, Transform, GitMerge, Filter, AlertTriangle, GitBranch,
+  Languages, Eraser, Transform, GitMerge, Filter, AlertTriangle, GitBranch,
   Repeat, SwitchCamera, Zap, Clock, Link, Webhook, TableChart, ChartBar, Dashboard,
   Description, Variable, Functions, StickyNote2, Bug
 } from 'lucide-react';
@@ -109,7 +109,7 @@ export const nodeCategories = [
     name: "Data Manipulation",
     color: categoryColors.dataManipulation.base,
     nodes: [
-      { type: 'dataCleaning', label: 'Data Cleaning', icon: CleaningServices },
+      { type: 'dataCleaning', label: 'Data Cleaning', icon: Eraser },
       { type: 'dataTransformation', label: 'Data Transformation', icon: Transform },
       { type: 'dataMerging', label: 'Data Merging', icon: GitMerge },
       { type: 'dataFiltering', label: 'Data Filtering', icon: Filter },
