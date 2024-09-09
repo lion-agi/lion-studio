@@ -11,6 +11,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/common/components/ui
 import AgenticFlowWizard from '@/common/components/AgenticFlowWizard';
 import WorkflowOperationsPanel from '@/features/workflow/components/WorkflowOperationsPanel';
 import { MessageSquare, FileText, FolderPlus, PlusCircle } from 'lucide-react';
+import { DateRangePicker } from "@/common/components/ui/date-range-picker";
 
 const Dashboard = () => {
   const [timeRange, setTimeRange] = useState('7d');
@@ -18,9 +19,10 @@ const Dashboard = () => {
   const [isInfoModalOpen, setIsInfoModalOpen] = useState(false);
   const [isWizardOpen, setIsWizardOpen] = useState(false);
   const [wizardType, setWizardType] = useState('');
+  const [dateRange, setDateRange] = useState({ from: null, to: null });
   const navigate = useNavigate();
 
-  const { data, isLoading, error } = useApiData(timeRange);
+  const { data, isLoading, error } = useApiData(timeRange, dateRange);
 
   const handleMetricClick = (metric) => {
     setSelectedMetric(metric);
@@ -52,13 +54,20 @@ const Dashboard = () => {
             <Info className="h-5 w-5" />
           </Button>
         </div>
-        <div className="relative w-full md:w-80">
-          <Input
-            type="text"
-            placeholder="Search workflows..."
-            className="w-full bg-gray-800 text-gray-200 placeholder-gray-400 border-gray-700 focus:border-purple-500 focus:ring-1 focus:ring-purple-500 pr-10"
+        <div className="flex items-center space-x-4">
+          <DateRangePicker
+            from={dateRange.from}
+            to={dateRange.to}
+            onSelect={setDateRange}
           />
-          <Search className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
+          <div className="relative w-full md:w-80">
+            <Input
+              type="text"
+              placeholder="Search workflows..."
+              className="w-full bg-gray-800 text-gray-200 placeholder-gray-400 border-gray-700 focus:border-purple-500 focus:ring-1 focus:ring-purple-500 pr-10"
+            />
+            <Search className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
+          </div>
         </div>
       </div>
 
