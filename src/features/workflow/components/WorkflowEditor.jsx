@@ -4,11 +4,11 @@ import 'reactflow/dist/style.css';
 import { nodeTypes } from '@/common/components/nodes';
 import { useWorkflowState } from '../hooks/useWorkflowState';
 import { useWorkflowHandlers } from '../hooks/useWorkflowHandlers';
-import { useWorkflowModals } from '../hooks/useWorkflowModals';
 import { useEdgeHighlighting } from '../hooks/useEdgeHighlighting';
 import { WorkflowSettingsProvider, useWorkflowSettings } from './WorkflowSettingsContext';
 import WorkflowOperationsPanel from './WorkflowOperationsPanel';
 import NodeCreationPanel from './NodeCreationPanel';
+import AgenticFlowWizard from '@/common/components/AgenticFlowWizard';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/common/components/ui/tooltip";
 
 const WorkflowEditorContent = () => {
@@ -40,6 +40,10 @@ const WorkflowEditorContent = () => {
     redo,
     canUndo,
     canRedo,
+    handleDeleteNode,
+    handleSaveSettings,
+    isWizardOpen,
+    setIsWizardOpen,
   } = useWorkflowHandlers(nodes, setNodes, edges, setEdges);
 
   const { edgeOptions, getEdgeStyle } = useEdgeHighlighting(edges, setEdges);
@@ -69,11 +73,6 @@ const WorkflowEditorContent = () => {
 
     return () => window.removeEventListener('resize', updateSize);
   }, []);
-
-  const onDeleteNode = useCallback((nodeId) => {
-    setNodes((nds) => nds.filter((node) => node.id !== nodeId));
-    setEdges((eds) => eds.filter((edge) => edge.source !== nodeId && edge.target !== nodeId));
-  }, [setNodes, setEdges]);
 
   return (
     <div ref={containerRef} className="h-full w-full relative" style={{ height: 'calc(100vh - 64px)' }}>
@@ -126,10 +125,21 @@ const WorkflowEditorContent = () => {
               onRedo={redo}
               canUndo={canUndo}
               canRedo={canRedo}
+              onDeleteNode={handleDeleteNode}
+              onSaveSettings={handleSaveSettings}
             />
           </div>
         </Panel>
       </ReactFlow>
+      <AgenticFlowWizard
+        isOpen={isWizardOpen}
+        onClose={() => setIsWizardOpen(false)}
+        onCreateFlow={(flowConfig) => {
+          // Implement the logic to create a new flow based on the configuration
+          console.log('Creating new flow:', flowConfig);
+          setIsWizardOpen(false);
+        }}
+      />
     </div>
   );
 };

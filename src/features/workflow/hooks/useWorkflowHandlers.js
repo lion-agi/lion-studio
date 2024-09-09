@@ -1,11 +1,15 @@
 import { useCallback, useRef, useState } from 'react';
 import { addEdge } from 'reactflow';
 import { useUndoRedo } from './useUndoRedo';
+import { useWorkflowSettings } from '../components/WorkflowSettingsContext';
+import AgenticFlowWizard from '@/common/components/AgenticFlowWizard';
 
 export const useWorkflowHandlers = (nodes, setNodes, edges, setEdges) => {
   const reactFlowWrapper = useRef(null);
   const [reactFlowInstance, setReactFlowInstance] = useState(null);
   const { undo, redo, canUndo, canRedo, takeSnapshot } = useUndoRedo(nodes, edges, setNodes, setEdges);
+  const [isWizardOpen, setIsWizardOpen] = useState(false);
+  const { setBackgroundColor } = useWorkflowSettings();
 
   const onConnect = useCallback((params) => {
     setEdges((eds) => {
@@ -78,19 +82,39 @@ export const useWorkflowHandlers = (nodes, setNodes, edges, setEdges) => {
   }, [reactFlowInstance]);
 
   const handleSaveLoad = useCallback((savedGraph) => {
-    console.log('Graph saved:', savedGraph);
-    // Here you would typically implement the actual save logic
-  }, []);
+    if (savedGraph) {
+      setNodes(savedGraph.nodes || []);
+      setEdges(savedGraph.edges || []);
+      takeSnapshot(savedGraph.nodes || [], savedGraph.edges || []);
+    }
+  }, [setNodes, setEdges, takeSnapshot]);
 
-  const handleCreateAgenticFlow = useCallback((flowConfig) => {
-    console.log('Creating new flow:', flowConfig);
-    // Here you would implement the logic to create a new flow based on the configuration
+  const handleCreateAgenticFlow = useCallback(() => {
+    setIsWizardOpen(true);
   }, []);
 
   const onNodeClick = useCallback((event, node) => {
     console.log('Node clicked:', node);
-    // Here you would implement any node click behavior
   }, []);
+
+  const handleDeleteNode = useCallback((nodeId) => {
+    setNodes((nds) => {
+      const updatedNodes = nds.filter((node) => node.id !== nodeId);
+      setEdges((eds) => {
+        const updatedEdges = eds.filter((edge) => edge.source !== nodeId && edge.target !== nodeId);
+        takeSnapshot(updatedNodes, updatedEdges);
+        return updatedEdges;
+      });
+      return updatedNodes;
+    });
+  }, [setNodes, setEdges, takeSnapshot]);
+
+  const handleSaveSettings = useCallback((settings) => {
+    if (settings.backgroundColor) {
+      setBackgroundColor(settings.backgroundColor);
+    }
+    // Handle other settings here
+  }, [setBackgroundColor]);
 
   return {
     reactFlowWrapper,
@@ -108,5 +132,9 @@ export const useWorkflowHandlers = (nodes, setNodes, edges, setEdges) => {
     redo,
     canUndo,
     canRedo,
+    handleDeleteNode,
+    handleSaveSettings,
+    isWizardOpen,
+    setIsWizardOpen,
   };
 };

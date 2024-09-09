@@ -7,7 +7,7 @@ import { Switch } from "@/common/components/ui/switch";
 import { Label } from "@/common/components/ui/label";
 import { Input } from "@/common/components/ui/input";
 import { Zap, Save, Upload, PlusCircle, FileJson, Play, Pause, Undo, Redo, Settings } from 'lucide-react';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/common/components/ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogFooter } from "@/common/components/ui/dialog";
 import JSONModal from '@/common/components/JSONModal';
 
 const WorkflowOperationsPanel = ({ 
@@ -17,7 +17,8 @@ const WorkflowOperationsPanel = ({
   onUndo, 
   onRedo, 
   canUndo, 
-  canRedo 
+  canRedo,
+  onSaveSettings
 }) => {
   const [showJSONModal, setShowJSONModal] = useState(false);
   const [showSettingsModal, setShowSettingsModal] = useState(false);
@@ -32,11 +33,25 @@ const WorkflowOperationsPanel = ({
   };
 
   const handleSave = () => {
-    // Implement save functionality
+    const flow = onExportJSON();
+    localStorage.setItem('savedWorkflow', JSON.stringify(flow));
   };
 
   const handleLoad = () => {
-    // Implement load functionality
+    const savedFlow = localStorage.getItem('savedWorkflow');
+    if (savedFlow) {
+      onSaveLoad(JSON.parse(savedFlow));
+    }
+  };
+
+  const handleSettingsSave = () => {
+    onSaveSettings({
+      backgroundColor,
+      autoSave,
+      performanceMode,
+      theme
+    });
+    setShowSettingsModal(false);
   };
 
   return (
@@ -104,32 +119,6 @@ const WorkflowOperationsPanel = ({
           <TooltipProvider>
             <Tooltip>
               <TooltipTrigger asChild>
-                <Button variant="outline" size="icon">
-                  <Play className="h-4 w-4" />
-                </Button>
-              </TooltipTrigger>
-              <TooltipContent>
-                <p>Run Workflow</p>
-              </TooltipContent>
-            </Tooltip>
-          </TooltipProvider>
-
-          <TooltipProvider>
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <Button variant="outline" size="icon">
-                  <Pause className="h-4 w-4" />
-                </Button>
-              </TooltipTrigger>
-              <TooltipContent>
-                <p>Pause Workflow</p>
-              </TooltipContent>
-            </Tooltip>
-          </TooltipProvider>
-
-          <TooltipProvider>
-            <Tooltip>
-              <TooltipTrigger asChild>
                 <Button variant="outline" size="icon" onClick={onUndo} disabled={!canUndo}>
                   <Undo className="h-4 w-4" />
                 </Button>
@@ -182,17 +171,13 @@ const WorkflowOperationsPanel = ({
           <div className="space-y-4">
             <div className="flex items-center justify-between">
               <Label htmlFor="backgroundColor">Background Color</Label>
-              <Select value={backgroundColor} onValueChange={setBackgroundColor}>
-                <SelectTrigger className="w-[180px]">
-                  <SelectValue placeholder="Select color" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="#1A2530">Dark Blue</SelectItem>
-                  <SelectItem value="#F0F4F8">Light Gray</SelectItem>
-                  <SelectItem value="#2C3E50">Dark Gray</SelectItem>
-                  <SelectItem value="#34495E">Navy</SelectItem>
-                </SelectContent>
-              </Select>
+              <Input
+                id="backgroundColor"
+                type="color"
+                value={backgroundColor}
+                onChange={(e) => setBackgroundColor(e.target.value)}
+                className="w-[100px]"
+              />
             </div>
             <div className="flex items-center justify-between">
               <Label htmlFor="autoSave">Auto Save</Label>
@@ -216,6 +201,9 @@ const WorkflowOperationsPanel = ({
               </Select>
             </div>
           </div>
+          <DialogFooter>
+            <Button onClick={handleSettingsSave}>Save Settings</Button>
+          </DialogFooter>
         </DialogContent>
       </Dialog>
     </Card>
