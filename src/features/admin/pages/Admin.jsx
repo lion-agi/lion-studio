@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
 import { Tabs, TabsContent } from "@/common/components/ui/tabs";
-import TabSwitchBar from '../components/TabSwitchBar';
+import TabSwitchBar from '@/common/components/TabSwitchBar';
 import UserRoles from '../components/UserRoles';
 import AccessLogs from '../components/AccessLogs';
 import SecuritySettings from '../components/SecuritySettings';
 import Secrets from '../components/Secrets';
-import { useAdminData } from './useAdminData';
+import { useAdminData } from '../useAdminData';
 
 const Admin = () => {
   const [activeTab, setActiveTab] = useState('overview');
