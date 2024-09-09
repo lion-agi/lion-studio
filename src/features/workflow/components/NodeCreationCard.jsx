@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from "@/common/components/ui/card";
 import { Button } from "@/common/components/ui/button";
 import { Input } from "@/common/components/ui/input";
@@ -36,7 +36,7 @@ const NodeCreationCard = ({ onAddNode }) => {
   };
 
   return (
-    <Card className="w-64 fixed top-4 left-4 z-50 shadow-lg">
+    <Card className="w-64 fixed top-20 left-4 z-50 shadow-lg">
       <CardHeader className="cursor-pointer flex flex-row items-center justify-between" onClick={toggleExpand}>
         <CardTitle>Create Nodes</CardTitle>
         <Button variant="ghost" size="sm">

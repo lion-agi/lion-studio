@@ -57,7 +57,7 @@ const BaseNode = ({
 
   return (
     <Card 
-      className={`node-card w-64 bg-gradient-to-br ${gradientFrom} ${gradientTo} backdrop-blur-sm ${selected ? 'ring-2 ring-${baseColor}-400 ring-opacity-50' : ''}`}
+      className={`node-card w-64 bg-gradient-to-br ${gradientFrom} ${gradientTo} backdrop-blur-sm ${selected ? `ring-2 ring-${baseColor}-400 ring-opacity-50` : ''}`}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
