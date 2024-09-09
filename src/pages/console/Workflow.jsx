@@ -5,17 +5,22 @@ import { WorkflowSettingsProvider } from '../../features/workflow/WorkflowSettin
 import Sidebar from '@/common/components/Sidebar';
 import SecondaryNavigation from '@/common/components/SecondaryNavigation';
 import NodeCreationCard from '@/features/workflow/components/NodeCreationCard';
+import SaveLoadDialog from '@/common/components/SaveLoadDialog';
+import JSONModal from '@/common/components/JSONModal';
 import { Button } from "@/common/components/ui/button";
 import { Input } from "@/common/components/ui/input";
 import { Search, Info } from 'lucide-react';
 
-const Workflow = () => {
+const WorkflowEditorPage = () => {
   const [sidebarExpanded, setSidebarExpanded] = useState(true);
   const [secondarySidebarExpanded, setSecondarySidebarExpanded] = useState(true);
   const [activeFeature, setActiveFeature] = useState('workflows');
   const [activeTab, setActiveTab] = useState('editor');
   const [searchTerm, setSearchTerm] = useState('');
   const [isInfoModalOpen, setIsInfoModalOpen] = useState(false);
+  const [showSaveLoadDialog, setShowSaveLoadDialog] = useState(false);
+  const [showJSONModal, setShowJSONModal] = useState(false);
+  const [jsonData, setJsonData] = useState(null);
 
   const toggleSidebar = () => setSidebarExpanded(!sidebarExpanded);
   const toggleSecondarySidebar = () => setSecondarySidebarExpanded(!secondarySidebarExpanded);
@@ -37,7 +42,7 @@ const Workflow = () => {
         <div className="p-8 space-y-6 h-full flex flex-col">
           <div className="flex flex-col md:flex-row justify-between items-center mb-6">
             <div className="flex items-center">
-              <h1 className="text-2xl font-bold mb-6 md:mb-0 text-gray-100 mr-4">Workflow</h1>
+              <h1 className="text-2xl font-bold mb-6 md:mb-0 text-gray-100 mr-4">Workflow Editor</h1>
               <Button
                 variant="ghost"
                 size="sm"
@@ -72,6 +77,18 @@ const Workflow = () => {
                 <div className="relative h-full">
                   <WorkflowEditor />
                   <NodeCreationCard className="absolute top-4 left-4 z-10" />
+                  <SaveLoadDialog
+                    isOpen={showSaveLoadDialog}
+                    onClose={() => setShowSaveLoadDialog(false)}
+                    onSave={() => console.log('Save')}
+                    onLoad={() => console.log('Load')}
+                    graphData={{ nodes: [], edges: [] }}
+                  />
+                  <JSONModal
+                    isOpen={showJSONModal}
+                    onClose={() => setShowJSONModal(false)}
+                    jsonData={jsonData}
+                  />
                 </div>
               </WorkflowSettingsProvider>
             </TabsContent>
@@ -94,4 +111,4 @@ const Workflow = () => {
   );
 };
 
-export default Workflow;
+export default WorkflowEditorPage;

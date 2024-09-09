@@ -27,7 +27,7 @@ const AppRoutes = () => (
     <Route path="/console/integrations" element={<Integrations />} />
     <Route path="/console/deployment" element={<Deployment />} />
     <Route path="/console/library" element={<Library />} />
-    <Route path="/console/workflow" element={<WorkflowEditor />} />
+    <Route path="/console/workflow-editor" element={<WorkflowEditor />} />
     <Route path="/about" element={<About />} />
     <Route path="/pricing" element={<Pricing />} />
     <Route path="/contact" element={<Contact />} />
