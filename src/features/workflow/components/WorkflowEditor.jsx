@@ -1,4 +1,4 @@
-import React, { useMemo, useRef, useState, useEffect, useCallback } from 'react';
+import React, { useMemo, useRef, useState, useEffect } from 'react';
 import ReactFlow, { Background, Controls, MiniMap, Panel } from 'reactflow';
 import 'reactflow/dist/style.css';
 import SaveLoadDialog from '@/common/components/SaveLoadDialog';
@@ -15,14 +15,12 @@ import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/common/co
 import { ChevronDown, ChevronUp, Save, Upload, PlusCircle, FileJson, Settings } from 'lucide-react';
 import WorkflowSettingsPanel from './WorkflowSettingsPanel';
 import NodeCreationPanel from './NodeCreationPanel';
-import AgenticFlowWizard from '@/common/components/AgenticFlowWizard';
 
 const WorkflowEditorContent = () => {
   const containerRef = useRef(null);
   const [containerSize, setContainerSize] = useState({ width: 0, height: 0 });
   const [isSettingsExpanded, setIsSettingsExpanded] = useState(true);
   const [isToolsExpanded, setIsToolsExpanded] = useState(true);
-  const [isAgenticFlowWizardOpen, setIsAgenticFlowWizardOpen] = useState(false);
 
   const {
     nodes,
@@ -85,21 +83,6 @@ const WorkflowEditorContent = () => {
 
   const toggleSettings = () => setIsSettingsExpanded(!isSettingsExpanded);
   const toggleTools = () => setIsToolsExpanded(!isToolsExpanded);
-
-  const handleExportJSONClick = useCallback(() => {
-    const flowData = reactFlowInstance.toObject();
-    setJsonData(JSON.stringify(flowData, null, 2));
-    setShowJSONModal(true);
-  }, [reactFlowInstance, setJsonData, setShowJSONModal]);
-
-  const handleCreateFlow = useCallback(() => {
-    setIsAgenticFlowWizardOpen(true);
-  }, []);
-
-  const onCreateFlow = useCallback((flowConfig) => {
-    handleCreateAgenticFlow(flowConfig);
-    setIsAgenticFlowWizardOpen(false);
-  }, [handleCreateAgenticFlow]);
 
   return (
     <div ref={containerRef} className="h-full w-full relative" style={{ height: 'calc(100vh - 64px)' }}>
@@ -167,7 +150,7 @@ const WorkflowEditorContent = () => {
           }}
         />
         <Panel position="top-left">
-          <Card className="bg-gray-800 rounded-lg shadow-lg p-2 mb-2 w-48">
+          <Card className="bg-gray-800 rounded-lg shadow-lg p-2 mb-2 w-56">
             <Collapsible open={isSettingsExpanded} onOpenChange={setIsSettingsExpanded}>
               <CollapsibleTrigger asChild>
                 <CardHeader className="cursor-pointer flex flex-row items-center justify-between pb-1 pt-1">
@@ -182,7 +165,7 @@ const WorkflowEditorContent = () => {
                 <CardContent className="pt-2 px-2">
                   <WorkflowSettingsPanel />
                   <div className="flex flex-col space-y-1 mt-2">
-                    <Button onClick={handleExportJSONClick} size="sm" className="w-full text-xs py-1 h-7">
+                    <Button onClick={handleExportJSON} size="sm" className="w-full text-xs py-1 h-7">
                       <FileJson className="mr-1 h-3 w-3" />
                       Export JSON
                     </Button>
@@ -190,7 +173,7 @@ const WorkflowEditorContent = () => {
                       <Save className="mr-1 h-3 w-3" />
                       Save/Load
                     </Button>
-                    <Button onClick={handleCreateFlow} size="sm" className="w-full text-xs py-1 h-7">
+                    <Button onClick={handleCreateAgenticFlow} size="sm" className="w-full text-xs py-1 h-7">
                       <PlusCircle className="mr-1 h-3 w-3" />
                       Create Flow
                     </Button>
@@ -199,7 +182,7 @@ const WorkflowEditorContent = () => {
               </CollapsibleContent>
             </Collapsible>
           </Card>
-          <Card className="bg-gray-800 rounded-lg shadow-lg p-2 w-48">
+          <Card className="bg-gray-800 rounded-lg shadow-lg p-2 w-56">
             <Collapsible open={isToolsExpanded} onOpenChange={setIsToolsExpanded}>
               <CollapsibleTrigger asChild>
                 <CardHeader className="cursor-pointer flex flex-row items-center justify-between pb-1 pt-1">
@@ -234,36 +217,6 @@ const WorkflowEditorContent = () => {
         onClose={() => setShowJSONModal(false)}
         jsonData={jsonData}
       />
-      <AgenticFlowWizard
-        isOpen={isAgenticFlowWizardOpen}
-        onClose={() => setIsAgenticFlowWizardOpen(false)}
-        onCreateFlow={onCreateFlow}
-      />
-      <style jsx global>{`
-        .react-flow__panel.react-flow__attribution {
-          display: none;
-        }
-        .react-flow__node {
-          font-size: 10px;
-        }
-        .react-flow__handle {
-          width: 8px;
-          height: 8px;
-        }
-        ::-webkit-scrollbar {
-          width: 8px;
-        }
-        ::-webkit-scrollbar-track {
-          background: #2D3748;
-        }
-        ::-webkit-scrollbar-thumb {
-          background: #4A5568;
-          border-radius: 4px;
-        }
-        ::-webkit-scrollbar-thumb:hover {
-          background: #718096;
-        }
-      `}</style>
     </div>
   );
 };
