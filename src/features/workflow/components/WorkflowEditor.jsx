@@ -80,6 +80,7 @@ const WorkflowEditor = () => {
     <WorkflowSettingsProvider>
       <div ref={containerRef} className="h-full w-full relative" style={{ height: 'calc(100vh - 64px)' }}>
         <ReactFlow
+          ref={reactFlowWrapper}
           nodes={nodes}
           edges={styledEdges}
           onNodesChange={onNodesChange}
