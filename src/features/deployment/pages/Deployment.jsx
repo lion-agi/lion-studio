@@ -1,12 +1,14 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Input } from "@/common/components/ui/input";
 import { Label } from "@/common/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/common/components/ui/tabs";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/common/components/ui/select";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/common/components/ui/accordion";
 import { Search } from 'lucide-react';
-import { DeploymentCard, NewDeploymentDialog, DeploymentTimeline } from '@/features/deployment/components';
-import useDeployment from '@/features/deployment/hooks/useDeployment';
+import DeploymentCard from '../components/DeploymentCard';
+import NewDeploymentDialog from '../components/NewDeploymentDialog';
+import DeploymentTimeline from '../components/DeploymentTimeline';
+import useDeployment from '../hooks/useDeployment';
 
 const Deployment = () => {
   const {
