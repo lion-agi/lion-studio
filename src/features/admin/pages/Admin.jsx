@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Tabs, TabsContent } from "@/common/components/ui/tabs";
 import TabSwitchBar from '@/common/components/TabSwitchBar';
 import UserRoles from '../components/UserRoles';
-import AccessLogs from '../components/AccessLogs';
+import AccessLogs from '@/common/components/AccessLogs';
 import SecuritySettings from '../components/SecuritySettings';
 import Secrets from '../components/Secrets';
 import { useAdminData } from '../useAdminData';
