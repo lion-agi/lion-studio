@@ -12,6 +12,7 @@ import WorkflowToolbar from './WorkflowToolbar';
 import { WorkflowSettingsProvider, useWorkflowSettings } from './WorkflowSettingsContext';
 import WorkflowSettingsPanel from './WorkflowSettingsPanel';
 import NodeCreationCard from './NodeCreationCard';
+import SettingsModal from '@/common/components/SettingsModal';
 
 const WorkflowEditorContent = () => {
   const containerRef = useRef(null);
@@ -51,6 +52,8 @@ const WorkflowEditorContent = () => {
   const { onNodeClick, edgeOptions, getEdgeStyle } = useEdgeHighlighting(edges, setEdges);
 
   const { backgroundColor, gridSize } = useWorkflowSettings();
+
+  const [showSettingsModal, setShowSettingsModal] = useState(false);
 
   const styledEdges = useMemo(() => 
     edges.map(edge => ({
@@ -148,6 +151,7 @@ const WorkflowEditorContent = () => {
             onLoad={() => setShowSaveLoadDialog(true)}
             onExportJSON={handleExportJSON}
             onCreateFlow={handleCreateAgenticFlow}
+            onOpenSettings={() => setShowSettingsModal(true)}
           />
         </Panel>
         <Panel position="top-right">
@@ -155,6 +159,7 @@ const WorkflowEditorContent = () => {
             onExportJSON={handleExportJSON}
             onSaveLoad={() => setShowSaveLoadDialog(true)}
             onCreateFlow={handleCreateAgenticFlow}
+            onOpenSettings={() => setShowSettingsModal(true)}
           />
         </Panel>
         <Panel position="bottom-right">
@@ -175,6 +180,10 @@ const WorkflowEditorContent = () => {
         isOpen={showJSONModal}
         onClose={() => setShowJSONModal(false)}
         jsonData={jsonData}
+      />
+      <SettingsModal
+        isOpen={showSettingsModal}
+        onClose={() => setShowSettingsModal(false)}
       />
     </div>
   );
