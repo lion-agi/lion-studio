@@ -12,19 +12,19 @@ export const useWorkflowSettings = () => {
 
 export const WorkflowSettingsProvider = ({ children }) => {
   const [backgroundColor, setBackgroundColor] = useState('#1A2530');
-  const [gridSize, setGridSize] = useState(20);
-  const [snapToGrid, setSnapToGrid] = useState(true);
-  const [jsonData, setJsonData] = useState(null);
+  const [autoSave, setAutoSave] = useState(true);
+  const [performanceMode, setPerformanceMode] = useState(false);
+  const [theme, setTheme] = useState('dark');
 
   const value = {
     backgroundColor,
     setBackgroundColor,
-    gridSize,
-    setGridSize,
-    snapToGrid,
-    setSnapToGrid,
-    jsonData,
-    setJsonData,
+    autoSave,
+    setAutoSave,
+    performanceMode,
+    setPerformanceMode,
+    theme,
+    setTheme,
   };
 
   return (
