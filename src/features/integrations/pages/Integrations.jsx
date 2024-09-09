@@ -101,7 +101,7 @@ const Integrations = () => {
   if (error) return <div className="text-red-500">Error loading integrations: {error.message}</div>;
 
   return (
-    <div className="min-h-screen bg-gray-900 text-gray-100">
+    <div className="min-h-screen bg-gray-900 text-gray-100 mt-6">
       <div className="container mx-auto p-8 space-y-8">
         <IntegrationFilters
           activeTab={activeTab}
