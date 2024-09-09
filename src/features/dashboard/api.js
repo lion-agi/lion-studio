@@ -32,7 +32,7 @@ export const generateRecentCalls = (count) => {
       baseUrl: baseUrls[provider],
       tokens: Math.floor(Math.random() * 1000) + 100,
       cost: (Math.random() * 0.1 + 0.01),
-      responseTime: Math.floor(Math.random() * 1000) + 100,
+      responseTime: Math.random() * 1000 + 100,
     });
   }
   return calls;

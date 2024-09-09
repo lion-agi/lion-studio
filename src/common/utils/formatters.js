@@ -1,6 +1,7 @@
 export const formatDate = (dateString) => {
+  if (!dateString) return 'N/A';
   const date = new Date(dateString);
-  return isNaN(date.getTime()) ? 'N/A' : date.toLocaleString();
+  return isNaN(date.getTime()) ? 'Invalid Date' : date.toLocaleString();
 };
 
 export const formatNumber = (num) => {
@@ -12,5 +13,5 @@ export const formatCurrency = (amount) => {
 };
 
 export const formatResponseTime = (time) => {
-  return typeof time === 'number' ? `${time} ms` : 'N/A';
+  return typeof time === 'number' ? `${time.toFixed(2)} ms` : 'N/A';
 };
