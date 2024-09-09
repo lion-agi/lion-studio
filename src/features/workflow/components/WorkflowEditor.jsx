@@ -18,6 +18,7 @@ const WorkflowEditorContent = () => {
   const containerRef = useRef(null);
   const [containerSize, setContainerSize] = useState({ width: 0, height: 0 });
   const [isSettingsExpanded, setIsSettingsExpanded] = useState(true);
+  const [isToolsExpanded, setIsToolsExpanded] = useState(true);
 
   const {
     nodes,
@@ -78,9 +79,8 @@ const WorkflowEditorContent = () => {
     return () => window.removeEventListener('resize', updateSize);
   }, []);
 
-  const toggleSettings = () => {
-    setIsSettingsExpanded(!isSettingsExpanded);
-  };
+  const toggleSettings = () => setIsSettingsExpanded(!isSettingsExpanded);
+  const toggleTools = () => setIsToolsExpanded(!isToolsExpanded);
 
   return (
     <div ref={containerRef} className="h-full w-full relative" style={{ height: 'calc(100vh - 64px)' }}>
@@ -148,7 +148,7 @@ const WorkflowEditorContent = () => {
           }}
         />
         <Panel position="top-left">
-          <div className="bg-gray-800 rounded-lg shadow-lg p-4">
+          <div className="bg-gray-800 rounded-lg shadow-lg p-4 mb-4">
             <div className="flex justify-between items-center mb-2">
               <h3 className="text-lg font-semibold text-white">Workflow Settings</h3>
               <Button
@@ -161,20 +161,35 @@ const WorkflowEditorContent = () => {
               </Button>
             </div>
             {isSettingsExpanded && (
-              <>
-                <NodeCreationCard
-                  onAddNode={(type) => {/* Implement add node logic */}}
-                  onSave={handleSaveLoad}
-                  onLoad={() => setShowSaveLoadDialog(true)}
-                  onExportJSON={handleExportJSON}
-                  onCreateFlow={handleCreateAgenticFlow}
-                />
-                <WorkflowToolbar
-                  onExportJSON={handleExportJSON}
-                  onSaveLoad={() => setShowSaveLoadDialog(true)}
-                  onCreateFlow={handleCreateAgenticFlow}
-                />
-              </>
+              <WorkflowToolbar
+                onExportJSON={handleExportJSON}
+                onSaveLoad={() => setShowSaveLoadDialog(true)}
+                onCreateFlow={handleCreateAgenticFlow}
+              />
+            )}
+          </div>
+        </Panel>
+        <Panel position="top-right">
+          <div className="bg-gray-800 rounded-lg shadow-lg p-4">
+            <div className="flex justify-between items-center mb-2">
+              <h3 className="text-lg font-semibold text-white">Workflow Tools</h3>
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={toggleTools}
+                className="text-gray-400 hover:text-white"
+              >
+                {isToolsExpanded ? <ChevronUp className="h-5 w-5" /> : <ChevronDown className="h-5 w-5" />}
+              </Button>
+            </div>
+            {isToolsExpanded && (
+              <NodeCreationCard
+                onAddNode={(type) => {/* Implement add node logic */}}
+                onSave={handleSaveLoad}
+                onLoad={() => setShowSaveLoadDialog(true)}
+                onExportJSON={handleExportJSON}
+                onCreateFlow={handleCreateAgenticFlow}
+              />
             )}
           </div>
         </Panel>
