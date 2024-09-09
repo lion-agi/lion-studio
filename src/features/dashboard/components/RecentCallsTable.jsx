@@ -1,6 +1,6 @@
 import React from 'react';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/common/components/ui/table";
-import useSettingsStore from '@/store/settingsSlice';
+import { useSettingsStore } from '@/store/settingsSlice';
 import { formatDate, formatNumber, formatCurrency, formatResponseTime } from '@/common/utils/formatters';
 
 const RecentCallsTable = ({ data }) => {

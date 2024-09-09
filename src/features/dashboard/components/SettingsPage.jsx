@@ -1,94 +1,143 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
-import TableCustomizationSettings from './TableCustomizationSettings';
-import DisplayPreferencesSettings from './DisplayPreferencesSettings';
-import DataVisualizationSettings from './DataVisualizationSettings';
-import NotificationSettings from './NotificationSettings';
-import PerformanceOptimizationSettings from './PerformanceOptimizationSettings';
-import ExportAndReportingSettings from './ExportAndReportingSettings';
-import UserPreferencesSettings from './UserPreferencesSettings';
-import AccessibilitySettings from './AccessibilitySettings';
-import AdvancedFeaturesSettings from './AdvancedFeaturesSettings';
-import SecuritySettings from './SecuritySettings';
-import { SettingsProvider, useSettings } from './SettingsContext';
 import { Input } from "@/common/components/ui/input";
 import { Button } from "@/common/components/ui/button";
+import { Label } from "@/common/components/ui/label";
+import { Switch } from "@/common/components/ui/switch";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/common/components/ui/select";
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/common/components/ui/accordion";
+import { Card, CardContent, CardHeader, CardTitle } from "@/common/components/ui/card";
+import { Search } from 'lucide-react';
 import { useSettingsStore } from '@/store/settingsSlice';
 
-const settingsCategories = [
-  { name: 'Table Customization', component: TableCustomizationSettings },
-  { name: 'Display Preferences', component: DisplayPreferencesSettings },
-  { name: 'Data Visualization', component: DataVisualizationSettings },
-  { name: 'Notification Settings', component: NotificationSettings },
-  { name: 'Performance Optimization', component: PerformanceOptimizationSettings },
-  { name: 'Export and Reporting', component: ExportAndReportingSettings },
-  { name: 'User Preferences', component: UserPreferencesSettings },
-  { name: 'Accessibility', component: AccessibilitySettings },
-  { name: 'Advanced Features', component: AdvancedFeaturesSettings },
-  { name: 'Security', component: SecuritySettings },
-];
-
 const SettingsPage = () => {
-  const [activeCategory, setActiveCategory] = useState(settingsCategories[0].name);
+  const {
+    tableFields,
+    toggleTableField,
+    theme,
+    setTheme,
+    autoRefreshInterval,
+    setAutoRefreshInterval,
+    chartType,
+    setChartType,
+    colorScheme,
+    setColorScheme,
+    language,
+    setLanguage,
+    enableNotifications,
+    setEnableNotifications,
+    resetToDefault,
+  } = useSettingsStore();
+
   const [searchTerm, setSearchTerm] = useState('');
-  const { settings, setSettings } = useSettings();
-  const { fetchSettings, updateSettings } = useSettingsStore();
 
-  useEffect(() => {
-    fetchSettings();
-  }, [fetchSettings]);
+  const settingsSections = [
+    {
+      title: 'Display',
+      settings: [
+        { key: 'theme', label: 'Theme', type: 'select', options: ['light', 'dark', 'system'] },
+        { key: 'chartType', label: 'Chart Type', type: 'select', options: ['bar', 'line', 'pie'] },
+        { key: 'colorScheme', label: 'Color Scheme', type: 'select', options: ['default', 'colorblind', 'pastel'] },
+      ]
+    },
+    {
+      title: 'Data',
+      settings: [
+        { key: 'autoRefreshInterval', label: 'Auto Refresh Interval (seconds)', type: 'number' },
+        ...Object.keys(tableFields).map(field => ({
+          key: field,
+          label: `Show ${field.charAt(0).toUpperCase() + field.slice(1)}`,
+          type: 'switch'
+        }))
+      ]
+    },
+    {
+      title: 'General',
+      settings: [
+        { key: 'language', label: 'Language', type: 'select', options: ['en', 'es', 'fr', 'de', 'ja'] },
+        { key: 'enableNotifications', label: 'Enable Notifications', type: 'switch' },
+      ]
+    }
+  ];
 
-  const handleApplyChanges = () => {
-    updateSettings(settings);
-  };
-
-  const filteredCategories = settingsCategories.filter(category =>
-    category.name.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  const filteredSections = settingsSections.map(section => ({
+    ...section,
+    settings: section.settings.filter(setting => 
+      setting.label.toLowerCase().includes(searchTerm.toLowerCase())
+    )
+  })).filter(section => section.settings.length > 0);
 
   return (
-    <SettingsProvider>
-      <div className="flex h-screen">
-        <aside className="w-1/4 bg-gray-800 text-white p-4">
-          <Input
-            type="text"
-            placeholder="Search settings..."
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            className="mb-4"
-          />
-          <nav>
-            <ul>
-              {filteredCategories.map(category => (
-                <li key={category.name}>
-                  <Button
-                    variant="ghost"
-                    className={`w-full text-left ${activeCategory === category.name ? 'bg-gray-700' : ''}`}
-                    onClick={() => setActiveCategory(category.name)}
-                  >
-                    {category.name}
-                  </Button>
-                </li>
-              ))}
-            </ul>
-          </nav>
-        </aside>
-        <main className="w-3/4 p-4">
-          {settingsCategories.map(category => (
-            category.name === activeCategory && (
-              <div key={category.name}>
-                <h2 className="text-2xl font-bold mb-4">{category.name}</h2>
-                <category.component />
-              </div>
-            )
-          ))}
-          <div className="flex justify-end mt-6">
-            <Button className="bg-purple-600 hover:bg-purple-700 text-white" onClick={handleApplyChanges}>Apply Changes</Button>
-            <Button variant="outline" className="ml-2">Reset to Default</Button>
+    <div className="container mx-auto p-6 space-y-8">
+      <Card className="w-full">
+        <CardHeader>
+          <CardTitle className="text-2xl font-bold">Settings</CardTitle>
+          <div className="relative">
+            <Input
+              type="text"
+              placeholder="Search settings..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="pl-10"
+            />
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
           </div>
-        </main>
-      </div>
-    </SettingsProvider>
+        </CardHeader>
+        <CardContent>
+          <Accordion type="single" collapsible className="w-full space-y-4">
+            {filteredSections.map((section, index) => (
+              <AccordionItem value={`item-${index}`} key={index}>
+                <AccordionTrigger>{section.title}</AccordionTrigger>
+                <AccordionContent>
+                  <div className="space-y-4">
+                    {section.settings.map((setting) => (
+                      <div key={setting.key} className="flex items-center justify-between">
+                        <Label htmlFor={setting.key} className="flex-grow">{setting.label}</Label>
+                        {setting.type === 'select' && (
+                          <Select
+                            value={eval(setting.key)}
+                            onValueChange={(value) => eval(`set${setting.key.charAt(0).toUpperCase() + setting.key.slice(1)}`)(value)}
+                          >
+                            <SelectTrigger className="w-[180px]">
+                              <SelectValue placeholder={`Select ${setting.label.toLowerCase()}`} />
+                            </SelectTrigger>
+                            <SelectContent>
+                              {setting.options.map((option) => (
+                                <SelectItem key={option} value={option}>
+                                  {option.charAt(0).toUpperCase() + option.slice(1)}
+                                </SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Select>
+                        )}
+                        {setting.type === 'switch' && (
+                          <Switch
+                            id={setting.key}
+                            checked={setting.key.includes('tableFields') ? tableFields[setting.key.split('.')[1]] : eval(setting.key)}
+                            onCheckedChange={(checked) => setting.key.includes('tableFields') ? toggleTableField(setting.key.split('.')[1]) : eval(`set${setting.key.charAt(0).toUpperCase() + setting.key.slice(1)}`)(checked)}
+                          />
+                        )}
+                        {setting.type === 'number' && (
+                          <Input
+                            type="number"
+                            id={setting.key}
+                            value={eval(setting.key)}
+                            onChange={(e) => eval(`set${setting.key.charAt(0).toUpperCase() + setting.key.slice(1)}`)(Number(e.target.value))}
+                            className="w-[180px]"
+                          />
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                </AccordionContent>
+              </AccordionItem>
+            ))}
+          </Accordion>
+          <div className="mt-8 flex justify-end">
+            <Button onClick={resetToDefault} variant="outline">Reset to Default</Button>
+          </div>
+        </CardContent>
+      </Card>
+    </div>
   );
 };
 
