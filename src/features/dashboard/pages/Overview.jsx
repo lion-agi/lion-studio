@@ -1,8 +1,8 @@
 import React from 'react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/common/components/ui/tabs";
 import { TrendingUp, PieChart, Activity, AlertTriangle } from 'lucide-react';
-import CostTrendChart from '../charts/CostTrendChart';
-import CostBreakdownChart from '../charts/CostBreakdownChart';
+import CostTrendChart from '../components/CostTrendChart';
+import CostBreakdownChart from '../components/CostBreakdownChart';
 import SummaryCards from '../components/SummaryCards';
 import EmptyState from '../../library/components/EmptyState';
 
