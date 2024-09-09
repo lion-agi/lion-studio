@@ -134,7 +134,7 @@ const Dashboard = () => {
           </div>
         </div>
         
-        <Tabs defaultValue="overview" className="space-y-8">
+        <Tabs defaultValue="overview" className="min-h-screen bg-gray-900 text-gray-100">
           <TabsList>
             <TabsTrigger value="overview" className="data-[state=active]:bg-purple-600 data-[state=active]:text-white">Overview</TabsTrigger>
             <TabsTrigger value="costs" className="data-[state=active]:bg-purple-600 data-[state=active]:text-white">Costs</TabsTrigger>
