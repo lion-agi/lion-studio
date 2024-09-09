@@ -1,63 +1,62 @@
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/supabase';
 
-const fetchApiData = async () => {
-  // Fetch summary data
-  const { data: summaryData, error: summaryError } = await supabase
-    .from('api_calls_summary')
-    .select('*')
-    .single();
-
-  if (summaryError) {
-    console.error('Error fetching summary data:', summaryError);
-    throw new Error('Failed to fetch summary data');
-  }
-
-  // Fetch cost trend data
-  const { data: costTrendData, error: costTrendError } = await supabase
-    .from('cost_trend')
-    .select('*')
-    .order('date', { ascending: true });
-
-  if (costTrendError) {
-    console.error('Error fetching cost trend data:', costTrendError);
-    throw new Error('Failed to fetch cost trend data');
-  }
-
-  // Fetch cost breakdown data
-  const { data: costBreakdownData, error: costBreakdownError } = await supabase
-    .from('cost_breakdown')
-    .select('*');
-
-  if (costBreakdownError) {
-    console.error('Error fetching cost breakdown data:', costBreakdownError);
-    throw new Error('Failed to fetch cost breakdown data');
-  }
-
-  // Fetch recent calls data
-  const { data: recentCallsData, error: recentCallsError } = await supabase
+const fetchApiCalls = async () => {
+  const { data, error } = await supabase
     .from('api_calls')
     .select('*')
     .order('created_at', { ascending: false })
     .limit(100);
 
-  if (recentCallsError) {
-    console.error('Error fetching recent calls data:', recentCallsError);
-    throw new Error('Failed to fetch recent calls data');
-  }
+  if (error) throw error;
+  return data;
+};
+
+const calculateSummary = (apiCalls) => {
+  const totalCalls = apiCalls.length;
+  const totalCost = apiCalls.reduce((sum, call) => sum + (call.cost || 0), 0);
+  const avgResponseTime = apiCalls.reduce((sum, call) => sum + (call.response_time || 0), 0) / totalCalls;
+  const errorRate = apiCalls.filter(call => call.error).length / totalCalls;
 
   return {
-    summary: summaryData,
-    costTrend: costTrendData,
-    costBreakdown: costBreakdownData,
-    recentCalls: recentCallsData,
+    totalCalls,
+    totalCost,
+    avgResponseTime,
+    errorRate,
   };
 };
 
-export const useApiData = () => {
+const calculateCostTrend = (apiCalls) => {
+  const costByDate = apiCalls.reduce((acc, call) => {
+    const date = new Date(call.created_at).toISOString().split('T')[0];
+    acc[date] = (acc[date] || 0) + (call.cost || 0);
+    return acc;
+  }, {});
+
+  return Object.entries(costByDate).map(([date, cost]) => ({ date, cost }));
+};
+
+const calculateCostBreakdown = (apiCalls) => {
+  const costByModel = apiCalls.reduce((acc, call) => {
+    acc[call.model] = (acc[call.model] || 0) + (call.cost || 0);
+    return acc;
+  }, {});
+
+  return Object.entries(costByModel).map(([model, cost]) => ({ model, cost }));
+};
+
+export const useApiData = (options = {}) => {
   return useQuery({
     queryKey: ['apiData'],
-    queryFn: fetchApiData,
-    refetchInterval: 60000, // Refetch every minute
+    queryFn: async () => {
+      const apiCalls = await fetchApiCalls();
+      return {
+        summary: calculateSummary(apiCalls),
+        costTrend: calculateCostTrend(apiCalls),
+        costBreakdown: calculateCostBreakdown(apiCalls),
+        recentCalls: apiCalls,
+      };
+    },
+    ...options,
   });
 };
