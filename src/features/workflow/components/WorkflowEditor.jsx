@@ -12,17 +12,19 @@ import { WorkflowSettingsProvider, useWorkflowSettings } from './WorkflowSetting
 import { Button } from "@/common/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/common/components/ui/card";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/common/components/ui/collapsible";
-import { ChevronDown, ChevronUp, Save, Upload, PlusCircle, FileJson, Settings } from 'lucide-react';
+import { ChevronDown, ChevronUp, FileJson, Save, PlusCircle, Settings, Zap } from 'lucide-react';
 import WorkflowSettingsPanel from './WorkflowSettingsPanel';
 import NodeCreationPanel from './NodeCreationPanel';
 import AgenticFlowWizard from '@/common/components/AgenticFlowWizard';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/common/components/ui/select";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/common/components/ui/tooltip";
 
 const WorkflowEditorContent = () => {
   const containerRef = useRef(null);
   const [containerSize, setContainerSize] = useState({ width: 0, height: 0 });
   const [isSettingsExpanded, setIsSettingsExpanded] = useState(true);
-  const [isToolsExpanded, setIsToolsExpanded] = useState(true);
+  const [isCreateNodeExpanded, setIsCreateNodeExpanded] = useState(true);
+  const [isOperationsExpanded, setIsOperationsExpanded] = useState(true);
   const [isAgenticFlowWizardOpen, setIsAgenticFlowWizardOpen] = useState(false);
   const [selectedBackgroundColor, setSelectedBackgroundColor] = useState('#1A2530');
 
@@ -87,7 +89,8 @@ const WorkflowEditorContent = () => {
   }, []);
 
   const toggleSettings = () => setIsSettingsExpanded(!isSettingsExpanded);
-  const toggleTools = () => setIsToolsExpanded(!isToolsExpanded);
+  const toggleCreateNode = () => setIsCreateNodeExpanded(!isCreateNodeExpanded);
+  const toggleOperations = () => setIsOperationsExpanded(!isOperationsExpanded);
 
   const handleExportJSONClick = () => {
     const jsonContent = handleExportJSON();
@@ -177,105 +180,122 @@ const WorkflowEditorContent = () => {
           }}
         />
         <Panel position="top-left">
-          <Card className="bg-gray-800 rounded-lg shadow-lg p-2 mb-2 w-56">
-            <Collapsible open={isSettingsExpanded} onOpenChange={setIsSettingsExpanded}>
-              <CollapsibleTrigger asChild>
-                <CardHeader className="cursor-pointer flex flex-row items-center justify-between pb-1 pt-1">
-                  <CardTitle className="text-xs font-semibold text-white flex items-center">
-                    <Settings className="mr-2 h-3 w-3" />
-                    Workflow Settings
-                  </CardTitle>
-                  {isSettingsExpanded ? <ChevronUp className="h-3 w-3" /> : <ChevronDown className="h-3 w-3" />}
-                </CardHeader>
-              </CollapsibleTrigger>
-              <CollapsibleContent>
-                <CardContent className="pt-2 px-2">
-                  <WorkflowSettingsPanel />
-                  <div className="flex flex-col space-y-1 mt-2">
-                    <Button onClick={handleExportJSONClick} size="sm" className="w-full text-xs py-1 h-7">
-                      <FileJson className="mr-1 h-3 w-3" />
-                      Export JSON
-                    </Button>
-                    <Button onClick={() => setShowSaveLoadDialog(true)} size="sm" className="w-full text-xs py-1 h-7">
-                      <Save className="mr-1 h-3 w-3" />
-                      Save/Load
-                    </Button>
-                    <Button onClick={handleCreateFlow} size="sm" className="w-full text-xs py-1 h-7">
-                      <PlusCircle className="mr-1 h-3 w-3" />
-                      Create Flow
-                    </Button>
-                  </div>
-                  <div className="mt-4">
-                    <label className="block text-sm font-medium text-gray-300 mb-2">Background Color</label>
-                    <Select value={selectedBackgroundColor} onValueChange={setSelectedBackgroundColor}>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Select background color" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {Object.entries(backgroundColors).map(([name, color]) => (
-                          <SelectItem key={color} value={color}>
-                            <div className="flex items-center">
-                              <div className="w-4 h-4 rounded-full mr-2" style={{ backgroundColor: color }} />
-                              {name}
-                            </div>
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                  </div>
-                </CardContent>
-              </CollapsibleContent>
-            </Collapsible>
-          </Card>
-          <Card className="bg-gray-800 rounded-lg shadow-lg p-2 w-56">
-            <Collapsible open={isToolsExpanded} onOpenChange={setIsToolsExpanded}>
-              <CollapsibleTrigger asChild>
-                <CardHeader className="cursor-pointer flex flex-row items-center justify-between pb-1 pt-1">
-                  <CardTitle className="text-xs font-semibold text-white flex items-center">
-                    <PlusCircle className="mr-2 h-3 w-3" />
-                    Create Node
-                  </CardTitle>
-                  {isToolsExpanded ? <ChevronUp className="h-3 w-3" /> : <ChevronDown className="h-3 w-3" />}
-                </CardHeader>
-              </CollapsibleTrigger>
-              <CollapsibleContent>
-                <CardContent className="pt-2 px-2">
-                  <NodeCreationPanel />
-                </CardContent>
-              </CollapsibleContent>
-            </Collapsible>
-          </Card>
-          <Card className="bg-gray-800 rounded-lg shadow-lg p-2 w-56 mt-2">
-            <Collapsible open={isToolsExpanded} onOpenChange={setIsToolsExpanded}>
-              <CollapsibleTrigger asChild>
-                <CardHeader className="cursor-pointer flex flex-row items-center justify-between pb-1 pt-1">
-                  <CardTitle className="text-xs font-semibold text-white flex items-center">
-                    <PlusCircle className="mr-2 h-3 w-3" />
-                    Workflow Operations
-                  </CardTitle>
-                  {isToolsExpanded ? <ChevronUp className="h-3 w-3" /> : <ChevronDown className="h-3 w-3" />}
-                </CardHeader>
-              </CollapsibleTrigger>
-              <CollapsibleContent>
-                <CardContent className="pt-2 px-2">
-                  <div className="flex flex-col space-y-1 mt-2">
-                    <Button onClick={handleExportJSONClick} size="sm" className="w-full text-xs py-1 h-7">
-                      <FileJson className="mr-1 h-3 w-3" />
-                      Export JSON
-                    </Button>
-                    <Button onClick={() => setShowSaveLoadDialog(true)} size="sm" className="w-full text-xs py-1 h-7">
-                      <Save className="mr-1 h-3 w-3" />
-                      Save/Load
-                    </Button>
-                    <Button onClick={handleCreateFlow} size="sm" className="w-full text-xs py-1 h-7">
-                      <PlusCircle className="mr-1 h-3 w-3" />
-                      Create Flow
-                    </Button>
-                  </div>
-                </CardContent>
-              </CollapsibleContent>
-            </Collapsible>
-          </Card>
+          <div className="space-y-2">
+            <Card className="bg-gray-800 rounded-lg shadow-lg p-2 w-56">
+              <Collapsible open={isCreateNodeExpanded} onOpenChange={setIsCreateNodeExpanded}>
+                <CollapsibleTrigger asChild>
+                  <CardHeader className="cursor-pointer flex flex-row items-center justify-between pb-1 pt-1">
+                    <CardTitle className="text-xs font-semibold text-white flex items-center">
+                      <PlusCircle className="mr-2 h-3 w-3" />
+                      Create Node
+                    </CardTitle>
+                    {isCreateNodeExpanded ? <ChevronUp className="h-3 w-3" /> : <ChevronDown className="h-3 w-3" />}
+                  </CardHeader>
+                </CollapsibleTrigger>
+                <CollapsibleContent>
+                  <CardContent className="pt-2 px-2">
+                    <NodeCreationPanel />
+                  </CardContent>
+                </CollapsibleContent>
+              </Collapsible>
+            </Card>
+
+            <Card className="bg-gray-800 rounded-lg shadow-lg p-2 w-56">
+              <Collapsible open={isOperationsExpanded} onOpenChange={setIsOperationsExpanded}>
+                <CollapsibleTrigger asChild>
+                  <CardHeader className="cursor-pointer flex flex-row items-center justify-between pb-1 pt-1">
+                    <CardTitle className="text-xs font-semibold text-white flex items-center">
+                      <Zap className="mr-2 h-3 w-3" />
+                      Workflow Operations
+                    </CardTitle>
+                    {isOperationsExpanded ? <ChevronUp className="h-3 w-3" /> : <ChevronDown className="h-3 w-3" />}
+                  </CardHeader>
+                </CollapsibleTrigger>
+                <CollapsibleContent>
+                  <CardContent className="pt-2 px-2 space-y-2">
+                    <TooltipProvider>
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <Button onClick={handleExportJSONClick} size="sm" className="w-full text-xs py-1 h-7">
+                            <FileJson className="mr-1 h-3 w-3" />
+                            Export JSON
+                          </Button>
+                        </TooltipTrigger>
+                        <TooltipContent>
+                          <p>Export workflow as JSON</p>
+                        </TooltipContent>
+                      </Tooltip>
+                    </TooltipProvider>
+
+                    <TooltipProvider>
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <Button onClick={() => setShowSaveLoadDialog(true)} size="sm" className="w-full text-xs py-1 h-7">
+                            <Save className="mr-1 h-3 w-3" />
+                            Save/Load
+                          </Button>
+                        </TooltipTrigger>
+                        <TooltipContent>
+                          <p>Save or load workflow</p>
+                        </TooltipContent>
+                      </Tooltip>
+                    </TooltipProvider>
+
+                    <TooltipProvider>
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <Button onClick={handleCreateFlow} size="sm" className="w-full text-xs py-1 h-7">
+                            <Zap className="mr-1 h-3 w-3" />
+                            New Agentic Flow
+                          </Button>
+                        </TooltipTrigger>
+                        <TooltipContent>
+                          <p>Create a new agentic flow</p>
+                        </TooltipContent>
+                      </Tooltip>
+                    </TooltipProvider>
+                  </CardContent>
+                </CollapsibleContent>
+              </Collapsible>
+            </Card>
+
+            <Card className="bg-gray-800 rounded-lg shadow-lg p-2 w-56">
+              <Collapsible open={isSettingsExpanded} onOpenChange={setIsSettingsExpanded}>
+                <CollapsibleTrigger asChild>
+                  <CardHeader className="cursor-pointer flex flex-row items-center justify-between pb-1 pt-1">
+                    <CardTitle className="text-xs font-semibold text-white flex items-center">
+                      <Settings className="mr-2 h-3 w-3" />
+                      Workflow Settings
+                    </CardTitle>
+                    {isSettingsExpanded ? <ChevronUp className="h-3 w-3" /> : <ChevronDown className="h-3 w-3" />}
+                  </CardHeader>
+                </CollapsibleTrigger>
+                <CollapsibleContent>
+                  <CardContent className="pt-2 px-2">
+                    <WorkflowSettingsPanel />
+                    <div className="mt-4">
+                      <label className="block text-sm font-medium text-gray-300 mb-2">Background Color</label>
+                      <Select value={selectedBackgroundColor} onValueChange={setSelectedBackgroundColor}>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Select background color" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {Object.entries(backgroundColors).map(([name, color]) => (
+                            <SelectItem key={color} value={color}>
+                              <div className="flex items-center">
+                                <div className="w-4 h-4 rounded-full mr-2" style={{ backgroundColor: color }} />
+                                {name}
+                              </div>
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </div>
+                  </CardContent>
+                </CollapsibleContent>
+              </Collapsible>
+            </Card>
+          </div>
         </Panel>
       </ReactFlow>
       <SaveLoadDialog
