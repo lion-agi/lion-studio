@@ -4,7 +4,8 @@ import {
   Layers, Wrench, Globe, Workflow, FileInput, FileOutput, Shuffle,
   Repeat, GitMerge, Sliders, AlertTriangle, BarChart, PieChart, Share2,
   Mail, Phone, Video, Mic, Image, Folder, Lock, Key, Search, Paperclip,
-  Calendar, Clock, Compass, Map, Thermometer, CloudRain, Wind, Sun
+  Calendar, Clock, Compass, Map, Thermometer, CloudRain, Wind, Sun,
+  CreditCard
 } from 'lucide-react';
 
 export const nodeCategories = [
