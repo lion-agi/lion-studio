@@ -1,12 +1,12 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { WorkflowEditorContainer } from '../../features/workflow/components/WorkflowEditorContainer';
+import { WorkflowEditorContainer } from '@/features/workflow/components/WorkflowEditorContainer';
 import Sidebar from '@/common/components/Sidebar';
 import { Button } from "@/common/components/ui/button";
 import { Input } from "@/common/components/ui/input";
 import { Search, Info } from 'lucide-react';
 import useSettingsStore from '@/store/settingsSlice';
 
-const WorkflowEditorPage = () => {
+const Dashboard = () => {
   const [sidebarExpanded, setSidebarExpanded] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
   const [isInfoModalOpen, setIsInfoModalOpen] = useState(false);
@@ -42,7 +42,7 @@ const WorkflowEditorPage = () => {
         <div className="p-8 space-y-6 h-full flex flex-col">
           <div className="flex flex-col md:flex-row justify-between items-center mb-6">
             <div className="flex items-center">
-              <h1 className="text-2xl font-bold mb-6 md:mb-0 text-gray-100 mr-4">Workflow Editor</h1>
+              <h1 className="text-2xl font-bold mb-6 md:mb-0 text-gray-100 mr-4">Dashboard</h1>
               <Button
                 variant="ghost"
                 size="sm"
@@ -73,4 +73,4 @@ const WorkflowEditorPage = () => {
   );
 };
 
-export default WorkflowEditorPage;
+export default Dashboard;
