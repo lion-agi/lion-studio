@@ -84,7 +84,7 @@ const WorkflowOperationsPanel = ({
   ];
 
   return (
-    <Card className="bg-gray-800 text-white">
+    <Card className="bg-gray-800 text-white mt-8">
       <CardHeader className="pb-2">
         <CardTitle className="text-sm font-medium flex items-center">
           <Zap className="w-4 h-4 mr-2" />

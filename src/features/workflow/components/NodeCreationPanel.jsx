@@ -38,7 +38,13 @@ const NodeCreationPanel = () => {
         onChange={(e) => setSearchTerm(e.target.value)}
         className="w-full"
       />
-      <ScrollArea className="h-[calc(50vh-100px)] pr-4" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
+      <ScrollArea 
+        className="h-[calc(50vh-100px)] pr-4" 
+        style={{ 
+          scrollbarWidth: 'thin',
+          scrollbarColor: 'rgba(155, 155, 155, 0.5) transparent'
+        }}
+      >
         <div className="space-y-2">
           {filteredCategories.map((category) => (
             <Collapsible
