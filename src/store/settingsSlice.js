@@ -38,8 +38,7 @@ const useSettingsStore = create(
       setAutoRefreshInterval: (interval) => set({ autoRefreshInterval: interval }),
     }),
     {
-      name: 'settings-storage',
-      getStorage: () => localStorage,
+      name: 'dashboard-settings',
     }
   )
 );

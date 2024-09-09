@@ -3,6 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/common/components/ui
 import { Checkbox } from "@/common/components/ui/checkbox";
 import { Label } from "@/common/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/common/components/ui/select";
+import { Switch } from "@/common/components/ui/switch";
 import useSettingsStore from '@/store/settingsSlice';
 
 const TableCustomization = () => {
@@ -17,7 +18,7 @@ const TableCustomization = () => {
             checked={isVisible}
             onCheckedChange={() => toggleTableField(field)}
           />
-          <Label htmlFor={field}>{field}</Label>
+          <Label htmlFor={field} className="capitalize">{field}</Label>
         </div>
       ))}
     </div>
@@ -75,24 +76,6 @@ const SettingsTab = () => {
               </Select>
             </div>
           </div>
-        </CardContent>
-      </Card>
-      
-      <Card>
-        <CardHeader>
-          <CardTitle>Component Library</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <p>Component library options will go here.</p>
-        </CardContent>
-      </Card>
-      
-      <Card>
-        <CardHeader>
-          <CardTitle>General Settings</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <p>General settings options will go here.</p>
         </CardContent>
       </Card>
     </div>
