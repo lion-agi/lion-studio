@@ -1,5 +1,5 @@
 import React, { useMemo, useRef, useState, useEffect, useCallback } from 'react';
-import ReactFlow, { Background, Controls, MiniMap, Panel } from 'reactflow';
+import ReactFlow, { Background, Controls, MiniMap, Panel, useReactFlow } from 'reactflow';
 import 'reactflow/dist/style.css';
 import { nodeTypes } from '@/common/components/nodes';
 import { useWorkflowState } from '../hooks/useWorkflowState';
@@ -14,6 +14,7 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/comm
 const WorkflowEditorContent = () => {
   const containerRef = useRef(null);
   const [containerSize, setContainerSize] = useState({ width: 0, height: 0 });
+  const [isLocked, setIsLocked] = useState(false);
 
   const {
     nodes,
@@ -50,6 +51,8 @@ const WorkflowEditorContent = () => {
 
   const { backgroundColor } = useWorkflowSettings();
 
+  const { zoomIn, zoomOut, fitView } = useReactFlow();
+
   const styledEdges = useMemo(() => 
     edges.map(edge => ({
       ...edge,
@@ -74,6 +77,11 @@ const WorkflowEditorContent = () => {
     return () => window.removeEventListener('resize', updateSize);
   }, []);
 
+  const onEdgeClick = useCallback((event, edge) => {
+    console.log('Edge clicked:', edge);
+    // Handle edge click, e.g., open a dialog to edit edge properties
+  }, []);
+
   return (
     <div ref={containerRef} className="h-full w-full relative" style={{ height: 'calc(100vh - 64px)' }}>
       <ReactFlow
@@ -87,6 +95,7 @@ const WorkflowEditorContent = () => {
         onDrop={onDrop}
         onDragOver={onDragOver}
         onNodeClick={onNodeClick}
+        onEdgeClick={onEdgeClick}
         onNodeDragStop={onNodeDragStop}
         nodeTypes={nodeTypes}
         defaultEdgeOptions={edgeOptions}
@@ -96,6 +105,11 @@ const WorkflowEditorContent = () => {
           height: containerSize.height,
           backgroundColor: backgroundColor,
         }}
+        panOnDrag={!isLocked}
+        zoomOnScroll={!isLocked}
+        nodesDraggable={!isLocked}
+        nodesConnectable={!isLocked}
+        elementsSelectable={!isLocked}
       >
         <Controls />
         <MiniMap 
@@ -127,6 +141,12 @@ const WorkflowEditorContent = () => {
               canRedo={canRedo}
               onDeleteNode={handleDeleteNode}
               onSaveSettings={handleSaveSettings}
+              isLocked={isLocked}
+              setIsLocked={setIsLocked}
+              onZoomIn={zoomIn}
+              onZoomOut={zoomOut}
+              onResetView={fitView}
+              onEdgeClick={onEdgeClick}
             />
           </div>
         </Panel>

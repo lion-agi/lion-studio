@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from "@/common/components/ui/card";
 import { Button } from "@/common/components/ui/button";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/common/components/ui/tooltip";
@@ -11,6 +11,7 @@ import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/common/co
 import { Zap, Save, Upload, PlusCircle, FileJson, Play, Pause, Undo, Redo, Settings, Lock, Unlock, ZoomIn, ZoomOut, RotateCcw, Download, Share, ChevronUp, ChevronDown } from 'lucide-react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogFooter } from "@/common/components/ui/dialog";
 import JSONModal from '@/common/components/JSONModal';
+import EdgePropertiesDialog from './EdgePropertiesDialog';
 
 const WorkflowOperationsPanel = ({ 
   onExportJSON, 
@@ -21,7 +22,13 @@ const WorkflowOperationsPanel = ({
   canUndo, 
   canRedo,
   onSaveSettings,
-  backgroundColor
+  backgroundColor,
+  isLocked,
+  setIsLocked,
+  onZoomIn,
+  onZoomOut,
+  onResetView,
+  onEdgeClick
 }) => {
   const [showJSONModal, setShowJSONModal] = useState(false);
   const [showSettingsModal, setShowSettingsModal] = useState(false);
@@ -29,8 +36,9 @@ const WorkflowOperationsPanel = ({
   const [autoSave, setAutoSave] = useState(true);
   const [performanceMode, setPerformanceMode] = useState(false);
   const [theme, setTheme] = useState('dark');
-  const [isLocked, setIsLocked] = useState(false);
   const [isCollapsed, setIsCollapsed] = useState(false);
+  const [showEdgePropertiesDialog, setShowEdgePropertiesDialog] = useState(false);
+  const [selectedEdge, setSelectedEdge] = useState(null);
 
   const handleExportJSON = () => {
     const jsonData = onExportJSON();
@@ -61,8 +69,12 @@ const WorkflowOperationsPanel = ({
 
   const toggleLock = () => {
     setIsLocked(!isLocked);
-    // This is where you would implement the actual locking functionality
   };
+
+  const handleEdgeClick = useCallback((edge) => {
+    setSelectedEdge(edge);
+    setShowEdgePropertiesDialog(true);
+  }, []);
 
   const presetColors = [
     { name: 'Dark Blue', value: '#1A2530' },
@@ -196,7 +208,7 @@ const WorkflowOperationsPanel = ({
                 <TooltipProvider>
                   <Tooltip>
                     <TooltipTrigger asChild>
-                      <Button variant="outline" size="icon">
+                      <Button variant="outline" size="icon" onClick={onZoomIn}>
                         <ZoomIn className="h-4 w-4" />
                       </Button>
                     </TooltipTrigger>
@@ -209,7 +221,7 @@ const WorkflowOperationsPanel = ({
                 <TooltipProvider>
                   <Tooltip>
                     <TooltipTrigger asChild>
-                      <Button variant="outline" size="icon">
+                      <Button variant="outline" size="icon" onClick={onZoomOut}>
                         <ZoomOut className="h-4 w-4" />
                       </Button>
                     </TooltipTrigger>
@@ -222,7 +234,7 @@ const WorkflowOperationsPanel = ({
                 <TooltipProvider>
                   <Tooltip>
                     <TooltipTrigger asChild>
-                      <Button variant="outline" size="icon">
+                      <Button variant="outline" size="icon" onClick={onResetView}>
                         <RotateCcw className="h-4 w-4" />
                       </Button>
                     </TooltipTrigger>
@@ -320,6 +332,16 @@ const WorkflowOperationsPanel = ({
           </DialogFooter>
         </DialogContent>
       </Dialog>
+
+      <EdgePropertiesDialog
+        isOpen={showEdgePropertiesDialog}
+        onClose={() => setShowEdgePropertiesDialog(false)}
+        edge={selectedEdge}
+        onSave={(updatedEdge) => {
+          onEdgeClick(updatedEdge);
+          setShowEdgePropertiesDialog(false);
+        }}
+      />
     </Card>
   );
 };
