@@ -16,3 +16,6 @@ const TabSwitchBar = ({ tabs }) => (
 );
 
 export default TabSwitchBar;
+
+
+// Path: src/common/components/TabSwitchBar.jsx

@@ -130,3 +130,7 @@ export const useRegistration = () => {
     navigate
   };
 };
+
+
+
+// Path: src/common/hooks/useRegistration.js

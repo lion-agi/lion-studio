@@ -94,3 +94,6 @@ export const safeCurrency = (value) => {
   const num = typeof value === 'string' ? parseFloat(value) : value;
   return isNaN(num) ? 'N/A' : formatCurrency(num);
 };
+
+
+// Path: src/features/dashboard/utils.js

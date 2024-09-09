@@ -65,3 +65,5 @@ const CollectionItem = ({ collection, onOpenModal, onDelete, onEdit }) => {
 };
 
 export default CollectionItem;
+
+// Path: src/features/library/components/CollectionItem.jsx

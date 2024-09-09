@@ -100,3 +100,5 @@ const VariableManipulationModal = ({ isOpen, onClose }) => {
 };
 
 export default VariableManipulationModal;
+
+// Path: src/common/components/VariableManipulationModal.jsx

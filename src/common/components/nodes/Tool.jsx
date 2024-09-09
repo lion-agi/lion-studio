@@ -18,3 +18,5 @@ const Tool = (props) => {
 };
 
 export default Tool;
+
+// Path: src/common/components/nodes/Tool.jsx

@@ -29,3 +29,6 @@ const Contact = () => {
 };
 
 export default Contact;
+
+
+// Path: src/pages/home/Contact.jsx

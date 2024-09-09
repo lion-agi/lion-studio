@@ -170,3 +170,5 @@ export const useAdminData = () => {
     handleDeleteSecret,
   };
 };
+
+// Path: src/features/admin/useAdminData.js

@@ -25,3 +25,6 @@ const DatabaseNode = (props) => {
 };
 
 export default DatabaseNode;
+
+
+// Path: src/common/components/nodes/DatabaseNode.jsx

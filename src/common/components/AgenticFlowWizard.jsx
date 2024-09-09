@@ -80,3 +80,6 @@ const AgenticFlowWizard = ({ isOpen, onClose, onCreateFlow }) => {
 };
 
 export default AgenticFlowWizard;
+
+
+// Path: src/common/components/AgenticFlowWizard.jsx

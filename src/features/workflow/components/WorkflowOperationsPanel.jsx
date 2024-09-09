@@ -367,3 +367,6 @@ const WorkflowOperationsPanel = ({
 };
 
 export default WorkflowOperationsPanel;
+
+
+// Path: src/features/workflow/components/WorkflowOperationsPanel.jsx

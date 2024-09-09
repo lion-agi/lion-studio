@@ -21,3 +21,5 @@ const About = () => {
 };
 
 export default About;
+
+// Path: src/pages/home/About.jsx

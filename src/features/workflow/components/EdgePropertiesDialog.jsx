@@ -118,3 +118,5 @@ const EdgePropertiesDialog = ({ isOpen, onClose, edge, onSave }) => {
 };
 
 export default EdgePropertiesDialog;
+
+// Path: src/features/workflow/components/EditNodeDialog.jsx

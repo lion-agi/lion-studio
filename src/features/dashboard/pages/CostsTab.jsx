@@ -19,3 +19,5 @@ const CostsTab = ({ data }) => (
 );
 
 export default CostsTab;
+
+// Path: src/features/dashboard/pages/CostsTab.jsx

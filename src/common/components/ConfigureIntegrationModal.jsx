@@ -81,3 +81,5 @@ const ConfigureIntegrationModal = ({ isOpen, onClose, integration, onSave }) => 
 };
 
 export default ConfigureIntegrationModal;
+
+// Path: src/common/components/ConfigureIntegrationModal.jsx

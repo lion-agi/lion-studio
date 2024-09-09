@@ -39,3 +39,5 @@ const SummaryCards = ({ data }) => {
 };
 
 export default SummaryCards;
+
+// Path: src/features/dashboard/components/SummaryCards.jsx

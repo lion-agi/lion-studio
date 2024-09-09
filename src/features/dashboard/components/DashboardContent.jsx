@@ -26,3 +26,5 @@ const DashboardContent = () => {
 };
 
 export default DashboardContent;
+
+// Path: src/features/dashboard/components/DashboardContent.jsx

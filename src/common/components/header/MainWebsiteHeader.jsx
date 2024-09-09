@@ -37,3 +37,5 @@ const MainWebsiteHeader = () => {
 };
 
 export default MainWebsiteHeader;
+
+// Path: src/common/components/header/MainWebsiteHeader.jsx

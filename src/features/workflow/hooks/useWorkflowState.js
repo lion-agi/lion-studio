@@ -30,3 +30,5 @@ export const useWorkflowState = () => {
     deleteNode,
   };
 };
+
+// Path: src/features/workflow/hooks/useWorkflowState.js

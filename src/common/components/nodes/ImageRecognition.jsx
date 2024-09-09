@@ -18,3 +18,5 @@ const ImageRecognition = (props) => {
 };
 
 export default ImageRecognition;
+
+// Path: src/common/components/nodes/ImageRecognition.jsx

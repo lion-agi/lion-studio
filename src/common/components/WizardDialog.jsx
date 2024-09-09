@@ -147,3 +147,5 @@ const WizardDialog = ({ isOpen, onClose, onAddNode, nodeType }) => {
 };
 
 export default WizardDialog;
+
+// Path: src/common/components/WizardDialog.jsx

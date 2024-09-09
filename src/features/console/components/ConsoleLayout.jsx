@@ -20,3 +20,5 @@ const ConsoleLayout = () => (
 );
 
 export default ConsoleLayout;
+
+// Path: src/features/console/components/ConsoleLayout.jsx

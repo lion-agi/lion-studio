@@ -34,3 +34,5 @@ export function ThemeToggle() {
     </DropdownMenu>
   );
 }
+
+// Path: src/common/components/ThemeToggle.jsx

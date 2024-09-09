@@ -170,3 +170,5 @@ const Integrations = () => {
 };
 
 export default Integrations;
+
+// Path: src/features/integrations/pages/Integrations.jsx
