@@ -55,63 +55,69 @@ const WorkflowEditor = () => {
   );
 
   return (
-    <div className="flex-grow flex" style={{ height: 'calc(100vh - 180px)' }}>
-      <div className="flex-grow relative" ref={reactFlowWrapper}>
-        <ReactFlow
-          nodes={nodes}
-          edges={styledEdges}
-          onNodesChange={onNodesChange}
-          onEdgesChange={onEdgesChange}
-          onConnect={onConnect}
-          onInit={setReactFlowInstance}
-          onDrop={onDrop}
-          onDragOver={onDragOver}
-          onNodeClick={onNodeClick}
-          onNodeDragStop={onNodeDragStop}
-          nodeTypes={nodeTypes}
-          defaultEdgeOptions={edgeOptions}
-          snapToGrid={true}
-          snapGrid={[GRID_SIZE, GRID_SIZE]}
-          fitView
+    <div className="h-full w-full relative">
+      <ReactFlow
+        nodes={nodes}
+        edges={styledEdges}
+        onNodesChange={onNodesChange}
+        onEdgesChange={onEdgesChange}
+        onConnect={onConnect}
+        onInit={setReactFlowInstance}
+        onDrop={onDrop}
+        onDragOver={onDragOver}
+        onNodeClick={onNodeClick}
+        onNodeDragStop={onNodeDragStop}
+        nodeTypes={nodeTypes}
+        defaultEdgeOptions={edgeOptions}
+        snapToGrid={true}
+        snapGrid={[GRID_SIZE, GRID_SIZE]}
+        fitView
+        style={{
+          backgroundColor: '#2C3E50', // Dark muted blue-gray background
+        }}
+      >
+        <Background 
+          variant="dots" 
+          gap={GRID_SIZE} 
+          size={1} 
+          color="rgba(255, 255, 255, 0.05)" 
+          style={{ zIndex: -1 }}
+        />
+        <Controls 
           style={{
-            backgroundColor: '#2C3E50', // Dark muted blue-gray background
-          }}
-        >
-          <Background 
-            variant="dots" 
-            gap={GRID_SIZE} 
-            size={1} 
-            color="rgba(255, 255, 255, 0.05)" 
-            style={{ zIndex: -1 }}
-          />
-          <Controls 
-            style={{
-              button: {
-                backgroundColor: '#34495E',
-                color: '#ECF0F1',
-                border: 'none',
-                borderRadius: '4px',
-                boxShadow: '0 1px 3px rgba(0, 0, 0, 0.2)',
-              },
-            }}
-          />
-          <MiniMap 
-            nodeColor={getNodeColor} 
-            nodeStrokeWidth={3} 
-            zoomable 
-            pannable
-            style={{
+            button: {
               backgroundColor: '#34495E',
+              color: '#ECF0F1',
               border: 'none',
               borderRadius: '4px',
               boxShadow: '0 1px 3px rgba(0, 0, 0, 0.2)',
-            }}
-          />
-          <Panel position="top-right" style={{ margin: '10px' }}>
-            <NodeCreationCard onAddNode={(nodeData) => setNodes((nds) => [...nds, createNode(nodeData)])} />
-          </Panel>
-        </ReactFlow>
-      </div>
+            },
+          }}
+        />
+        <MiniMap 
+          nodeColor={(node) => {
+            switch (node.type) {
+              case 'user': return '#3498DB';
+              case 'agent': return '#2ECC71';
+              case 'assistant': return '#F39C12';
+              case 'group': return '#E74C3C';
+              case 'initializer': return '#9B59B6';
+              case 'conversation': return '#1ABC9C';
+              case 'note': return '#34495E';
+              default: return '#95A5A6';
+            }
+          }}
+          nodeStrokeWidth={3} 
+          zoomable 
+          pannable
+          style={{
+            backgroundColor: '#34495E',
+            border: 'none',
+            borderRadius: '4px',
+            boxShadow: '0 1px 3px rgba(0, 0, 0, 0.2)',
+          }}
+        />
+      </ReactFlow>
       <SaveLoadDialog
         isOpen={showSaveLoadDialog}
         onClose={() => setShowSaveLoadDialog(false)}
@@ -130,25 +136,5 @@ const WorkflowEditor = () => {
     </div>
   );
 };
-
-const getNodeColor = (node) => {
-  switch (node.type) {
-    case 'user': return '#3498DB';      // Muted blue
-    case 'agent': return '#2ECC71';     // Muted green
-    case 'assistant': return '#F39C12'; // Muted orange
-    case 'group': return '#E74C3C';     // Muted red
-    case 'initializer': return '#9B59B6'; // Muted purple
-    case 'conversation': return '#1ABC9C'; // Muted teal
-    case 'note': return '#34495E';      // Muted navy
-    default: return '#95A5A6';          // Muted gray
-  }
-};
-
-const createNode = (nodeData) => ({
-  id: `${nodeData.type}-${Date.now()}`,
-  type: nodeData.type,
-  position: { x: Math.random() * 500, y: Math.random() * 500 },
-  data: { label: nodeData.name, ...nodeData },
-});
 
 export default WorkflowEditor;
