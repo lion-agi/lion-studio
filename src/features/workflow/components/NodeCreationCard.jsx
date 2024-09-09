@@ -38,7 +38,7 @@ const NodeCreationCard = ({ onAddNode, onSave, onLoad }) => {
   };
 
   return (
-    <Card className="w-72 fixed top-20 left-4 z-50 shadow-lg">
+    <Card className="w-72 absolute top-4 left-4 z-50 shadow-lg">
       <CardHeader className="cursor-pointer flex flex-row items-center justify-between" onClick={toggleExpand}>
         <CardTitle>Workflow Tools</CardTitle>
         <Button variant="ghost" size="sm">

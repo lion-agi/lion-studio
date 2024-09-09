@@ -34,7 +34,7 @@ const Workflow = () => {
         toggleExpanded={toggleSecondarySidebar}
       />
       <div className="flex-grow overflow-hidden flex flex-col">
-        <div className="p-8 space-y-6">
+        <div className="p-8 space-y-6 h-full flex flex-col">
           <div className="flex flex-col md:flex-row justify-between items-center mb-6">
             <div className="flex items-center">
               <h1 className="text-2xl font-bold mb-6 md:mb-0 text-gray-100 mr-4">Workflow</h1>
@@ -59,7 +59,7 @@ const Workflow = () => {
             </div>
           </div>
 
-          <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
+          <Tabs value={activeTab} onValueChange={setActiveTab} className="flex-grow flex flex-col">
             <TabsList className="bg-gray-800">
               <TabsTrigger value="editor" className="data-[state=active]:bg-purple-600 data-[state=active]:text-white">Editor</TabsTrigger>
               <TabsTrigger value="templates" className="data-[state=active]:bg-purple-600 data-[state=active]:text-white">Templates</TabsTrigger>
@@ -67,7 +67,7 @@ const Workflow = () => {
               <TabsTrigger value="settings" className="data-[state=active]:bg-purple-600 data-[state=active]:text-white">Settings</TabsTrigger>
             </TabsList>
 
-            <TabsContent value="editor" className="mt-6 flex-grow overflow-hidden">
+            <TabsContent value="editor" className="flex-grow overflow-hidden">
               <WorkflowSettingsProvider>
                 <div className="relative h-full">
                   <WorkflowEditor />
