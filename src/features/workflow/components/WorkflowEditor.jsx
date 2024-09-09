@@ -150,30 +150,30 @@ const WorkflowEditorContent = () => {
           }}
         />
         <Panel position="top-left">
-          <Card className="bg-gray-800 rounded-lg shadow-lg p-2 mb-2 w-64">
+          <Card className="bg-gray-800 rounded-lg shadow-lg p-2 mb-2 w-56">
             <Collapsible open={isSettingsExpanded} onOpenChange={setIsSettingsExpanded}>
               <CollapsibleTrigger asChild>
-                <CardHeader className="cursor-pointer flex flex-row items-center justify-between pb-1">
-                  <CardTitle className="text-sm font-semibold text-white flex items-center">
-                    <Settings className="mr-2 h-4 w-4" />
+                <CardHeader className="cursor-pointer flex flex-row items-center justify-between pb-1 pt-1">
+                  <CardTitle className="text-xs font-semibold text-white flex items-center">
+                    <Settings className="mr-2 h-3 w-3" />
                     Workflow Settings
                   </CardTitle>
-                  {isSettingsExpanded ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
+                  {isSettingsExpanded ? <ChevronUp className="h-3 w-3" /> : <ChevronDown className="h-3 w-3" />}
                 </CardHeader>
               </CollapsibleTrigger>
               <CollapsibleContent>
-                <CardContent className="pt-2">
+                <CardContent className="pt-2 px-2">
                   <WorkflowSettingsPanel />
                   <div className="flex flex-col space-y-1 mt-2">
-                    <Button onClick={handleExportJSON} size="sm" className="w-full text-xs">
+                    <Button onClick={handleExportJSON} size="sm" className="w-full text-xs py-1 h-7">
                       <FileJson className="mr-1 h-3 w-3" />
                       Export JSON
                     </Button>
-                    <Button onClick={() => setShowSaveLoadDialog(true)} size="sm" className="w-full text-xs">
+                    <Button onClick={() => setShowSaveLoadDialog(true)} size="sm" className="w-full text-xs py-1 h-7">
                       <Save className="mr-1 h-3 w-3" />
                       Save/Load
                     </Button>
-                    <Button onClick={handleCreateAgenticFlow} size="sm" className="w-full text-xs">
+                    <Button onClick={handleCreateAgenticFlow} size="sm" className="w-full text-xs py-1 h-7">
                       <PlusCircle className="mr-1 h-3 w-3" />
                       Create Flow
                     </Button>
@@ -182,19 +182,19 @@ const WorkflowEditorContent = () => {
               </CollapsibleContent>
             </Collapsible>
           </Card>
-          <Card className="bg-gray-800 rounded-lg shadow-lg p-2 w-64">
+          <Card className="bg-gray-800 rounded-lg shadow-lg p-2 w-56">
             <Collapsible open={isToolsExpanded} onOpenChange={setIsToolsExpanded}>
               <CollapsibleTrigger asChild>
-                <CardHeader className="cursor-pointer flex flex-row items-center justify-between pb-1">
-                  <CardTitle className="text-sm font-semibold text-white flex items-center">
-                    <PlusCircle className="mr-2 h-4 w-4" />
+                <CardHeader className="cursor-pointer flex flex-row items-center justify-between pb-1 pt-1">
+                  <CardTitle className="text-xs font-semibold text-white flex items-center">
+                    <PlusCircle className="mr-2 h-3 w-3" />
                     Workflow Tools
                   </CardTitle>
-                  {isToolsExpanded ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
+                  {isToolsExpanded ? <ChevronUp className="h-3 w-3" /> : <ChevronDown className="h-3 w-3" />}
                 </CardHeader>
               </CollapsibleTrigger>
               <CollapsibleContent>
-                <CardContent className="pt-2">
+                <CardContent className="pt-2 px-2">
                   <NodeCreationPanel />
                 </CardContent>
               </CollapsibleContent>
