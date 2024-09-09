@@ -1,5 +1,12 @@
 import React, { useMemo, useRef, useState, useEffect, useCallback } from 'react';
-import ReactFlow, { Background, Controls, MiniMap, Panel, useReactFlow } from 'reactflow';
+import ReactFlow, { 
+  Background, 
+  Controls, 
+  MiniMap, 
+  Panel, 
+  useReactFlow,
+  ReactFlowProvider
+} from 'reactflow';
 import 'reactflow/dist/style.css';
 import { nodeTypes } from '@/common/components/nodes';
 import { useWorkflowState } from '../hooks/useWorkflowState';
@@ -10,11 +17,14 @@ import WorkflowOperationsPanel from './WorkflowOperationsPanel';
 import NodeCreationPanel from './NodeCreationPanel';
 import AgenticFlowWizard from '@/common/components/AgenticFlowWizard';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/common/components/ui/tooltip";
+import EdgePropertiesDialog from './EdgePropertiesDialog';
 
 const WorkflowEditorContent = () => {
   const containerRef = useRef(null);
   const [containerSize, setContainerSize] = useState({ width: 0, height: 0 });
   const [isLocked, setIsLocked] = useState(false);
+  const [selectedEdge, setSelectedEdge] = useState(null);
+  const [isEdgePropertiesDialogOpen, setIsEdgePropertiesDialogOpen] = useState(false);
 
   const {
     nodes,
@@ -78,9 +88,15 @@ const WorkflowEditorContent = () => {
   }, []);
 
   const onEdgeClick = useCallback((event, edge) => {
-    console.log('Edge clicked:', edge);
-    // Handle edge click, e.g., open a dialog to edit edge properties
+    setSelectedEdge(edge);
+    setIsEdgePropertiesDialogOpen(true);
   }, []);
+
+  const handleEdgePropertiesSave = useCallback((updatedEdge) => {
+    setEdges(eds => eds.map(e => e.id === updatedEdge.id ? updatedEdge : e));
+    setIsEdgePropertiesDialogOpen(false);
+    setSelectedEdge(null);
+  }, [setEdges]);
 
   return (
     <div ref={containerRef} className="h-full w-full relative" style={{ height: 'calc(100vh - 64px)' }}>
@@ -155,19 +171,26 @@ const WorkflowEditorContent = () => {
         isOpen={isWizardOpen}
         onClose={() => setIsWizardOpen(false)}
         onCreateFlow={(flowConfig) => {
-          // Implement the logic to create a new flow based on the configuration
           console.log('Creating new flow:', flowConfig);
           setIsWizardOpen(false);
         }}
+      />
+      <EdgePropertiesDialog
+        isOpen={isEdgePropertiesDialogOpen}
+        onClose={() => setIsEdgePropertiesDialogOpen(false)}
+        edge={selectedEdge}
+        onSave={handleEdgePropertiesSave}
       />
     </div>
   );
 };
 
 const WorkflowEditor = () => (
-  <WorkflowSettingsProvider>
-    <WorkflowEditorContent />
-  </WorkflowSettingsProvider>
+  <ReactFlowProvider>
+    <WorkflowSettingsProvider>
+      <WorkflowEditorContent />
+    </WorkflowSettingsProvider>
+  </ReactFlowProvider>
 );
 
 export default WorkflowEditor;
