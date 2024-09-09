@@ -5,7 +5,7 @@ import { Input } from "@/common/components/ui/input";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/common/components/ui/collapsible";
 import { ChevronDown, Search, ChevronUp } from 'lucide-react';
 import Draggable from 'react-draggable';
-import { nodeCategories } from './nodes/nodeCategories';
+import { nodeCategories } from '@/common/components/nodes/nodeCategories';
 import { ScrollArea } from "@/common/components/ui/scroll-area";
 
 const NodeCreationCard = ({ onAddNode }) => {
