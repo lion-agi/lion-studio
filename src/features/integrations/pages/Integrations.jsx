@@ -3,7 +3,7 @@ import { useIntegrations, useAddIntegration, useUpdateIntegration, useDeleteInte
 import { useToast } from "@/common/components/ui/use-toast";
 import { useStore } from '@/store';
 import IntegrationCard from '@/common/components/IntegrationCard';
-import IntegrationFilters from './components/IntegrationFilters';
+import IntegrationFilters from '../components/IntegrationFilters';
 import ConfigureIntegrationModal from './components/ConfigureIntegrationModal';
 import { Button } from "@/common/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/common/components/ui/dialog";
