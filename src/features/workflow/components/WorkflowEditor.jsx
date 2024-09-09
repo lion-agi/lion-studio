@@ -1,7 +1,6 @@
 import React, { useMemo } from 'react';
 import ReactFlow, { Background, Controls, MiniMap, Panel } from 'reactflow';
 import 'reactflow/dist/style.css';
-import NodeCreationCard from './NodeCreationCard';
 import SaveLoadDialog from '@/common/components/SaveLoadDialog';
 import JSONModal from '@/common/components/JSONModal';
 import { nodeTypes } from '@/common/components/nodes';
@@ -73,6 +72,8 @@ const WorkflowEditor = () => {
         snapGrid={[GRID_SIZE, GRID_SIZE]}
         fitView
         style={{
+          width: '100%',
+          height: '100%',
           backgroundColor: '#2C3E50', // Dark muted blue-gray background
         }}
       >
@@ -118,7 +119,6 @@ const WorkflowEditor = () => {
           }}
         />
       </ReactFlow>
-      <NodeCreationCard onAddNode={handleCreateAgenticFlow} />
       <SaveLoadDialog
         isOpen={showSaveLoadDialog}
         onClose={() => setShowSaveLoadDialog(false)}
