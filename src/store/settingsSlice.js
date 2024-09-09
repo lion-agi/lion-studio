@@ -1,7 +1,7 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 
-export const useSettingsStore = create(
+const useSettingsStore = create(
   persist(
     (set) => ({
       tableFields: {
@@ -60,3 +60,5 @@ export const useSettingsStore = create(
     }
   )
 );
+
+export default useSettingsStore;

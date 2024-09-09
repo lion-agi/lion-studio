@@ -53,12 +53,12 @@ const Dashboard = () => {
       <div className="container mx-auto">
         <div className="flex flex-col md:flex-row justify-between items-center mb-12">
           <div className="flex items-center">
-            <h1 className="text-2xl font-bold mb-6 md:mb-0 text-foreground mr-4">Dashboard</h1>
+            <h1 className="text-2xl font-bold mb-6 md:mb-0 text-gray-100 mr-4">Dashboard</h1>
             <Button
               variant="ghost"
               size="sm"
               onClick={() => setIsInfoModalOpen(true)}
-              className="text-muted-foreground hover:text-foreground"
+              className="text-gray-400 hover:text-gray-100"
             >
               <Info className="h-5 w-5" />
             </Button>
