@@ -1,13 +1,9 @@
 import React, { useMemo } from 'react';
-import ReactFlow, { Background, Controls, MiniMap, Panel } from 'reactflow';
+import ReactFlow, { Background, Controls, MiniMap } from 'reactflow';
 import 'reactflow/dist/style.css';
-import NodeCreationCard from './NodeCreationCard';
-import SaveLoadDialog from '@/common/components/SaveLoadDialog';
-import JSONModal from '@/common/components/JSONModal';
 import { nodeTypes } from '@/common/components/nodes';
 import { useWorkflowState } from '../hooks/useWorkflowState';
 import { useWorkflowHandlers } from '../hooks/useWorkflowHandlers';
-import { useWorkflowModals } from '../hooks/useWorkflowModals';
 import { useEdgeHighlighting } from '../hooks/useEdgeHighlighting';
 
 const GRID_SIZE = 20;
@@ -30,19 +26,7 @@ const WorkflowEditor = () => {
     onDragOver,
     onDrop,
     onNodeDragStop,
-    handleExportJSON,
-    handleSaveLoad,
-    handleCreateAgenticFlow,
   } = useWorkflowHandlers(nodes, setNodes, edges, setEdges);
-
-  const {
-    showJSONModal,
-    showSaveLoadDialog,
-    setShowJSONModal,
-    setShowSaveLoadDialog,
-    jsonData,
-    setJsonData,
-  } = useWorkflowModals();
 
   const { onNodeClick, edgeOptions, getEdgeStyle } = useEdgeHighlighting(edges, setEdges);
 
@@ -55,7 +39,7 @@ const WorkflowEditor = () => {
   );
 
   return (
-    <div className="h-full w-full relative">
+    <div className="h-full w-full" ref={reactFlowWrapper}>
       <ReactFlow
         nodes={nodes}
         edges={styledEdges}
@@ -73,7 +57,7 @@ const WorkflowEditor = () => {
         snapGrid={[GRID_SIZE, GRID_SIZE]}
         fitView
         style={{
-          backgroundColor: '#2C3E50', // Dark muted blue-gray background
+          backgroundColor: '#2C3E50',
         }}
       >
         <Background 
@@ -118,21 +102,6 @@ const WorkflowEditor = () => {
           }}
         />
       </ReactFlow>
-      <SaveLoadDialog
-        isOpen={showSaveLoadDialog}
-        onClose={() => setShowSaveLoadDialog(false)}
-        onSave={handleSaveLoad}
-        onLoad={(loadedData) => {
-          setNodes(loadedData.nodes);
-          setEdges(loadedData.edges);
-        }}
-        graphData={{ nodes, edges }}
-      />
-      <JSONModal
-        isOpen={showJSONModal}
-        onClose={() => setShowJSONModal(false)}
-        jsonData={jsonData}
-      />
     </div>
   );
 };

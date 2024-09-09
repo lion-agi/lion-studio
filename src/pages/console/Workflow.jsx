@@ -10,6 +10,8 @@ import JSONModal from '@/common/components/JSONModal';
 import { Button } from "@/common/components/ui/button";
 import { Input } from "@/common/components/ui/input";
 import { Search, Info } from 'lucide-react';
+import { Card, CardContent } from "@/common/components/ui/card";
+import { ScrollArea } from "@/common/components/ui/scroll-area";
 
 const WorkflowEditorPage = () => {
   const [sidebarExpanded, setSidebarExpanded] = useState(true);
@@ -24,6 +26,47 @@ const WorkflowEditorPage = () => {
 
   const toggleSidebar = () => setSidebarExpanded(!sidebarExpanded);
   const toggleSecondarySidebar = () => setSecondarySidebarExpanded(!secondarySidebarExpanded);
+
+  const renderSettings = () => (
+    <Card className="bg-gray-800 text-gray-100">
+      <CardContent className="p-4">
+        <h3 className="text-lg font-semibold mb-4">Workflow Settings</h3>
+        <div className="space-y-4">
+          <div>
+            <label className="block text-sm font-medium mb-1">Auto-save</label>
+            <select className="w-full bg-gray-700 text-gray-100 rounded-md">
+              <option>Every 5 minutes</option>
+              <option>Every 10 minutes</option>
+              <option>Every 15 minutes</option>
+              <option>Disabled</option>
+            </select>
+          </div>
+          <div>
+            <label className="block text-sm font-medium mb-1">Default Node Type</label>
+            <select className="w-full bg-gray-700 text-gray-100 rounded-md">
+              <option>Assistant</option>
+              <option>User</option>
+              <option>System</option>
+              <option>Function</option>
+            </select>
+          </div>
+          <div>
+            <label className="block text-sm font-medium mb-1">Edge Style</label>
+            <select className="w-full bg-gray-700 text-gray-100 rounded-md">
+              <option>Bezier</option>
+              <option>Straight</option>
+              <option>Step</option>
+              <option>Smoothstep</option>
+            </select>
+          </div>
+          <div>
+            <label className="block text-sm font-medium mb-1">Grid Size</label>
+            <input type="range" min="10" max="50" className="w-full" />
+          </div>
+        </div>
+      </CardContent>
+    </Card>
+  );
 
   return (
     <div className="h-screen bg-background text-foreground flex">
@@ -76,7 +119,13 @@ const WorkflowEditorPage = () => {
               <WorkflowSettingsProvider>
                 <div className="relative h-full">
                   <WorkflowEditor />
-                  <NodeCreationCard className="absolute top-4 left-4 z-10" />
+                  <Card className="absolute top-4 left-4 z-10 w-64 bg-gray-800 text-gray-100">
+                    <ScrollArea className="h-[calc(100vh-200px)]">
+                      <CardContent>
+                        <NodeCreationCard />
+                      </CardContent>
+                    </ScrollArea>
+                  </Card>
                   <SaveLoadDialog
                     isOpen={showSaveLoadDialog}
                     onClose={() => setShowSaveLoadDialog(false)}
@@ -102,7 +151,9 @@ const WorkflowEditorPage = () => {
             </TabsContent>
 
             <TabsContent value="settings">
-              <div className="text-gray-300">Workflow settings content goes here.</div>
+              <ScrollArea className="h-[calc(100vh-200px)]">
+                {renderSettings()}
+              </ScrollArea>
             </TabsContent>
           </Tabs>
         </div>
