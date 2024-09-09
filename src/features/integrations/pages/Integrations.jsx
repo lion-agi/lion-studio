@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useIntegrations, useAddIntegration, useUpdateIntegration, useDeleteIntegration } from '@/integrations/supabase/hooks/integrations';
 import { useToast } from "@/common/components/ui/use-toast";
 import { useStore } from '@/store';
-import IntegrationCard from './components/IntegrationCard';
+import IntegrationCard from '@/common/components/IntegrationCard';
 import IntegrationFilters from './components/IntegrationFilters';
 import ConfigureIntegrationModal from './components/ConfigureIntegrationModal';
 import { Button } from "@/common/components/ui/button";
