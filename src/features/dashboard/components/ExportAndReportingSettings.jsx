@@ -4,18 +4,25 @@ import { Button } from "@/common/components/ui/button";
 import { Label } from "@/common/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/common/components/ui/select";
 import { Switch } from "@/common/components/ui/switch";
+import { useSettingsStore } from '@/store/settingsSlice';
 
 const ExportAndReportingSettings = () => {
-  const [exportFormat, setExportFormat] = useState('CSV');
-  const [reportSchedule, setReportSchedule] = useState('daily');
+  const { exportFormat, setExportFormat, reportScheduling, setReportScheduling, customReports, setCustomReports } = useSettingsStore();
   const [customReportName, setCustomReportName] = useState('');
-  const [customReports, setCustomReports] = useState([]);
 
   const handleSaveCustomReport = () => {
     if (customReportName) {
       setCustomReports([...customReports, customReportName]);
       setCustomReportName('');
     }
+  };
+
+  const exportToCSV = () => {
+    // Implement export to CSV logic here
+  };
+
+  const exportToJSON = () => {
+    // Implement export to JSON logic here
   };
 
   return (
@@ -35,7 +42,7 @@ const ExportAndReportingSettings = () => {
       </div>
       <div className="flex items-center space-x-4">
         <Label htmlFor="reportSchedule" className="text-lg">Report Scheduling</Label>
-        <Select value={reportSchedule} onValueChange={setReportSchedule}>
+        <Select value={reportScheduling} onValueChange={setReportScheduling}>
           <SelectTrigger id="reportSchedule">
             <SelectValue placeholder="Select schedule" />
           </SelectTrigger>
@@ -63,6 +70,10 @@ const ExportAndReportingSettings = () => {
             <li key={index}>{report}</li>
           ))}
         </ul>
+      </div>
+      <div className="flex space-x-4">
+        <Button onClick={exportToCSV}>Export to CSV</Button>
+        <Button onClick={exportToJSON}>Export to JSON</Button>
       </div>
     </div>
   );

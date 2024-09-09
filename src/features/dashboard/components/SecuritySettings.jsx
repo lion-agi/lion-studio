@@ -3,24 +3,23 @@ import { Input } from "@/common/components/ui/input";
 import { Button } from "@/common/components/ui/button";
 import { Label } from "@/common/components/ui/label";
 import { Switch } from "@/common/components/ui/switch";
+import useSettingsStore from '@/store/settingsSlice';
 
 const SecuritySettings = () => {
-  const [sessionTimeout, setSessionTimeout] = useState(30);
-  const [ipWhitelist, setIpWhitelist] = useState('');
-  const [twoFactorAuth, setTwoFactorAuth] = useState(false);
+  const { sessionTimeout, setSessionTimeout, ipWhitelist, setIpWhitelist, twoFactorAuthentication, setTwoFactorAuthentication } = useSettingsStore();
 
   const handleSave = () => {
     // Save settings to local storage or backend
     localStorage.setItem('sessionTimeout', sessionTimeout);
     localStorage.setItem('ipWhitelist', ipWhitelist);
-    localStorage.setItem('twoFactorAuth', twoFactorAuth);
+    localStorage.setItem('twoFactorAuthentication', twoFactorAuthentication);
   };
 
   const handleReset = () => {
     // Reset settings to default values
     setSessionTimeout(30);
-    setIpWhitelist('');
-    setTwoFactorAuth(false);
+    setIpWhitelist([]);
+    setTwoFactorAuthentication(false);
   };
 
   return (
@@ -40,18 +39,18 @@ const SecuritySettings = () => {
         <Input
           id="ipWhitelist"
           type="text"
-          value={ipWhitelist}
-          onChange={(e) => setIpWhitelist(e.target.value)}
+          value={ipWhitelist.join(', ')}
+          onChange={(e) => setIpWhitelist(e.target.value.split(',').map(ip => ip.trim()))}
           placeholder="Enter IP addresses separated by commas"
           className="flex-grow"
         />
       </div>
       <div className="flex items-center space-x-4">
-        <Label htmlFor="twoFactorAuth" className="text-lg">Two-Factor Authentication</Label>
+        <Label htmlFor="twoFactorAuthentication" className="text-lg">Two-Factor Authentication</Label>
         <Switch
-          id="twoFactorAuth"
-          checked={twoFactorAuth}
-          onCheckedChange={setTwoFactorAuth}
+          id="twoFactorAuthentication"
+          checked={twoFactorAuthentication}
+          onCheckedChange={setTwoFactorAuthentication}
         />
       </div>
       <div className="flex justify-end mt-6">

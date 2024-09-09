@@ -1,4 +1,6 @@
 import { formatDate, formatNumber, formatCurrency, formatResponseTime } from '@/common/utils/formatters';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import axios from 'axios';
 
 const providers = ['OpenAI', 'Anthropic', 'Cohere'];
 const models = {
@@ -63,4 +65,39 @@ export const fetchApiData = async (timeRange, selectedModel) => {
     },
     recentCalls: apiCalls,
   };
+};
+
+const fetchSettings = async () => {
+  const response = await axios.get('/api/settings');
+  return response.data;
+};
+
+const updateSettings = async (settings) => {
+  const response = await axios.put('/api/settings', settings);
+  return response.data;
+};
+
+export const useSettings = () => {
+  return useQuery('settings', fetchSettings, {
+    staleTime: 5 * 60 * 1000, // 5 minutes
+    cacheTime: 10 * 60 * 1000, // 10 minutes
+  });
+};
+
+export const useUpdateSettings = () => {
+  const queryClient = useQueryClient();
+  return useMutation(updateSettings, {
+    onMutate: async (newSettings) => {
+      await queryClient.cancelQueries('settings');
+      const previousSettings = queryClient.getQueryData('settings');
+      queryClient.setQueryData('settings', newSettings);
+      return { previousSettings };
+    },
+    onError: (err, newSettings, context) => {
+      queryClient.setQueryData('settings', context.previousSettings);
+    },
+    onSettled: () => {
+      queryClient.invalidateQueries('settings');
+    },
+  });
 };

@@ -4,12 +4,10 @@ import { Input } from "@/common/components/ui/input";
 import { Switch } from "@/common/components/ui/switch";
 import { Button } from "@/common/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/common/components/ui/select";
+import { useSettingsStore } from '@/store/settingsSlice';
 
 const NotificationSettings = () => {
-  const [alertThresholds, setAlertThresholds] = useState('');
-  const [notificationMethod, setNotificationMethod] = useState('in-app');
-  const [notificationFrequency, setNotificationFrequency] = useState('daily');
-  const [customAlert, setCustomAlert] = useState('');
+  const { alertThresholds, setAlertThresholds, notificationMethod, setNotificationMethod, notificationFrequency, setNotificationFrequency, customAlert, setCustomAlert } = useSettingsStore();
 
   const handleSave = () => {
     // Save settings logic here

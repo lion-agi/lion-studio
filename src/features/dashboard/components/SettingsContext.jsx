@@ -1,4 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
+import { useSettingsStore } from '@/store/settingsSlice';
 
 const SettingsContext = createContext();
 
@@ -11,18 +12,11 @@ export const useSettings = () => {
 };
 
 export const SettingsProvider = ({ children }) => {
-  const [settings, setSettings] = useState(() => {
-    const savedSettings = localStorage.getItem('settings');
-    return savedSettings ? JSON.parse(savedSettings) : {};
-  });
+  const { settings, setSettings, resetToDefault } = useSettingsStore();
 
   useEffect(() => {
     localStorage.setItem('settings', JSON.stringify(settings));
   }, [settings]);
-
-  const resetToDefault = () => {
-    setSettings({});
-  };
 
   const value = {
     settings,

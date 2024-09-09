@@ -4,10 +4,11 @@ import { Label } from "@/common/components/ui/label";
 import { Button } from "@/common/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/common/components/ui/select";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/common/components/ui/tooltip";
+import useSettingsStore from '@/store/settingsSlice';
 
 const AdvancedFeaturesSettings = () => {
-  const [sqlQuery, setSqlQuery] = useState('');
-  const [savedViews, setSavedViews] = useState([]);
+  const { sqlQueryBuilder, setSqlQueryBuilder, savedViews, setSavedViews, apiAccessKeys, setApiAccessKeys } = useSettingsStore();
+  const [sqlQuery, setSqlQuery] = useState(sqlQueryBuilder);
   const [apiKey, setApiKey] = useState('');
 
   const handleSaveView = () => {
@@ -17,6 +18,7 @@ const AdvancedFeaturesSettings = () => {
 
   const handleGenerateApiKey = () => {
     const newApiKey = 'API_KEY_' + Math.random().toString(36).substr(2, 9).toUpperCase();
+    setApiAccessKeys([...apiAccessKeys, newApiKey]);
     setApiKey(newApiKey);
   };
 
