@@ -1,7 +1,6 @@
-import React, { useMemo, useState } from 'react';
+import React, { useMemo, useRef, useState, useEffect } from 'react';
 import ReactFlow, { Background, Controls, MiniMap, Panel } from 'reactflow';
 import 'reactflow/dist/style.css';
-import NodeCreationCard from './NodeCreationCard';
 import SaveLoadDialog from '@/common/components/SaveLoadDialog';
 import JSONModal from '@/common/components/JSONModal';
 import { nodeTypes } from '@/common/components/nodes';
@@ -9,12 +8,17 @@ import { useWorkflowState } from '../hooks/useWorkflowState';
 import { useWorkflowHandlers } from '../hooks/useWorkflowHandlers';
 import { useWorkflowModals } from '../hooks/useWorkflowModals';
 import { useEdgeHighlighting } from '../hooks/useEdgeHighlighting';
-import SettingsModal from '@/common/components/SettingsModal';
+import WorkflowToolbar from './WorkflowToolbar';
+import { WorkflowSettingsProvider, useWorkflowSettings } from './WorkflowSettingsContext';
+import NodeCreationCard from './NodeCreationCard';
+import { ChevronDown, ChevronUp } from 'lucide-react';
+import { Button } from "@/common/components/ui/button";
 
-const GRID_SIZE = 20;
-
-const WorkflowEditor = () => {
-  const [showSettingsModal, setShowSettingsModal] = useState(false);
+const WorkflowEditorContent = () => {
+  const containerRef = useRef(null);
+  const [containerSize, setContainerSize] = useState({ width: 0, height: 0 });
+  const [isSettingsExpanded, setIsSettingsExpanded] = useState(true);
+  const [isToolsExpanded, setIsToolsExpanded] = useState(true);
 
   const {
     nodes,
@@ -49,6 +53,8 @@ const WorkflowEditor = () => {
 
   const { onNodeClick, edgeOptions, getEdgeStyle } = useEdgeHighlighting(edges, setEdges);
 
+  const { backgroundColor, gridSize } = useWorkflowSettings();
+
   const styledEdges = useMemo(() => 
     edges.map(edge => ({
       ...edge,
@@ -57,9 +63,29 @@ const WorkflowEditor = () => {
     [edges, getEdgeStyle]
   );
 
+  useEffect(() => {
+    const updateSize = () => {
+      if (containerRef.current) {
+        setContainerSize({
+          width: containerRef.current.offsetWidth,
+          height: containerRef.current.offsetHeight,
+        });
+      }
+    };
+
+    window.addEventListener('resize', updateSize);
+    updateSize();
+
+    return () => window.removeEventListener('resize', updateSize);
+  }, []);
+
+  const toggleSettings = () => setIsSettingsExpanded(!isSettingsExpanded);
+  const toggleTools = () => setIsToolsExpanded(!isToolsExpanded);
+
   return (
-    <div className="h-full w-full relative">
+    <div ref={containerRef} className="h-full w-full relative" style={{ height: 'calc(100vh - 64px)' }}>
       <ReactFlow
+        ref={reactFlowWrapper}
         nodes={nodes}
         edges={styledEdges}
         onNodesChange={onNodesChange}
@@ -73,15 +99,17 @@ const WorkflowEditor = () => {
         nodeTypes={nodeTypes}
         defaultEdgeOptions={edgeOptions}
         snapToGrid={true}
-        snapGrid={[GRID_SIZE, GRID_SIZE]}
+        snapGrid={[gridSize, gridSize]}
         fitView
         style={{
-          backgroundColor: '#2C3E50', // Dark muted blue-gray background
+          width: containerSize.width,
+          height: containerSize.height,
+          backgroundColor: backgroundColor,
         }}
       >
         <Background 
           variant="dots" 
-          gap={GRID_SIZE} 
+          gap={gridSize} 
           size={1} 
           color="rgba(255, 255, 255, 0.05)" 
           style={{ zIndex: -1 }}
@@ -101,7 +129,6 @@ const WorkflowEditor = () => {
           nodeColor={(node) => {
             switch (node.type) {
               case 'user': return '#3498DB';
-              case 'agent': return '#2ECC71';
               case 'assistant': return '#F39C12';
               case 'group': return '#E74C3C';
               case 'initializer': return '#9B59B6';
@@ -120,6 +147,52 @@ const WorkflowEditor = () => {
             boxShadow: '0 1px 3px rgba(0, 0, 0, 0.2)',
           }}
         />
+        <Panel position="top-left">
+          <div className="bg-gray-800 rounded-lg shadow-lg p-4 mb-4">
+            <div className="flex justify-between items-center mb-2">
+              <h3 className="text-lg font-semibold text-white">Workflow Settings</h3>
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={toggleSettings}
+                className="text-gray-400 hover:text-white"
+              >
+                {isSettingsExpanded ? <ChevronUp className="h-5 w-5" /> : <ChevronDown className="h-5 w-5" />}
+              </Button>
+            </div>
+            {isSettingsExpanded && (
+              <WorkflowToolbar
+                onExportJSON={handleExportJSON}
+                onSaveLoad={() => setShowSaveLoadDialog(true)}
+                onCreateFlow={handleCreateAgenticFlow}
+              />
+            )}
+          </div>
+        </Panel>
+        <Panel position="top-right">
+          <div className="bg-gray-800 rounded-lg shadow-lg p-4">
+            <div className="flex justify-between items-center mb-2">
+              <h3 className="text-lg font-semibold text-white">Workflow Tools</h3>
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={toggleTools}
+                className="text-gray-400 hover:text-white"
+              >
+                {isToolsExpanded ? <ChevronUp className="h-5 w-5" /> : <ChevronDown className="h-5 w-5" />}
+              </Button>
+            </div>
+            {isToolsExpanded && (
+              <NodeCreationCard
+                onAddNode={(type) => {/* Implement add node logic */}}
+                onSave={handleSaveLoad}
+                onLoad={() => setShowSaveLoadDialog(true)}
+                onExportJSON={handleExportJSON}
+                onCreateFlow={handleCreateAgenticFlow}
+              />
+            )}
+          </div>
+        </Panel>
       </ReactFlow>
       <SaveLoadDialog
         isOpen={showSaveLoadDialog}
@@ -136,12 +209,14 @@ const WorkflowEditor = () => {
         onClose={() => setShowJSONModal(false)}
         jsonData={jsonData}
       />
-      <SettingsModal
-        isOpen={showSettingsModal}
-        onClose={() => setShowSettingsModal(false)}
-      />
     </div>
   );
 };
+
+const WorkflowEditor = () => (
+  <WorkflowSettingsProvider>
+    <WorkflowEditorContent />
+  </WorkflowSettingsProvider>
+);
 
 export default WorkflowEditor;
