@@ -1,37 +1,23 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { WorkflowEditor } from '@/features/workflow';
-import Sidebar from '@/common/components/Sidebar';
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Button } from "@/common/components/ui/button";
 import { Input } from "@/common/components/ui/input";
 import { Search, Info } from 'lucide-react';
 import { useToast } from "@/common/components/ui/use-toast";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/common/components/ui/dialog";
+import SummaryCards from '../components/SummaryCards';
+import CostTrendChart from '../components/CostTrendChart';
+import CostBreakdownChart from '../components/CostBreakdownChart';
+import RecentCallsTable from '../components/RecentCallsTable';
+import { useApiData } from '../hooks';
 
 const Dashboard = () => {
-  const [sidebarExpanded, setSidebarExpanded] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
   const [isInfoModalOpen, setIsInfoModalOpen] = useState(false);
-  const [editorSize, setEditorSize] = useState({ width: 0, height: 0 });
-  const editorContainerRef = useRef(null);
+  const navigate = useNavigate();
   const { toast } = useToast();
 
-  const toggleSidebar = () => setSidebarExpanded(!sidebarExpanded);
-
-  useEffect(() => {
-    const updateSize = () => {
-      if (editorContainerRef.current) {
-        setEditorSize({
-          width: editorContainerRef.current.offsetWidth,
-          height: editorContainerRef.current.offsetHeight,
-        });
-      }
-    };
-
-    window.addEventListener('resize', updateSize);
-    updateSize();
-
-    return () => window.removeEventListener('resize', updateSize);
-  }, []);
+  const { data, isLoading, error } = useApiData();
 
   const handleSearch = () => {
     toast({
@@ -41,46 +27,46 @@ const Dashboard = () => {
     // Implement search functionality here
   };
 
-  return (
-    <div className="h-screen bg-background text-foreground flex">
-      <Sidebar
-        expanded={sidebarExpanded}
-        toggleSidebar={toggleSidebar}
-      />
-      <div className="flex-grow overflow-hidden flex flex-col">
-        <div className="p-8 space-y-6 h-full flex flex-col">
-          <div className="flex flex-col md:flex-row justify-between items-center mb-6">
-            <div className="flex items-center">
-              <h1 className="text-2xl font-bold mb-6 md:mb-0 text-gray-100 mr-4">Dashboard</h1>
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={() => setIsInfoModalOpen(true)}
-                className="text-gray-400 hover:text-gray-100"
-              >
-                <Info className="h-5 w-5" />
-              </Button>
-            </div>
-            <div className="relative w-full md:w-80">
-              <Input
-                type="text"
-                placeholder="Search workflows..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full bg-gray-800 text-gray-200 placeholder-gray-400 border-gray-700 focus:border-purple-500 focus:ring-1 focus:ring-purple-500 pr-10"
-              />
-              <Search 
-                className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5 cursor-pointer" 
-                onClick={handleSearch}
-              />
-            </div>
-          </div>
+  if (isLoading) return <div>Loading dashboard data...</div>;
+  if (error) return <div>Error loading dashboard data: {error.message}</div>;
 
-          <div ref={editorContainerRef} className="relative h-full">
-            <WorkflowEditor />
+  return (
+    <div className="container mx-auto p-6 space-y-6">
+      <div className="flex justify-between items-center mb-6">
+        <h1 className="text-2xl font-bold text-gray-100">Dashboard</h1>
+        <div className="flex items-center space-x-4">
+          <div className="relative">
+            <Input
+              type="text"
+              placeholder="Search dashboard..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="w-64 bg-gray-800 text-gray-200 placeholder-gray-400 border-gray-700 focus:border-purple-500 focus:ring-1 focus:ring-purple-500 pr-10"
+            />
+            <Search 
+              className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5 cursor-pointer" 
+              onClick={handleSearch}
+            />
           </div>
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={() => setIsInfoModalOpen(true)}
+            className="text-gray-400 hover:text-gray-100"
+          >
+            <Info className="h-5 w-5" />
+          </Button>
         </div>
       </div>
+
+      <SummaryCards data={data.summary} />
+      
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <CostTrendChart data={data.costTrend} />
+        <CostBreakdownChart data={data.costBreakdown} />
+      </div>
+      
+      <RecentCallsTable calls={data.recentCalls} />
 
       <Dialog open={isInfoModalOpen} onOpenChange={setIsInfoModalOpen}>
         <DialogContent className="sm:max-w-[425px] bg-gray-800 text-gray-100">
@@ -90,11 +76,11 @@ const Dashboard = () => {
           <div className="mt-4">
             <p>Welcome to your dashboard! Here you can:</p>
             <ul className="list-disc list-inside mt-2 space-y-1">
-              <li>View and manage your workflows</li>
-              <li>Search for specific workflows</li>
-              <li>Access quick statistics and insights</li>
+              <li>View overall stats and trends</li>
+              <li>Monitor API usage and costs</li>
+              <li>Check recent API calls</li>
             </ul>
-            <p className="mt-4">Use the sidebar to navigate between different sections of the application.</p>
+            <p className="mt-4">Use the search bar to quickly find specific information.</p>
           </div>
         </DialogContent>
       </Dialog>
