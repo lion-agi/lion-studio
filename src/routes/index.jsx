@@ -1,23 +1,23 @@
 import React from 'react';
 import { Route, Routes } from 'react-router-dom';
-import Home from '../pages/home/Home';
-import Login from '../pages/home/Login';
-import Registration from '../pages/home/Registration';
-import AuthCallback from '../pages/home/AuthCallback';
+import Home from '@/pages/home/Home';
+import Login from '@/pages/home/Login';
+import Registration from '@/pages/home/Registration';
+import AuthCallback from '@/pages/home/AuthCallback';
 import Dashboard from '@/features/dashboard/pages/Dashboard';
-import Integrations from '../pages/console/Integrations';
+import Integrations from '@/features/integrations/pages/Integrations';
 import Deployment from '@/features/deployment/pages/Deployment';
 import Library from '@/features/library/pages/Library';
-import WorkflowEditor from '../features/workflow/components/WorkflowEditor';
-import About from '../pages/home/About';
-import Pricing from '../pages/home/Pricing';
-import Contact from '../pages/home/Contact';
-import UserProfile from '../features/profile/pages/UserProfile';
+import WorkflowEditor from '@/features/workflow/components/WorkflowEditor';
+import About from '@/pages/home/About';
+import Pricing from '@/pages/home/Pricing';
+import Contact from '@/pages/home/Contact';
+import UserProfile from '@-/features/profile/pages/UserProfile';
 import Overview from '@/features/dashboard/pages/Overview';
 import CallsTab from '@/features/dashboard/pages/CallsTab';
 import CostsTab from '@/features/dashboard/pages/CostsTab';
-import Admin from '../features/admin/pages/Admin';
-import ConsoleLayout from '../pages/console/ConsoleLayout';
+import Admin from '@/features/admin/pages/Admin';
+import ConsoleLayout from '@/features/console/components/ConsoleLayout';
 import ProtectedRoute from '@/common/components/ProtectedRoute';
 
 const AppRoutes = () => (
