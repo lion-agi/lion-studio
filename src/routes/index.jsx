@@ -17,11 +17,8 @@ import Overview from '@/features/dashboard/pages/Overview';
 import CallsTab from '@/features/dashboard/pages/CallsTab';
 import CostsTab from '@/features/dashboard/pages/CostsTab';
 import Admin from '../features/admin/pages/Admin';
-import ConsoleLayout from '../common/components/ConsoleLayout';
+import ConsoleLayout from '../pages/console/ConsoleLayout';
 import ProtectedRoute from '@/common/components/ProtectedRoute';
-import WorkerManagement from '@/features/deployment/pages/WorkerManagement';
-import JobManagement from '@/features/deployment/pages/JobManagement';
-import CronAndSchedule from '@/features/deployment/pages/CronAndSchedule';
 
 const AppRoutes = () => (
   <Routes>
@@ -40,11 +37,7 @@ const AppRoutes = () => (
         <Route path="costs" element={<CostsTab />} />
       </Route>
       <Route path="integrations" element={<Integrations />} />
-      <Route path="deployment" element={<Deployment />}>
-        <Route path="workers" element={<WorkerManagement />} />
-        <Route path="jobs" element={<JobManagement />} />
-        <Route path="cron" element={<CronAndSchedule />} />
-      </Route>
+      <Route path="deployment" element={<Deployment />} />
       <Route path="library" element={<Library />} />
       <Route path="workflow" element={<WorkflowEditor />} />
       <Route path="user-profile" element={<UserProfile />} />
