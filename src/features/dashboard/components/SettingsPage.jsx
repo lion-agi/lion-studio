@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import TableCustomizationSettings from './TableCustomizationSettings';
 import DisplayPreferencesSettings from './DisplayPreferencesSettings';
@@ -10,9 +10,10 @@ import UserPreferencesSettings from './UserPreferencesSettings';
 import AccessibilitySettings from './AccessibilitySettings';
 import AdvancedFeaturesSettings from './AdvancedFeaturesSettings';
 import SecuritySettings from './SecuritySettings';
-import { SettingsProvider } from './SettingsContext';
+import { SettingsProvider, useSettings } from './SettingsContext';
 import { Input } from "@/common/components/ui/input";
 import { Button } from "@/common/components/ui/button";
+import { useSettingsStore } from '@/store/settingsSlice';
 
 const settingsCategories = [
   { name: 'Table Customization', component: TableCustomizationSettings },
@@ -30,6 +31,16 @@ const settingsCategories = [
 const SettingsPage = () => {
   const [activeCategory, setActiveCategory] = useState(settingsCategories[0].name);
   const [searchTerm, setSearchTerm] = useState('');
+  const { settings, setSettings } = useSettings();
+  const { fetchSettings, updateSettings } = useSettingsStore();
+
+  useEffect(() => {
+    fetchSettings();
+  }, [fetchSettings]);
+
+  const handleApplyChanges = () => {
+    updateSettings(settings);
+  };
 
   const filteredCategories = settingsCategories.filter(category =>
     category.name.toLowerCase().includes(searchTerm.toLowerCase())
@@ -72,7 +83,7 @@ const SettingsPage = () => {
             )
           ))}
           <div className="flex justify-end mt-6">
-            <Button className="bg-purple-600 hover:bg-purple-700 text-white">Apply Changes</Button>
+            <Button className="bg-purple-600 hover:bg-purple-700 text-white" onClick={handleApplyChanges}>Apply Changes</Button>
             <Button variant="outline" className="ml-2">Reset to Default</Button>
           </div>
         </main>

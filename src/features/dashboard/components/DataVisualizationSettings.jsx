@@ -6,6 +6,9 @@ import { Switch } from "@/common/components/ui/switch";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/common/components/ui/tooltip";
 import { useSettingsStore } from '@/store/settingsSlice';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
+import { Responsive, WidthProvider } from 'react-grid-layout';
+
+const ResponsiveGridLayout = WidthProvider(Responsive);
 
 const DataVisualizationSettings = () => {
   const { dashboardLayout, setDashboardLayout, widgetSizes, setWidgetSizes, metricSelection, setMetricSelection, chartColorSchemes, setChartColorSchemes, dataDensity, setDataDensity } = useSettingsStore();
@@ -169,6 +172,25 @@ const DataVisualizationSettings = () => {
       </div>
       <div className="flex justify-end mt-4">
         <Button variant="outline">Reset to Default</Button>
+      </div>
+      <div className="mt-8">
+        <h2 className="text-2xl font-bold mb-4">Dashboard Layout</h2>
+        <ResponsiveGridLayout
+          className="layout"
+          layouts={{ lg: dashboardLayout }}
+          breakpoints={{ lg: 1200, md: 996, sm: 768, xs: 480, xxs: 0 }}
+          cols={{ lg: 12, md: 10, sm: 6, xs: 4, xxs: 2 }}
+          rowHeight={30}
+          onLayoutChange={(layout) => setDashboardLayout(layout)}
+        >
+          {dashboardLayout.map((widget) => (
+            <div key={widget.i} data-grid={widget}>
+              <div className="bg-gray-800 text-white p-4 rounded-lg">
+                {widget.name}
+              </div>
+            </div>
+          ))}
+        </ResponsiveGridLayout>
       </div>
     </div>
   );

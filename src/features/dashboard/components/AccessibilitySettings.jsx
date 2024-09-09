@@ -1,14 +1,12 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Label } from "@/common/components/ui/label";
 import { Slider } from "@/common/components/ui/slider";
 import { Switch } from "@/common/components/ui/switch";
 import { Input } from "@/common/components/ui/input";
+import useSettingsStore from '@/store/settingsSlice';
 
 const AccessibilitySettings = () => {
-  const [fontSize, setFontSize] = useState(16);
-  const [highContrast, setHighContrast] = useState(false);
-  const [screenReaderOptimization, setScreenReaderOptimization] = useState(false);
-  const [keyboardNavigation, setKeyboardNavigation] = useState('');
+  const { fontSize, setFontSize, highContrastMode, setHighContrastMode, screenReaderOptimization, setScreenReaderOptimization, keyboardNavigation, setKeyboardNavigation } = useSettingsStore();
 
   return (
     <div className="space-y-4">
@@ -28,8 +26,8 @@ const AccessibilitySettings = () => {
         <Label htmlFor="highContrast" className="text-lg">High Contrast Mode</Label>
         <Switch
           id="highContrast"
-          checked={highContrast}
-          onCheckedChange={setHighContrast}
+          checked={highContrastMode}
+          onCheckedChange={setHighContrastMode}
         />
       </div>
       <div className="flex items-center space-x-4">

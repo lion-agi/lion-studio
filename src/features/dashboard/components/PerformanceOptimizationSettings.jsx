@@ -3,11 +3,10 @@ import { Label } from "@/common/components/ui/label";
 import { Switch } from "@/common/components/ui/switch";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/common/components/ui/select";
 import { Slider } from "@/common/components/ui/slider";
+import { useSettingsStore } from '@/store/settingsSlice';
 
 const PerformanceOptimizationSettings = () => {
-  const [dataSamplingRate, setDataSamplingRate] = useState(100);
-  const [cacheDuration, setCacheDuration] = useState(60);
-  const [lazyLoading, setLazyLoading] = useState(false);
+  const { dataSamplingRate, setDataSamplingRate, cacheDuration, setCacheDuration, lazyLoading, setLazyLoading } = useSettingsStore();
 
   return (
     <div className="space-y-4">

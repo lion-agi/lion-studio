@@ -115,6 +115,12 @@ const useSettingsStore = create(
     }),
     {
       name: 'dashboard-settings',
+      getStorage: () => localStorage,
+      onRehydrateStorage: () => (state) => {
+        if (state) {
+          console.log('Rehydrated state:', state);
+        }
+      },
     }
   )
 );
