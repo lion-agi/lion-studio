@@ -2,9 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { useIntegrations, useAddIntegration, useUpdateIntegration, useDeleteIntegration } from '@/integrations/supabase/hooks/integrations';
 import { useToast } from "@/common/components/ui/use-toast";
 import { useStore } from '@/store';
-import IntegrationCard from '@/common/components/IntegrationCard';
-import IntegrationFilters from './components/IntegrationFilters';
-import ConfigureIntegrationModal from './components/ConfigureIntegrationModal';
+import IntegrationCard from '../components/IntegrationCard';
+import IntegrationFilters from '../components/IntegrationFilters';
+import ConfigureIntegrationModal from '@/common/components/ConfigureIntegrationModal';
 import { Button } from "@/common/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/common/components/ui/dialog";
 import { Info } from 'lucide-react';
@@ -102,7 +102,7 @@ const Integrations = () => {
 
   return (
     <div className="min-h-screen bg-gray-900 text-gray-100">
-      <div className="container mx-auto p-8 space-y-8">
+      <div className="container mx-auto p-8 space-y-8  mt-8">
         <IntegrationFilters
           activeTab={activeTab}
           setActiveTab={setActiveTab}

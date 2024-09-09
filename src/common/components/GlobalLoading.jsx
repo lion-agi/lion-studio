@@ -22,22 +22,59 @@ const GlobalLoading = () => {
         }}
       >
         <motion.div 
-          className="w-16 h-16 border-4 border-primary border-t-transparent rounded-full"
-          animate={{ rotate: 360 }}
-          transition={{
-            loop: Infinity,
-            ease: "linear",
-            duration: 1
+          className="w-24 h-24 mb-8"
+          animate={{ 
+            rotate: 360,
+            scale: [1, 1.2, 1],
           }}
-        />
+          transition={{
+            rotate: {
+              repeat: Infinity,
+              duration: 2,
+              ease: "linear",
+            },
+            scale: {
+              repeat: Infinity,
+              duration: 1,
+              ease: "easeInOut",
+            },
+          }}
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-primary">
+            <circle cx="12" cy="12" r="10" />
+            <path d="M12 6v6l4 2" />
+          </svg>
+        </motion.div>
         <motion.p 
-          className="mt-4 text-lg font-semibold text-primary"
+          className="text-xl font-semibold text-primary"
           initial={{ y: 10, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           transition={{ delay: 0.2 }}
         >
-          Loading...
+          Loading Lion Studio...
         </motion.p>
+        <motion.div
+          className="mt-4 flex space-x-2"
+          initial={{ scale: 0, opacity: 0 }}
+          animate={{ scale: 1, opacity: 1 }}
+          transition={{ delay: 0.4 }}
+        >
+          {[0, 1, 2].map((index) => (
+            <motion.div
+              key={index}
+              className="w-3 h-3 rounded-full bg-primary"
+              animate={{
+                scale: [1, 1.5, 1],
+                opacity: [0.7, 1, 0.7],
+              }}
+              transition={{
+                duration: 1,
+                repeat: Infinity,
+                delay: index * 0.2,
+              }}
+            />
+          ))}
+        </motion.div>
       </motion.div>
     </div>
   );
