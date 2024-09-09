@@ -121,7 +121,7 @@ const WorkflowEditorContent = () => {
           height: containerSize.height,
           backgroundColor: backgroundColor,
         }}
-        panOnDrag={!isLocked}
+        panOnDrag
         zoomOnScroll={!isLocked}
         nodesDraggable={!isLocked}
         nodesConnectable={!isLocked}
@@ -143,7 +143,7 @@ const WorkflowEditorContent = () => {
           zoomable 
           pannable
         />
-        <Panel position="top-left">
+        <Panel position="top-left" style={{ top: '10px' }}>
           <div className="space-y-2">
             <NodeCreationPanel />
             <WorkflowOperationsPanel
