@@ -21,7 +21,7 @@ import Contact from './pages/home/Contact';
 
 import Library from './features/library/pages/Library';
 import Dashboard from '@/features/dashboard/pages/Dashboard';
-import Integrations from './pages/console/Integrations';
+import Integrations from './features/integrations/pages/Integrations';
 import Deployment from '@/features/deployment/pages/Deployment';
 import Overview from '@/features/dashboard/pages/Overview';
 import CallsTab from '@/features/dashboard/pages/CallsTab';
