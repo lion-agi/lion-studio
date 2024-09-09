@@ -1,5 +1,6 @@
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from "@/common/components/ui/card";
+import { Button } from "@/common/components/ui/button";
 
 const DashboardCard = ({ title, value, change, icon: Icon, onClick }) => (
   <Card className="bg-gray-800 hover:bg-gray-700 transition-colors cursor-pointer" onClick={onClick}>

@@ -1,7 +1,7 @@
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from "@/common/components/ui/card";
 import { ResponsiveContainer, LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip } from 'recharts';
-import { formatCurrency } from '@/features/dashboard/utils';
+import { formatCurrency, formatNumber, formatPercentage } from '@/features/dashboard/utils';
 import commonStyles from '@/common/components/ui/style-guide';
 
 const CustomTooltip = ({ active, payload, label }) => {
@@ -9,11 +9,26 @@ const CustomTooltip = ({ active, payload, label }) => {
     return (
       <div className="bg-gray-800 border border-gray-700 p-2 rounded shadow-lg">
         <p className="text-gray-300 text-sm">{`Date: ${label}`}</p>
-        <p className="text-purple-400 text-sm">{`${payload[0].name}: ${formatCurrency(payload[0].value)}`}</p>
+        <p className="text-purple-400 text-sm">{`${payload[0].name}: ${formatValue(payload[0].value, payload[0].name)}`}</p>
       </div>
     );
   }
   return null;
+};
+
+const formatValue = (value, metric) => {
+  switch (metric) {
+    case 'totalCost':
+      return formatCurrency(value);
+    case 'totalCalls':
+      return formatNumber(value);
+    case 'avgResponseTime':
+      return `${formatNumber(value)} ms`;
+    case 'errorRate':
+      return formatPercentage(value);
+    default:
+      return value;
+  }
 };
 
 const CostTrendChart = ({ data, selectedMetric }) => {
@@ -50,10 +65,7 @@ const CostTrendChart = ({ data, selectedMetric }) => {
               />
               <YAxis 
                 stroke="#9CA3AF" 
-                tickFormatter={(value) => {
-                  const formatted = formatCurrency(value);
-                  return formatted.endsWith('.00') ? formatted.slice(0, -3) : formatted;
-                }}
+                tickFormatter={(value) => formatValue(value, selectedMetric)}
                 tick={{ fill: '#9CA3AF' }}
                 tickLine={{ stroke: '#9CA3AF' }}
                 width={80}
