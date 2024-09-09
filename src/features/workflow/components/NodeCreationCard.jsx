@@ -1,13 +1,13 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from "@/common/components/ui/card";
 import { Button } from "@/common/components/ui/button";
 import { Input } from "@/common/components/ui/input";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/common/components/ui/collapsible";
 import { ChevronDown, Search, ChevronUp } from 'lucide-react';
 import { ScrollArea } from "@/common/components/ui/scroll-area";
-import { nodeCategories } from './nodes/nodeCategories';
+import { nodeCategories } from '@/common/components/nodes/nodeCategories';
 
-const NodeCreationCard = ({ className }) => {
+const NodeCreationCard = ({ onAddNode }) => {
   const [searchTerm, setSearchTerm] = useState('');
   const [expandedCategories, setExpandedCategories] = useState({});
   const [isExpanded, setIsExpanded] = useState(true);
@@ -36,7 +36,7 @@ const NodeCreationCard = ({ className }) => {
   };
 
   return (
-    <Card className={`w-64 shadow-lg ${className}`}>
+    <Card className="w-64 fixed top-4 left-4 z-50 shadow-lg">
       <CardHeader className="cursor-pointer flex flex-row items-center justify-between" onClick={toggleExpand}>
         <CardTitle>Create Nodes</CardTitle>
         <Button variant="ghost" size="sm">
@@ -72,7 +72,7 @@ const NodeCreationCard = ({ className }) => {
                         draggable
                         onDragStart={(e) => handleDragStart(e, node.type)}
                       >
-                        {node.icon}
+                        {node.icon && <node.icon className="h-4 w-4 mr-2" />}
                         <span className="ml-2">{node.label}</span>
                       </div>
                     ))}
