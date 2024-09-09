@@ -10,7 +10,8 @@ import SummaryCards from '../components/SummaryCards';
 import CostTrendChart from '../components/CostTrendChart';
 import CostBreakdownChart from '../components/CostBreakdownChart';
 import RecentCallsTable from '../components/RecentCallsTable';
-import { useApiData } from '../hooks';
+import SettingsTab from '../components/SettingsTab';
+import { useApiData } from '../hooks/useApiData';
 
 const Dashboard = () => {
   const [searchTerm, setSearchTerm] = useState('');
@@ -19,14 +20,6 @@ const Dashboard = () => {
   const { toast } = useToast();
 
   const { data, isLoading, error } = useApiData();
-
-  const handleSearch = () => {
-    toast({
-      title: "Search",
-      description: `Searching for: ${searchTerm}`,
-    });
-    // Implement search functionality here
-  };
 
   if (isLoading) return <div>Loading dashboard data...</div>;
   if (error) return <div>Error loading dashboard data: {error.message}</div>;
@@ -62,6 +55,7 @@ const Dashboard = () => {
           <TabsTrigger value="overview">Overview</TabsTrigger>
           <TabsTrigger value="calls">Calls</TabsTrigger>
           <TabsTrigger value="costs">Costs</TabsTrigger>
+          <TabsTrigger value="settings">Settings</TabsTrigger>
         </TabsList>
 
         <TabsContent value="overview">
@@ -83,6 +77,10 @@ const Dashboard = () => {
             <CostBreakdownChart data={data.costBreakdown} />
           </div>
         </TabsContent>
+
+        <TabsContent value="settings">
+          <SettingsTab />
+        </TabsContent>
       </Tabs>
 
       <Dialog open={isInfoModalOpen} onOpenChange={setIsInfoModalOpen}>
@@ -96,6 +94,7 @@ const Dashboard = () => {
               <li>View overall stats and trends</li>
               <li>Monitor API usage and costs</li>
               <li>Check recent API calls</li>
+              <li>Adjust settings for your dashboard</li>
             </ul>
             <p className="mt-4">Use the search bar to quickly find specific information.</p>
           </div>
