@@ -36,7 +36,7 @@ const WorkflowOperationsPanel = ({
   const [autoSave, setAutoSave] = useState(true);
   const [performanceMode, setPerformanceMode] = useState(false);
   const [theme, setTheme] = useState('dark');
-  const [isContentCollapsed, setIsContentCollapsed] = useState(false);
+  const [isCollapsed, setIsCollapsed] = useState(false);
   const [showEdgePropertiesDialog, setShowEdgePropertiesDialog] = useState(false);
   const [selectedEdge, setSelectedEdge] = useState(null);
 
@@ -85,13 +85,18 @@ const WorkflowOperationsPanel = ({
 
   return (
     <Card className="bg-gray-800 text-white w-72">
-      <CardHeader className="pb-2">
-        <CardTitle className="text-sm font-medium flex items-center">
-          <Zap className="w-4 h-4 mr-2" />
-          Workflow Operations
-        </CardTitle>
-      </CardHeader>
-      <Collapsible open={!isContentCollapsed} onOpenChange={setIsContentCollapsed}>
+      <Collapsible open={!isCollapsed} onOpenChange={setIsCollapsed}>
+        <CardHeader className="pb-2">
+          <CollapsibleTrigger asChild>
+            <div className="flex items-center justify-between cursor-pointer">
+              <CardTitle className="text-sm font-medium flex items-center">
+                <Zap className="w-4 h-4 mr-2" />
+                Workflow Operations
+              </CardTitle>
+              {isCollapsed ? <ChevronDown className="h-4 w-4" /> : <ChevronUp className="h-4 w-4" />}
+            </div>
+          </CollapsibleTrigger>
+        </CardHeader>
         <CollapsibleContent>
           <CardContent className="pt-2">
             <ScrollArea className="h-[320px]" style={{ backgroundColor: tempBackgroundColor }}>
