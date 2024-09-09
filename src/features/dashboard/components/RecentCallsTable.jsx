@@ -8,13 +8,13 @@ const RecentCallsTable = ({ data }) => {
 
   const formatField = (field, value) => {
     switch (field) {
-      case 'timestamp':
+      case 'created_at':
         return formatDate(value);
       case 'tokens':
         return formatNumber(value);
       case 'cost':
         return formatCurrency(value);
-      case 'responseTime':
+      case 'response_time':
         return formatResponseTime(value);
       default:
         return value || 'N/A';

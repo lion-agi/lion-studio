@@ -112,5 +112,3 @@ export const useApiData = (timeRange, selectedModel) => {
     refetchInterval: 5 * 60 * 1000, // 5 minutes
   });
 };
-
-// Path: src/features/dashboard/hooks.js
