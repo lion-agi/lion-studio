@@ -91,8 +91,8 @@ const WorkflowOperationsPanel = ({
           Workflow Operations
         </CardTitle>
       </CardHeader>
-      <CardContent className="pt-2">
-        <Collapsible open={!isCollapsed} onOpenChange={setIsCollapsed}>
+      <Collapsible open={!isCollapsed} onOpenChange={setIsCollapsed}>
+        <CardContent className="pt-2">
           <CollapsibleContent>
             <ScrollArea className="h-[calc(50vh-100px)]">
               <div className="grid grid-cols-3 gap-2">
@@ -254,13 +254,13 @@ const WorkflowOperationsPanel = ({
               </div>
             </ScrollArea>
           </CollapsibleContent>
-        </Collapsible>
+        </CardContent>
         <CollapsibleTrigger asChild>
           <Button variant="ghost" size="sm" className="w-full mt-2">
             {isCollapsed ? <ChevronDown className="h-4 w-4" /> : <ChevronUp className="h-4 w-4" />}
           </Button>
         </CollapsibleTrigger>
-      </CardContent>
+      </Collapsible>
 
       <JSONModal
         isOpen={showJSONModal}
