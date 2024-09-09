@@ -1,4 +1,4 @@
-import { Zap, Bot, User, StickyNote, Database, GitBranch, MessageSquare, Users, Play, Filter, Code, FileText, Tool, Briefcase, Brain, Cog, Cpu, Network, Layers } from 'lucide-react';
+import { Zap, Bot, User, StickyNote, Database, GitBranch, MessageSquare, Users, Play, Filter, Code, FileText, Briefcase, Brain, Cog, Cpu, Network, Layers, Wrench } from 'lucide-react';
 
 export const nodeCategories = {
   'Basic': [
@@ -22,7 +22,7 @@ export const nodeCategories = {
   ],
   'Tools & Workers': [
     { type: 'worker', label: 'Worker', icon: Briefcase },
-    { type: 'tool', label: 'Tool', icon: Tool },
+    { type: 'tool', label: 'Tool', icon: Wrench },
     { type: 'taskQueue', label: 'Task Queue', icon: Layers },
     { type: 'scheduler', label: 'Scheduler', icon: Cog },
   ],
