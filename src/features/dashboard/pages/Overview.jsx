@@ -1,10 +1,10 @@
 import React from 'react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/common/components/ui/tabs";
-import { TrendingUp, PieChart, Activity } from 'lucide-react';
-import CostTrendChart from '../components/CostTrendChart';
-import CostBreakdownChart from '../components/CostBreakdownChart';
+import { TrendingUp, PieChart, Activity, AlertTriangle } from 'lucide-react';
+import CostTrendChart from '../charts/CostTrendChart';
+import CostBreakdownChart from '../charts/CostBreakdownChart';
 import SummaryCards from '../components/SummaryCards';
-import EmptyState from '@/common/components/EmptyState';
+import EmptyState from '../../library/components/EmptyState';
 
 const OverviewTab = ({ data }) => (
   <Tabs defaultValue="summary" className="mt-8">
