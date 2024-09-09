@@ -73,16 +73,18 @@ const WorkflowOperationsPanel = ({
 
   return (
     <Card className="bg-gray-800 text-white">
-      <CardHeader className="pb-2">
-        <CollapsibleTrigger onClick={() => setIsCollapsed(!isCollapsed)} className="flex items-center justify-between w-full">
-          <CardTitle className="text-sm font-medium flex items-center">
-            <Zap className="w-4 h-4 mr-2" />
-            Workflow Operations
-          </CardTitle>
-          {isCollapsed ? <ChevronDown className="h-4 w-4" /> : <ChevronUp className="h-4 w-4" />}
-        </CollapsibleTrigger>
-      </CardHeader>
-      <Collapsible open={!isCollapsed}>
+      <Collapsible open={!isCollapsed} onOpenChange={setIsCollapsed}>
+        <CardHeader className="pb-2">
+          <CollapsibleTrigger asChild>
+            <div className="flex items-center justify-between cursor-pointer">
+              <CardTitle className="text-sm font-medium flex items-center">
+                <Zap className="w-4 h-4 mr-2" />
+                Workflow Operations
+              </CardTitle>
+              {isCollapsed ? <ChevronDown className="h-4 w-4" /> : <ChevronUp className="h-4 w-4" />}
+            </div>
+          </CollapsibleTrigger>
+        </CardHeader>
         <CollapsibleContent>
           <CardContent className="pt-2">
             <ScrollArea className="h-[120px]" style={{ backgroundColor: tempBackgroundColor }}>
