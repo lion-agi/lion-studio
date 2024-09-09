@@ -17,7 +17,7 @@ const RecentCallsTable = ({ data }) => {
       case 'response_time':
         return formatResponseTime(value);
       default:
-        return value || 'N/A';
+        return value;
     }
   };
 
@@ -30,7 +30,7 @@ const RecentCallsTable = ({ data }) => {
       <TableHeader>
         <TableRow>
           {Object.entries(tableFields).map(([field, isVisible]) => 
-            isVisible && <TableHead key={field}>{capitalizeFirstLetter(field)}</TableHead>
+            isVisible && <TableHead key={field}>{capitalizeFirstLetter(field.replace('_', ' '))}</TableHead>
           )}
         </TableRow>
       </TableHeader>
