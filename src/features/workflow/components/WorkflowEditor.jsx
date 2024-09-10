@@ -96,6 +96,11 @@ const WorkflowEditorContent = () => {
     setSelectedEdge(null);
   }, [setEdges]);
 
+  const onDeleteNode = useCallback((nodeId) => {
+    setNodes((nds) => nds.filter((node) => node.id !== nodeId));
+    setEdges((eds) => eds.filter((edge) => edge.source !== nodeId && edge.target !== nodeId));
+  }, [setNodes, setEdges]);
+
   return (
     <div ref={containerRef} className="h-full w-full relative flex" style={{ height: 'calc(100vh - 64px)' }}>
       <div className="w-72 bg-gray-800 p-4 overflow-y-auto flex flex-col" style={{ maxHeight: 'calc(100vh - 64px)' }}>
@@ -111,7 +116,7 @@ const WorkflowEditorContent = () => {
           onDeleteNode={handleDeleteNode}
           onSaveSettings={handleSaveSettings}
           isGraphLocked={isGraphLocked}
-          setIsGraphLocked={setIsGraphLocked}
+          onToggleGraphLock={() => setIsGraphLocked(!isGraphLocked)}
           onZoomIn={zoomIn}
           onZoomOut={zoomOut}
           onResetView={fitView}
