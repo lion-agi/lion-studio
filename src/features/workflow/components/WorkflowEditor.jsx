@@ -48,7 +48,6 @@ const WorkflowEditorContent = () => {
     redo,
     canUndo,
     canRedo,
-    handleDeleteNode,
     handleSaveSettings,
     isWizardOpen,
     setIsWizardOpen,
@@ -58,7 +57,7 @@ const WorkflowEditorContent = () => {
 
   const { backgroundColor } = useWorkflowSettings();
 
-  const { zoomIn, zoomOut, fitView } = useReactFlow();
+  const { zoomIn, zoomOut, fitView, getNodes, getEdges, setNodes: setReactFlowNodes, setEdges: setReactFlowEdges } = useReactFlow();
 
   const styledEdges = useMemo(() => 
     edges.map(edge => ({
@@ -97,9 +96,9 @@ const WorkflowEditorContent = () => {
   }, [setEdges]);
 
   const onDeleteNode = useCallback((nodeId) => {
-    setNodes((nds) => nds.filter((node) => node.id !== nodeId));
-    setEdges((eds) => eds.filter((edge) => edge.source !== nodeId && edge.target !== nodeId));
-  }, [setNodes, setEdges]);
+    setReactFlowNodes((nds) => nds.filter((node) => node.id !== nodeId));
+    setReactFlowEdges((eds) => eds.filter((edge) => edge.source !== nodeId && edge.target !== nodeId));
+  }, [setReactFlowNodes, setReactFlowEdges]);
 
   return (
     <div ref={containerRef} className="h-full w-full relative flex" style={{ height: 'calc(100vh - 64px)' }}>
@@ -113,7 +112,7 @@ const WorkflowEditorContent = () => {
           onRedo={redo}
           canUndo={canUndo}
           canRedo={canRedo}
-          onDeleteNode={handleDeleteNode}
+          onDeleteNode={onDeleteNode}
           onSaveSettings={handleSaveSettings}
           isGraphLocked={isGraphLocked}
           onToggleGraphLock={() => setIsGraphLocked(!isGraphLocked)}
