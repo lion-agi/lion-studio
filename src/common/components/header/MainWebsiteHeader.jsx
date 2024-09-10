@@ -16,9 +16,9 @@ const MainWebsiteHeader = () => {
         </Link>
         <nav className="flex items-center space-x-6">
           <Link to="/" className="hover:text-gray-300">Home</Link>
-          <Link to="/about" className="hover:text-gray-300">About</Link>
+          {/* <Link to="/about" className="hover:text-gray-300">About</Link>
           <Link to="/pricing" className="hover:text-gray-300">Pricing</Link>
-          <Link to="/contact" className="hover:text-gray-300">Contact</Link>
+          <Link to="/contact" className="hover:text-gray-300">Contact</Link> */}
           {session ? (
             <>
               <Link to="/console" className="hover:text-gray-300">Console</Link>
