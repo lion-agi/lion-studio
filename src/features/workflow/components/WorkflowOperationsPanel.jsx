@@ -1,10 +1,9 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from "@/common/components/ui/card";
 import { Button } from "@/common/components/ui/button";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/common/components/ui/tooltip";
-import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/common/components/ui/collapsible";
 import { ScrollArea } from "@/common/components/ui/scroll-area";
-import { Save, Upload, Download, RotateCcw, Plus, Undo, Redo, Lock, Unlock, ZoomIn, ZoomOut, Trash2, ChevronUp, ChevronDown } from 'lucide-react';
+import { Save, Upload, Download, RotateCcw, Plus, Undo, Redo, Lock, Unlock, ZoomIn, ZoomOut, Trash2 } from 'lucide-react';
 
 const WorkflowOperationsPanel = ({ 
   onExportJSON, 
@@ -21,8 +20,6 @@ const WorkflowOperationsPanel = ({
   isGraphLocked,
   onToggleGraphLock
 }) => {
-  const [isCollapsed, setIsCollapsed] = useState(false);
-
   const renderButton = (icon, label, onClick, disabled = false) => (
     <TooltipProvider>
       <Tooltip>
@@ -60,34 +57,23 @@ const WorkflowOperationsPanel = ({
 
   return (
     <Card className="bg-gray-800 text-white mt-2 border border-gray-700 rounded-lg shadow-lg">
-      <Collapsible open={!isCollapsed} onOpenChange={setIsCollapsed}>
-        <CardHeader className="pb-2">
-          <div className="flex justify-between items-center">
-            <CardTitle className="text-sm font-medium flex items-center">
-              <Save className="w-4 h-4 mr-2" />
-              Workflow Operations
-            </CardTitle>
-            <CollapsibleTrigger asChild>
-              <Button variant="ghost" size="sm">
-                {isCollapsed ? <ChevronDown className="h-4 w-4" /> : <ChevronUp className="h-4 w-4" />}
-              </Button>
-            </CollapsibleTrigger>
-          </div>
-        </CardHeader>
-        <CollapsibleContent>
-          <CardContent className="pt-2">
-            <ScrollArea className="h-[132px] pr-4" style={{ scrollbarWidth: 'thin', scrollbarColor: 'rgba(155, 155, 155, 0.5) transparent' }}>
-              <div className="grid grid-cols-3 gap-2">
-                {buttons.map((button, index) => (
-                  <div key={index}>
-                    {renderButton(button.icon, button.label, button.onClick, button.disabled)}
-                  </div>
-                ))}
+      <CardHeader className="pb-2">
+        <CardTitle className="text-sm font-medium flex items-center">
+          <Save className="w-4 h-4 mr-2" />
+          Workflow Operations
+        </CardTitle>
+      </CardHeader>
+      <CardContent className="pt-2">
+        <ScrollArea className="h-[132px] pr-4" style={{ scrollbarWidth: 'thin', scrollbarColor: 'rgba(155, 155, 155, 0.5) transparent' }}>
+          <div className="grid grid-cols-3 gap-2">
+            {buttons.map((button, index) => (
+              <div key={index}>
+                {renderButton(button.icon, button.label, button.onClick, button.disabled)}
               </div>
-            </ScrollArea>
-          </CardContent>
-        </CollapsibleContent>
-      </Collapsible>
+            ))}
+          </div>
+        </ScrollArea>
+      </CardContent>
     </Card>
   );
 };
