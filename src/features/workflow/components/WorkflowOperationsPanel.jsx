@@ -79,6 +79,11 @@ const WorkflowOperationsPanel = ({
             </ScrollArea>
           </CollapsibleContent>
         </CardContent>
+        <CollapsibleTrigger asChild>
+          <Button variant="ghost" size="sm" className="w-full mt-2">
+            {isCollapsed ? <ChevronDown className="h-4 w-4" /> : <ChevronUp className="h-4 w-4" />}
+          </Button>
+        </CollapsibleTrigger>
     </Card>
   );
 };
