@@ -20,6 +20,7 @@ import JSONModal from '@/common/components/JSONModal';
 import SaveLoadDialog from '@/common/components/SaveLoadDialog';
 import { useToast } from "@/common/components/ui/use-toast";
 import { useWorkflowStore } from '@/store/workflowStore';
+import { nodeColors } from '@/styles/nodeStyles';
 
 const WorkflowEditorContent = () => {
   const containerRef = useRef(null);
@@ -196,15 +197,8 @@ const WorkflowEditorContent = () => {
         >
           <MiniMap 
             nodeColor={(node) => {
-              switch (node.type) {
-                case 'user': return '#22c55e';
-                case 'assistant': return '#CD7F32';
-                case 'group': return '#FF4136';
-                case 'initializer': return '#ec4899';
-                case 'conversation': return '#1ABC9C';
-                case 'note': return '#f97316';
-                default: return '#6366f1';
-              }
+              const color = nodeColors[node.type] || '#6366f1';
+              return color + '20'; // Adding 20% opacity
             }}
             nodeStrokeWidth={3} 
             zoomable 
