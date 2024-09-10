@@ -1,5 +1,5 @@
 import React from 'react';
-import MainWebsiteLayout from '../common/components/MainWebsiteLayout';
+import MainWebsiteLayout from '../../common/components/MainWebsiteLayout';
 
 const Pricing = () => {
   return (
@@ -47,3 +47,6 @@ const Pricing = () => {
 };
 
 export default Pricing;
+
+
+// Path: src/pages/home/Pricing.jsx

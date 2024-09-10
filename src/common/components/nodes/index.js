@@ -43,6 +43,7 @@ import Geolocation from './Geolocation';
 import PaymentGateway from './PaymentGateway';
 import SMSService from './SMSService';
 import SocialMediaIntegration from './SocialMediaIntegration';
+import VariableManipulationModal from '../VariableManipulationModal';
 
 export const nodeTypes = {
   assistant: AssistantNode,
@@ -91,3 +92,8 @@ export const nodeTypes = {
   smsService: SMSService,
   socialMediaIntegration: SocialMediaIntegration,
 };
+
+export { VariableManipulationModal };
+
+
+// Path: src/common/components/nodes/index.js

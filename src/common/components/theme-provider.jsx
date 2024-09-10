@@ -53,3 +53,5 @@ export const useTheme = () => {
 
   return context;
 };
+
+// Path: src/common/components/theme-provider.jsx

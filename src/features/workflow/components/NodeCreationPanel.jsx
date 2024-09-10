@@ -39,7 +39,7 @@ const NodeCreationPanel = () => {
         className="w-full"
       />
       <ScrollArea 
-        className="h-[calc(65vh-75px)] pr-4" 
+        className="h-[calc(50vh-100px)] pr-4" 
         style={{ 
           scrollbarWidth: 'thin',
           scrollbarColor: 'rgba(155, 155, 155, 0.5) transparent'
@@ -80,3 +80,4 @@ const NodeCreationPanel = () => {
 };
 
 export default NodeCreationPanel;
+// Path: src/features/workflow/components/NodeCreationPanel.jsx

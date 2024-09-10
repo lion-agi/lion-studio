@@ -9,23 +9,26 @@ import commonStyles from '@/common/components/ui/style-guide';
 
 // Import components
 import ConsoleHeader from '@/features/console/components/ConsoleHeader';
-import Home from './pages/Home';
-import Login from './pages/Login';
-import Registration from './pages/Registration';
-import AuthCallback from './pages/AuthCallback';
-import EmailConfirmation from './pages/EmailConfirmation';
+import Home from './pages/home/Home';
+import Login from './pages/home/Login';
+import Registration from './pages/home/Registration';
+import AuthCallback from './pages/home/AuthCallback';
+import EmailConfirmation from './pages/home/EmailConfirmation';
 import WorkflowEditor from '@/features/workflow/components/WorkflowEditor';
-import About from './pages/About';
-import Pricing from './pages/Pricing';
-import Contact from './pages/Contact';
+// import About from './pages/home/About';
+// import Pricing from './pages/home/Pricing';
+// import Contact from './pages/home/Contact';
 
-import Library from './features/library/pages/Library';
+// import Library from './features/library/pages/Library';
 import Dashboard from '@/features/dashboard/pages/Dashboard';
-import Integrations from './pages/console/Integrations';
-import Deployment from '@/features/deployment/pages/Deployment';
-import Overview from '@/features/dashboard/pages/Overview';
-import CallsTab from '@/features/dashboard/pages/CallsTab';
-import CostsTab from '@/features/dashboard/pages/CostsTab';
+// import Integrations from './features/integrations/pages/Integrations';
+// import Deployment from '@/features/deployment/pages/Deployment';
+// import Overview from '@/features/dashboard/pages/Overview';
+// import CallsTab from '@/features/dashboard/pages/CallsTab';
+// import CostsTab from '@/features/dashboard/pages/CostsTab';
+// import UserProfile from './features/profile/pages/UserProfile';
+// import Admin from './features/admin/pages/Admin';
+// import SettingsPage from '@/features/dashboard/components/SettingsPage';
 
 // Create a client
 const queryClient = new QueryClient();
@@ -50,17 +53,20 @@ const AppRoutes = () => (
     <Route path="/register" element={<Registration />} />
     <Route path="/auth/callback" element={<AuthCallback />} />
     <Route path="/email-confirmation" element={<EmailConfirmation />} />
-    <Route path="/about" element={<About />} />
+    {/* <Route path="/about" element={<About />} />
     <Route path="/pricing" element={<Pricing />} />
-    <Route path="/contact" element={<Contact />} />
+    <Route path="/contact" element={<Contact />} /> */}
 
     {/* Console routes */}
     <Route path="/console" element={<ProtectedRoute><ConsoleLayout><Navigate to="/console/dashboard" replace /></ConsoleLayout></ProtectedRoute>} />
     <Route path="/console/dashboard" element={<ProtectedRoute><ConsoleLayout><Dashboard /></ConsoleLayout></ProtectedRoute>} />
     <Route path="/console/workflow" element={<ProtectedRoute><ConsoleLayout><WorkflowEditor /></ConsoleLayout></ProtectedRoute>} />
-    <Route path="/console/library" element={<ProtectedRoute><ConsoleLayout><Library /></ConsoleLayout></ProtectedRoute>} />
+    {/* <Route path="/console/library" element={<ProtectedRoute><ConsoleLayout><Library /></ConsoleLayout></ProtectedRoute>} />
     <Route path="/console/integrations" element={<ProtectedRoute><ConsoleLayout><Integrations /></ConsoleLayout></ProtectedRoute>} />
     <Route path="/console/deployment" element={<ProtectedRoute><ConsoleLayout><Deployment /></ConsoleLayout></ProtectedRoute>} />
+    <Route path="/console/user-profile" element={<ProtectedRoute><ConsoleLayout><UserProfile /></ConsoleLayout></ProtectedRoute>} />
+    <Route path="/console/admin" element={<ProtectedRoute><ConsoleLayout><Admin /></ConsoleLayout></ProtectedRoute>} />
+    <Route path="/console/settings" element={<ProtectedRoute><ConsoleLayout><SettingsPage /></ConsoleLayout></ProtectedRoute>} /> */}
 
     {/* Add more console routes as needed */}
   </Routes>

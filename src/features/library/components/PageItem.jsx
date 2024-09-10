@@ -64,3 +64,5 @@ const PageItem = ({ page, onOpenModal, onDelete, onEdit }) => {
 };
 
 export default PageItem;
+
+// Path: src/features/library/components/PageItem.jsx

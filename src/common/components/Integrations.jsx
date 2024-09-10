@@ -170,3 +170,6 @@ const Integrations = () => {
 };
 
 export default Integrations;
+
+
+// Path: src/common/components/Integrations.jsx

@@ -18,3 +18,5 @@ const Webhook = (props) => {
 };
 
 export default Webhook;
+
+// Path: src/common/components/nodes/Webhook.jsx

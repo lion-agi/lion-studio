@@ -2,7 +2,7 @@ import { useCallback, useRef, useState } from 'react';
 import { addEdge } from 'reactflow';
 import { useUndoRedo } from './useUndoRedo';
 import { useWorkflowSettings } from '../components/WorkflowSettingsContext';
-import { useToast } from "@/common/components/ui/use-toast";
+import AgenticFlowWizard from '@/common/components/AgenticFlowWizard';
 
 export const useWorkflowHandlers = (nodes, setNodes, edges, setEdges) => {
   const reactFlowWrapper = useRef(null);
@@ -10,7 +10,6 @@ export const useWorkflowHandlers = (nodes, setNodes, edges, setEdges) => {
   const { undo, redo, canUndo, canRedo, takeSnapshot } = useUndoRedo(nodes, edges, setNodes, setEdges);
   const [isWizardOpen, setIsWizardOpen] = useState(false);
   const { setBackgroundColor } = useWorkflowSettings();
-  const { toast } = useToast();
 
   const onConnect = useCallback((params) => {
     setEdges((eds) => {
@@ -82,25 +81,13 @@ export const useWorkflowHandlers = (nodes, setNodes, edges, setEdges) => {
     return null;
   }, [reactFlowInstance]);
 
-  const handleSaveLoad = useCallback(() => {
-    const savedData = localStorage.getItem('workflowData');
-    if (savedData) {
-      const parsedData = JSON.parse(savedData);
-      setNodes(parsedData.nodes || []);
-      setEdges(parsedData.edges || []);
-      takeSnapshot(parsedData.nodes || [], parsedData.edges || []);
-      toast({
-        title: "Workflow Loaded",
-        description: "Your saved workflow has been loaded successfully.",
-      });
-    } else {
-      toast({
-        title: "No Saved Workflow",
-        description: "There is no saved workflow to load.",
-        variant: "warning",
-      });
+  const handleSaveLoad = useCallback((savedGraph) => {
+    if (savedGraph) {
+      setNodes(savedGraph.nodes || []);
+      setEdges(savedGraph.edges || []);
+      takeSnapshot(savedGraph.nodes || [], savedGraph.edges || []);
     }
-  }, [setNodes, setEdges, takeSnapshot, toast]);
+  }, [setNodes, setEdges, takeSnapshot]);
 
   const handleCreateAgenticFlow = useCallback(() => {
     setIsWizardOpen(true);
@@ -129,17 +116,6 @@ export const useWorkflowHandlers = (nodes, setNodes, edges, setEdges) => {
     // Handle other settings here
   }, [setBackgroundColor]);
 
-  const handleSave = useCallback(() => {
-    if (reactFlowInstance) {
-      const flow = reactFlowInstance.toObject();
-      localStorage.setItem('workflowData', JSON.stringify(flow));
-      toast({
-        title: "Workflow Saved",
-        description: "Your workflow has been saved successfully.",
-      });
-    }
-  }, [reactFlowInstance, toast]);
-
   return {
     reactFlowWrapper,
     reactFlowInstance,
@@ -160,6 +136,7 @@ export const useWorkflowHandlers = (nodes, setNodes, edges, setEdges) => {
     handleSaveSettings,
     isWizardOpen,
     setIsWizardOpen,
-    handleSave,
   };
 };
+
+// Path: src/features/workflow/hooks/useEdgeHighlighting.js

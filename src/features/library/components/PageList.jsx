@@ -20,7 +20,7 @@ const PageList = ({ pages, onOpenModal, onDelete, onEdit, onCreateNew }) => {
             onOpenModal={onOpenModal}
             onDelete={onDelete}
             onEdit={onEdit}
-          />
+          /> 
         ))}
       </div>
     </div>
@@ -28,3 +28,5 @@ const PageList = ({ pages, onOpenModal, onDelete, onEdit, onCreateNew }) => {
 };
 
 export default PageList;
+
+// Path: src/features/library/components/PageList.jsx

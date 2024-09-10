@@ -44,3 +44,5 @@ const AuthCallback = () => {
 };
 
 export default AuthCallback;
+
+// Path: src/pages/home/AuthCallback.jsx

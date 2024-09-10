@@ -1,8 +1,8 @@
 import { nodeCategories } from './nodeCategories';
 
 export const createNode = (type, position) => {
-  const nodeConfig = Object.values(nodeCategories)
-    .flat()
+  const nodeConfig = nodeCategories
+    .flatMap(category => category.nodes)
     .find(node => node.type === type);
 
   if (!nodeConfig) {
@@ -16,20 +16,20 @@ export const createNode = (type, position) => {
     data: { 
       label: nodeConfig.label,
       description: '',
+      baseColor: nodeConfig.baseColor,
+      gradientFrom: nodeConfig.gradientFrom,
+      gradientTo: nodeConfig.gradientTo,
     },
   };
 };
 
 export const getNodeColor = (node) => {
-  switch (node.type) {
-    case 'apiCall': return '#EC4899';
-    case 'assistant': return '#F59E0B';
-    case 'user': return '#3B82F6';
-    case 'note': return '#EAB308';
-    case 'database': return '#6366F1';
-    case 'workflow': return '#22C55E';
-    case 'conversation': return '#A855F7';
-    case 'experts': return '#EF4444';
-    default: return '#64748B';
-  }
+  const nodeConfig = nodeCategories
+    .flatMap(category => category.nodes)
+    .find(n => n.type === node.type);
+
+  return nodeConfig ? nodeConfig.baseColor : '#64748B';
 };
+
+
+// Path: src/common/components/nodes/nodeUtils.js

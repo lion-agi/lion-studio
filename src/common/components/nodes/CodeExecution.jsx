@@ -1,16 +1,23 @@
 import React from 'react';
 import BaseNode from './BaseNode';
 import { Code } from 'lucide-react';
+import { nodeCategories } from './nodeCategories';
 
 const CodeExecution = (props) => {
+  const nodeCategory = nodeCategories.find(category => 
+    category.nodes.some(node => node.type === 'codeExecution')
+  );
+
+  const nodeConfig = nodeCategory.nodes.find(node => node.type === 'codeExecution');
+
   return (
     <BaseNode 
       {...props} 
       icon={Code} 
       type="codeExecution"
-      baseColor="cyan"
-      gradientFrom="from-cyan-500/30"
-      gradientTo="to-cyan-400/10"
+      baseColor={nodeConfig.baseColor}
+      gradientFrom={nodeConfig.gradientFrom}
+      gradientTo={nodeConfig.gradientTo}
     >
       Code Execution
     </BaseNode>
@@ -18,3 +25,5 @@ const CodeExecution = (props) => {
 };
 
 export default CodeExecution;
+
+// Path: src/common/components/nodes/CodeExecution.jsx

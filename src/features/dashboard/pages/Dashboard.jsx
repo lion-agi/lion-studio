@@ -9,9 +9,9 @@ import PerformanceChart from '@/features/dashboard/components/PerformanceChart';
 import RecentCallsTable from '@/features/dashboard/components/RecentCallsTable';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/common/components/ui/tabs";
 import { Button } from "@/common/components/ui/button";
-import { Alert, AlertDescription, AlertTitle } from "@/common/components/ui/alert";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/common/components/ui/select";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/common/components/ui/dialog";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/common/components/ui/select";
+import { Input } from "@/common/components/ui/input";
 import { DownloadIcon, AlertTriangle, Info, Search } from 'lucide-react';
 
 const LoadingSpinner = () => (
@@ -45,61 +45,34 @@ const Dashboard = () => {
   const [isInfoModalOpen, setIsInfoModalOpen] = useState(false);
   const { data, isLoading, error } = useApiData(timeRange, selectedModel);
 
+  const [searchTerm, setSearchTerm] = useState('');
+  const [activeTab, setActiveTab] = useState('overview');
+
   if (isLoading) {
-    return <div className="flex justify-center items-center h-screen">Loading dashboard data...</div>;
+    return <LoadingSpinner />;
   }
 
   if (error) {
     return (
-      <Alert variant="destructive">
-        <AlertTriangle className="h-4 w-4" />
-        <AlertTitle>Error</AlertTitle>
-        <AlertDescription>Failed to load dashboard data: {error.message}</AlertDescription>
-      </Alert>
+      <div className="text-center py-8">
+        <AlertTriangle className="mx-auto h-12 w-12 text-yellow-400" />
+        <h3 className="mt-2 text-sm font-semibold text-gray-100">Error</h3>
+        <p className="mt-1 text-sm text-gray-400">{error.message || "An unknown error occurred"}</p>
+      </div>
     );
   }
 
   const handleExportApiCalls = () => {
-    if (!data || !data.recentCalls || data.recentCalls.length === 0) {
-      console.error('No data available for export');
-      return;
-    }
-
-    const csvContent = [
-      ['Timestamp', 'Provider', 'Model', 'Endpoint', 'Method', 'Base URL', 'Tokens', 'Cost', 'Response Time'],
-      ...data.recentCalls.map(call => [
-        call.created_at,
-        call.provider,
-        call.model,
-        call.endpoint,
-        call.method,
-        call.base_url,
-        call.tokens,
-        call.cost,
-        call.response_time
-      ])
-    ].map(row => row.join(',')).join('\n');
-
-    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-    const link = document.createElement('a');
-    if (link.download !== undefined) {
-      const url = URL.createObjectURL(blob);
-      link.setAttribute('href', url);
-      link.setAttribute('download', 'api_calls_export.csv');
-      link.style.visibility = 'hidden';
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-    }
+    // Implement export functionality here
+    console.log('Exporting API calls...');
   };
-
 
   return (
     <div className="min-h-screen bg-gray-900 text-gray-100">
-      <div className="container mx-auto p-8">
-        <div className="flex justify-between items-center mb-8">
+      <div className="container mx-auto p-8 space-y-8">
+        <div className="flex flex-col md:flex-row justify-between items-center mb-12">
           <div className="flex items-center">
-            <h1 className="text-2xl font-bold text-gray-100 mr-4">Dashboard</h1>
+            <h1 className="text-2xl font-bold mb-6 md:mb-0 text-gray-100 mr-4">Dashboard</h1>
             <Button
               variant="ghost"
               size="sm"
@@ -109,7 +82,7 @@ const Dashboard = () => {
               <Info className="h-5 w-5" />
             </Button>
           </div>
-          <div className="flex items-center space-x-4">
+          <div className="flex space-x-4 items-center">
             <Select value={timeRange} onValueChange={setTimeRange}>
               <SelectTrigger className="w-[180px] bg-gray-800 text-gray-200 border-gray-700">
                 <SelectValue placeholder="Select time range" />
@@ -131,37 +104,38 @@ const Dashboard = () => {
                 <SelectItem value="gpt-4">GPT-4</SelectItem>
               </SelectContent>
             </Select>
+            <div className="relative w-full md:w-80">
+              <Input
+                type="text"
+                placeholder="Search dashboard..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="w-full bg-gray-800 text-gray-200 placeholder-gray-400 border-gray-700 focus:border-purple-500 focus:ring-1 focus:ring-purple-500 pr-10"
+              />
+              <Search className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
+            </div>
           </div>
         </div>
-        
-        <Tabs defaultValue="overview" className="space-y-8">
-          <TabsList>
-            <TabsTrigger value="overview" className="data-[state=active]:bg-purple-600 data-[state=active]:text-white px-6 py-3">Overview</TabsTrigger>
-            <TabsTrigger value="costs" className="data-[state=active]:bg-purple-600 data-[state=active]:text-white px-6 py-3">Costs</TabsTrigger>
-            <TabsTrigger value="calls" className="data-[state=active]:bg-purple-600 data-[state=active]:text-white px-6 py-3">API Calls</TabsTrigger>
+
+        <Tabs value={activeTab} onValueChange={setActiveTab} className="mt-8">
+          <TabsList className="bg-gray-800 mb-6">
+            <TabsTrigger value="overview" className="data-[state=active]:bg-purple-600 data-[state=active]:text-white">Overview</TabsTrigger>
+            <TabsTrigger value="calls" className="data-[state=active]:bg-purple-600 data-[state=active]:text-white">API Calls</TabsTrigger>
           </TabsList>
 
-          <TabsContent value="overview">
+          <TabsContent value="overview" className="mt-6">
             <div className="space-y-8">
               <SummaryCards data={data.summary} />
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
                 <CostTrendChart data={data.costTrend} />
                 <PerformanceChart data={data.performance} />
-              </div>
-            </div>
-          </TabsContent>
-
-          <TabsContent value="costs">
-            <div className="space-y-8">
-              <SummaryCards data={data.summary} />
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                <CostTrendChart data={data.costTrend} />
                 <CostBreakdownChart data={data.costBreakdown} />
               </div>
             </div>
           </TabsContent>
 
-          <TabsContent value="calls">
+
+          <TabsContent value="calls" className="mt-6">
             <div className="space-y-8">
               <SummaryCards data={data.summary} />
               {data.recentCalls && data.recentCalls.length > 0 ? (
@@ -185,7 +159,10 @@ const Dashboard = () => {
           </TabsContent>
         </Tabs>
       </div>
-      <InfoModal isOpen={isInfoModalOpen} onClose={() => setIsInfoModalOpen(false)} />
+      <InfoModal
+        isOpen={isInfoModalOpen}
+        onClose={() => setIsInfoModalOpen(false)}
+      />
     </div>
   );
 };

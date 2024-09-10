@@ -43,3 +43,5 @@ const ThreadItem = ({ thread, onOpenModal }) => {
 };
 
 export default ThreadItem;
+
+// Path: src/features/library/components/ThreadItem.jsx

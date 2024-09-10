@@ -18,3 +18,5 @@ const Timer = (props) => {
 };
 
 export default Timer;
+
+// Path: src/common/components/nodes/Timer.jsx

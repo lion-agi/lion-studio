@@ -2,20 +2,19 @@ import React, { useState, useCallback } from 'react';
 import { Handle, Position } from 'reactflow';
 import { Card, CardContent, CardHeader, CardTitle } from "@/common/components/ui/card"
 import { Button } from "@/common/components/ui/button"
-import { Input } from "@/common/components/ui/input"
-import { Textarea } from "@/common/components/ui/textarea"
 import { Edit, Trash2, Save, X, ChevronDown, ChevronUp } from 'lucide-react';
+import { nodeCategories } from './nodeCategories';
+import NodeContent from './NodeContent';
+import NodeForm from './NodeForm';
 
 const BaseNode = ({ 
-  data, 
+  data = {}, 
   isConnectable, 
   selected, 
   icon: Icon, 
   type,
-  baseColor,
-  gradientFrom,
-  gradientTo,
-  children 
+  children,
+  onDelete // Add this prop
 }) => {
   const [isExpanded, setIsExpanded] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
@@ -40,35 +39,42 @@ const BaseNode = ({
     setIsExpanded(false);
   }, [data]);
 
-  const handleInputChange = useCallback((e) => {
-    const { name, value } = e.target;
-    setEditedData(prev => ({ ...prev, [name]: value }));
-  }, []);
-
   const handleDelete = useCallback(() => {
-    if (data.onDelete) {
-      data.onDelete(data.id);
+    if (onDelete) {
+      onDelete(data.id);
     }
-  }, [data]);
+  }, [onDelete, data.id]);
 
   const toggleExpand = useCallback(() => {
     setIsExpanded(prev => !prev);
   }, []);
 
+  const nodeCategory = nodeCategories.find(category => 
+    category.nodes.some(node => node.type === type)
+  );
+
+  const nodeConfig = nodeCategory?.nodes.find(node => node.type === type) || {};
+
   return (
     <Card 
-      className={`node-card w-64 bg-gradient-to-br ${gradientFrom} ${gradientTo} backdrop-blur-sm ${selected ? `ring-2 ring-${baseColor}-400 ring-opacity-50` : ''}`}
+      className={`node-card w-64 bg-gradient-to-br ${nodeConfig.gradientFrom} ${nodeConfig.gradientTo} backdrop-blur-sm ${selected ? `ring-2 ring-${nodeConfig.baseColor}-400 ring-opacity-50` : ''}`}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
-      <CardHeader className="node-header relative cursor-pointer p-3" onClick={toggleExpand}>
-        <CardTitle className={`text-${baseColor}-100 font-bold flex items-center justify-between text-sm`}>
-          <div className="flex items-center">
-            <Icon className={`w-4 h-4 mr-2 text-${baseColor}-100`} />
-            {children}
-          </div>
-          {isExpanded ? <ChevronUp className="w-3 h-3" /> : <ChevronDown className="w-3 h-3" />}
-        </CardTitle>
+      <CardHeader 
+        className="node-header relative cursor-pointer p-3 flex items-center justify-between h-16" 
+        onClick={toggleExpand}
+      >
+        <div className="flex items-center justify-center w-full space-x-2">
+          <Icon className={`h-5 w-5 text-${nodeConfig.baseColor}-100 flex-shrink-0`} />
+          <CardTitle className={`text-${nodeConfig.baseColor}-100 font-bold text-center text-lg break-words max-w-full flex-grow text-center leading-tight`} style={{ textShadow: '0 1px 2px rgba(0, 0, 0, 0.1)' }}>
+            {data.label || children || 'Unnamed Node'}
+          </CardTitle>
+          {isExpanded ? 
+            <ChevronUp className={`h-4 w-4 text-${nodeConfig.baseColor}-100 flex-shrink-0`} /> : 
+            <ChevronDown className={`h-4 w-4 text-${nodeConfig.baseColor}-100 flex-shrink-0`} />
+          }
+        </div>
         <Handle
           type="target"
           position={Position.Left}
@@ -78,7 +84,7 @@ const BaseNode = ({
             transform: 'translateY(-50%)', 
             width: '12px', 
             height: '12px',
-            background: `var(--${baseColor}-400)`
+            background: `var(--${nodeConfig.baseColor}-400)`
           }}
           isConnectable={isConnectable}
         />
@@ -91,7 +97,7 @@ const BaseNode = ({
             transform: 'translateY(-50%)', 
             width: '12px', 
             height: '12px',
-            background: `var(--${baseColor}-400)`
+            background: `var(--${nodeConfig.baseColor}-400)`
           }}
           isConnectable={isConnectable}
         />
@@ -99,47 +105,23 @@ const BaseNode = ({
       {isExpanded && (
         <CardContent className="node-content p-3">
           {isEditing ? (
-            <>
-              <Input
-                className={`node-input mb-2 text-xs h-7 px-2 py-1 bg-${baseColor}-800 text-${baseColor}-100 border-${baseColor}-600`}
-                name="label"
-                placeholder="Node label"
-                value={editedData.label || ''}
-                onChange={handleInputChange}
-              />
-              <Textarea
-                className={`node-input mb-2 text-xs px-2 py-1 bg-${baseColor}-800 text-${baseColor}-100 border-${baseColor}-600`}
-                name="description"
-                placeholder="Node description"
-                value={editedData.description || ''}
-                onChange={handleInputChange}
-                rows={2}
-              />
-              <div className="flex justify-end space-x-2 mt-2">
-                <Button size="sm" variant="outline" onClick={handleCancel} className={`text-xs py-1 h-7 bg-${baseColor}-700 text-${baseColor}-100 border-${baseColor}-600 hover:bg-${baseColor}-600`}>
-                  <X className="w-3 h-3 mr-1" />
-                  Cancel
-                </Button>
-                <Button size="sm" onClick={handleSave} className={`text-xs py-1 h-7 bg-${baseColor}-600 text-${baseColor}-100 hover:bg-${baseColor}-500`}>
-                  <Save className="w-3 h-3 mr-1" />
-                  Save
-                </Button>
-              </div>
-            </>
+            <NodeForm
+              data={editedData}
+              onChange={setEditedData}
+              onSave={handleSave}
+              onCancel={handleCancel}
+            />
           ) : (
-            <>
-              <p className={`mb-2 text-xs text-${baseColor}-100`}><strong>Label:</strong> {data.label || children}</p>
-              <p className={`mb-2 text-xs text-${baseColor}-200`}><strong>Description:</strong> {editedData.description || 'No description'}</p>
-            </>
+            <NodeContent data={data} />
           )}
         </CardContent>
       )}
       {!isEditing && (isHovered || selected) && (
-        <div className="absolute top-0 right-0 p-1 bg-background/80 rounded-bl">
-          <Button variant="ghost" size="icon" onClick={handleEdit} className={`h-7 w-7 text-${baseColor}-100 hover:bg-${baseColor}-700`}>
+        <div className="absolute top-2 right-2 p-1 bg-background/80 rounded-bl">
+          <Button variant="ghost" size="icon" onClick={handleEdit} className={`h-7 w-7 text-${nodeConfig.baseColor}-100 hover:bg-${nodeConfig.baseColor}-700`}>
             <Edit className="h-3 w-3" />
           </Button>
-          <Button variant="ghost" size="icon" onClick={handleDelete} className={`h-7 w-7 text-${baseColor}-100 hover:bg-${baseColor}-700`}>
+          <Button variant="ghost" size="icon" onClick={handleDelete} className={`h-7 w-7 text-${nodeConfig.baseColor}-100 hover:bg-${nodeConfig.baseColor}-700`}>
             <Trash2 className="h-3 w-3" />
           </Button>
         </div>

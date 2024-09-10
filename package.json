@@ -1,7 +1,7 @@
 {
   "name": "vite-project",
   "private": true,
-  "version": "0.1.7",
+  "version": "0.1.9",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -54,6 +54,7 @@
     "lucide-react": "^0.417.0",
     "next-themes": "^0.3.0",
     "react": "^18.2.0",
+    "react-beautiful-dnd": "^13.1.1",
     "react-day-picker": "^8.10.1",
     "react-dom": "^18.2.0",
     "react-draggable": "^4.4.6",

@@ -18,3 +18,5 @@ const Initializer = (props) => {
 };
 
 export default Initializer;
+
+// Path: src/common/components/nodes/Initializer.jsx

@@ -6,3 +6,5 @@ export const useStore = create((set) => ({
   setSession: (session) => set({ session }),
   setLoading: (loading) => set({ loading }),
 }));
+
+// Path: src/common/components/store.js

@@ -5,8 +5,8 @@ import { Input } from "@/common/components/ui/input";
 import { Checkbox } from "@/common/components/ui/checkbox";
 import { Alert, AlertDescription, AlertTitle } from "@/common/components/ui/alert";
 import { InfoIcon } from 'lucide-react';
-import { useRegistration } from '../common/hooks/useRegistration';
-import SocialSignUpButtons from '../common/components/SocialSignUpButtons';
+import { useRegistration } from '../../common/hooks/useRegistration';
+import SocialSignUpButtons from '../../common/components/SocialSignUpButtons';
 
 const Registration = () => {
   const {
@@ -112,3 +112,6 @@ const Registration = () => {
 };
 
 export default Registration;
+
+
+// Path: src/pages/home/Registration.jsx

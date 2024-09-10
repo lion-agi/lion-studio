@@ -142,3 +142,5 @@ const SaveLoadDialog = ({ isOpen, onClose, onSave, onLoad, graphData }) => {
 };
 
 export default SaveLoadDialog;
+
+// Path: src/common/components/SaveLoadDialog.jsx

@@ -1,5 +1,5 @@
 import React from 'react';
-import MainWebsiteLayout from '../common/components/MainWebsiteLayout';
+import MainWebsiteLayout from '../../common/components/MainWebsiteLayout';
 
 const About = () => {
   return (
@@ -21,3 +21,5 @@ const About = () => {
 };
 
 export default About;
+
+// Path: src/pages/home/About.jsx

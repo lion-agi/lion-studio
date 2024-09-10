@@ -49,3 +49,5 @@ const InfoItem = ({ label, value }) => (
 );
 
 export default ThreadModal;
+
+// Path: src/features/library/components/ThreadModal.jsx

@@ -1,16 +1,23 @@
 import React from 'react';
 import BaseNode from './BaseNode';
 import { FileText } from 'lucide-react';
+import { nodeCategories } from './nodeCategories';
 
 const DocumentAnalysis = (props) => {
+  const nodeCategory = nodeCategories.find(category => 
+    category.nodes.some(node => node.type === 'documentAnalysis')
+  );
+
+  const nodeConfig = nodeCategory.nodes.find(node => node.type === 'documentAnalysis');
+
   return (
     <BaseNode 
       {...props} 
       icon={FileText} 
       type="documentAnalysis"
-      baseColor="yellow"
-      gradientFrom="from-yellow-500/30"
-      gradientTo="to-yellow-400/10"
+      baseColor={nodeConfig.baseColor}
+      gradientFrom={nodeConfig.gradientFrom}
+      gradientTo={nodeConfig.gradientTo}
     >
       Document Analysis
     </BaseNode>
@@ -18,3 +25,6 @@ const DocumentAnalysis = (props) => {
 };
 
 export default DocumentAnalysis;
+
+
+// Path: src/common/components/nodes/DocumentAnalysis.jsx
