@@ -1,48 +1,29 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from "@/common/components/ui/card";
 import { Button } from "@/common/components/ui/button";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/common/components/ui/tooltip";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/common/components/ui/collapsible";
 import { ScrollArea } from "@/common/components/ui/scroll-area";
-import { Zap, Save, Upload, PlusCircle, FileJson, Undo, Redo, Lock, Unlock, ZoomIn, ZoomOut, RotateCcw, Download, RefreshCw, ChevronUp, ChevronDown } from 'lucide-react';
-import JSONModal from '@/common/components/JSONModal';
+import { Save, Upload, Download, RotateCcw, Plus, Undo, Redo, Lock, Unlock, ZoomIn, ZoomOut, Trash2, ChevronUp, ChevronDown } from 'lucide-react';
 
 const WorkflowOperationsPanel = ({ 
   onExportJSON, 
   onSaveLoad, 
-  onCreateAgenticFlow, 
+  onCreateFlow, 
   onUndo, 
   onRedo, 
   canUndo, 
   canRedo,
-  onSaveSettings,
   onZoomIn,
   onZoomOut,
   onResetView,
-  onClearCanvas
+  onClearCanvas,
+  isGraphLocked,
+  onToggleGraphLock
 }) => {
-  const [showJSONModal, setShowJSONModal] = useState(false);
   const [isCollapsed, setIsCollapsed] = useState(false);
-  const [isGraphLocked, setIsGraphLocked] = useState(false);
 
-  const handleExportJSON = () => {
-    const jsonData = onExportJSON();
-    setShowJSONModal(true);
-  };
-
-  const handleSave = () => {
-    onSaveLoad('save');
-  };
-
-  const handleLoad = () => {
-    onSaveLoad('load');
-  };
-
-  const toggleGraphLock = () => {
-    setIsGraphLocked(!isGraphLocked);
-  };
-
-  const renderButton = useCallback((icon, label, onClick, disabled = false) => (
+  const renderButton = (icon, label, onClick, disabled = false) => (
     <TooltipProvider>
       <Tooltip>
         <TooltipTrigger asChild>
@@ -61,33 +42,40 @@ const WorkflowOperationsPanel = ({
         </TooltipContent>
       </Tooltip>
     </TooltipProvider>
-  ), []);
+  );
+
+  const buttons = [
+    { icon: <Save className="h-4 w-4" />, label: "Save", onClick: () => onSaveLoad('save') },
+    { icon: <Upload className="h-4 w-4" />, label: "Load", onClick: () => onSaveLoad('load') },
+    { icon: <Download className="h-4 w-4" />, label: "Export JSON", onClick: onExportJSON },
+    { icon: <Plus className="h-4 w-4" />, label: "New Flow", onClick: onCreateFlow },
+    { icon: <Undo className="h-4 w-4" />, label: "Undo", onClick: onUndo, disabled: !canUndo },
+    { icon: <Redo className="h-4 w-4" />, label: "Redo", onClick: onRedo, disabled: !canRedo },
+    { icon: isGraphLocked ? <Lock className="h-4 w-4" /> : <Unlock className="h-4 w-4" />, label: isGraphLocked ? "Unlock Graph" : "Lock Graph", onClick: onToggleGraphLock },
+    { icon: <ZoomIn className="h-4 w-4" />, label: "Zoom In", onClick: onZoomIn },
+    { icon: <ZoomOut className="h-4 w-4" />, label: "Zoom Out", onClick: onZoomOut },
+    { icon: <RotateCcw className="h-4 w-4" />, label: "Reset View", onClick: onResetView },
+    { icon: <Trash2 className="h-4 w-4" />, label: "Clear Canvas", onClick: onClearCanvas },
+  ];
 
   return (
-    <Card className="bg-gray-800 text-white mt-12 border border-gray-700 rounded-lg shadow-lg">
+    <Card className="bg-gray-800 text-white mt-16 border border-gray-700 rounded-lg shadow-lg">
       <CardHeader className="pb-2">
         <CardTitle className="text-sm font-medium flex items-center">
-          <Zap className="w-4 h-4 mr-2" />
+          <Save className="w-4 h-4 mr-2" />
           Workflow Operations
         </CardTitle>
       </CardHeader>
       <Collapsible open={!isCollapsed} onOpenChange={setIsCollapsed}>
         <CardContent className="pt-2">
           <CollapsibleContent>
-            <ScrollArea className="h-40 pr-4 custom-scrollbar">
+            <ScrollArea className="h-[132px] pr-4" style={{ scrollbarWidth: 'thin', scrollbarColor: 'rgba(155, 155, 155, 0.5) transparent' }}>
               <div className="grid grid-cols-3 gap-2">
-                {renderButton(<FileJson className="h-4 w-4" />, "Export JSON", handleExportJSON)}
-                {renderButton(<Save className="h-4 w-4" />, "Save Workflow", handleSave)}
-                {renderButton(<Upload className="h-4 w-4" />, "Load Workflow", handleLoad)}
-                {renderButton(<PlusCircle className="h-4 w-4" />, "New Agentic Flow", onCreateAgenticFlow)}
-                {renderButton(<Undo className="h-4 w-4" />, "Undo", onUndo, !canUndo)}
-                {renderButton(<Redo className="h-4 w-4" />, "Redo", onRedo, !canRedo)}
-                {renderButton(isGraphLocked ? <Lock className="h-4 w-4" /> : <Unlock className="h-4 w-4" />, isGraphLocked ? "Unlock Graph" : "Lock Graph", toggleGraphLock)}
-                {renderButton(<ZoomIn className="h-4 w-4" />, "Zoom In", onZoomIn)}
-                {renderButton(<ZoomOut className="h-4 w-4" />, "Zoom Out", onZoomOut)}
-                {renderButton(<RotateCcw className="h-4 w-4" />, "Reset View", onResetView)}
-                {renderButton(<RefreshCw className="h-4 w-4" />, "Clear Canvas", onClearCanvas)}
-                {renderButton(<Download className="h-4 w-4" />, "Download Workflow", () => {})}
+                {buttons.map((button, index) => (
+                  <div key={index}>
+                    {renderButton(button.icon, button.label, button.onClick, button.disabled)}
+                  </div>
+                ))}
               </div>
             </ScrollArea>
           </CollapsibleContent>
@@ -98,12 +86,6 @@ const WorkflowOperationsPanel = ({
           </Button>
         </CollapsibleTrigger>
       </Collapsible>
-
-      <JSONModal
-        isOpen={showJSONModal}
-        onClose={() => setShowJSONModal(false)}
-        jsonData={onExportJSON()}
-      />
     </Card>
   );
 };
