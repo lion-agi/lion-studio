@@ -184,7 +184,7 @@ const WorkflowEditorContent = () => {
           onNodeDragStop={onNodeDragStop}
           nodeTypes={nodeTypes}
           defaultEdgeOptions={edgeOptions}
-          // fitView
+          fitView
           style={{
             backgroundColor: backgroundColor,
           }}
@@ -194,7 +194,6 @@ const WorkflowEditorContent = () => {
           nodesConnectable={!isGraphLocked}
           elementsSelectable={!isGraphLocked}
         >
-          <Controls />
           <MiniMap 
             nodeColor={(node) => {
               switch (node.type) {
