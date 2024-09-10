@@ -8,7 +8,7 @@ import { Edit, Trash2, Save, X, ChevronDown, ChevronUp } from 'lucide-react';
 import { nodeCategories } from './nodeCategories';
 
 const BaseNode = ({ 
-  data, 
+  data = {}, 
   isConnectable, 
   selected, 
   icon: Icon, 
@@ -57,7 +57,7 @@ const BaseNode = ({
     category.nodes.some(node => node.type === type)
   );
 
-  const nodeConfig = nodeCategory.nodes.find(node => node.type === type);
+  const nodeConfig = nodeCategory?.nodes.find(node => node.type === type) || {};
 
   return (
     <Card 
@@ -68,8 +68,8 @@ const BaseNode = ({
       <CardHeader className="node-header relative cursor-pointer p-3" onClick={toggleExpand}>
         <CardTitle className={`text-${nodeConfig.baseColor}-100 font-bold flex items-center justify-between text-sm`}>
           <div className="flex items-center">
-            <Icon className={`w-4 h-4 mr-2 text-${nodeConfig.baseColor}-100`} />
-            {children}
+            {Icon && <Icon className={`w-4 h-4 mr-2 text-${nodeConfig.baseColor}-100`} />}
+            {data.label || children || 'Unnamed Node'}
           </div>
           {isExpanded ? <ChevronUp className="w-3 h-3" /> : <ChevronDown className="w-3 h-3" />}
         </CardTitle>
@@ -132,7 +132,7 @@ const BaseNode = ({
             </>
           ) : (
             <>
-              <p className={`mb-2 text-xs text-${nodeConfig.baseColor}-100`}><strong>Label:</strong> {data.label || children}</p>
+              <p className={`mb-2 text-xs text-${nodeConfig.baseColor}-100`}><strong>Label:</strong> {data.label || children || 'Unnamed Node'}</p>
               <p className={`mb-2 text-xs text-${nodeConfig.baseColor}-200`}><strong>Description:</strong> {editedData.description || 'No description'}</p>
             </>
           )}
@@ -153,5 +153,3 @@ const BaseNode = ({
 };
 
 export default BaseNode;
-
-// Path: src/common/components/nodes/BaseNode.jsx
