@@ -184,7 +184,7 @@ const WorkflowEditorContent = () => {
           onNodeDragStop={onNodeDragStop}
           nodeTypes={nodeTypes}
           defaultEdgeOptions={edgeOptions}
-          fitView
+          // fitView
           style={{
             backgroundColor: backgroundColor,
           }}
