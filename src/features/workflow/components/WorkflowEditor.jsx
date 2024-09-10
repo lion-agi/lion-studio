@@ -3,7 +3,8 @@ import ReactFlow, {
   MiniMap, 
   Panel, 
   useReactFlow,
-  ReactFlowProvider
+  ReactFlowProvider,
+  Controls
 } from 'reactflow';
 import 'reactflow/dist/style.css';
 import { nodeTypes } from '@/common/components/nodes';
@@ -18,10 +19,10 @@ import EdgePropertiesDialog from './EdgePropertiesDialog';
 import JSONModal from '@/common/components/JSONModal';
 import SaveLoadDialog from '@/common/components/SaveLoadDialog';
 import { useToast } from "@/common/components/ui/use-toast";
+import { useWorkflowStore } from '@/store/workflowStore';
 
 const WorkflowEditorContent = () => {
   const containerRef = useRef(null);
-  const [isGraphLocked, setIsGraphLocked] = useState(false);
   const [selectedEdge, setSelectedEdge] = useState(null);
   const [isEdgePropertiesDialogOpen, setIsEdgePropertiesDialogOpen] = useState(false);
   const [showJSONModal, setShowJSONModal] = useState(false);
@@ -29,6 +30,7 @@ const WorkflowEditorContent = () => {
   const [jsonData, setJsonData] = useState(null);
   const [savedGraphs, setSavedGraphs] = useState([]);
   const { toast } = useToast();
+  const { isGraphLocked } = useWorkflowStore();
 
   const {
     nodes,
@@ -49,10 +51,6 @@ const WorkflowEditorContent = () => {
     onNodeDragStop,
     handleExportJSON,
     handleCreateAgenticFlow,
-    undo,
-    redo,
-    canUndo,
-    canRedo,
     handleSaveSettings,
     isWizardOpen,
     setIsWizardOpen,
@@ -88,19 +86,6 @@ const WorkflowEditorContent = () => {
     setJsonData(jsonContent);
     setShowJSONModal(true);
   }, [handleExportJSON]);
-
-  const handleToggleGraphLock = useCallback(() => {
-    setIsGraphLocked(prev => !prev);
-  }, []);
-
-  const modifiedOnDrop = useCallback(
-    (event) => {
-      if (!isGraphLocked) {
-        onDrop(event);
-      }
-    },
-    [isGraphLocked, onDrop]
-  );
 
   const handleSave = useCallback(() => {
     const flowData = reactFlowInstance.toObject();
@@ -165,13 +150,6 @@ const WorkflowEditorContent = () => {
           onExportJSON={handleExportJSON}
           onSaveLoad={() => setShowSaveLoadDialog(true)}
           onCreateAgenticFlow={handleCreateAgenticFlow}
-          onUndo={undo}
-          onRedo={redo}
-          canUndo={canUndo}
-          canRedo={canRedo}
-          onSaveSettings={handleSaveSettings}
-          isGraphLocked={isGraphLocked}
-          onToggleGraphLock={handleToggleGraphLock}
           onZoomIn={zoomIn}
           onZoomOut={zoomOut}
           onResetView={fitView}
@@ -191,7 +169,7 @@ const WorkflowEditorContent = () => {
           onEdgesChange={onEdgesChange}
           onConnect={onConnect}
           onInit={setReactFlowInstance}
-          onDrop={modifiedOnDrop}
+          onDrop={onDrop}
           onDragOver={onDragOver}
           onNodeClick={onNodeClick}
           onEdgeClick={onEdgeClick}
@@ -208,6 +186,7 @@ const WorkflowEditorContent = () => {
           nodesConnectable={!isGraphLocked}
           elementsSelectable={!isGraphLocked}
         >
+          <Controls />
           <MiniMap 
             nodeColor={(node) => {
               switch (node.type) {
