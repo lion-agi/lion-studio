@@ -119,6 +119,12 @@ const WorkflowEditorContent = () => {
         title: "Workflow Loaded",
         description: "Your workflow has been loaded successfully.",
       });
+    } else {
+      toast({
+        title: "No Data to Load",
+        description: "There is no saved workflow data to load.",
+        variant: "warning",
+      });
     }
   }, [setNodes, setEdges, toast]);
 
