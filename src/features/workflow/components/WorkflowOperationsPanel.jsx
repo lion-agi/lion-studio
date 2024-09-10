@@ -4,7 +4,6 @@ import { Button } from "@/common/components/ui/button";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/common/components/ui/tooltip";
 import { ScrollArea } from "@/common/components/ui/scroll-area";
 import { Undo, Redo, Lock, Unlock, ZoomIn, ZoomOut, RotateCcw, FileJson } from 'lucide-react';
-import { useReactFlow } from 'reactflow';
 import { useWorkflowStore } from '@/store/workflowStore';
 
 const WorkflowOperationsPanel = ({ 
@@ -12,8 +11,11 @@ const WorkflowOperationsPanel = ({
   onZoomOut,
   onResetView,
   onShowJSONModal,
+  undo,
+  redo,
+  canUndo,
+  canRedo
 }) => {
-  const { undo, redo, canUndo, canRedo } = useReactFlow();
   const { isGraphLocked, setIsGraphLocked } = useWorkflowStore();
 
   const renderButton = (icon, label, onClick, disabled = false) => (
@@ -39,8 +41,8 @@ const WorkflowOperationsPanel = ({
 
   const buttons = [
     { icon: <FileJson className="h-4 w-4" />, label: "View JSON", onClick: onShowJSONModal },
-    { icon: <Undo className="h-4 w-4" />, label: "Undo", onClick: undo, disabled: !canUndo() },
-    { icon: <Redo className="h-4 w-4" />, label: "Redo", onClick: redo, disabled: !canRedo() },
+    { icon: <Undo className="h-4 w-4" />, label: "Undo", onClick: undo, disabled: !canUndo },
+    { icon: <Redo className="h-4 w-4" />, label: "Redo", onClick: redo, disabled: !canRedo },
     { icon: isGraphLocked ? <Lock className="h-4 w-4" /> : <Unlock className="h-4 w-4" />, label: isGraphLocked ? "Unlock Graph" : "Lock Graph", onClick: () => setIsGraphLocked(!isGraphLocked) },
     { icon: <ZoomIn className="h-4 w-4" />, label: "Zoom In", onClick: onZoomIn },
     { icon: <ZoomOut className="h-4 w-4" />, label: "Zoom Out", onClick: onZoomOut },
