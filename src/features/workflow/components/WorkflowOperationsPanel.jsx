@@ -2,17 +2,10 @@ import React, { useState, useCallback } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from "@/common/components/ui/card";
 import { Button } from "@/common/components/ui/button";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/common/components/ui/tooltip";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/common/components/ui/select";
-import { Switch } from "@/common/components/ui/switch";
-import { Label } from "@/common/components/ui/label";
-import { Input } from "@/common/components/ui/input";
-import { ScrollArea } from "@/common/components/ui/scroll-area";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/common/components/ui/collapsible";
-import { Zap, Save, Upload, PlusCircle, FileJson, Play, Pause, Undo, Redo, Settings, Lock, Unlock, ZoomIn, ZoomOut, RotateCcw, Download, Share, ChevronUp, ChevronDown, Sliders, RefreshCw, MapPin } from 'lucide-react';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogFooter } from "@/common/components/ui/dialog";
+import { ScrollArea } from "@/common/components/ui/scroll-area";
+import { Zap, Save, Upload, PlusCircle, FileJson, Undo, Redo, Lock, Unlock, ZoomIn, ZoomOut, RotateCcw, Download, RefreshCw, ChevronUp, ChevronDown } from 'lucide-react';
 import JSONModal from '@/common/components/JSONModal';
-import EdgePropertiesDialog from './EdgePropertiesDialog';
-import VariableManipulationModal from '@/common/components/VariableManipulationModal';
 
 const WorkflowOperationsPanel = ({ 
   onExportJSON, 
@@ -23,25 +16,14 @@ const WorkflowOperationsPanel = ({
   canUndo, 
   canRedo,
   onSaveSettings,
-  backgroundColor,
-  isGraphLocked,
-  setIsGraphLocked,
   onZoomIn,
   onZoomOut,
   onResetView,
-  onEdgeClick,
   onClearCanvas
 }) => {
   const [showJSONModal, setShowJSONModal] = useState(false);
-  const [showSettingsModal, setShowSettingsModal] = useState(false);
-  const [tempBackgroundColor, setTempBackgroundColor] = useState(backgroundColor);
-  const [autoSave, setAutoSave] = useState(true);
-  const [performanceMode, setPerformanceMode] = useState(false);
-  const [theme, setTheme] = useState('dark');
   const [isCollapsed, setIsCollapsed] = useState(false);
-  const [showEdgePropertiesDialog, setShowEdgePropertiesDialog] = useState(false);
-  const [selectedEdge, setSelectedEdge] = useState(null);
-  const [showVariableManipulationModal, setShowVariableManipulationModal] = useState(false);
+  const [isGraphLocked, setIsGraphLocked] = useState(false);
 
   const handleExportJSON = () => {
     const jsonData = onExportJSON();
@@ -49,45 +31,40 @@ const WorkflowOperationsPanel = ({
   };
 
   const handleSave = () => {
-    const flow = onExportJSON();
-    localStorage.setItem('savedWorkflow', JSON.stringify(flow));
+    onSaveLoad('save');
   };
 
   const handleLoad = () => {
-    const savedFlow = localStorage.getItem('savedWorkflow');
-    if (savedFlow) {
-      onSaveLoad(JSON.parse(savedFlow));
-    }
-  };
-
-  const handleSettingsSave = () => {
-    onSaveSettings({
-      backgroundColor: tempBackgroundColor,
-      autoSave,
-      performanceMode,
-      theme
-    });
-    setShowSettingsModal(false);
+    onSaveLoad('load');
   };
 
   const toggleGraphLock = () => {
     setIsGraphLocked(!isGraphLocked);
   };
 
-  const handleEdgeClick = useCallback((edge) => {
-    setSelectedEdge(edge);
-    setShowEdgePropertiesDialog(true);
-  }, []);
-
-  const presetColors = [
-    { name: 'Dark Blue', value: '#1A2530' },
-    { name: 'Light Gray', value: '#F0F4F8' },
-    { name: 'Dark Gray', value: '#2C3E50' },
-    { name: 'Navy', value: '#34495E' },
-  ];
+  const renderButton = useCallback((icon, label, onClick, disabled = false) => (
+    <TooltipProvider>
+      <Tooltip>
+        <TooltipTrigger asChild>
+          <Button
+            variant="outline"
+            size="icon"
+            onClick={onClick}
+            disabled={disabled}
+            className="w-10 h-10 p-2"
+          >
+            {icon}
+          </Button>
+        </TooltipTrigger>
+        <TooltipContent side="bottom">
+          <p>{label}</p>
+        </TooltipContent>
+      </Tooltip>
+    </TooltipProvider>
+  ), []);
 
   return (
-    <Card className="bg-gray-800 text-white mt-8 border border-gray-700 rounded-lg shadow-lg">
+    <Card className="bg-gray-800 text-white mt-12 border border-gray-700 rounded-lg shadow-lg">
       <CardHeader className="pb-2">
         <CardTitle className="text-sm font-medium flex items-center">
           <Zap className="w-4 h-4 mr-2" />
@@ -97,163 +74,20 @@ const WorkflowOperationsPanel = ({
       <Collapsible open={!isCollapsed} onOpenChange={setIsCollapsed}>
         <CardContent className="pt-2">
           <CollapsibleContent>
-            <ScrollArea className="h-[calc(50vh-100px)] custom-scrollbar">
+            <ScrollArea className="h-40 pr-4 custom-scrollbar">
               <div className="grid grid-cols-3 gap-2">
-                <TooltipProvider>
-                  <Tooltip>
-                    <TooltipTrigger asChild>
-                      <Button variant="outline" size="icon" onClick={handleExportJSON}>
-                        <FileJson className="h-4 w-4" />
-                      </Button>
-                    </TooltipTrigger>
-                    <TooltipContent>
-                      <p>Export JSON</p>
-                    </TooltipContent>
-                  </Tooltip>
-                </TooltipProvider>
-
-                <TooltipProvider>
-                  <Tooltip>
-                    <TooltipTrigger asChild>
-                      <Button variant="outline" size="icon" onClick={handleSave}>
-                        <Save className="h-4 w-4" />
-                      </Button>
-                    </TooltipTrigger>
-                    <TooltipContent>
-                      <p>Save Workflow</p>
-                    </TooltipContent>
-                  </Tooltip>
-                </TooltipProvider>
-
-                <TooltipProvider>
-                  <Tooltip>
-                    <TooltipTrigger asChild>
-                      <Button variant="outline" size="icon" onClick={handleLoad}>
-                        <Upload className="h-4 w-4" />
-                      </Button>
-                    </TooltipTrigger>
-                    <TooltipContent>
-                      <p>Load Workflow</p>
-                    </TooltipContent>
-                  </Tooltip>
-                </TooltipProvider>
-
-                <TooltipProvider>
-                  <Tooltip>
-                    <TooltipTrigger asChild>
-                      <Button variant="outline" size="icon" onClick={onCreateAgenticFlow}>
-                        <PlusCircle className="h-4 w-4" />
-                      </Button>
-                    </TooltipTrigger>
-                    <TooltipContent>
-                      <p>New Agentic Flow</p>
-                    </TooltipContent>
-                  </Tooltip>
-                </TooltipProvider>
-
-                <TooltipProvider>
-                  <Tooltip>
-                    <TooltipTrigger asChild>
-                      <Button variant="outline" size="icon" onClick={onUndo} disabled={!canUndo}>
-                        <Undo className="h-4 w-4" />
-                      </Button>
-                    </TooltipTrigger>
-                    <TooltipContent>
-                      <p>Undo</p>
-                    </TooltipContent>
-                  </Tooltip>
-                </TooltipProvider>
-
-                <TooltipProvider>
-                  <Tooltip>
-                    <TooltipTrigger asChild>
-                      <Button variant="outline" size="icon" onClick={onRedo} disabled={!canRedo}>
-                        <Redo className="h-4 w-4" />
-                      </Button>
-                    </TooltipTrigger>
-                    <TooltipContent>
-                      <p>Redo</p>
-                    </TooltipContent>
-                  </Tooltip>
-                </TooltipProvider>
-
-                <TooltipProvider>
-                  <Tooltip>
-                    <TooltipTrigger asChild>
-                      <Button variant="outline" size="icon" onClick={() => setShowSettingsModal(true)}>
-                        <Settings className="h-4 w-4" />
-                      </Button>
-                    </TooltipTrigger>
-                    <TooltipContent>
-                      <p>Settings</p>
-                    </TooltipContent>
-                  </Tooltip>
-                </TooltipProvider>
-
-                <TooltipProvider>
-                  <Tooltip>
-                    <TooltipTrigger asChild>
-                      <Button variant="outline" size="icon" onClick={toggleGraphLock}>
-                        {isGraphLocked ? <Lock className="h-4 w-4" /> : <Unlock className="h-4 w-4" />}
-                      </Button>
-                    </TooltipTrigger>
-                    <TooltipContent>
-                      <p>{isGraphLocked ? 'Unlock' : 'Lock'} Graph</p>
-                    </TooltipContent>
-                  </Tooltip>
-                </TooltipProvider>
-
-                <TooltipProvider>
-                  <Tooltip>
-                    <TooltipTrigger asChild>
-                      <Button variant="outline" size="icon" onClick={onZoomIn}>
-                        <ZoomIn className="h-4 w-4" />
-                      </Button>
-                    </TooltipTrigger>
-                    <TooltipContent>
-                      <p>Zoom In</p>
-                    </TooltipContent>
-                  </Tooltip>
-                </TooltipProvider>
-
-                <TooltipProvider>
-                  <Tooltip>
-                    <TooltipTrigger asChild>
-                      <Button variant="outline" size="icon" onClick={onZoomOut}>
-                        <ZoomOut className="h-4 w-4" />
-                      </Button>
-                    </TooltipTrigger>
-                    <TooltipContent>
-                      <p>Zoom Out</p>
-                    </TooltipContent>
-                  </Tooltip>
-                </TooltipProvider>
-
-                <TooltipProvider>
-                  <Tooltip>
-                    <TooltipTrigger asChild>
-                      <Button variant="outline" size="icon" onClick={onResetView}>
-                        <MapPin className="h-4 w-4" />
-                      </Button>
-                    </TooltipTrigger>
-                    <TooltipContent>
-                      <p>Recenter View</p>
-                    </TooltipContent>
-                  </Tooltip>
-                </TooltipProvider>
-
-                <TooltipProvider>
-                  <Tooltip>
-                    <TooltipTrigger asChild>
-                      <Button variant="outline" size="icon" onClick={onClearCanvas}>
-                        <RefreshCw className="h-4 w-4" />
-                      </Button>
-                    </TooltipTrigger>
-                    <TooltipContent>
-                      <p>Refresh Canvas</p>
-                    </TooltipContent>
-                  </Tooltip>
-                </TooltipProvider>
+                {renderButton(<FileJson className="h-4 w-4" />, "Export JSON", handleExportJSON)}
+                {renderButton(<Save className="h-4 w-4" />, "Save Workflow", handleSave)}
+                {renderButton(<Upload className="h-4 w-4" />, "Load Workflow", handleLoad)}
+                {renderButton(<PlusCircle className="h-4 w-4" />, "New Agentic Flow", onCreateAgenticFlow)}
+                {renderButton(<Undo className="h-4 w-4" />, "Undo", onUndo, !canUndo)}
+                {renderButton(<Redo className="h-4 w-4" />, "Redo", onRedo, !canRedo)}
+                {renderButton(isGraphLocked ? <Lock className="h-4 w-4" /> : <Unlock className="h-4 w-4" />, isGraphLocked ? "Unlock Graph" : "Lock Graph", toggleGraphLock)}
+                {renderButton(<ZoomIn className="h-4 w-4" />, "Zoom In", onZoomIn)}
+                {renderButton(<ZoomOut className="h-4 w-4" />, "Zoom Out", onZoomOut)}
+                {renderButton(<RotateCcw className="h-4 w-4" />, "Reset View", onResetView)}
+                {renderButton(<RefreshCw className="h-4 w-4" />, "Clear Canvas", onClearCanvas)}
+                {renderButton(<Download className="h-4 w-4" />, "Download Workflow", () => {})}
               </div>
             </ScrollArea>
           </CollapsibleContent>
@@ -269,86 +103,6 @@ const WorkflowOperationsPanel = ({
         isOpen={showJSONModal}
         onClose={() => setShowJSONModal(false)}
         jsonData={onExportJSON()}
-      />
-
-      <Dialog open={showSettingsModal} onOpenChange={setShowSettingsModal}>
-        <DialogContent className="bg-gray-800 text-white">
-          <DialogHeader>
-            <DialogTitle>Workflow Settings</DialogTitle>
-          </DialogHeader>
-          <div className="space-y-4">
-            <div className="flex items-center justify-between">
-              <Label htmlFor="backgroundColor">Background Color</Label>
-              <Select value={tempBackgroundColor} onValueChange={setTempBackgroundColor}>
-                <SelectTrigger className="w-[180px]">
-                  <SelectValue placeholder="Select color" />
-                </SelectTrigger>
-                <SelectContent>
-                  {presetColors.map(({ name, value }) => (
-                    <SelectItem key={value} value={value}>
-                      <div className="flex items-center">
-                        <div className="w-4 h-4 rounded-full mr-2" style={{ backgroundColor: value }} />
-                        {name}
-                      </div>
-                    </SelectItem>
-                  ))}
-                  <SelectItem value="custom">Custom Color</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-            {tempBackgroundColor === 'custom' && (
-              <div className="flex items-center justify-between">
-                <Label htmlFor="customColor">Custom Color</Label>
-                <Input
-                  id="customColor"
-                  type="color"
-                  value={tempBackgroundColor}
-                  onChange={(e) => setTempBackgroundColor(e.target.value)}
-                  className="w-[100px]"
-                />
-              </div>
-            )}
-            <div className="flex items-center justify-between">
-              <Label htmlFor="autoSave">Auto Save</Label>
-              <Switch id="autoSave" checked={autoSave} onCheckedChange={setAutoSave} />
-            </div>
-            <div className="flex items-center justify-between">
-              <Label htmlFor="performanceMode">Performance Mode</Label>
-              <Switch id="performanceMode" checked={performanceMode} onCheckedChange={setPerformanceMode} />
-            </div>
-            <div className="flex items-center justify-between">
-              <Label htmlFor="theme">Theme</Label>
-              <Select value={theme} onValueChange={setTheme}>
-                <SelectTrigger className="w-[180px]">
-                  <SelectValue placeholder="Select theme" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="light">Light</SelectItem>
-                  <SelectItem value="dark">Dark</SelectItem>
-                  <SelectItem value="system">System</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-          </div>
-          <DialogFooter>
-            <Button onClick={handleSettingsSave}>Save Settings</Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
-
-      <EdgePropertiesDialog
-        isOpen={showEdgePropertiesDialog}
-        onClose={() => setShowEdgePropertiesDialog(false)}
-        edge={selectedEdge}
-        onSave={(updatedEdge) => {
-          onEdgeClick(updatedEdge);
-          setShowEdgePropertiesDialog(false);
-        }}
-      />
-
-      <VariableManipulationModal
-        isOpen={showVariableManipulationModal}
-        onClose={() => setShowVariableManipulationModal(false)}
       />
     </Card>
   );
