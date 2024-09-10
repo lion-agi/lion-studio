@@ -2,10 +2,10 @@ import React, { useState, useCallback } from 'react';
 import { Handle, Position } from 'reactflow';
 import { Card, CardContent, CardHeader, CardTitle } from "@/common/components/ui/card"
 import { Button } from "@/common/components/ui/button"
-import { Input } from "@/common/components/ui/input"
-import { Textarea } from "@/common/components/ui/textarea"
 import { Edit, Trash2, Save, X, ChevronDown, ChevronUp } from 'lucide-react';
 import { nodeCategories } from './nodeCategories';
+import NodeContent from './NodeContent';
+import NodeForm from './NodeForm';
 
 const BaseNode = ({ 
   data = {}, 
@@ -37,11 +37,6 @@ const BaseNode = ({
     setIsEditing(false);
     setIsExpanded(false);
   }, [data]);
-
-  const handleInputChange = useCallback((e) => {
-    const { name, value } = e.target;
-    setEditedData(prev => ({ ...prev, [name]: value }));
-  }, []);
 
   const handleDelete = useCallback(() => {
     if (data.onDelete) {
@@ -103,38 +98,14 @@ const BaseNode = ({
       {isExpanded && (
         <CardContent className="node-content p-3">
           {isEditing ? (
-            <>
-              <Input
-                className={`node-input mb-2 text-xs h-7 px-2 py-1 bg-${nodeConfig.baseColor}-800 text-${nodeConfig.baseColor}-100 border-${nodeConfig.baseColor}-600`}
-                name="label"
-                placeholder="Node label"
-                value={editedData.label || ''}
-                onChange={handleInputChange}
-              />
-              <Textarea
-                className={`node-input mb-2 text-xs px-2 py-1 bg-${nodeConfig.baseColor}-800 text-${nodeConfig.baseColor}-100 border-${nodeConfig.baseColor}-600`}
-                name="description"
-                placeholder="Node description"
-                value={editedData.description || ''}
-                onChange={handleInputChange}
-                rows={2}
-              />
-              <div className="flex justify-end space-x-2 mt-2">
-                <Button size="sm" variant="outline" onClick={handleCancel} className={`text-xs py-1 h-7 bg-${nodeConfig.baseColor}-700 text-${nodeConfig.baseColor}-100 border-${nodeConfig.baseColor}-600 hover:bg-${nodeConfig.baseColor}-600`}>
-                  <X className="w-3 h-3 mr-1" />
-                  Cancel
-                </Button>
-                <Button size="sm" onClick={handleSave} className={`text-xs py-1 h-7 bg-${nodeConfig.baseColor}-600 text-${nodeConfig.baseColor}-100 hover:bg-${nodeConfig.baseColor}-500`}>
-                  <Save className="w-3 h-3 mr-1" />
-                  Save
-                </Button>
-              </div>
-            </>
+            <NodeForm
+              data={editedData}
+              onChange={setEditedData}
+              onSave={handleSave}
+              onCancel={handleCancel}
+            />
           ) : (
-            <>
-              <p className={`mb-2 text-xs text-${nodeConfig.baseColor}-100`}><strong>Label:</strong> {data.label || children || 'Unnamed Node'}</p>
-              <p className={`mb-2 text-xs text-${nodeConfig.baseColor}-200`}><strong>Description:</strong> {editedData.description || 'No description'}</p>
-            </>
+            <NodeContent data={data} />
           )}
         </CardContent>
       )}
