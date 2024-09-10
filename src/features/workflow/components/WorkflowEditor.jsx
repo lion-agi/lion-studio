@@ -18,6 +18,7 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/comm
 import EdgePropertiesDialog from './EdgePropertiesDialog';
 import JSONModal from '@/common/components/JSONModal';
 import SaveLoadDialog from '@/common/components/SaveLoadDialog';
+import { useToast } from "@/common/components/ui/use-toast";
 
 const WorkflowEditorContent = () => {
   const containerRef = useRef(null);
@@ -28,6 +29,7 @@ const WorkflowEditorContent = () => {
   const [showJSONModal, setShowJSONModal] = useState(false);
   const [showSaveLoadDialog, setShowSaveLoadDialog] = useState(false);
   const [jsonData, setJsonData] = useState(null);
+  const { toast } = useToast();
 
   const {
     nodes,
@@ -131,7 +133,7 @@ const WorkflowEditorContent = () => {
       title: "Workflow Saved",
       description: "Your workflow has been saved locally.",
     });
-  }, [reactFlowInstance]);
+  }, [reactFlowInstance, toast]);
 
   const handleLoad = useCallback(() => {
     const savedFlow = localStorage.getItem('savedWorkflow');
@@ -144,7 +146,7 @@ const WorkflowEditorContent = () => {
         description: "Your saved workflow has been loaded.",
       });
     }
-  }, [setNodes, setEdges]);
+  }, [setNodes, setEdges, toast]);
 
   const handleDownload = useCallback(() => {
     const flowData = reactFlowInstance.toObject();
@@ -169,7 +171,7 @@ const WorkflowEditorContent = () => {
       });
     };
     fileReader.readAsText(event.target.files[0]);
-  }, [setNodes, setEdges]);
+  }, [setNodes, setEdges, toast]);
 
   return (
     <div ref={containerRef} className="h-full w-full relative flex" style={{ height: 'calc(100vh - 64px)' }}>
