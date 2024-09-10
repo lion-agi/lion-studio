@@ -51,5 +51,3 @@ const DataSourceModal = ({ dataSource, isOpen, onClose }) => {
 };
 
 export default DataSourceModal;
-
-// Path: src/features/library/components/DataSourceModal.jsx
