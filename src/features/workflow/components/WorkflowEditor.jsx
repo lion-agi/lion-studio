@@ -20,7 +20,7 @@ import EdgePropertiesDialog from './EdgePropertiesDialog';
 const WorkflowEditorContent = () => {
   const containerRef = useRef(null);
   const [containerSize, setContainerSize] = useState({ width: 0, height: 0 });
-  const [isLocked, setIsLocked] = useState(false);
+  const [isGraphLocked, setIsGraphLocked] = useState(false);
   const [selectedEdge, setSelectedEdge] = useState(null);
   const [isEdgePropertiesDialogOpen, setIsEdgePropertiesDialogOpen] = useState(false);
 
@@ -110,8 +110,8 @@ const WorkflowEditorContent = () => {
           canRedo={canRedo}
           onDeleteNode={handleDeleteNode}
           onSaveSettings={handleSaveSettings}
-          isLocked={isLocked}
-          setIsLocked={setIsLocked}
+          isGraphLocked={isGraphLocked}
+          setIsGraphLocked={setIsGraphLocked}
           onZoomIn={zoomIn}
           onZoomOut={zoomOut}
           onResetView={fitView}
@@ -138,11 +138,11 @@ const WorkflowEditorContent = () => {
           style={{
             backgroundColor: backgroundColor,
           }}
-          panOnDrag={!isLocked}
-          zoomOnScroll={!isLocked}
-          nodesDraggable={!isLocked}
-          nodesConnectable={!isLocked}
-          elementsSelectable={!isLocked}
+          panOnDrag={!isGraphLocked}
+          zoomOnScroll={!isGraphLocked}
+          nodesDraggable={!isGraphLocked}
+          nodesConnectable={!isGraphLocked}
+          elementsSelectable={!isGraphLocked}
         >
           <MiniMap 
             nodeColor={(node) => {
