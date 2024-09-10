@@ -66,7 +66,6 @@ const WorkflowOperationsPanel = ({
           Workflow Operations
         </CardTitle>
       </CardHeader>
-      <Collapsible open={!isCollapsed} onOpenChange={setIsCollapsed}>
         <CardContent className="pt-2">
           <CollapsibleContent>
             <ScrollArea className="h-[132px] pr-4" style={{ scrollbarWidth: 'thin', scrollbarColor: 'rgba(155, 155, 155, 0.5) transparent' }}>
@@ -80,7 +79,6 @@ const WorkflowOperationsPanel = ({
             </ScrollArea>
           </CollapsibleContent>
         </CardContent>
-      </Collapsible>
     </Card>
   );
 };
