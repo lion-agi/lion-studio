@@ -20,6 +20,3 @@ export const apiDataState = selector({
     return data;
   },
 });
-
-
-// Path: src/features/dashboard/atoms.js

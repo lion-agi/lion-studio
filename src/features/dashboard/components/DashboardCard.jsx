@@ -1,9 +1,8 @@
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from "@/common/components/ui/card";
-import { Button } from "@/common/components/ui/button";
 
-const DashboardCard = ({ title, value, change, icon: Icon, onClick }) => (
-  <Card className="bg-gray-800 hover:bg-gray-700 transition-colors cursor-pointer" onClick={onClick}>
+const DashboardCard = ({ title, value, change, icon: Icon }) => (
+  <Card className="bg-gray-800 hover:bg-gray-700 transition-colors">
     <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
       <CardTitle className="text-sm font-medium text-gray-400">{title}</CardTitle>
       <Icon className="h-4 w-4 text-gray-400" />

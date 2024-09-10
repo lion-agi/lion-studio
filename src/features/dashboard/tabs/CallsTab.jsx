@@ -1,5 +1,5 @@
 import React from 'react';
-import RecentCallsTable from '../components/RecentCallsTable';
+import RecentCallsTable from '../RecentCallsTable';
 
 const CallsTab = ({ data }) => (
   <RecentCallsTable calls={data.recentCalls} />
