@@ -8,7 +8,7 @@ import { Label } from "@/common/components/ui/label";
 import { Input } from "@/common/components/ui/input";
 import { ScrollArea } from "@/common/components/ui/scroll-area";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/common/components/ui/collapsible";
-import { Zap, Save, Upload, PlusCircle, FileJson, Play, Pause, Undo, Redo, Settings, Lock, Unlock, ZoomIn, ZoomOut, RotateCcw, Download, Share, ChevronUp, ChevronDown, Sliders } from 'lucide-react';
+import { Zap, Save, Upload, PlusCircle, FileJson, Play, Pause, Undo, Redo, Settings, Lock, Unlock, ZoomIn, ZoomOut, RotateCcw, Download, Share, ChevronUp, ChevronDown, Sliders, RefreshCw, MapPin } from 'lucide-react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogFooter } from "@/common/components/ui/dialog";
 import JSONModal from '@/common/components/JSONModal';
 import EdgePropertiesDialog from './EdgePropertiesDialog';
@@ -29,7 +29,8 @@ const WorkflowOperationsPanel = ({
   onZoomIn,
   onZoomOut,
   onResetView,
-  onEdgeClick
+  onEdgeClick,
+  onClearCanvas
 }) => {
   const [showJSONModal, setShowJSONModal] = useState(false);
   const [showSettingsModal, setShowSettingsModal] = useState(false);
@@ -96,7 +97,7 @@ const WorkflowOperationsPanel = ({
       <Collapsible open={!isCollapsed} onOpenChange={setIsCollapsed}>
         <CardContent className="pt-2">
           <CollapsibleContent>
-            <ScrollArea className="h-[calc(50vh-100px)]">
+            <ScrollArea className="h-[calc(50vh-100px)] custom-scrollbar">
               <div className="grid grid-cols-3 gap-2">
                 <TooltipProvider>
                   <Tooltip>
@@ -232,11 +233,11 @@ const WorkflowOperationsPanel = ({
                   <Tooltip>
                     <TooltipTrigger asChild>
                       <Button variant="outline" size="icon" onClick={onResetView}>
-                        <RotateCcw className="h-4 w-4" />
+                        <MapPin className="h-4 w-4" />
                       </Button>
                     </TooltipTrigger>
                     <TooltipContent>
-                      <p>Reset View</p>
+                      <p>Recenter View</p>
                     </TooltipContent>
                   </Tooltip>
                 </TooltipProvider>
@@ -244,25 +245,12 @@ const WorkflowOperationsPanel = ({
                 <TooltipProvider>
                   <Tooltip>
                     <TooltipTrigger asChild>
-                      <Button variant="outline" size="icon">
-                        <Download className="h-4 w-4" />
+                      <Button variant="outline" size="icon" onClick={onClearCanvas}>
+                        <RefreshCw className="h-4 w-4" />
                       </Button>
                     </TooltipTrigger>
                     <TooltipContent>
-                      <p>Download Workflow</p>
-                    </TooltipContent>
-                  </Tooltip>
-                </TooltipProvider>
-
-                <TooltipProvider>
-                  <Tooltip>
-                    <TooltipTrigger asChild>
-                      <Button variant="outline" size="icon" onClick={() => setShowVariableManipulationModal(true)}>
-                        <Sliders className="h-4 w-4" />
-                      </Button>
-                    </TooltipTrigger>
-                    <TooltipContent>
-                      <p>Variable Manipulation</p>
+                      <p>Refresh Canvas</p>
                     </TooltipContent>
                   </Tooltip>
                 </TooltipProvider>
