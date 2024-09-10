@@ -2,7 +2,7 @@ import React, { useState, useCallback } from 'react';
 import { Handle, Position } from 'reactflow';
 import { Card, CardContent, CardHeader, CardTitle } from "@/common/components/ui/card"
 import { Button } from "@/common/components/ui/button"
-import { Edit, Trash2, Save, X, ChevronDown, ChevronUp } from 'lucide-react';
+import { Edit, Trash2, ChevronDown, ChevronUp } from 'lucide-react';
 import { nodeCategories } from './nodeCategories';
 import NodeContent from './NodeContent';
 import NodeForm from './NodeForm';
@@ -55,35 +55,54 @@ const BaseNode = ({
   const nodeConfig = nodeCategory?.nodes.find(node => node.type === type) || {};
 
   return (
-    <Card 
-      className={`node-card w-64 bg-gradient-to-br ${nodeConfig.gradientFrom} ${nodeConfig.gradientTo} backdrop-blur-sm ${selected ? `ring-2 ring-${nodeConfig.baseColor}-400 ring-opacity-50` : ''}`}
+    <div 
+      className="relative group"
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
-      <CardHeader 
-        className="node-header relative cursor-pointer p-3 flex items-center justify-between h-16" 
-        onClick={toggleExpand}
+      <Card 
+        className={`node-card w-64 bg-gradient-to-br ${nodeConfig.gradientFrom} ${nodeConfig.gradientTo} backdrop-blur-sm ${selected ? `ring-2 ring-${nodeConfig.baseColor}-400 ring-opacity-50` : ''}`}
       >
-        <div className="flex items-center justify-center w-full space-x-2">
-          <Icon className={`h-5 w-5 text-${nodeConfig.baseColor}-100 flex-shrink-0`} />
-          <CardTitle className={`text-${nodeConfig.baseColor}-100 font-bold text-center text-sm break-words max-w-full flex-grow text-center`}>
-            {data.label || children || 'Unnamed Node'}
-          </CardTitle>
-          {isExpanded ? 
-            <ChevronUp className={`h-4 w-4 text-${nodeConfig.baseColor}-100 flex-shrink-0`} /> : 
-            <ChevronDown className={`h-4 w-4 text-${nodeConfig.baseColor}-100 flex-shrink-0`} />
-          }
-        </div>
+        <CardHeader 
+          className="node-header relative cursor-pointer p-3 flex items-center justify-between h-16" 
+          onClick={toggleExpand}
+        >
+          <div className="flex items-center justify-center w-full space-x-2">
+            <Icon className={`h-5 w-5 text-${nodeConfig.baseColor}-100 flex-shrink-0`} />
+            <CardTitle className={`text-${nodeConfig.baseColor}-100 font-bold text-center text-sm break-words max-w-full flex-grow text-center`}>
+              {data.label || children || 'Unnamed Node'}
+            </CardTitle>
+            {isExpanded ? 
+              <ChevronUp className={`h-4 w-4 text-${nodeConfig.baseColor}-100 flex-shrink-0`} /> : 
+              <ChevronDown className={`h-4 w-4 text-${nodeConfig.baseColor}-100 flex-shrink-0`} />
+            }
+          </div>
+        </CardHeader>
+        {isExpanded && (
+          <CardContent className="node-content p-3">
+            {isEditing ? (
+              <NodeForm
+                data={editedData}
+                onChange={setEditedData}
+                onSave={handleSave}
+                onCancel={handleCancel}
+              />
+            ) : (
+              <NodeContent data={data} />
+            )}
+          </CardContent>
+        )}
         <Handle
           type="target"
           position={Position.Left}
           style={{ 
-            left: '-8px', 
+            left: '-6px', 
             top: '50%', 
             transform: 'translateY(-50%)', 
             width: '12px', 
             height: '12px',
-            background: `var(--${nodeConfig.baseColor}-400)`
+            background: `var(--${nodeConfig.baseColor}-400)`,
+            border: `2px solid var(--${nodeConfig.baseColor}-100)`,
           }}
           isConnectable={isConnectable}
         />
@@ -91,41 +110,28 @@ const BaseNode = ({
           type="source"
           position={Position.Right}
           style={{ 
-            right: '-8px', 
+            right: '-6px', 
             top: '50%', 
             transform: 'translateY(-50%)', 
             width: '12px', 
             height: '12px',
-            background: `var(--${nodeConfig.baseColor}-400)`
+            background: `var(--${nodeConfig.baseColor}-400)`,
+            border: `2px solid var(--${nodeConfig.baseColor}-100)`,
           }}
           isConnectable={isConnectable}
         />
-      </CardHeader>
-      {isExpanded && (
-        <CardContent className="node-content p-3">
-          {isEditing ? (
-            <NodeForm
-              data={editedData}
-              onChange={setEditedData}
-              onSave={handleSave}
-              onCancel={handleCancel}
-            />
-          ) : (
-            <NodeContent data={data} />
-          )}
-        </CardContent>
-      )}
-      {!isEditing && (isHovered || selected) && (
-        <div className="absolute top-0 right-0 p-1 bg-background/80 rounded-bl">
-          <Button variant="ghost" size="icon" onClick={handleEdit} className={`h-7 w-7 text-${nodeConfig.baseColor}-100 hover:bg-${nodeConfig.baseColor}-700`}>
-            <Edit className="h-3 w-3" />
+      </Card>
+      {isHovered && (
+        <div className="absolute -right-12 top-0 flex flex-col space-y-2 p-1 bg-gray-800 rounded-md shadow-lg transition-opacity duration-200 opacity-100">
+          <Button variant="ghost" size="icon" onClick={handleEdit} className={`h-8 w-8 text-${nodeConfig.baseColor}-100 hover:bg-${nodeConfig.baseColor}-700`}>
+            <Edit className="h-4 w-4" />
           </Button>
-          <Button variant="ghost" size="icon" onClick={handleDelete} className={`h-7 w-7 text-${nodeConfig.baseColor}-100 hover:bg-${nodeConfig.baseColor}-700`}>
-            <Trash2 className="h-3 w-3" />
+          <Button variant="ghost" size="icon" onClick={handleDelete} className={`h-8 w-8 text-${nodeConfig.baseColor}-100 hover:bg-${nodeConfig.baseColor}-700`}>
+            <Trash2 className="h-4 w-4" />
           </Button>
         </div>
       )}
-    </Card>
+    </div>
   );
 };
 
