@@ -80,12 +80,22 @@ export const useApiCallStats = (startDate, endDate, options = {}) => {
             return acc;
         }, {});
 
+        const costTrend = apiCalls.reduce((acc, call) => {
+            const date = call.created_at.split('T')[0];
+            acc[date] = (acc[date] || 0) + parseFloat(call.cost);
+            return acc;
+        }, {});
+
+        const costTrendArray = Object.entries(costTrend).map(([date, cost]) => ({ date, cost }));
+
         return {
             totalCalls,
             totalCost,
             totalTokens,
             avgResponseTime,
             costByModel,
+            costTrend: costTrendArray,
+            recentCalls: apiCalls.slice(0, 100), // Get the 100 most recent calls
         };
     }, [apiCalls]);
 

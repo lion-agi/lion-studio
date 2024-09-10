@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from "@/common/components/ui/button";
 import { Input } from "@/common/components/ui/input";
@@ -7,7 +7,7 @@ import SummaryCards from '../components/SummaryCards';
 import CostTrendChart from '../components/CostTrendChart';
 import CostBreakdownChart from '../components/CostBreakdownChart';
 import RecentCallsTable from '../components/RecentCallsTable';
-import { useApiData } from '../hooks/useApiData';
+import { useApiCallStats } from '@/integrations/supabase/hooks/apiCalls';
 import { Card, CardContent, CardHeader, CardTitle } from "@/common/components/ui/card";
 import { DateRangePicker } from "@/common/components/ui/date-range-picker";
 
@@ -15,13 +15,23 @@ const Dashboard = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedMetric, setSelectedMetric] = useState('totalCost');
   const [isInfoModalOpen, setIsInfoModalOpen] = useState(false);
-  const [dateRange, setDateRange] = useState({ from: null, to: null });
+  const [dateRange, setDateRange] = useState({ 
+    from: new Date(new Date().setMonth(new Date().getMonth() - 1)), 
+    to: new Date() 
+  });
   const navigate = useNavigate();
 
-  const { data, isLoading, error } = useApiData(dateRange.from, dateRange.to);
+  const { stats, isLoading, error } = useApiCallStats(dateRange.from, dateRange.to);
 
   const handleMetricClick = (metric) => {
     setSelectedMetric(metric);
+  };
+
+  const handleDateRangeChange = (newDateRange) => {
+    if (newDateRange.to > new Date()) {
+      newDateRange.to = new Date();
+    }
+    setDateRange(newDateRange);
   };
 
   if (isLoading) return <div>Loading dashboard data...</div>;
@@ -44,7 +54,7 @@ const Dashboard = () => {
         <div className="flex items-center space-x-4">
           <DateRangePicker
             value={dateRange}
-            onValueChange={setDateRange}
+            onValueChange={handleDateRangeChange}
           />
           <div className="relative w-full md:w-80">
             <Input
@@ -59,14 +69,14 @@ const Dashboard = () => {
         </div>
       </div>
 
-      <SummaryCards data={data.summary} onMetricClick={handleMetricClick} />
+      <SummaryCards data={stats} onMetricClick={handleMetricClick} />
       
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
-        <CostTrendChart data={data.costTrend} selectedMetric={selectedMetric} />
-        <CostBreakdownChart data={data.costBreakdown} />
+        <CostTrendChart data={stats.costTrend} selectedMetric={selectedMetric} />
+        <CostBreakdownChart data={stats.costByModel} />
       </div>
       
-      <RecentCallsTable calls={data.recentCalls} />
+      <RecentCallsTable calls={stats.recentCalls} />
     </div>
   );
 };
