@@ -39,7 +39,7 @@ const NodeCreationPanel = () => {
         className="w-full"
       />
       <ScrollArea 
-        className="h-[calc(65vh-50px)] pr-4" 
+        className="h-[calc(65vh-75px)] pr-4" 
         style={{ 
           scrollbarWidth: 'thin',
           scrollbarColor: 'rgba(155, 155, 155, 0.5) transparent'

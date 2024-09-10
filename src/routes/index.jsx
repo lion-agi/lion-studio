@@ -26,9 +26,9 @@ const AppRoutes = () => (
     <Route path="/login" element={<Login />} />
     <Route path="/register" element={<Registration />} />
     <Route path="/auth/callback" element={<AuthCallback />} />
-    <Route path="/about" element={<About />} />
+    {/* <Route path="/about" element={<About />} />
     <Route path="/pricing" element={<Pricing />} />
-    <Route path="/contact" element={<Contact />} />
+    <Route path="/contact" element={<Contact />} /> */}
     
     <Route path="/console" element={<ProtectedRoute><ConsoleLayout /></ProtectedRoute>}>
       <Route path="dashboard" element={<Dashboard />}>
@@ -36,12 +36,12 @@ const AppRoutes = () => (
         <Route path="calls" element={<CallsTab />} />
         <Route path="costs" element={<CostsTab />} />
       </Route>
-      <Route path="integrations" element={<Integrations />} />
+      {/* <Route path="integrations" element={<Integrations />} />
       <Route path="deployment" element={<Deployment />} />
-      <Route path="library" element={<Library />} />
+      <Route path="library" element={<Library />} /> */}
       <Route path="workflow" element={<WorkflowEditor />} />
-      <Route path="user-profile" element={<UserProfile />} />
-      <Route path="admin" element={<Admin />} />
+      {/* <Route path="user-profile" element={<UserProfile />} />
+      <Route path="admin" element={<Admin />} /> */}
     </Route>
   </Routes>
 );
