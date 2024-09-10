@@ -66,7 +66,7 @@ const BaseNode = ({
       >
         <div className="flex items-center justify-center w-full space-x-2">
           <Icon className={`h-5 w-5 text-${nodeConfig.baseColor}-100 flex-shrink-0`} />
-          <CardTitle className={`text-${nodeConfig.baseColor}-100 font-bold text-center text-sm break-words max-w-full flex-grow text-center`}>
+          <CardTitle className={`text-${nodeConfig.baseColor}-100 font-bold text-center text-lg break-words max-w-full flex-grow text-center leading-tight`} style={{ textShadow: '0 1px 2px rgba(0, 0, 0, 0.1)' }}>
             {data.label || children || 'Unnamed Node'}
           </CardTitle>
           {isExpanded ? 
