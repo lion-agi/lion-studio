@@ -3,20 +3,16 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/common/components/ui
 import { Button } from "@/common/components/ui/button";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/common/components/ui/tooltip";
 import { ScrollArea } from "@/common/components/ui/scroll-area";
-import { Save, Download, RotateCcw, Plus, Undo, Redo, Lock, Unlock, ZoomIn, ZoomOut, FileJson } from 'lucide-react';
-import { useToast } from "@/common/components/ui/use-toast";
+import { Plus, Undo, Redo, Lock, Unlock, ZoomIn, ZoomOut, RotateCcw } from 'lucide-react';
 import { useWorkflowStore } from '@/store/workflowStore';
 
 const WorkflowOperationsPanel = ({ 
-  onExportJSON, 
   onCreateFlow, 
   onZoomIn,
   onZoomOut,
   onResetView,
   onShowJSONModal,
-  onSave,
 }) => {
-  const { toast } = useToast();
   const { 
     isGraphLocked, 
     setIsGraphLocked, 
@@ -25,22 +21,6 @@ const WorkflowOperationsPanel = ({
     canUndo, 
     canRedo 
   } = useWorkflowStore();
-
-  const handleSave = () => {
-    const savedData = onSave();
-    if (savedData) {
-      toast({
-        title: "Workflow Saved",
-        description: "Your workflow has been saved successfully.",
-      });
-    } else {
-      toast({
-        title: "Error",
-        description: "Failed to save the workflow. Please try again.",
-        variant: "destructive",
-      });
-    }
-  };
 
   const renderButton = (icon, label, onClick, disabled = false) => (
     <TooltipProvider key={label}>
@@ -64,9 +44,6 @@ const WorkflowOperationsPanel = ({
   );
 
   const buttons = [
-    { icon: <Save className="h-4 w-4" />, label: "Save", onClick: handleSave },
-    { icon: <Download className="h-4 w-4" />, label: "Export JSON", onClick: onExportJSON },
-    { icon: <FileJson className="h-4 w-4" />, label: "View JSON", onClick: onShowJSONModal },
     { icon: <Plus className="h-4 w-4" />, label: "New Flow", onClick: onCreateFlow },
     { icon: <Undo className="h-4 w-4" />, label: "Undo", onClick: undo, disabled: !canUndo },
     { icon: <Redo className="h-4 w-4" />, label: "Redo", onClick: redo, disabled: !canRedo },
@@ -80,7 +57,6 @@ const WorkflowOperationsPanel = ({
     <Card className="bg-gray-800 text-white mt-2 border border-gray-700 rounded-lg shadow-lg">
       <CardHeader className="pb-2">
         <CardTitle className="text-sm font-medium flex items-center">
-          <Save className="w-4 h-4 mr-2" />
           Workflow Operations
         </CardTitle>
       </CardHeader>
