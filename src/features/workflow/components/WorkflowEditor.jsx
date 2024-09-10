@@ -133,6 +133,30 @@ const WorkflowEditorContent = () => {
     linkElement.click();
   }, [reactFlowInstance]);
 
+  const handleUpload = useCallback(() => {
+    const input = document.createElement('input');
+    input.type = 'file';
+    input.accept = '.json';
+    input.onchange = (e) => {
+      const file = e.target.files[0];
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        try {
+          const jsonContent = JSON.parse(event.target.result);
+          handleLoad(jsonContent);
+        } catch (error) {
+          toast({
+            title: "Invalid JSON",
+            description: "The uploaded file is not a valid JSON.",
+            variant: "destructive",
+          });
+        }
+      };
+      reader.readAsText(file);
+    };
+    input.click();
+  }, [handleLoad, toast]);
+
   return (
     <div ref={containerRef} className="h-full w-full relative flex" style={{ height: 'calc(100vh - 64px)' }}>
       <div className="w-72 bg-gray-800 p-4 overflow-y-auto flex flex-col" style={{ maxHeight: 'calc(100vh - 64px)' }}>
@@ -155,6 +179,7 @@ const WorkflowEditorContent = () => {
           onShowJSONModal={handleShowJSONModal}
           onSave={handleSave}
           onDownload={handleDownload}
+          onUpload={handleUpload}
         />
       </div>
       <div className="flex-grow">
