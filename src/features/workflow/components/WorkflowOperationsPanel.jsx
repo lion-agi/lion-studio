@@ -59,20 +59,20 @@ const WorkflowOperationsPanel = ({
   ];
 
   return (
-    <Card className="bg-gray-800 text-white mt-16 border border-gray-700 rounded-lg shadow-lg">
+    <Card className="bg-gray-800 text-white mt-2 border border-gray-700 rounded-lg shadow-lg">
       <Collapsible open={!isCollapsed} onOpenChange={setIsCollapsed}>
         <CardHeader className="pb-2">
-          <CardTitle className="text-sm font-medium flex items-center justify-between">
-            <span className="flex items-center">
+          <div className="flex justify-between items-center">
+            <CardTitle className="text-sm font-medium flex items-center">
               <Save className="w-4 h-4 mr-2" />
               Workflow Operations
-            </span>
+            </CardTitle>
             <CollapsibleTrigger asChild>
               <Button variant="ghost" size="sm">
                 {isCollapsed ? <ChevronDown className="h-4 w-4" /> : <ChevronUp className="h-4 w-4" />}
               </Button>
             </CollapsibleTrigger>
-          </CardTitle>
+          </div>
         </CardHeader>
         <CollapsibleContent>
           <CardContent className="pt-2">
