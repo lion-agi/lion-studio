@@ -1,4 +1,4 @@
-import React, { useMemo, useRef, useState, useEffect, useCallback } from 'react';
+import React, { useMemo, useRef, useState, useCallback } from 'react';
 import ReactFlow, { 
   MiniMap, 
   Panel, 
@@ -14,7 +14,6 @@ import { WorkflowSettingsProvider, useWorkflowSettings } from './WorkflowSetting
 import WorkflowOperationsPanel from './WorkflowOperationsPanel';
 import NodeCreationPanel from './NodeCreationPanel';
 import AgenticFlowWizard from '@/common/components/AgenticFlowWizard';
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/common/components/ui/tooltip";
 import EdgePropertiesDialog from './EdgePropertiesDialog';
 import JSONModal from '@/common/components/JSONModal';
 import SaveLoadDialog from '@/common/components/SaveLoadDialog';
@@ -22,13 +21,13 @@ import { useToast } from "@/common/components/ui/use-toast";
 
 const WorkflowEditorContent = () => {
   const containerRef = useRef(null);
-  const [containerSize, setContainerSize] = useState({ width: 0, height: 0 });
   const [isGraphLocked, setIsGraphLocked] = useState(false);
   const [selectedEdge, setSelectedEdge] = useState(null);
   const [isEdgePropertiesDialogOpen, setIsEdgePropertiesDialogOpen] = useState(false);
   const [showJSONModal, setShowJSONModal] = useState(false);
   const [showSaveLoadDialog, setShowSaveLoadDialog] = useState(false);
   const [jsonData, setJsonData] = useState(null);
+  const [savedGraphs, setSavedGraphs] = useState([]);
   const { toast } = useToast();
 
   const {
@@ -49,7 +48,6 @@ const WorkflowEditorContent = () => {
     onDrop,
     onNodeDragStop,
     handleExportJSON,
-    handleSaveLoad,
     handleCreateAgenticFlow,
     undo,
     redo,
@@ -64,7 +62,7 @@ const WorkflowEditorContent = () => {
 
   const { backgroundColor } = useWorkflowSettings();
 
-  const { zoomIn, zoomOut, fitView, getNodes, getEdges, setNodes: setReactFlowNodes, setEdges: setReactFlowEdges } = useReactFlow();
+  const { zoomIn, zoomOut, fitView } = useReactFlow();
 
   const styledEdges = useMemo(() => 
     edges.map(edge => ({
@@ -73,23 +71,6 @@ const WorkflowEditorContent = () => {
     })),
     [edges, getEdgeStyle]
   );
-
-  useEffect(() => {
-    const updateSize = () => {
-      if (containerRef.current) {
-        const { offsetWidth, offsetHeight } = containerRef.current;
-        setContainerSize({
-          width: offsetWidth,
-          height: offsetHeight,
-        });
-      }
-    };
-
-    window.addEventListener('resize', updateSize);
-    updateSize();
-
-    return () => window.removeEventListener('resize', updateSize);
-  }, []);
 
   const onEdgeClick = useCallback((event, edge) => {
     setSelectedEdge(edge);
@@ -101,11 +82,6 @@ const WorkflowEditorContent = () => {
     setIsEdgePropertiesDialogOpen(false);
     setSelectedEdge(null);
   }, [setEdges]);
-
-  const onDeleteNode = useCallback((nodeId) => {
-    setReactFlowNodes((nds) => nds.filter((node) => node.id !== nodeId));
-    setReactFlowEdges((eds) => eds.filter((edge) => edge.source !== nodeId && edge.target !== nodeId));
-  }, [setReactFlowNodes, setReactFlowEdges]);
 
   const handleShowJSONModal = useCallback(() => {
     const jsonContent = handleExportJSON();
@@ -128,22 +104,20 @@ const WorkflowEditorContent = () => {
 
   const handleSave = useCallback(() => {
     const flowData = reactFlowInstance.toObject();
-    localStorage.setItem('savedWorkflow', JSON.stringify(flowData));
+    setSavedGraphs(prev => [...prev, flowData]);
     toast({
       title: "Workflow Saved",
-      description: "Your workflow has been saved locally.",
+      description: "Your workflow has been saved to the current session.",
     });
   }, [reactFlowInstance, toast]);
 
-  const handleLoad = useCallback(() => {
-    const savedFlow = localStorage.getItem('savedWorkflow');
-    if (savedFlow) {
-      const flow = JSON.parse(savedFlow);
-      setNodes(flow.nodes || []);
-      setEdges(flow.edges || []);
+  const handleLoad = useCallback((loadedGraph) => {
+    if (loadedGraph && loadedGraph.nodes && loadedGraph.edges) {
+      setNodes(loadedGraph.nodes);
+      setEdges(loadedGraph.edges);
       toast({
         title: "Workflow Loaded",
-        description: "Your saved workflow has been loaded.",
+        description: "Your workflow has been loaded successfully.",
       });
     }
   }, [setNodes, setEdges, toast]);
@@ -159,20 +133,6 @@ const WorkflowEditorContent = () => {
     linkElement.click();
   }, [reactFlowInstance]);
 
-  const handleUpload = useCallback((event) => {
-    const fileReader = new FileReader();
-    fileReader.onload = (e) => {
-      const flow = JSON.parse(e.target.result);
-      setNodes(flow.nodes || []);
-      setEdges(flow.edges || []);
-      toast({
-        title: "Workflow Uploaded",
-        description: "Your workflow has been uploaded successfully.",
-      });
-    };
-    fileReader.readAsText(event.target.files[0]);
-  }, [setNodes, setEdges, toast]);
-
   return (
     <div ref={containerRef} className="h-full w-full relative flex" style={{ height: 'calc(100vh - 64px)' }}>
       <div className="w-72 bg-gray-800 p-4 overflow-y-auto flex flex-col" style={{ maxHeight: 'calc(100vh - 64px)' }}>
@@ -185,7 +145,6 @@ const WorkflowEditorContent = () => {
           onRedo={redo}
           canUndo={canUndo}
           canRedo={canRedo}
-          onDeleteNode={onDeleteNode}
           onSaveSettings={handleSaveSettings}
           isGraphLocked={isGraphLocked}
           onToggleGraphLock={handleToggleGraphLock}
@@ -195,9 +154,7 @@ const WorkflowEditorContent = () => {
           onEdgeClick={onEdgeClick}
           onShowJSONModal={handleShowJSONModal}
           onSave={handleSave}
-          onLoad={handleLoad}
           onDownload={handleDownload}
-          onUpload={handleUpload}
         />
       </div>
       <div className="flex-grow">
@@ -269,6 +226,7 @@ const WorkflowEditorContent = () => {
         onSave={handleSave}
         onLoad={handleLoad}
         graphData={{ nodes, edges }}
+        savedGraphs={savedGraphs}
       />
     </div>
   );
