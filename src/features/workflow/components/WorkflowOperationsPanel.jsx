@@ -3,7 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/common/components/ui
 import { Button } from "@/common/components/ui/button";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/common/components/ui/tooltip";
 import { ScrollArea } from "@/common/components/ui/scroll-area";
-import { Save, Upload, Download, RotateCcw, Plus, Undo, Redo, Lock, Unlock, ZoomIn, ZoomOut, Trash2 } from 'lucide-react';
+import { Save, Upload, Download, RotateCcw, Plus, Undo, Redo, Lock, Unlock, ZoomIn, ZoomOut, Trash2, FileJson } from 'lucide-react';
 
 const WorkflowOperationsPanel = ({ 
   onExportJSON, 
@@ -18,7 +18,8 @@ const WorkflowOperationsPanel = ({
   onResetView,
   onClearCanvas,
   isGraphLocked,
-  onToggleGraphLock
+  onToggleGraphLock,
+  onShowJSONModal
 }) => {
   const renderButton = (icon, label, onClick, disabled = false) => (
     <TooltipProvider>
@@ -45,6 +46,7 @@ const WorkflowOperationsPanel = ({
     { icon: <Save className="h-4 w-4" />, label: "Save", onClick: () => onSaveLoad('save') },
     { icon: <Upload className="h-4 w-4" />, label: "Load", onClick: () => onSaveLoad('load') },
     { icon: <Download className="h-4 w-4" />, label: "Export JSON", onClick: onExportJSON },
+    { icon: <FileJson className="h-4 w-4" />, label: "View JSON", onClick: onShowJSONModal },
     { icon: <Plus className="h-4 w-4" />, label: "New Flow", onClick: onCreateFlow },
     { icon: <Undo className="h-4 w-4" />, label: "Undo", onClick: onUndo, disabled: !canUndo },
     { icon: <Redo className="h-4 w-4" />, label: "Redo", onClick: onRedo, disabled: !canRedo },
