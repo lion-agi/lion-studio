@@ -16,6 +16,7 @@ import NodeCreationPanel from './NodeCreationPanel';
 import AgenticFlowWizard from '@/common/components/AgenticFlowWizard';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/common/components/ui/tooltip";
 import EdgePropertiesDialog from './EdgePropertiesDialog';
+import JSONModal from '@/common/components/JSONModal';
 
 const WorkflowEditorContent = () => {
   const containerRef = useRef(null);
@@ -23,6 +24,8 @@ const WorkflowEditorContent = () => {
   const [isGraphLocked, setIsGraphLocked] = useState(false);
   const [selectedEdge, setSelectedEdge] = useState(null);
   const [isEdgePropertiesDialogOpen, setIsEdgePropertiesDialogOpen] = useState(false);
+  const [showJSONModal, setShowJSONModal] = useState(false);
+  const [jsonData, setJsonData] = useState(null);
 
   const {
     nodes,
@@ -100,6 +103,25 @@ const WorkflowEditorContent = () => {
     setReactFlowEdges((eds) => eds.filter((edge) => edge.source !== nodeId && edge.target !== nodeId));
   }, [setReactFlowNodes, setReactFlowEdges]);
 
+  const handleShowJSONModal = useCallback(() => {
+    const jsonContent = handleExportJSON();
+    setJsonData(jsonContent);
+    setShowJSONModal(true);
+  }, [handleExportJSON]);
+
+  const handleToggleGraphLock = useCallback(() => {
+    setIsGraphLocked(prev => !prev);
+  }, []);
+
+  const modifiedOnDrop = useCallback(
+    (event) => {
+      if (!isGraphLocked) {
+        onDrop(event);
+      }
+    },
+    [isGraphLocked, onDrop]
+  );
+
   return (
     <div ref={containerRef} className="h-full w-full relative flex" style={{ height: 'calc(100vh - 64px)' }}>
       <div className="w-72 bg-gray-800 p-4 overflow-y-auto flex flex-col" style={{ maxHeight: 'calc(100vh - 64px)' }}>
@@ -115,11 +137,12 @@ const WorkflowEditorContent = () => {
           onDeleteNode={onDeleteNode}
           onSaveSettings={handleSaveSettings}
           isGraphLocked={isGraphLocked}
-          onToggleGraphLock={() => setIsGraphLocked(!isGraphLocked)}
+          onToggleGraphLock={handleToggleGraphLock}
           onZoomIn={zoomIn}
           onZoomOut={zoomOut}
           onResetView={fitView}
           onEdgeClick={onEdgeClick}
+          onShowJSONModal={handleShowJSONModal}
         />
       </div>
       <div className="flex-grow">
@@ -131,7 +154,7 @@ const WorkflowEditorContent = () => {
           onEdgesChange={onEdgesChange}
           onConnect={onConnect}
           onInit={setReactFlowInstance}
-          onDrop={onDrop}
+          onDrop={modifiedOnDrop}
           onDragOver={onDragOver}
           onNodeClick={onNodeClick}
           onEdgeClick={onEdgeClick}
@@ -179,6 +202,11 @@ const WorkflowEditorContent = () => {
         onClose={() => setIsEdgePropertiesDialogOpen(false)}
         edge={selectedEdge}
         onSave={handleEdgePropertiesSave}
+      />
+      <JSONModal
+        isOpen={showJSONModal}
+        onClose={() => setShowJSONModal(false)}
+        jsonData={jsonData}
       />
     </div>
   );
