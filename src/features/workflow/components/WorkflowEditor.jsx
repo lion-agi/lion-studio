@@ -31,6 +31,7 @@ const WorkflowEditorContent = () => {
   const [savedGraphs, setSavedGraphs] = useState([]);
   const { toast } = useToast();
   const { isGraphLocked } = useWorkflowStore();
+  const reactFlowInstance = useReactFlow();
 
   const {
     nodes,
@@ -43,7 +44,6 @@ const WorkflowEditorContent = () => {
 
   const {
     reactFlowWrapper,
-    reactFlowInstance,
     setReactFlowInstance,
     onConnect,
     onDragOver,
