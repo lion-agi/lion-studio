@@ -17,6 +17,7 @@ import AgenticFlowWizard from '@/common/components/AgenticFlowWizard';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/common/components/ui/tooltip";
 import EdgePropertiesDialog from './EdgePropertiesDialog';
 import JSONModal from '@/common/components/JSONModal';
+import SaveLoadDialog from '@/common/components/SaveLoadDialog';
 
 const WorkflowEditorContent = () => {
   const containerRef = useRef(null);
@@ -25,6 +26,7 @@ const WorkflowEditorContent = () => {
   const [selectedEdge, setSelectedEdge] = useState(null);
   const [isEdgePropertiesDialogOpen, setIsEdgePropertiesDialogOpen] = useState(false);
   const [showJSONModal, setShowJSONModal] = useState(false);
+  const [showSaveLoadDialog, setShowSaveLoadDialog] = useState(false);
   const [jsonData, setJsonData] = useState(null);
 
   const {
@@ -122,13 +124,60 @@ const WorkflowEditorContent = () => {
     [isGraphLocked, onDrop]
   );
 
+  const handleSave = useCallback(() => {
+    const flowData = reactFlowInstance.toObject();
+    localStorage.setItem('savedWorkflow', JSON.stringify(flowData));
+    toast({
+      title: "Workflow Saved",
+      description: "Your workflow has been saved locally.",
+    });
+  }, [reactFlowInstance]);
+
+  const handleLoad = useCallback(() => {
+    const savedFlow = localStorage.getItem('savedWorkflow');
+    if (savedFlow) {
+      const flow = JSON.parse(savedFlow);
+      setNodes(flow.nodes || []);
+      setEdges(flow.edges || []);
+      toast({
+        title: "Workflow Loaded",
+        description: "Your saved workflow has been loaded.",
+      });
+    }
+  }, [setNodes, setEdges]);
+
+  const handleDownload = useCallback(() => {
+    const flowData = reactFlowInstance.toObject();
+    const dataStr = JSON.stringify(flowData);
+    const dataUri = 'data:application/json;charset=utf-8,'+ encodeURIComponent(dataStr);
+    const exportFileDefaultName = 'workflow.json';
+    const linkElement = document.createElement('a');
+    linkElement.setAttribute('href', dataUri);
+    linkElement.setAttribute('download', exportFileDefaultName);
+    linkElement.click();
+  }, [reactFlowInstance]);
+
+  const handleUpload = useCallback((event) => {
+    const fileReader = new FileReader();
+    fileReader.onload = (e) => {
+      const flow = JSON.parse(e.target.result);
+      setNodes(flow.nodes || []);
+      setEdges(flow.edges || []);
+      toast({
+        title: "Workflow Uploaded",
+        description: "Your workflow has been uploaded successfully.",
+      });
+    };
+    fileReader.readAsText(event.target.files[0]);
+  }, [setNodes, setEdges]);
+
   return (
     <div ref={containerRef} className="h-full w-full relative flex" style={{ height: 'calc(100vh - 64px)' }}>
       <div className="w-72 bg-gray-800 p-4 overflow-y-auto flex flex-col" style={{ maxHeight: 'calc(100vh - 64px)' }}>
         <NodeCreationPanel />
         <WorkflowOperationsPanel
           onExportJSON={handleExportJSON}
-          onSaveLoad={handleSaveLoad}
+          onSaveLoad={() => setShowSaveLoadDialog(true)}
           onCreateAgenticFlow={handleCreateAgenticFlow}
           onUndo={undo}
           onRedo={redo}
@@ -143,6 +192,10 @@ const WorkflowEditorContent = () => {
           onResetView={fitView}
           onEdgeClick={onEdgeClick}
           onShowJSONModal={handleShowJSONModal}
+          onSave={handleSave}
+          onLoad={handleLoad}
+          onDownload={handleDownload}
+          onUpload={handleUpload}
         />
       </div>
       <div className="flex-grow">
@@ -207,6 +260,13 @@ const WorkflowEditorContent = () => {
         isOpen={showJSONModal}
         onClose={() => setShowJSONModal(false)}
         jsonData={jsonData}
+      />
+      <SaveLoadDialog
+        isOpen={showSaveLoadDialog}
+        onClose={() => setShowSaveLoadDialog(false)}
+        onSave={handleSave}
+        onLoad={handleLoad}
+        graphData={{ nodes, edges }}
       />
     </div>
   );
