@@ -4,6 +4,7 @@ import { Button } from "@/common/components/ui/button";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/common/components/ui/tooltip";
 import { ScrollArea } from "@/common/components/ui/scroll-area";
 import { Save, Upload, Download, RotateCcw, Plus, Undo, Redo, Lock, Unlock, ZoomIn, ZoomOut, FileJson } from 'lucide-react';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/common/components/ui/select";
 
 const WorkflowOperationsPanel = ({ 
   onExportJSON, 
@@ -18,7 +19,9 @@ const WorkflowOperationsPanel = ({
   onResetView,
   isGraphLocked,
   onToggleGraphLock,
-  onShowJSONModal
+  onShowJSONModal,
+  onSave,
+  onDownload
 }) => {
   const renderButton = (icon, label, onClick, disabled = false) => (
     <TooltipProvider>
@@ -42,9 +45,9 @@ const WorkflowOperationsPanel = ({
   );
 
   const buttons = [
-    { icon: <Save className="h-4 w-4" />, label: "Save", onClick: () => onSaveLoad('save') },
+    { icon: <Save className="h-4 w-4" />, label: "Save", onClick: onSave },
     { icon: <Upload className="h-4 w-4" />, label: "Load", onClick: () => onSaveLoad('load') },
-    { icon: <Download className="h-4 w-4" />, label: "Download JSON", onClick: onExportJSON },
+    { icon: <Download className="h-4 w-4" />, label: "Download JSON", onClick: onDownload },
     { icon: <FileJson className="h-4 w-4" />, label: "View JSON", onClick: onShowJSONModal },
     { icon: <Plus className="h-4 w-4" />, label: "New Flow", onClick: onCreateFlow },
     { icon: <Undo className="h-4 w-4" />, label: "Undo", onClick: onUndo, disabled: !canUndo },
