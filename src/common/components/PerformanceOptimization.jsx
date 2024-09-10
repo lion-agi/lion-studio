@@ -47,6 +47,3 @@ const PerformanceOptimization = () => {
 };
 
 export default PerformanceOptimization;
-
-
-// Path: src/common/components/PerformanceOptimization.jsx

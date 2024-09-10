@@ -91,5 +91,3 @@ const CreateCollectionForm = ({ onClose }) => {
 };
 
 export default CreateCollectionForm;
-
-// Path: src/features/library/components/CreateCollectionForm.jsx
