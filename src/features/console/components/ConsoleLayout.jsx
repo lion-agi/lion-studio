@@ -1,8 +1,9 @@
 import React from 'react';
 import ConsoleHeader from './ConsoleHeader';
+import commonStyles from '@/common/components/ui/style-guide';
 
 const ConsoleLayout = ({ children }) => (
-  <div className="min-h-screen bg-gray-50 flex flex-col">
+  <div className="min-h-screen bg-background flex flex-col" style={commonStyles}>
     <ConsoleHeader />
     <main className="flex-grow container mx-auto px-4 py-8">
       <div className="bg-white shadow-sm rounded-lg p-6">

@@ -5,6 +5,7 @@ import { ThemeProvider } from "@/common/components/theme-provider";
 import { Toaster } from "@/common/components/ui/toaster";
 import { SupabaseAuthProvider, useSupabaseAuth } from './integrations/supabase';
 import { RecoilRoot } from 'recoil';
+import commonStyles from '@/common/components/ui/style-guide';
 
 // Import components
 import ConsoleHeader from '@/features/console/components/ConsoleHeader';
@@ -13,18 +14,24 @@ import Login from './pages/Login';
 import Registration from './pages/Registration';
 import AuthCallback from './pages/AuthCallback';
 import EmailConfirmation from './pages/EmailConfirmation';
-import Workflow from '@/features/workflow/pages/Workflow';
+import WorkflowEditor from '@/features/workflow/components/WorkflowEditor';
+import About from './pages/About';
+import Pricing from './pages/Pricing';
+import Contact from './pages/Contact';
 
-import Library from './pages/console/library/Library';
-import Dashboard from './pages/console/Dashboard';
+import Library from './features/library/pages/Library';
+import Dashboard from '@/features/dashboard/pages/Dashboard';
 import Integrations from './pages/console/Integrations';
-import Deployment from './pages/console/Deployment';
+import Deployment from '@/features/deployment/pages/Deployment';
+import Overview from '@/features/dashboard/pages/Overview';
+import CallsTab from '@/features/dashboard/pages/CallsTab';
+import CostsTab from '@/features/dashboard/pages/CostsTab';
 
 // Create a client
 const queryClient = new QueryClient();
 
 const ConsoleLayout = ({ children }) => (
-  <div className="min-h-screen bg-background font-sans antialiased">
+  <div className="min-h-screen bg-background font-sans antialiased" style={commonStyles}>
     <ConsoleHeader />
     {children}
   </div>
@@ -43,14 +50,17 @@ const AppRoutes = () => (
     <Route path="/register" element={<Registration />} />
     <Route path="/auth/callback" element={<AuthCallback />} />
     <Route path="/email-confirmation" element={<EmailConfirmation />} />
+    <Route path="/about" element={<About />} />
+    <Route path="/pricing" element={<Pricing />} />
+    <Route path="/contact" element={<Contact />} />
 
     {/* Console routes */}
     <Route path="/console" element={<ProtectedRoute><ConsoleLayout><Navigate to="/console/dashboard" replace /></ConsoleLayout></ProtectedRoute>} />
     <Route path="/console/dashboard" element={<ProtectedRoute><ConsoleLayout><Dashboard /></ConsoleLayout></ProtectedRoute>} />
-    <Route path="/console/workflow" element={<ProtectedRoute><ConsoleLayout><Workflow /></ConsoleLayout></ProtectedRoute>} />
-    {/* <Route path="/console/library" element={<ProtectedRoute><ConsoleLayout><Library /></ConsoleLayout></ProtectedRoute>} />
+    <Route path="/console/workflow" element={<ProtectedRoute><ConsoleLayout><WorkflowEditor /></ConsoleLayout></ProtectedRoute>} />
+    <Route path="/console/library" element={<ProtectedRoute><ConsoleLayout><Library /></ConsoleLayout></ProtectedRoute>} />
     <Route path="/console/integrations" element={<ProtectedRoute><ConsoleLayout><Integrations /></ConsoleLayout></ProtectedRoute>} />
-    <Route path="/console/deployment" element={<ProtectedRoute><ConsoleLayout><Deployment /></ConsoleLayout></ProtectedRoute>} /> */}
+    <Route path="/console/deployment" element={<ProtectedRoute><ConsoleLayout><Deployment /></ConsoleLayout></ProtectedRoute>} />
 
     {/* Add more console routes as needed */}
   </Routes>

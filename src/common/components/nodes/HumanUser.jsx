@@ -12,7 +12,7 @@ const HumanUser = (props) => {
       gradientFrom="from-blue-400/30"
       gradientTo="to-blue-300/10"
     >
-      User Node
+      User
     </BaseNode>
   );
 };

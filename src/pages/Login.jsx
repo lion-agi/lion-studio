@@ -69,7 +69,7 @@ const Login = () => {
         <img src="/lion-studio-logo.jpeg" alt="Lion Studio Logo" className="w-24 h-24 object-contain" />
         <div>
           <h1 className="text-4xl font-bold mb-4">Welcome Back</h1>
-          <img src="/workflow-illustration.jpg" alt="Workflow Illustration" className="w-full rounded-lg shadow-lg" />
+          <img src="/demo2.jpg" alt="Workflow Illustration" className="w-full rounded-lg shadow-lg" />
         </div>
       </div>
       <div className="flex-1 p-12 flex flex-col justify-center">

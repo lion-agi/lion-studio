@@ -3,6 +3,7 @@ import { Button } from "@/common/components/ui/button";
 import { Input } from "@/common/components/ui/input";
 import { Textarea } from "@/common/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/common/components/ui/select";
+import commonStyles from '@/common/components/ui/style-guide';
 
 const CreateCollectionForm = ({ onClose }) => {
   const [newCollection, setNewCollection] = useState({
@@ -24,7 +25,7 @@ const CreateCollectionForm = ({ onClose }) => {
   };
 
   return (
-    <div className="grid gap-4 py-4">
+    <div className="grid gap-4 py-4" style={commonStyles}>
       <div className="grid grid-cols-4 items-center gap-4">
         <label htmlFor="title" className="text-right">Title</label>
         <Input
