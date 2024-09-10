@@ -54,6 +54,10 @@ const WorkflowEditorContent = () => {
     handleSaveSettings,
     isWizardOpen,
     setIsWizardOpen,
+    undo,
+    redo,
+    canUndo,
+    canRedo,
   } = useWorkflowHandlers(nodes, setNodes, edges, setEdges);
 
   const { edgeOptions, getEdgeStyle, onNodeClick } = useEdgeHighlighting(edges, setEdges);
@@ -158,6 +162,10 @@ const WorkflowEditorContent = () => {
           onSave={handleSave}
           onDownload={handleDownload}
           onUpload={handleUpload}
+          undo={undo}
+          redo={redo}
+          canUndo={canUndo}
+          canRedo={canRedo}
         />
       </div>
       <div className="flex-grow">
