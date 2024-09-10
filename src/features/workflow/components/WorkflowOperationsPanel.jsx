@@ -4,7 +4,7 @@ import { Button } from "@/common/components/ui/button";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/common/components/ui/tooltip";
 import { ScrollArea } from "@/common/components/ui/scroll-area";
 import { Save, Upload, Download, RotateCcw, Plus, Undo, Redo, Lock, Unlock, ZoomIn, ZoomOut, FileJson } from 'lucide-react';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/common/components/ui/select";
+import { useToast } from "@/common/components/ui/use-toast";
 
 const WorkflowOperationsPanel = ({ 
   onExportJSON, 
@@ -21,8 +21,34 @@ const WorkflowOperationsPanel = ({
   onToggleGraphLock,
   onShowJSONModal,
   onSave,
-  onDownload
+  onLoad
 }) => {
+  const { toast } = useToast();
+
+  const handleSave = () => {
+    onSave();
+    toast({
+      title: "Workflow Saved",
+      description: "Your workflow has been saved successfully.",
+    });
+  };
+
+  const handleLoad = () => {
+    const savedData = onLoad();
+    if (savedData) {
+      toast({
+        title: "Workflow Loaded",
+        description: "Your saved workflow has been loaded successfully.",
+      });
+    } else {
+      toast({
+        title: "No Saved Workflow",
+        description: "There is no saved workflow to load.",
+        variant: "warning",
+      });
+    }
+  };
+
   const renderButton = (icon, label, onClick, disabled = false) => (
     <TooltipProvider>
       <Tooltip>
@@ -45,9 +71,9 @@ const WorkflowOperationsPanel = ({
   );
 
   const buttons = [
-    { icon: <Save className="h-4 w-4" />, label: "Save", onClick: onSave },
-    { icon: <Upload className="h-4 w-4" />, label: "Load", onClick: () => onSaveLoad('load') },
-    { icon: <Download className="h-4 w-4" />, label: "Download JSON", onClick: onDownload },
+    { icon: <Save className="h-4 w-4" />, label: "Save", onClick: handleSave },
+    { icon: <Upload className="h-4 w-4" />, label: "Load", onClick: handleLoad },
+    { icon: <Download className="h-4 w-4" />, label: "Download JSON", onClick: onExportJSON },
     { icon: <FileJson className="h-4 w-4" />, label: "View JSON", onClick: onShowJSONModal },
     { icon: <Plus className="h-4 w-4" />, label: "New Flow", onClick: onCreateFlow },
     { icon: <Undo className="h-4 w-4" />, label: "Undo", onClick: onUndo, disabled: !canUndo },
