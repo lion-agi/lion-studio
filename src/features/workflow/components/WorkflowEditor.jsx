@@ -44,7 +44,6 @@ const WorkflowEditorContent = () => {
     handleExportJSON,
     handleSaveLoad,
     handleCreateAgenticFlow,
-    onNodeClick,
     undo,
     redo,
     canUndo,
@@ -55,7 +54,7 @@ const WorkflowEditorContent = () => {
     setIsWizardOpen,
   } = useWorkflowHandlers(nodes, setNodes, edges, setEdges);
 
-  const { edgeOptions, getEdgeStyle } = useEdgeHighlighting(edges, setEdges);
+  const { edgeOptions, getEdgeStyle, onNodeClick } = useEdgeHighlighting(edges, setEdges);
 
   const { backgroundColor } = useWorkflowSettings();
 
@@ -190,6 +189,3 @@ const WorkflowEditor = () => (
 );
 
 export default WorkflowEditor;
-
-
-// Path: src/features/workflow/components/WorkflowEditor.jsx

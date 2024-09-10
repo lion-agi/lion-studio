@@ -1,4 +1,4 @@
-import { useCallback, useState } from 'react';
+import { useCallback, useState, useEffect } from 'react';
 
 export const useEdgeHighlighting = (edges, setEdges) => {
   const [selectedNodeId, setSelectedNodeId] = useState(null);
@@ -9,9 +9,8 @@ export const useEdgeHighlighting = (edges, setEdges) => {
 
   const getEdgeStyle = useCallback((edge) => {
     if (!selectedNodeId) {
-      // Default style with effects for all edges
       return {
-        stroke: '#BDC3C7', // Muted light gray
+        stroke: '#BDC3C7',
         strokeWidth: 2,
         transition: 'all 0.3s ease',
       };
@@ -19,7 +18,7 @@ export const useEdgeHighlighting = (edges, setEdges) => {
 
     const isConnected = edge.source === selectedNodeId || edge.target === selectedNodeId;
     return {
-      stroke: isConnected ? '#3498DB' : '#7F8C8D', // Muted blue for connected, darker gray for others
+      stroke: isConnected ? '#3498DB' : '#7F8C8D',
       strokeWidth: isConnected ? 3 : 1,
       transition: 'all 0.3s ease',
       opacity: isConnected ? 1 : 0.4,
@@ -30,22 +29,18 @@ export const useEdgeHighlighting = (edges, setEdges) => {
     type: 'smoothstep',
     animated: true,
     style: {
-      stroke: '#BDC3C7', // Muted light gray
+      stroke: '#BDC3C7',
       strokeWidth: 2,
     },
   };
 
-  // Update edges when selectedNodeId changes
-  useState(() => {
-    setEdges(edges.map(edge => ({
+  useEffect(() => {
+    setEdges(prevEdges => prevEdges.map(edge => ({
       ...edge,
       style: getEdgeStyle(edge),
       animated: !selectedNodeId || edge.source === selectedNodeId || edge.target === selectedNodeId,
     })));
-  }, [selectedNodeId, edges, setEdges, getEdgeStyle]);
+  }, [selectedNodeId, setEdges, getEdgeStyle]);
 
   return { onNodeClick, edgeOptions, getEdgeStyle };
 };
-
-
-// Path: src/features/workflow/hooks/useEdgeHighlighting.js
