@@ -3,13 +3,12 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/common/components/ui
 import { Button } from "@/common/components/ui/button";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/common/components/ui/tooltip";
 import { ScrollArea } from "@/common/components/ui/scroll-area";
-import { Save, Upload, Download, RotateCcw, Plus, Undo, Redo, Lock, Unlock, ZoomIn, ZoomOut, FileJson } from 'lucide-react';
+import { Save, Download, RotateCcw, Plus, Undo, Redo, Lock, Unlock, ZoomIn, ZoomOut, FileJson } from 'lucide-react';
 import { useToast } from "@/common/components/ui/use-toast";
 import { useWorkflowStore } from '@/store/workflowStore';
 
 const WorkflowOperationsPanel = ({ 
   onExportJSON, 
-  onSaveLoad, 
   onCreateFlow, 
   onZoomIn,
   onZoomOut,
@@ -43,33 +42,8 @@ const WorkflowOperationsPanel = ({
     }
   };
 
-  const handleLoad = () => {
-    if (typeof onSaveLoad === 'function') {
-      const loadedData = onSaveLoad();
-      if (loadedData) {
-        toast({
-          title: "Workflow Loaded",
-          description: "Your saved workflow has been loaded successfully.",
-        });
-      } else {
-        toast({
-          title: "No Saved Workflow",
-          description: "There is no saved workflow to load.",
-          variant: "warning",
-        });
-      }
-    } else {
-      console.warn('onSaveLoad function is not provided');
-      toast({
-        title: "Load Function Not Available",
-        description: "The load functionality is not available at the moment.",
-        variant: "warning",
-      });
-    }
-  };
-
   const renderButton = (icon, label, onClick, disabled = false) => (
-    <TooltipProvider>
+    <TooltipProvider key={label}>
       <Tooltip>
         <TooltipTrigger asChild>
           <Button
@@ -91,8 +65,7 @@ const WorkflowOperationsPanel = ({
 
   const buttons = [
     { icon: <Save className="h-4 w-4" />, label: "Save", onClick: handleSave },
-    { icon: <Upload className="h-4 w-4" />, label: "Load", onClick: handleLoad },
-    { icon: <Download className="h-4 w-4" />, label: "Download JSON", onClick: onExportJSON },
+    { icon: <Download className="h-4 w-4" />, label: "Export JSON", onClick: onExportJSON },
     { icon: <FileJson className="h-4 w-4" />, label: "View JSON", onClick: onShowJSONModal },
     { icon: <Plus className="h-4 w-4" />, label: "New Flow", onClick: onCreateFlow },
     { icon: <Undo className="h-4 w-4" />, label: "Undo", onClick: undo, disabled: !canUndo },
@@ -114,11 +87,7 @@ const WorkflowOperationsPanel = ({
       <CardContent className="pt-2">
         <ScrollArea className="h-[132px] pr-4" style={{ scrollbarWidth: 'thin', scrollbarColor: 'rgba(155, 155, 155, 0.5) transparent' }}>
           <div className="grid grid-cols-3 gap-2">
-            {buttons.map((button, index) => (
-              <div key={index}>
-                {renderButton(button.icon, button.label, button.onClick, button.disabled)}
-              </div>
-            ))}
+            {buttons.map((button) => renderButton(button.icon, button.label, button.onClick, button.disabled))}
           </div>
         </ScrollArea>
       </CardContent>
