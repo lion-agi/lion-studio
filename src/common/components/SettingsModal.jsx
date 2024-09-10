@@ -1,22 +1,11 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { X } from 'lucide-react';
 import { Button } from "@/common/components/ui/button"
 import { Input } from "@/common/components/ui/input"
 import { Label } from "@/common/components/ui/label"
 import { Switch } from "@/common/components/ui/switch"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/common/components/ui/select";
-import { Slider } from "@/common/components/ui/slider";
 
-const backgroundColors = {
-  'Dark Blue': '#1A2530',
-  'Light Gray': '#F0F4F8',
-  'Dark Gray': '#2C3E50',
-  'Navy': '#34495E',
-};
-
-const SettingsModal = ({ isOpen, onClose }) => {
-  if (!isOpen) return null;
-
+const SettingsModal = ({ onClose }) => {
   return (
     <div className="fixed inset-0 bg-background/80 backdrop-blur-sm z-50 flex items-center justify-center">
       <div className="bg-card p-6 rounded-lg shadow-lg max-w-md w-full">
@@ -42,28 +31,6 @@ const SettingsModal = ({ isOpen, onClose }) => {
           <div className="flex items-center justify-between">
             <Label htmlFor="darkMode">Dark Mode</Label>
             <Switch id="darkMode" />
-          </div>
-          <div>
-            <Label>Background Color</Label>
-            <Select>
-              <SelectTrigger>
-                <SelectValue placeholder="Select background color" />
-              </SelectTrigger>
-              <SelectContent>
-                {Object.entries(backgroundColors).map(([name, color]) => (
-                  <SelectItem key={color} value={color}>
-                    <div className="flex items-center">
-                      <div className="w-4 h-4 rounded-full mr-2" style={{ backgroundColor: color }} />
-                      {name}
-                    </div>
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
-          <div>
-            <Label>Grid Size</Label>
-            <Slider min={10} max={50} step={5} />
           </div>
           <Button className="w-full">Save Settings</Button>
         </div>

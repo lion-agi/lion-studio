@@ -1,21 +1,17 @@
 import React from 'react';
-import { Outlet } from 'react-router-dom';
-import ConsoleHeader from '@/common/components/ConsoleHeader';
-import { Toaster } from "@/common/components/ui/toaster";
-import commonStyles from '@/common/components/ui/style-guide';
+import ConsoleHeader from './ConsoleHeader';
 
-const ConsoleLayout = () => (
-  <div className="min-h-screen bg-background flex flex-col" style={commonStyles}>
+const ConsoleLayout = ({ children }) => (
+  <div className="min-h-screen bg-gray-50 flex flex-col">
     <ConsoleHeader />
     <main className="flex-grow container mx-auto px-4 py-8">
-      <div className="bg-card shadow-sm rounded-lg p-6">
-        <Outlet />
+      <div className="bg-white shadow-sm rounded-lg p-6">
+        {children}
       </div>
     </main>
     <footer className="bg-gray-900 text-gray-400 py-4 text-center text-sm">
       &copy; {new Date().getFullYear()} Lion Intelligence. All rights reserved.
     </footer>
-    <Toaster />
   </div>
 );
 

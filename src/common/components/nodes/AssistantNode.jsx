@@ -1,25 +1,18 @@
 import React from 'react';
 import BaseNode from './BaseNode';
 import { Bot } from 'lucide-react';
-import { nodeCategories } from './nodeCategories';
 
 const AssistantNode = (props) => {
-  const nodeCategory = nodeCategories.find(category => 
-    category.nodes.some(node => node.type === 'assistant')
-  );
-
-  const nodeConfig = nodeCategory.nodes.find(node => node.type === 'assistant');
-
   return (
     <BaseNode 
       {...props} 
       icon={Bot} 
-      type="assistant"
-      baseColor={nodeConfig.baseColor}
-      gradientFrom={nodeConfig.gradientFrom}
-      gradientTo={nodeConfig.gradientTo}
+      type="Assistant"
+      baseColor="amber"
+      gradientFrom="from-amber-800/30"
+      gradientTo="to-amber-700/10"
     >
-      Assistant
+      Assistant Node
     </BaseNode>
   );
 };

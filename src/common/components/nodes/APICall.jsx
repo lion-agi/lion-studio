@@ -1,23 +1,16 @@
 import React from 'react';
 import BaseNode from './BaseNode';
 import { Zap } from 'lucide-react';
-import { nodeCategories } from './nodeCategories';
 
 const APICall = (props) => {
-  const nodeCategory = nodeCategories.find(category => 
-    category.nodes.some(node => node.type === 'apiCall')
-  );
-
-  const nodeConfig = nodeCategory.nodes.find(node => node.type === 'apiCall');
-
   return (
     <BaseNode 
       {...props} 
       icon={Zap} 
       type="APICall"
-      baseColor={nodeConfig.baseColor}
-      gradientFrom={nodeConfig.gradientFrom}
-      gradientTo={nodeConfig.gradientTo}
+      baseColor="pink"
+      gradientFrom="from-pink-500/30"
+      gradientTo="to-pink-400/10"
     >
       API Call
     </BaseNode>

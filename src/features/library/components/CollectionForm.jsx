@@ -4,7 +4,6 @@ import { Button } from "@/common/components/ui/button";
 import { Input } from "@/common/components/ui/input";
 import { Textarea } from "@/common/components/ui/textarea";
 import { Label } from "@/common/components/ui/label";
-import commonStyles from '@/common/components/ui/style-guide';
 
 const CollectionForm = ({ collection, isOpen, onClose, onSave }) => {
   const [formData, setFormData] = useState({
@@ -56,7 +55,7 @@ const CollectionForm = ({ collection, isOpen, onClose, onSave }) => {
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-[600px] bg-gray-800 text-gray-100" style={commonStyles}>
+      <DialogContent className="sm:max-w-[600px] bg-gray-800 text-gray-100">
         <DialogHeader>
           <DialogTitle className="text-2xl font-bold">
             {collection ? 'Edit Collection' : 'Create New Collection'}

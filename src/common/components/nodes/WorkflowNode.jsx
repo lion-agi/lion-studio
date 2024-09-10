@@ -12,7 +12,7 @@ const WorkflowNode = (props) => {
       gradientFrom="from-green-500/30"
       gradientTo="to-green-400/10"
     >
-      Workflow
+      Workflow Node
     </BaseNode>
   );
 };

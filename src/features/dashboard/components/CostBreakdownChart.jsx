@@ -2,7 +2,6 @@ import React, { useState, useCallback, useMemo } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from "@/common/components/ui/card";
 import { ResponsiveContainer, PieChart, Pie, Cell, Tooltip } from 'recharts';
 import { formatCurrency } from '@/features/dashboard/utils';
-import commonStyles from '@/common/components/ui/style-guide';
 
 const COLORS = ['#8B5CF6', '#EC4899', '#F59E0B', '#10B981', '#3B82F6', '#EF4444', '#14B8A6', '#6366F1', '#D946EF', '#F97316'];
 
@@ -42,7 +41,7 @@ const CostBreakdownChart = ({ data }) => {
 
   if (processedData.length === 0) {
     return (
-      <Card className="bg-gray-900 border-gray-800" style={commonStyles}>
+      <Card className="bg-gray-900 border-gray-800">
         <CardHeader>
           <CardTitle className="text-gray-100">Cost Breakdown by Model</CardTitle>
         </CardHeader>
@@ -54,7 +53,7 @@ const CostBreakdownChart = ({ data }) => {
   }
 
   return (
-    <Card className="bg-gray-900 border-gray-800" style={commonStyles}>
+    <Card className="bg-gray-900 border-gray-800">
       <CardHeader>
         <CardTitle className="text-gray-100">Cost Breakdown by Model</CardTitle>
       </CardHeader>

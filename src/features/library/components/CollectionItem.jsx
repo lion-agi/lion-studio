@@ -4,11 +4,10 @@ import { Button } from "@/common/components/ui/button";
 import { Badge } from "@/common/components/ui/badge";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/common/components/ui/tooltip";
 import { Eye, Trash2, Edit, Clock } from 'lucide-react';
-import commonStyles from '@/common/components/ui/style-guide';
 
 const CollectionItem = ({ collection, onOpenModal, onDelete, onEdit }) => {
   return (
-    <Card className="bg-gray-800 text-gray-100 hover:shadow-lg transition-all duration-300 ease-in-out" style={commonStyles}>
+    <Card className="bg-gray-800 text-gray-100 hover:shadow-lg transition-all duration-300 ease-in-out">
       <CardHeader className="pb-2">
         <div className="flex justify-between items-start">
           <CardTitle className="text-lg font-semibold text-purple-300 truncate">{collection.title}</CardTitle>
