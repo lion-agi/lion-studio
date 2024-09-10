@@ -26,16 +26,24 @@ const WorkflowOperationsPanel = ({
   const { toast } = useToast();
 
   const handleSave = () => {
-    onSave();
-    toast({
-      title: "Workflow Saved",
-      description: "Your workflow has been saved successfully.",
-    });
+    const savedData = onSave();
+    if (savedData) {
+      toast({
+        title: "Workflow Saved",
+        description: "Your workflow has been saved successfully.",
+      });
+    } else {
+      toast({
+        title: "Error",
+        description: "Failed to save the workflow. Please try again.",
+        variant: "destructive",
+      });
+    }
   };
 
   const handleLoad = () => {
-    const savedData = onLoad();
-    if (savedData) {
+    const loadedData = onLoad();
+    if (loadedData) {
       toast({
         title: "Workflow Loaded",
         description: "Your saved workflow has been loaded successfully.",
