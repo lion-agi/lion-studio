@@ -61,14 +61,18 @@ const BaseNode = ({
       onMouseLeave={() => setIsHovered(false)}
     >
       <CardHeader 
-        className="node-header relative cursor-pointer p-3 flex items-center justify-center h-16" 
+        className="node-header relative cursor-pointer p-3 flex items-center justify-between h-16" 
         onClick={toggleExpand}
       >
-        <CardTitle className={`text-${nodeConfig.baseColor}-100 font-bold text-center text-sm break-words max-w-full`}>
-          {data.label || children || 'Unnamed Node'}
-        </CardTitle>
-        <div className="absolute right-2 top-2">
-          {isExpanded ? <ChevronUp className="w-3 h-3" /> : <ChevronDown className="w-3 h-3" />}
+        <div className="flex items-center justify-center w-full space-x-2">
+          <Icon className={`h-5 w-5 text-${nodeConfig.baseColor}-100 flex-shrink-0`} />
+          <CardTitle className={`text-${nodeConfig.baseColor}-100 font-bold text-center text-sm break-words max-w-full flex-grow text-center`}>
+            {data.label || children || 'Unnamed Node'}
+          </CardTitle>
+          {isExpanded ? 
+            <ChevronUp className={`h-4 w-4 text-${nodeConfig.baseColor}-100 flex-shrink-0`} /> : 
+            <ChevronDown className={`h-4 w-4 text-${nodeConfig.baseColor}-100 flex-shrink-0`} />
+          }
         </div>
         <Handle
           type="target"
