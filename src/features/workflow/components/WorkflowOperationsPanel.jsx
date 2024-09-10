@@ -24,8 +24,8 @@ const WorkflowOperationsPanel = ({
   canRedo,
   onSaveSettings,
   backgroundColor,
-  isLocked,
-  setIsLocked,
+  isGraphLocked,
+  setIsGraphLocked,
   onZoomIn,
   onZoomOut,
   onResetView,
@@ -69,8 +69,8 @@ const WorkflowOperationsPanel = ({
     setShowSettingsModal(false);
   };
 
-  const toggleLock = () => {
-    setIsLocked(!isLocked);
+  const toggleGraphLock = () => {
+    setIsGraphLocked(!isGraphLocked);
   };
 
   const handleEdgeClick = useCallback((edge) => {
@@ -192,12 +192,12 @@ const WorkflowOperationsPanel = ({
                 <TooltipProvider>
                   <Tooltip>
                     <TooltipTrigger asChild>
-                      <Button variant="outline" size="icon" onClick={toggleLock}>
-                        {isLocked ? <Lock className="h-4 w-4" /> : <Unlock className="h-4 w-4" />}
+                      <Button variant="outline" size="icon" onClick={toggleGraphLock}>
+                        {isGraphLocked ? <Lock className="h-4 w-4" /> : <Unlock className="h-4 w-4" />}
                       </Button>
                     </TooltipTrigger>
                     <TooltipContent>
-                      <p>{isLocked ? 'Unlock' : 'Lock'} Workflow</p>
+                      <p>{isGraphLocked ? 'Unlock' : 'Lock'} Graph</p>
                     </TooltipContent>
                   </Tooltip>
                 </TooltipProvider>
@@ -367,6 +367,3 @@ const WorkflowOperationsPanel = ({
 };
 
 export default WorkflowOperationsPanel;
-
-
-// Path: src/features/workflow/components/WorkflowOperationsPanel.jsx
