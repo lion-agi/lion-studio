@@ -93,5 +93,3 @@ const ModelCallDiagram = ({ onExportJson }) => {
 };
 
 export default ModelCallDiagram;
-
-// Path: src/common/components/ModelCallDiagram.jsx

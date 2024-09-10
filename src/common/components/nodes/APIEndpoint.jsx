@@ -25,5 +25,3 @@ const APIEndpoint = (props) => {
 };
 
 export default APIEndpoint;
-
-// Path: src/common/components/nodes/APIEndpoint.jsx

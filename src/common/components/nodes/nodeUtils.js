@@ -30,6 +30,3 @@ export const getNodeColor = (node) => {
 
   return nodeConfig ? nodeConfig.baseColor : '#64748B';
 };
-
-
-// Path: src/common/components/nodes/nodeUtils.js

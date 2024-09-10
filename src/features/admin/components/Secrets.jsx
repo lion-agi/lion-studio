@@ -43,7 +43,3 @@ const Secrets = ({ secrets, newSecret, setNewSecret, handleAddSecret, handleUpda
 );
 
 export default Secrets;
-
-
-
-// Path: src/features/admin/components/Secrets.jsx

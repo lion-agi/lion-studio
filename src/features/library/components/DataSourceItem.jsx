@@ -59,5 +59,3 @@ const DataSourceItem = ({ dataSource, onOpenModal, onDelete, onEdit }) => {
 };
 
 export default DataSourceItem;
-
-// Path: src/features/library/components/DataSourceItem.jsx

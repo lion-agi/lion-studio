@@ -98,5 +98,3 @@ const InfoItem = ({ label, value }) => (
 );
 
 export default PageModal;
-
-// Path: src/features/library/components/PageModal.jsx

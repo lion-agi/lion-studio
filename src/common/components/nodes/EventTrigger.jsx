@@ -18,6 +18,3 @@ const EventTrigger = (props) => {
 };
 
 export default EventTrigger;
-
-
-// Path: src/common/components/nodes/EventTrigger.jsx

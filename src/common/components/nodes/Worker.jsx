@@ -18,6 +18,3 @@ const Worker = (props) => {
 };
 
 export default Worker;
-
-
-// Path: src/common/components/nodes/Worker.jsx

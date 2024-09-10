@@ -26,5 +26,3 @@ const Pagination = ({ currentPage, setCurrentPage, totalPages }) => (
 );
 
 export default Pagination;
-
-// Path: src/features/library/components/Pagination.jsx

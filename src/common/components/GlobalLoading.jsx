@@ -81,5 +81,3 @@ const GlobalLoading = () => {
 };
 
 export default GlobalLoading;
-
-// Path: src/common/components/GlobalLoading.jsx

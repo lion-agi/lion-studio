@@ -25,6 +25,3 @@ const ConditionalBranch = (props) => {
 };
 
 export default ConditionalBranch;
-
-
-// Path: src/common/components/nodes/ConditionalBranch.jsx

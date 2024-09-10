@@ -30,5 +30,3 @@ export const useAuthState = () => {
 
   return { user, loading };
 };
-
-// Path: src/common/hooks/useAuthState.js

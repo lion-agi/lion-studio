@@ -112,6 +112,3 @@ const Registration = () => {
 };
 
 export default Registration;
-
-
-// Path: src/pages/home/Registration.jsx

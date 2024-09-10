@@ -25,6 +25,3 @@ const ErrorHandler = (props) => {
 };
 
 export default ErrorHandler;
-
-
-// Path: src/common/components/nodes/ErrorHandler.jsx

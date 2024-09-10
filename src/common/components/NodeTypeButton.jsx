@@ -24,6 +24,3 @@ const NodeTypeButton = ({ icon, label, onClick, expanded }) => (
 );
 
 export default NodeTypeButton;
-
-
-// Path: src/common/components/NodeTypeButton.jsx

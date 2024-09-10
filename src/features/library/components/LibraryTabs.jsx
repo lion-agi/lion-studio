@@ -67,5 +67,3 @@ const LibraryTabs = ({
 );
 
 export default LibraryTabs;
-
-// Path: src/features/library/components/LibraryTabs.jsx

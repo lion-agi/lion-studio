@@ -18,5 +18,3 @@ const VideoConference = (props) => {
 };
 
 export default VideoConference;
-
-// Path: src/common/components/nodes/VideoConference.jsx

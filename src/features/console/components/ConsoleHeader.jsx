@@ -74,4 +74,3 @@ export default ConsoleHeader;
 
 
 
-// Path: src/features/console/components/ConsoleHeader.jsx

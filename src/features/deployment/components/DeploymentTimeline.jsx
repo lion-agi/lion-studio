@@ -25,6 +25,3 @@ const DeploymentTimeline = () => (
 );
 
 export default DeploymentTimeline;
-
-
-// Path: src/features/deployment/components/DeploymentTimeline.jsx

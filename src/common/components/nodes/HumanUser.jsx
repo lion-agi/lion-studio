@@ -18,5 +18,3 @@ const HumanUser = (props) => {
 };
 
 export default HumanUser;
-
-// Path: src/common/components/nodes/HumanUser.jsx

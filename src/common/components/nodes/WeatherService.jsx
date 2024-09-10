@@ -18,5 +18,3 @@ const WeatherService = (props) => {
 };
 
 export default WeatherService;
-
-// Path: src/common/components/nodes/WeatherService.jsx

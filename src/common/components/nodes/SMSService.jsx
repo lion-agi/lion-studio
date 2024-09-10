@@ -18,5 +18,3 @@ const SMSService = (props) => {
 };
 
 export default SMSService;
-
-// Path: src/common/components/nodes/SMSService.jsx

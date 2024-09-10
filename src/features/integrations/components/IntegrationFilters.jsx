@@ -60,5 +60,3 @@ const IntegrationFilters = ({ activeTab, setActiveTab, searchTerm, setSearchTerm
 };
 
 export default IntegrationFilters;
-
-// Path: src/features/integrations/components/IntegrationFilters.jsx

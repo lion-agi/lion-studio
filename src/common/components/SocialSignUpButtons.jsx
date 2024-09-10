@@ -50,5 +50,3 @@ const SocialSignUpButtons = ({ handleSocialSignUp }) => (
 );
 
 export default SocialSignUpButtons;
-
-// Path: src/common/components/SocialSignUpButtons.jsx

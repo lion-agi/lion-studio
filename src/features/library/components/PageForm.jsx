@@ -146,5 +146,3 @@ const PageForm = ({ page, isOpen, onClose, onSave }) => {
 };
 
 export default PageForm;
-
-// Path: src/features/library/components/PageForm.jsx

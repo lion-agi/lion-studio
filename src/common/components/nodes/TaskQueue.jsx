@@ -18,6 +18,3 @@ const TaskQueue = (props) => {
 };
 
 export default TaskQueue;
-
-
-// Path: src/common/components/nodes/TaskQueue.jsx

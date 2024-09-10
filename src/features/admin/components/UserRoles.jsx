@@ -22,5 +22,3 @@ const UserRoles = ({ roles, handleRoleChange }) => (
 );
 
 export default UserRoles;
-
-// Path: src/features/admin/components/UserRoles.jsx

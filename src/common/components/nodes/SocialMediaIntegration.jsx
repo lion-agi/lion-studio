@@ -18,5 +18,3 @@ const SocialMediaIntegration = (props) => {
 };
 
 export default SocialMediaIntegration;
-
-// Path: src/common/components/nodes/SocialMediaIntegration.jsx

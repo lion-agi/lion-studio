@@ -88,6 +88,3 @@ export const nodeCategories = [
     ]
   },
 ];
-
-
-// Path: src/common/components/nodes/nodeCategories.js

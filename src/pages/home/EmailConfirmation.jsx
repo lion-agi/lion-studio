@@ -81,5 +81,3 @@ const EmailConfirmation = () => {
 };
 
 export default EmailConfirmation;
-
-// Path: src/pages/home/EmailConfirmation.jsx

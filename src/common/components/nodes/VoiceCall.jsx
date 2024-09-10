@@ -18,5 +18,3 @@ const VoiceCall = (props) => {
 };
 
 export default VoiceCall;
-
-// Path: src/common/components/nodes/VoiceCall.jsx

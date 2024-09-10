@@ -28,7 +28,6 @@ import CallsTab from '@/features/dashboard/pages/CallsTab';
 import CostsTab from '@/features/dashboard/pages/CostsTab';
 import UserProfile from './features/profile/pages/UserProfile';
 import Admin from './features/admin/pages/Admin';
-import SettingsPage from '@/features/dashboard/components/SettingsPage';
 
 // Create a client
 const queryClient = new QueryClient();
@@ -61,12 +60,11 @@ const AppRoutes = () => (
     <Route path="/console" element={<ProtectedRoute><ConsoleLayout><Navigate to="/console/dashboard" replace /></ConsoleLayout></ProtectedRoute>} />
     <Route path="/console/dashboard" element={<ProtectedRoute><ConsoleLayout><Dashboard /></ConsoleLayout></ProtectedRoute>} />
     <Route path="/console/workflow" element={<ProtectedRoute><ConsoleLayout><WorkflowEditor /></ConsoleLayout></ProtectedRoute>} />
-    <Route path="/console/library" element={<ProtectedRoute><ConsoleLayout><Library /></ConsoleLayout></ProtectedRoute>} />
+    {/* <Route path="/console/library" element={<ProtectedRoute><ConsoleLayout><Library /></ConsoleLayout></ProtectedRoute>} />
     <Route path="/console/integrations" element={<ProtectedRoute><ConsoleLayout><Integrations /></ConsoleLayout></ProtectedRoute>} />
     <Route path="/console/deployment" element={<ProtectedRoute><ConsoleLayout><Deployment /></ConsoleLayout></ProtectedRoute>} />
     <Route path="/console/user-profile" element={<ProtectedRoute><ConsoleLayout><UserProfile /></ConsoleLayout></ProtectedRoute>} />
-    <Route path="/console/admin" element={<ProtectedRoute><ConsoleLayout><Admin /></ConsoleLayout></ProtectedRoute>} />
-    <Route path="/console/settings" element={<ProtectedRoute><ConsoleLayout><SettingsPage /></ConsoleLayout></ProtectedRoute>} />
+    <Route path="/console/admin" element={<ProtectedRoute><ConsoleLayout><Admin /></ConsoleLayout></ProtectedRoute>} /> */}
 
     {/* Add more console routes as needed */}
   </Routes>

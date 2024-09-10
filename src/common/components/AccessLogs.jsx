@@ -14,5 +14,3 @@ const AccessLogs = ({ logs }) => (
 );
 
 export default AccessLogs;
-
-// Path: src/common/components/AccesLogs.jsx

@@ -21,6 +21,3 @@ const ReactFlowMinimap = () => {
 };
 
 export default ReactFlowMinimap;
-
-
-// Path: src/common/components/ReactFlowMinimap.jsx

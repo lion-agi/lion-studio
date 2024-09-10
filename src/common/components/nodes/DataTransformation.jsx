@@ -25,6 +25,3 @@ const DataTransformation = (props) => {
 };
 
 export default DataTransformation;
-
-
-// Path: src/common/components/nodes/DataTransformation.jsx

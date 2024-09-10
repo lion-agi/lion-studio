@@ -18,5 +18,3 @@ const Geolocation = (props) => {
 };
 
 export default Geolocation;
-
-// Path: src/common/components/nodes/Geolocation.jsx

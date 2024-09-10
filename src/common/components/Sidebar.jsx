@@ -30,5 +30,3 @@ const Sidebar = ({ expanded, toggleSidebar, expandedCategories, toggleCategory }
 };
 
 export default Sidebar;
-
-// Path: src/common/components/Sidebar.jsx

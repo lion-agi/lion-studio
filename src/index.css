@@ -178,28 +178,23 @@ body.dragging * {
   filter: drop-shadow(0 0 2px rgba(167, 139, 250, 0.8));
 }
 
-/* Custom scrollbar styles */
-::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
+/* Node type-specific styles */
+.node-card.assistant {
+  @apply from-blue-500/20 to-blue-400/10;
 }
 
-::-webkit-scrollbar-track {
-  background: rgba(0, 0, 0, 0.1);
-  border-radius: 4px;
+.node-card.user {
+  @apply from-green-500/20 to-green-400/10;
 }
 
-::-webkit-scrollbar-thumb {
-  background: rgba(155, 155, 155, 0.5);
-  border-radius: 4px;
+.node-card.group {
+  @apply from-purple-500/20 to-purple-400/10;
 }
 
-::-webkit-scrollbar-thumb:hover {
-  background: rgba(155, 155, 155, 0.7);
+.node-card.note {
+  @apply from-yellow-500/20 to-yellow-400/10;
 }
 
-/* Firefox scrollbar styles */
-* {
-  scrollbar-width: thin;
-  scrollbar-color: rgba(155, 155, 155, 0.5) rgba(0, 0, 0, 0.1);
+.node-card.initializer {
+  @apply from-red-500/20 to-red-400/10;
 }

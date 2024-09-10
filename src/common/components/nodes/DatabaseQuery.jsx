@@ -25,6 +25,3 @@ const DatabaseQuery = (props) => {
 };
 
 export default DatabaseQuery;
-
-
-// Path: src/common/components/nodes/DatabaseQuery.jsx

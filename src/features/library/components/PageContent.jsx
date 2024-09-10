@@ -32,5 +32,3 @@ const PagesContent = ({ pages, handleOpenPageModal, handleDeletePage, handleEdit
 );
 
 export default PagesContent;
-
-// Path: src/features/library/components/PagesContent.jsx

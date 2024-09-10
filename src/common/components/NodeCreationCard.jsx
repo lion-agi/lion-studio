@@ -92,6 +92,3 @@ const NodeCreationCard = ({ onAddNode }) => {
 };
 
 export default NodeCreationCard;
-
-
-// Path: src/common/components/NodeCreationCard.jsx

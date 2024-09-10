@@ -51,5 +51,3 @@ const Home = () => {
 };
 
 export default Home;
-
-// Path: src/pages/home/Home.jsx

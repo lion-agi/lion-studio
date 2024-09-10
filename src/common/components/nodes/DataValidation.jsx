@@ -25,6 +25,3 @@ const DataValidation = (props) => {
 };
 
 export default DataValidation;
-
-
-// Path: src/common/components/nodes/DataValidation.jsx

@@ -18,5 +18,3 @@ const ProtectedRoute = ({ children }) => {
 };
 
 export default ProtectedRoute;
-
-// Path: src/common/components/ProtectedRoute.jsx

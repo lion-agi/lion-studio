@@ -20,6 +20,3 @@ const InfoModal = ({ isOpen, onClose }) => (
 );
 
 export default InfoModal;
-
-
-// Path: src/common/components/InfoModal.jsx

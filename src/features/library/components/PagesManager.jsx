@@ -127,5 +127,3 @@ const PagesManager = () => {
 };
 
 export default PagesManager;
-
-// Path: src/features/library/components/PagesManager.jsx

@@ -34,6 +34,3 @@ const VariableManipulation = (props) => {
 };
 
 export default VariableManipulation;
-
-
-// Path: src/common/components/nodes/VariableManipulation.jsx

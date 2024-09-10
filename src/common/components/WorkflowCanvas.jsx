@@ -42,6 +42,3 @@ const WorkflowCanvas = () => {
 };
 
 export default WorkflowCanvas;
-
-
-// Path: src/common/components/WorkflowCanvas.jsx

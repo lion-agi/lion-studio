@@ -18,5 +18,3 @@ const SentimentAnalysis = (props) => {
 };
 
 export default SentimentAnalysis;
-
-// Path: src/common/components/nodes/SentimentAnalysis.jsx

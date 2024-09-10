@@ -18,5 +18,3 @@ const Logger = (props) => {
 };
 
 export default Logger;
-
-// Path: src/common/components/nodes/Logger.jsx

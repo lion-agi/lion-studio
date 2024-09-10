@@ -47,6 +47,3 @@ const Pricing = () => {
 };
 
 export default Pricing;
-
-
-// Path: src/pages/home/Pricing.jsx

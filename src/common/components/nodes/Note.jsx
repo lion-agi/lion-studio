@@ -30,5 +30,3 @@ const Note = ({ data, ...props }) => {
 };
 
 export default Note;
-
-// Path: src/common/components/nodes/Note.jsx

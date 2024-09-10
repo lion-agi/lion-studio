@@ -3,13 +3,11 @@ import { useIntegrations, useAddIntegration, useUpdateIntegration, useDeleteInte
 import { useToast } from "@/common/components/ui/use-toast";
 import { useStore } from '@/store';
 import IntegrationCard from '../components/IntegrationCard';
+import IntegrationFilters from '../components/IntegrationFilters';
 import ConfigureIntegrationModal from '@/common/components/ConfigureIntegrationModal';
 import { Button } from "@/common/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/common/components/ui/dialog";
 import { Info } from 'lucide-react';
-import { Input } from "@/common/components/ui/input";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/common/components/ui/select";
-import { Search } from 'lucide-react';
 
 const Integrations = () => {
   const [activeTab, setActiveTab] = useState('all');
@@ -104,44 +102,16 @@ const Integrations = () => {
 
   return (
     <div className="min-h-screen bg-gray-900 text-gray-100">
-      <div className="container mx-auto p-8 space-y-8">
-        <div className="flex flex-col md:flex-row justify-between items-center mb-12">
-          <div className="flex items-center">
-            <h1 className="text-2xl font-bold mb-6 md:mb-0 text-gray-100 mr-4">Integrations</h1>
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={() => setIsInfoModalOpen(true)}
-              className="text-gray-400 hover:text-gray-100"
-            >
-              <Info className="h-5 w-5" />
-            </Button>
-          </div>
-          <div className="flex space-x-4 items-center">
-            <Select value={typeFilter} onValueChange={setTypeFilter}>
-              <SelectTrigger className="w-[180px] bg-gray-800 text-gray-200 border-gray-700">
-                <SelectValue placeholder="Select type" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="All Types">All Types</SelectItem>
-                <SelectItem value="Database">Database</SelectItem>
-                <SelectItem value="API">API</SelectItem>
-                <SelectItem value="Cloud">Cloud</SelectItem>
-                <SelectItem value="AI">AI</SelectItem>
-              </SelectContent>
-            </Select>
-            <div className="relative w-full md:w-80">
-              <Input
-                type="text"
-                placeholder="Search integrations..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full bg-gray-800 text-gray-200 placeholder-gray-400 border-gray-700 focus:border-purple-500 focus:ring-1 focus:ring-purple-500 pr-10"
-              />
-              <Search className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
-            </div>
-          </div>
-        </div>
+      <div className="container mx-auto p-8 space-y-8  mt-8">
+        <IntegrationFilters
+          activeTab={activeTab}
+          setActiveTab={setActiveTab}
+          searchTerm={searchTerm}
+          setSearchTerm={setSearchTerm}
+          typeFilter={typeFilter}
+          setTypeFilter={setTypeFilter}
+          setIsInfoModalOpen={setIsInfoModalOpen}
+        />
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {filteredIntegrations.map((integration) => (

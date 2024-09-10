@@ -19,5 +19,3 @@ const Footer = () => {
 };
 
 export default Footer;
-
-// Path: src/common/components/footer/Footer.jsx

@@ -15,6 +15,3 @@ const MainWebsiteLayout = ({ children }) => {
 };
 
 export default MainWebsiteLayout;
-
-
-// Path: src/common/components/

@@ -25,6 +25,3 @@ const Email = (props) => {
 };
 
 export default Email;
-
-
-// Path: src/common/components/nodes/Email.jsx

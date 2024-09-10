@@ -20,5 +20,3 @@ const SecuritySettings = ({ settings, handleSettingChange }) => (
 );
 
 export default SecuritySettings;
-
-// Path: src/features/admin/components/SecuritySettings.jsx

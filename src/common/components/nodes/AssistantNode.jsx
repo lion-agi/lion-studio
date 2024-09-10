@@ -25,5 +25,3 @@ const AssistantNode = (props) => {
 };
 
 export default AssistantNode;
-
-// Path: src/common/components/nodes/AssistantNode.jsx

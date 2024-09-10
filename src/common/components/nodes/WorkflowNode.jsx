@@ -18,5 +18,3 @@ const WorkflowNode = (props) => {
 };
 
 export default WorkflowNode;
-
-// Path: src/common/components/nodes/WorkflowNode.jsx

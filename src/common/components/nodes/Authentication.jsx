@@ -25,5 +25,3 @@ const Authentication = (props) => {
 };
 
 export default Authentication;
-
-// Path: src/common/components/nodes/Authentication.jsx
