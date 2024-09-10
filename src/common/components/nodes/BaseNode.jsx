@@ -13,7 +13,8 @@ const BaseNode = ({
   selected, 
   icon: Icon, 
   type,
-  children 
+  children,
+  onDelete // Add this prop
 }) => {
   const [isExpanded, setIsExpanded] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
@@ -39,10 +40,10 @@ const BaseNode = ({
   }, [data]);
 
   const handleDelete = useCallback(() => {
-    if (data.onDelete) {
-      data.onDelete(data.id);
+    if (onDelete) {
+      onDelete(data.id);
     }
-  }, [data]);
+  }, [onDelete, data.id]);
 
   const toggleExpand = useCallback(() => {
     setIsExpanded(prev => !prev);
@@ -116,7 +117,7 @@ const BaseNode = ({
         </CardContent>
       )}
       {!isEditing && (isHovered || selected) && (
-        <div className="absolute top-0 right-0 p-1 bg-background/80 rounded-bl">
+        <div className="absolute top-2 right-2 p-1 bg-background/80 rounded-bl">
           <Button variant="ghost" size="icon" onClick={handleEdit} className={`h-7 w-7 text-${nodeConfig.baseColor}-100 hover:bg-${nodeConfig.baseColor}-700`}>
             <Edit className="h-3 w-3" />
           </Button>
