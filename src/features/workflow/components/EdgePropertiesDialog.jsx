@@ -8,7 +8,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 const EdgePropertiesDialog = ({ isOpen, onClose, edge, onSave }) => {
   const [edgeData, setEdgeData] = useState({
     label: '',
-    type: '',
+    type: 'default',
     animated: false,
     style: { stroke: '#000000', strokeWidth: 1 },
   });
@@ -17,7 +17,7 @@ const EdgePropertiesDialog = ({ isOpen, onClose, edge, onSave }) => {
     if (edge) {
       setEdgeData({
         label: edge.label || '',
-        type: edge.type || '',
+        type: edge.type || 'default',
         animated: edge.animated || false,
         style: edge.style || { stroke: '#000000', strokeWidth: 1 },
       });
@@ -118,5 +118,3 @@ const EdgePropertiesDialog = ({ isOpen, onClose, edge, onSave }) => {
 };
 
 export default EdgePropertiesDialog;
-
-// Path: src/features/workflow/components/EditNodeDialog.jsx
