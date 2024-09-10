@@ -5,25 +5,27 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/comm
 import { ScrollArea } from "@/common/components/ui/scroll-area";
 import { Save, Upload, Download, RotateCcw, Plus, Undo, Redo, Lock, Unlock, ZoomIn, ZoomOut, FileJson } from 'lucide-react';
 import { useToast } from "@/common/components/ui/use-toast";
+import { useWorkflowStore } from '@/store/workflowStore';
 
 const WorkflowOperationsPanel = ({ 
   onExportJSON, 
   onSaveLoad, 
   onCreateFlow, 
-  onUndo, 
-  onRedo, 
-  canUndo, 
-  canRedo,
   onZoomIn,
   onZoomOut,
   onResetView,
-  isGraphLocked,
-  onToggleGraphLock,
   onShowJSONModal,
   onSave,
-  onLoad
 }) => {
   const { toast } = useToast();
+  const { 
+    isGraphLocked, 
+    setIsGraphLocked, 
+    undo, 
+    redo, 
+    canUndo, 
+    canRedo 
+  } = useWorkflowStore();
 
   const handleSave = () => {
     const savedData = onSave();
@@ -42,8 +44,8 @@ const WorkflowOperationsPanel = ({
   };
 
   const handleLoad = () => {
-    if (typeof onLoad === 'function') {
-      const loadedData = onLoad();
+    if (typeof onSaveLoad === 'function') {
+      const loadedData = onSaveLoad();
       if (loadedData) {
         toast({
           title: "Workflow Loaded",
@@ -57,7 +59,7 @@ const WorkflowOperationsPanel = ({
         });
       }
     } else {
-      console.warn('onLoad function is not provided');
+      console.warn('onSaveLoad function is not provided');
       toast({
         title: "Load Function Not Available",
         description: "The load functionality is not available at the moment.",
@@ -93,9 +95,9 @@ const WorkflowOperationsPanel = ({
     { icon: <Download className="h-4 w-4" />, label: "Download JSON", onClick: onExportJSON },
     { icon: <FileJson className="h-4 w-4" />, label: "View JSON", onClick: onShowJSONModal },
     { icon: <Plus className="h-4 w-4" />, label: "New Flow", onClick: onCreateFlow },
-    { icon: <Undo className="h-4 w-4" />, label: "Undo", onClick: onUndo, disabled: !canUndo },
-    { icon: <Redo className="h-4 w-4" />, label: "Redo", onClick: onRedo, disabled: !canRedo },
-    { icon: isGraphLocked ? <Lock className="h-4 w-4" /> : <Unlock className="h-4 w-4" />, label: isGraphLocked ? "Unlock Graph" : "Lock Graph", onClick: onToggleGraphLock },
+    { icon: <Undo className="h-4 w-4" />, label: "Undo", onClick: undo, disabled: !canUndo },
+    { icon: <Redo className="h-4 w-4" />, label: "Redo", onClick: redo, disabled: !canRedo },
+    { icon: isGraphLocked ? <Lock className="h-4 w-4" /> : <Unlock className="h-4 w-4" />, label: isGraphLocked ? "Unlock Graph" : "Lock Graph", onClick: () => setIsGraphLocked(!isGraphLocked) },
     { icon: <ZoomIn className="h-4 w-4" />, label: "Zoom In", onClick: onZoomIn },
     { icon: <ZoomOut className="h-4 w-4" />, label: "Zoom Out", onClick: onZoomOut },
     { icon: <RotateCcw className="h-4 w-4" />, label: "Reset View", onClick: onResetView },
