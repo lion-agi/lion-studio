@@ -21,6 +21,7 @@ import SaveLoadDialog from '@/common/components/SaveLoadDialog';
 import { useToast } from "@/common/components/ui/use-toast";
 import { useWorkflowStore } from '@/store/workflowStore';
 import { nodeColors } from '@/styles/nodeStyles';
+import CostBreakdownChart from '@/features/dashboard/components/CostBreakdownChart';
 
 const WorkflowEditorContent = () => {
   const containerRef = useRef(null);
@@ -147,6 +148,14 @@ const WorkflowEditorContent = () => {
     input.click();
   }, [handleLoad, toast]);
 
+  // Mock data for the CostBreakdownChart
+  const mockCostBreakdownData = [
+    { model: 'GPT-3.5', cost: 5000.00 },
+    { model: 'GPT-4', cost: 7000.00 },
+    { model: 'DALL-E', cost: 3000.00 },
+    { model: 'Other', cost: 1000.00 }
+  ];
+
   return (
     <div ref={containerRef} className="h-full w-full relative flex" style={{ height: 'calc(100vh - 64px)' }}>
       <div className="w-72 bg-gray-800 p-4 overflow-y-auto flex flex-col" style={{ maxHeight: 'calc(100vh - 64px)' }}>
@@ -168,6 +177,9 @@ const WorkflowEditorContent = () => {
           canUndo={canUndo}
           canRedo={canRedo}
         />
+        <div className="mt-4">
+          <CostBreakdownChart data={mockCostBreakdownData} />
+        </div>
       </div>
       <div className="flex-grow">
         <ReactFlow
@@ -204,6 +216,7 @@ const WorkflowEditorContent = () => {
             zoomable 
             pannable
           />
+          <Controls />
         </ReactFlow>
       </div>
       <AgenticFlowWizard
