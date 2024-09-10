@@ -60,14 +60,22 @@ const WorkflowOperationsPanel = ({
 
   return (
     <Card className="bg-gray-800 text-white mt-16 border border-gray-700 rounded-lg shadow-lg">
-      <CardHeader className="pb-2">
-        <CardTitle className="text-sm font-medium flex items-center">
-          <Save className="w-4 h-4 mr-2" />
-          Workflow Operations
-        </CardTitle>
-      </CardHeader>
-        <CardContent className="pt-2">
-          <CollapsibleContent>
+      <Collapsible open={!isCollapsed} onOpenChange={setIsCollapsed}>
+        <CardHeader className="pb-2">
+          <CardTitle className="text-sm font-medium flex items-center justify-between">
+            <span className="flex items-center">
+              <Save className="w-4 h-4 mr-2" />
+              Workflow Operations
+            </span>
+            <CollapsibleTrigger asChild>
+              <Button variant="ghost" size="sm">
+                {isCollapsed ? <ChevronDown className="h-4 w-4" /> : <ChevronUp className="h-4 w-4" />}
+              </Button>
+            </CollapsibleTrigger>
+          </CardTitle>
+        </CardHeader>
+        <CollapsibleContent>
+          <CardContent className="pt-2">
             <ScrollArea className="h-[132px] pr-4" style={{ scrollbarWidth: 'thin', scrollbarColor: 'rgba(155, 155, 155, 0.5) transparent' }}>
               <div className="grid grid-cols-3 gap-2">
                 {buttons.map((button, index) => (
@@ -77,13 +85,9 @@ const WorkflowOperationsPanel = ({
                 ))}
               </div>
             </ScrollArea>
-          </CollapsibleContent>
-        </CardContent>
-        <CollapsibleTrigger asChild>
-          <Button variant="ghost" size="sm" className="w-full mt-2">
-            {isCollapsed ? <ChevronDown className="h-4 w-4" /> : <ChevronUp className="h-4 w-4" />}
-          </Button>
-        </CollapsibleTrigger>
+          </CardContent>
+        </CollapsibleContent>
+      </Collapsible>
     </Card>
   );
 };
