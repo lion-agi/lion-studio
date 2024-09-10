@@ -42,16 +42,25 @@ const WorkflowOperationsPanel = ({
   };
 
   const handleLoad = () => {
-    const loadedData = onLoad();
-    if (loadedData) {
-      toast({
-        title: "Workflow Loaded",
-        description: "Your saved workflow has been loaded successfully.",
-      });
+    if (typeof onLoad === 'function') {
+      const loadedData = onLoad();
+      if (loadedData) {
+        toast({
+          title: "Workflow Loaded",
+          description: "Your saved workflow has been loaded successfully.",
+        });
+      } else {
+        toast({
+          title: "No Saved Workflow",
+          description: "There is no saved workflow to load.",
+          variant: "warning",
+        });
+      }
     } else {
+      console.warn('onLoad function is not provided');
       toast({
-        title: "No Saved Workflow",
-        description: "There is no saved workflow to load.",
+        title: "Load Function Not Available",
+        description: "The load functionality is not available at the moment.",
         variant: "warning",
       });
     }
