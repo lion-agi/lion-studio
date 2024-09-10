@@ -64,8 +64,8 @@ const WorkflowOperationsPanel = ({
   );
 
   const buttons = [
-    { icon: <Save className="h-4 w-4" />, label: "Save", onClick: handleSave },
-    { icon: <Download className="h-4 w-4" />, label: "Export JSON", onClick: onExportJSON },
+    // { icon: <Save className="h-4 w-4" />, label: "Save", onClick: handleSave },
+    // { icon: <Download className="h-4 w-4" />, label: "Export JSON", onClick: onExportJSON },
     { icon: <FileJson className="h-4 w-4" />, label: "View JSON", onClick: onShowJSONModal },
     { icon: <Plus className="h-4 w-4" />, label: "New Flow", onClick: onCreateFlow },
     { icon: <Undo className="h-4 w-4" />, label: "Undo", onClick: undo, disabled: !canUndo },

@@ -20,12 +20,12 @@ const ConsoleHeader = () => {
 
   const navItems = [
     { name: 'Dashboard', path: '/console/dashboard', icon: LayoutDashboard },
-    { name: 'Integrations', path: '/console/integrations', icon: LinkIcon },
-    { name: 'Deployment', path: '/console/deployment', icon: Rocket },
-    { name: 'Library', path: '/console/library', icon: Library },
+    // { name: 'Integrations', path: '/console/integrations', icon: LinkIcon },
+    // { name: 'Deployment', path: '/console/deployment', icon: Rocket },
+    // { name: 'Library', path: '/console/library', icon: Library },
     { name: 'Workflow', path: '/console/workflow', icon: GitBranch },
-    { name: 'Profile', path: '/console/user-profile', icon: User },
-    { name: 'Admin', path: '/console/admin', icon: Settings },
+    // { name: 'Profile', path: '/console/user-profile', icon: User },
+    // { name: 'Admin', path: '/console/admin', icon: Settings },
   ];
 
   const handleLogoClick = () => {
